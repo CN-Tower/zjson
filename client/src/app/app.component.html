@@ -1,0 +1,171 @@
+<div id="px-json">
+  <header>
+    <h4 class="fl">Visit Count: <strong>{{visitCount}}</strong></h4>
+    <h2 class="ct px-json-hd">
+      PX JSON <h5 class="px-sub-hd">[ V3.0.2 ]</h5>
+    </h2>
+  </header>
+  <section id="alerts" [@toggleSlid]="isShowAlerts">
+    <div class="alert alert-danger alert-dismissible" role="alert">
+      <button type="button" class="close" (click)="isShowAlerts='hide'"><span aria-hidden="true">&times;</span></button>
+      <strong>Error!</strong> Invalid Json or JsObj string!
+    </div>
+  </section>
+  
+  <section id="configs">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        <h3 class="panel-title">Config</h3>
+      </div>
+      <div class="panel-body row">
+        <div class="conf-item fl">
+          <h4 class="conf-tt fl">Model</h4>
+          <div class="conf-con fl">
+            <div class="radio">
+              <label>
+                <input type="radio" name="model"
+                        id="model1" value="expand"
+                        [(ngModel)]="conf.model" checked>Expand
+              </label>
+            </div>
+            <div class="radio">
+              <label>
+                <input type="radio" name="model"
+                        id="model2" value="combine"
+                        [(ngModel)]="conf.model">Combine
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="conf-item fl">
+          <h4 class="conf-tt fl">Type</h4>
+          <div class="conf-con fl">
+            <div class="radio">
+              <label>
+                <input type="radio" name="type"
+                        id="type1" value="json"
+                        [(ngModel)]="conf.type" checked>Json
+              </label>
+            </div>
+            <div class="radio">
+              <label>
+                <input type="radio" name="type"
+                        id="type2" value="jsobj"
+                        [(ngModel)]="conf.type">JsObj
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="conf-item fl">
+          <h4 class="conf-tt fl">Indent</h4>
+          <div class="conf-con fl">
+            <div class="dropdown px-drop px-indent-drop">
+              <button class="btn btn-default dropdown-toggle"
+                      [disabled]="conf.model!='expand'" (click)="toggleOptions('indent')" type="button">
+                {{conf.indent}} Space <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu px-indent-opts">
+                <li><a href="javascript:;" (click)="conf.indent=1">1 Space</a></li>
+                <li><a href="javascript:;" (click)="conf.indent=2">2 Space</a></li>
+                <li><a href="javascript:;" (click)="conf.indent=3">3 Space</a></li>
+                <li><a href="javascript:;" (click)="conf.indent=4">4 Space</a></li>
+                <li><a href="javascript:;" (click)="conf.indent=5">5 Space</a></li>
+                <li><a href="javascript:;" (click)="conf.indent=6">6 Space</a></li>
+                <li><a href="javascript:;" (click)="conf.indent=7">7 Space</a></li>
+                <li><a href="javascript:;" (click)="conf.indent=8">8 Space</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="conf-item fl">
+          <div class="fl conf-theme-tt">
+            <h4 class="conf-tt">Theme</h4>
+            <div class="sub-conf-tt">( In Time )</div>
+          </div>
+          <div class="conf-con fl">
+            <div class="dropdown px-drop px-theme-drop">
+              <button class="btn btn-default dropdown-toggle" (click)="toggleOptions('theme')" type="button">
+                  {{themeTts[theme]}} <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu px-theme-opts">
+                <li><a href="javascript:;" (click)="theme='default'">{{themeTts['default']}}</a></li>
+                <li><a href="javascript:;" (click)="theme='nocolor'">{{themeTts['nocolor']}}</a></li>
+                <!-- <li><a href="javascript:;" (click)="theme='darktheme'">{{themeTts['darktheme']}}</a></li>
+                <li><a href="javascript:;" (click)="theme='lighttheme'">{{themeTts['lighttheme']}}</a></li> -->
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <section id="operate">
+    <div class="fl">
+      <button type="button" class="btn btn-danger" (click)="clearSourc()">Clear Source</button>
+      <button type="button" class="btn btn-primary" (click)="doFormate()">Formatting</button>
+    </div>
+
+    <div class="px-fmt-alts" [ngSwitch]="alertType">
+        
+      <div class="alert alert-success alert-dismissible" *ngSwitchCase="'success'">
+        <strong class="fl alt-tt">Congratulations:</strong> {{alertMsg}}
+      </div>
+  
+      <div class="alert alert-warning alert-dismissible" *ngSwitchCase="'warning'">
+        <strong class="fl alt-tt">Warn:</strong> {{alertMsg}}
+      </div>
+  
+      <div class="alert alert-danger alert-dismissible" *ngSwitchCase="'danger'">
+        <strong class="fl alt-tt">Error:</strong> {{alertMsg}}
+      </div>
+
+      <div class="alert alert-info alert-dismissible" *ngSwitchDefault>
+        <strong class="fl alt-tt">Welcome:</strong> {{greeting}}
+      </div>
+    </div>
+
+    <div class="btn-group fr">
+      <button type="button" class="btn btn-default" (click)="copyFmted()">
+        <i class="fa fa-copy"></i>&nbsp;Copy
+      </button>
+      <button type="button" class="btn btn-default" (click)="clearFmted()">
+          <i class="fa fa-eraser"></i>&nbsp;Clear
+      </button>
+      <button type="button" class="btn btn-default" (click)="expandAll()">Expand All</button>
+      <button type="button" class="btn btn-default" (click)="collapseAll()">Collapse All</button>
+    </div>
+  </section>
+  
+  <section id="worker">
+    <div class="source">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h3 class="panel-title">Source</h3>
+        </div>
+        <div class="panel-body">
+          <textarea class="form-control src-text" rows="20" placeholder="{{srcPlaceHolder}}" [(ngModel)]="sourcest"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="pxjson">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h3 class="panel-title">Formated</h3>
+        </div>
+        <div class="panel-body">
+          <div id="pxj-container">
+            <div id="pxj-stage" [class.fullWidth]="!isModelExpand">
+              <div id="pxj-index" [style.height]="setRowIdxWpHeight()"></div>
+              <pre *ngIf="isModelExpand" class="pxj-canvas theme-{{theme}}" [attr.contenteditable]="isFmtedEditAb"></pre>
+              <div *ngIf="!isModelExpand" class="pxj-canvas theme-{{theme}} pxj-colp" [attr.contenteditable]="isFmtedEditAb"></div> 
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
