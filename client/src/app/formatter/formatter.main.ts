@@ -303,7 +303,7 @@ export class Formatter extends FmterEles {
             this.level ++;
             const curIndent = this.help.getCurIndent(this.baseIndent, this.level);
             this.dt.html += this.isExpand ? this.brcPre('[', 'arr', true) : this.brcPre('[', 'arr');
-            this.dt.json += '{';
+            this.dt.json += '[';
             this.dt.html += this.isExpand ? this.brkline() + curIndent : '';
             this.dt.json += this.isExpand ? '\n' + curIndent : '';
             this.dt.src = this.help.getSrcRest(this.dt.src);
