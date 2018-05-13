@@ -6,7 +6,8 @@
 /out-tsc
 
 # dependencies
-/node_modules
+/client/node_modules
+/server/node_modules
 
 # IDEs and editors
 /.idea
@@ -29,13 +30,15 @@
 /connect.lock
 /coverage
 /libpeerconnection.log
+/client/npm-debug.log
+/server/npm-debug.log
 npm-debug.log
-testem.log
-/typings
+/client/testem.log
+/client/typings
 
 # e2e
-/e2e/*.js
-/e2e/*.map
+/client/e2e/*.js
+/client/e2e/*.map
 
 # System Files
 .DS_Store
