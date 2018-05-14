@@ -2,11 +2,8 @@ const fs = require('fs');
 const glob = require('glob');
 const path = require('path');
 const exec = require('child_process').exec;
-let tarDir = 'build';
+let tarDir = 'server/pxjson';
 
-if (process.argv[2] && process.argv[2] === 'server') {
-    tarDir = 'server';
-}
 
 updatePxjson();
 
@@ -16,14 +13,15 @@ function updatePxjson() {
     const root = path.join(tmpDist.join('/'));
     const pxjsonNewDir = path.join(root, 'client/dist');
     const pxjsonSubFis = glob.sync(path.join(pxjsonNewDir, '**/*'));
-    const pxjsonOldDir = path.join(root, `${tarDir}/pxjson`);
+    const pxjsonOldDir = path.join(root, tarDir);
 
-    console.log('\nCopy files ...\n');
+    console.log('\Moving files ...\n');
     deleteDirectory(pxjsonOldDir);
     fs.mkdirSync(pxjsonOldDir);
-    renameDirSubFls(pxjsonSubFis);
-    // deleteDirectory(pxjsonNewDir);
+    copyDirectory(pxjsonSubFis);
+    deleteDirectory(pxjsonNewDir);
     console.log('\nCongratulations, Update Succeed!');
+
 }
 
 function deleteDirectory(dir) {
@@ -31,16 +29,22 @@ function deleteDirectory(dir) {
         const files = fs.readdirSync(dir);
         files.forEach(file => {
             const subFile = path.join(dir, file);
-            fs.statSync(subFile).isDirectory() ? deleteDirectory(subFile) : fs.unlinkSync(subFile);
+            if (fs.statSync(subFile).isDirectory()) {
+                deleteDirectory(subFile);
+            } else {
+                console.log('Del: ' + subFile);
+                fs.unlinkSync(subFile);
+            }
         });
+        console.log('Del: ' + dir);
         fs.rmdirSync(dir);
     }
 };
 
-function renameDirSubFls(files) {
+function copyDirectory(files) {
     files.forEach(file => {
-        const target = path.join(file.replace(/client[\\\/]dist/, `${tarDir}/pxjson`));
-        console.log(target);
+        const target = path.join(file.replace(/client[\\\/]dist/, tarDir));
+        console.log('Mv: ' + target);
         if (fs.statSync(file).isDirectory()) {
             fs.mkdirSync(target);
         } else {
