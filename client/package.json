@@ -10,7 +10,8 @@
     "e2e": "ng e2e",
     "electron": "npm run build-electron && electron dist",
     "build-electron": "npm run build && node ./electron.conf.js",
-    "update": "npm run build && node ./tools/update.js",
+    "update": "npm run build && node ./tools/update-pxjson.js",
+    "update.s": "npm run build && node ./tools/update-pxjson.js server",
     "package": "npm run electron && electron-packager ./dist PxJsonTool --platform=win32 --out ./build/package --verson=1.0.1 --overwrite --icon=./assets/imgs/favicon.ico"
   },
   "private": true,
