@@ -1,5 +1,5 @@
 {
-  "name": "pxjson",
+  "name": "zjson",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -10,8 +10,8 @@
     "e2e": "ng e2e",
     "electron": "npm run build-electron && electron dist",
     "build-electron": "npm run build && node ./electron.conf.js",
-    "update": "npm run build && node ./tools/update-pxjson.js",
-    "package": "npm run electron && electron-packager ./dist PxJsonTool --platform=win32 --out ./build/package --verson=1.0.1 --overwrite --icon=./assets/imgs/favicon.ico"
+    "update": "npm run build && node ./tools/update-zjson.js",
+    "package": "npm run electron && electron-packager ./dist zjson --platform=win32 --out ./build/package --verson=1.0.1 --overwrite --icon=./assets/imgs/favicon.ico"
   },
   "private": true,
   "dependencies": {

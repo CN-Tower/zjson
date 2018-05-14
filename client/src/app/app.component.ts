@@ -29,13 +29,13 @@ export class AppComponent implements AfterViewInit {
   fmtSt: FmtStatus = new FmtStatus();
   formatter: Formatter = new Formatter();
   clearSourc: Function = () => this.sourcest = '';
-  setRowIdxWpHeight: Function = () => $('.pxj-canvas').height() + 12 + 'px';
+  setRowIdxWpHeight: Function = () => $('.z-canvas').height() + 12 + 'px';
   clearFmted: Function = () => {
-    $('.pxj-canvas').html('');
+    $('.z-canvas').html('');
     this.alertType = 'info';
   }
   expandAll: Function = () => {
-    if ($('.pxj-canvas').html()) {
+    if ($('.z-canvas').html()) {
       this.doFormate();
     }
   }
@@ -46,7 +46,7 @@ export class AppComponent implements AfterViewInit {
     }
   }
   copyFmted: Function = () => {
-    if ($('.pxj-canvas').html()) {
+    if ($('.z-canvas').html()) {
       const $tmpIpt = $('<textarea></textarea>');
       $('body').append($tmpIpt);
       $tmpIpt.val(this.formated).select();
@@ -55,7 +55,7 @@ export class AppComponent implements AfterViewInit {
     }
   }
   toggleOptions: Function = tp => {
-    const $opts = $(`.px-${tp}-opts`);
+    const $opts = $(`.z-${tp}-opts`);
     if ($opts.hasClass('show')) {
       $opts.removeClass('show')
     } else {
@@ -65,7 +65,7 @@ export class AppComponent implements AfterViewInit {
   }
 
   constructor(private appService: AppService) {
-    const userId = this.appService.getUserId() || 'px-id';
+    const userId = this.appService.getUserId() || 'z-id';
     this.appService.getVistCount(userId).subscribe((vst: any) => {
       this.visitCount = vst.nb;
       this.appService.setUserId(vst.id);
@@ -74,9 +74,9 @@ export class AppComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     const that = this;
-    $('#pxj-container').scroll(function(e) {
-      $('#pxj-index').css('left', this.scrollLeft + 'px');
-      $('.px-row-index').css('left', (this.scrollLeft - 2) + 'px');
+    $('#z-container').scroll(function(e) {
+      $('#z-index').css('left', this.scrollLeft + 'px');
+      $('.z-row-index').css('left', (this.scrollLeft - 2) + 'px');
     });
   }
 
@@ -94,8 +94,8 @@ export class AppComponent implements AfterViewInit {
       }
       this.isModelExpand = this.conf.model === 'expand';
       setTimeout(() => {
-        const $pxjCanvas = $('.pxj-canvas');
-        $pxjCanvas.html(html);
+        const $zCanvas = $('.z-canvas');
+        $zCanvas.html(html);
         this.trigglerEvents();
       }, 0);
     });
@@ -115,21 +115,21 @@ export class AppComponent implements AfterViewInit {
         $(`#${$this.data('id')}`).removeClass('collapsed').addClass('expanded');
       }
     })
-    const $elps = $('.px-ellipsis').click(function() {
+    const $elps = $('.z-ellipsis').click(function() {
       $(this)
       .parent().removeClass('collapsed').addClass('expanded')
       .prev().removeClass('collapsed').addClass('expanded');
     });
-    [$oprs, $elps, $('.px-row-index')].forEach($ele => {
+    [$oprs, $elps, $('.z-row-index')].forEach($ele => {
       $ele.hover(() => this.isFmtedEditAb = false, () => this.isFmtedEditAb = true);
     });
     if (!this.fmtSt.isSrcValid) {
       const errIdx = this.fmtSt.errRowIdx;
-      $('#pxj-container')[0].scrollTop = errIdx * 18 - 240;
-      const caret_ = '<span class="px-hint-caret"><i class="fa fa-caret-right"></i><span>'
-      const $errRow = $(`.px-row-${errIdx}`).append(caret_);
+      $('#z-container')[0].scrollTop = errIdx * 18 - 240;
+      const caret_ = '<span class="z-hint-caret"><i class="fa fa-caret-right"></i><span>'
+      const $errRow = $(`.z-row-${errIdx}`).append(caret_);
       const redNext: Function = $next => {
-        if ($next.hasClass('px-code')) {
+        if ($next.hasClass('z-code')) {
           $next.addClass('bg-red');
           redNext($next.next());
         }

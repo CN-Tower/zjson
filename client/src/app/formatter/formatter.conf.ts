@@ -54,32 +54,32 @@ export class FmterEles {
     public rowIdx: number = 1;
     public isExpand: boolean  = true;
     public baseIndent: string = '';
-    public colon: string = '<span class="px-code px-colon-sign">:</span>';
-    public colon_: string = '<span class="px-code px-colon-sign">: </span>';
-    public comma: string = '<span class="px-code px-comma-sign">,</span>';
-    public backslash: string = '<span class="px-code px-backslash">\\</span>';
-    public propFmt: Function = val => `<span class="px-code px-prop-val">${val}</span>`;
-    public striFmt: Function = val => `<span class="px-code px-stri-val">${val}</span>`;
-    public funcFmt: Function = val => `<span class="px-code px-func-val">${val}</span>`;
-    public numbFmt: Function = val => `<span class="px-code px-numb-val">${val}</span>`;
-    public boolFmt: Function = val => `<span class="px-code px-bool-val">${val}</span>`;
-    public nullFmt: Function = val => `<span class="px-code px-null-val">${val}</span>`;
-    public brkline: Function = () => `<span class="px-code px-break-sign">\n</span>${this.rowIndex(++this.rowIdx)}`;
+    public colon: string = '<span class="z-code z-colon-sign">:</span>';
+    public colon_: string = '<span class="z-code z-colon-sign">: </span>';
+    public comma: string = '<span class="z-code z-comma-sign">,</span>';
+    public backslash: string = '<span class="z-code z-backslash">\\</span>';
+    public propFmt: Function = val => `<span class="z-code z-prop-val">${val}</span>`;
+    public striFmt: Function = val => `<span class="z-code z-stri-val">${val}</span>`;
+    public funcFmt: Function = val => `<span class="z-code z-func-val">${val}</span>`;
+    public numbFmt: Function = val => `<span class="z-code z-numb-val">${val}</span>`;
+    public boolFmt: Function = val => `<span class="z-code z-bool-val">${val}</span>`;
+    public nullFmt: Function = val => `<span class="z-code z-null-val">${val}</span>`;
+    public brkline: Function = () => `<span class="z-code z-break-sign">\n</span>${this.rowIndex(++this.rowIdx)}`;
     public rowIndex: Function = idx => {
-        let rowIdxes = '<span class="px-idxes-wp fr">';
+        let rowIdxes = '<span class="z-idxes-wp fr">';
         String(idx).split('').forEach(i => {
-            rowIdxes += `<span class="px-idxes px-idx-${i}"></span>`
+            rowIdxes += `<span class="z-idxes z-idx-${i}"></span>`
         });
-        return `<span class="px-row-index px-row-${idx}">${rowIdxes}</span></span>`;
+        return `<span class="z-row-index z-row-${idx}">${rowIdxes}</span></span>`;
     };
     public brcPre: Function = (sig, cls, isNotEmpty = false) => {
         const id = isNotEmpty ? fn.uuid() : '';
         const eleId = id ? `id="${id}"` : '';
         const expanded = id ? 'expandable expanded' : '';
         const operator = id ? `<span class="operator expanded" data-id="${id}"></span>` : '';
-        return `${operator}<span ${eleId} class="px-code px-brace px-${cls}-brace ${expanded}">${sig}<span class="px-obj-val">`;
+        return `${operator}<span ${eleId} class="z-code z-brace z-${cls}-brace ${expanded}">${sig}<span class="z-obj-val">`;
     };
-    public brcEnd: Function = sig => `</span><span class="px-ellipsis"></span>${sig}</span>`
+    public brcEnd: Function = sig => `</span><span class="z-ellipsis"></span>${sig}</span>`
     public getExpInfo: Function = (type, brc) => {
         const exps = {
             ost: {Tpe: 'danger', msg: `Expect a string in line: ${this.rowIdx}!!`},

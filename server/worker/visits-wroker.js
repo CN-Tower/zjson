@@ -21,7 +21,7 @@ function doGetAndSet() {
 }
 
 function addUser() {
-    const userId = 'px-' + fn.uuid();
+    const userId = 'z-' + fn.uuid();
     const vtTime = fn.time();
     users.push({userId: userId, vtTime: vtTime});
     setTimeout(function () {

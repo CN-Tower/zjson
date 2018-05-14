@@ -1,13 +1,14 @@
-#px-json {
+#z-json {
     header {
         padding: 0 20px;
         strong {
             color: #ac2925;
         }
-        h2.px-json-hd {
-            padding-right: 88px;
+        h2.z-json-hd {
+            padding-right: 98px;
+            font-weight: bold;
         }
-        h5.px-sub-hd {
+        h5.z-sub-hd {
             display: inline;
         }
     }
@@ -38,7 +39,7 @@
         .conf-con {
             height: 65px;
             margin-left: 28px;
-            .px-drop {
+            .z-drop {
                 margin-top: 10px;
             }
         }
@@ -49,7 +50,7 @@
         .src-op-btn:nth-child(1) {
             margin-right: 4px;
         }
-        .px-fmt-alts {
+        .z-fmt-alts {
             position: absolute;
             left: 0;
             right: 0;
@@ -85,7 +86,7 @@
             .panel {
                 min-height: 480px;
             }
-            #pxj-container {
+            #z-container {
                 width: 100%;
                 height: 410px;
                 overflow: auto;
@@ -96,7 +97,7 @@
                 line-height: 18px;
                 box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
                 transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-                #pxj-stage {
+                #z-stage {
                     position: absolute;
                     min-height: 100%;
                     top: 0;
@@ -106,7 +107,7 @@
                     &.fullWidth {
                         width: 100%;
                     }
-                    #pxj-index {
+                    #z-index {
                         width: 40px;
                         min-height: 100%;
                         position: absolute;
@@ -116,7 +117,7 @@
                         background: #eee;
                         z-index: 2;
                     }
-                    .px-row-index {
+                    .z-row-index {
                         position: absolute;
                         width: 40px;
                         left: -2px;
@@ -128,29 +129,29 @@
                         -webkit-touch-callout: none;
                         -moz-user-select: none;
                         -ms-user-select: none;
-                        .px-hint-caret {
+                        .z-hint-caret {
                             position: absolute;
                             right: -7px;
                             font-size: 18px;
                             color: red;
                         }
-                        .px-idxes-wp {
-                            .px-idxes {
+                        .z-idxes-wp {
+                            .z-idxes {
                                 display: inline-block;
                                 width: 9px;
                                 height: 16px;
                                 background-size: auto 14px !important;
                                 background-image: url(data:image/png;base64,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);
-                                &.px-idx-0 {background-position: -2px 1px;}
-                                &.px-idx-1 {background-position: -18px 1px;}
-                                &.px-idx-2 {background-position: -35px 1px;}
-                                &.px-idx-3 {background-position: -51px 1px;}
-                                &.px-idx-4 {background-position: -67px 1px;}
-                                &.px-idx-5 {background-position: -83px 1px;}
-                                &.px-idx-6 {background-position: -100px 1px;}
-                                &.px-idx-7 {background-position: -117px 1px;}
-                                &.px-idx-8 {background-position: -133px 1px;}
-                                &.px-idx-9 {background-position: -149px 1px;}
+                                &.z-idx-0 {background-position: -2px 1px;}
+                                &.z-idx-1 {background-position: -18px 1px;}
+                                &.z-idx-2 {background-position: -35px 1px;}
+                                &.z-idx-3 {background-position: -51px 1px;}
+                                &.z-idx-4 {background-position: -67px 1px;}
+                                &.z-idx-5 {background-position: -83px 1px;}
+                                &.z-idx-6 {background-position: -100px 1px;}
+                                &.z-idx-7 {background-position: -117px 1px;}
+                                &.z-idx-8 {background-position: -133px 1px;}
+                                &.z-idx-9 {background-position: -149px 1px;}
                             }
                         }
                     }
@@ -170,7 +171,7 @@
                             background-position: center center;
                         }
                     }
-                    .pxj-canvas {
+                    .z-canvas {
                         border: none;
                         min-height: 100%;
                         padding: 6px 12px 6px 56px;
@@ -184,12 +185,12 @@
                             border: none;
                             outline: none;
                         }
-                        &.pxj-colp {
+                        &.z-colp {
                             word-break: break-all;
                             word-wrap: break-word;
                         }
-                        .px-brace {
-                            .px-ellipsis {
+                        .z-brace {
+                            .z-ellipsis {
                                 display: none;
                                 width: 16px;
                                 height: 10px;
@@ -198,10 +199,10 @@
                                 background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAVCAIAAACor3u9AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAA60lEQVQ4je1UPwtBURw9z2hSlseERRb1elYWFtc3YPQxfAAGPgE+gYyk+AaUUsiCDLKIxb+iY5Duex6lZLunO/x+p9M5957haiTxT7j+6q4CVIAK+BhwQ7uEUAw+gcpA0ucJcgJaDJkSpkfJL3rIpKAlkKthf3O40YF5gzDlae5IkhcW4pI0qk/1isIiznde3d68YLO2rdMlAGBvu/VwhM1j2qJtEddnX1Sk+21rJAAA8CDilqQRhf6YvBAWcT7ssHNWxCtbRQZN6mmW+5I+jZlNEyZFkZODpdIuRZKIM1vl7vpqpqnvWgX8jDsgcLxfvOui8gAAAABJRU5ErkJggg==);
                                 background-position: center center;
                             }
-                            &.collapsed .px-obj-val {
+                            &.collapsed .z-obj-val {
                                 display: none;
                             }
-                            &.collapsed .px-ellipsis {
+                            &.collapsed .z-ellipsis {
                                 display: inline-block;
                             }
                         }

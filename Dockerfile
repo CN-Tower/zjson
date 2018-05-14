@@ -1,4 +1,4 @@
 FROM keymetrics/pm2:latest-alpine
-COPY pxjson.sh /pxjson.sh
-RUN chmod 777 pxjson.sh
-CMD ["sh", "pxjson.sh"]
+COPY zjson.sh /zjson.sh
+RUN chmod 777 zjson.sh
+CMD ["sh", "zjson.sh"]

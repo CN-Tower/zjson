@@ -2,24 +2,24 @@ const fs = require('fs');
 const glob = require('glob');
 const path = require('path');
 const exec = require('child_process').exec;
-let tarDir = 'server/pxjson';
+let tarDir = 'server/zjson';
 
 
-updatePxjson();
+updatezjson();
 
-function updatePxjson() {
+function updatezjson() {
     const tmpDist= __dirname.split(path.sep);
     tmpDist.splice(tmpDist.length-2, 2);
     const root = path.join(tmpDist.join('/'));
-    const pxjsonNewDir = path.join(root, 'client/dist');
-    const pxjsonSubFis = glob.sync(path.join(pxjsonNewDir, '**/*'));
-    const pxjsonOldDir = path.join(root, tarDir);
+    const newDir = path.join(root, 'client/dist');
+    const subFis = glob.sync(path.join(newDir, '**/*'));
+    const oldDir = path.join(root, tarDir);
 
     console.log('\Moving files ...\n');
-    deleteDirectory(pxjsonOldDir);
-    fs.mkdirSync(pxjsonOldDir);
-    copyDirectory(pxjsonSubFis);
-    // deleteDirectory(pxjsonNewDir);
+    deleteDirectory(oldDir);
+    fs.mkdirSync(oldDir);
+    copyDirectory(subFis);
+    // deleteDirectory(newDir);
     console.log('\nCongratulations, Update Succeed!');
 
 }

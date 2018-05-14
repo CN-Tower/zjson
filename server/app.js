@@ -15,13 +15,13 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-// uncomment after placing your favicon in /pxjson
-//app.use(favicon(path.join(__dirname, 'pxjson', 'favicon.ico')));
+// uncomment after placing your favicon in /zjson
+//app.use(favicon(path.join(__dirname, 'zjson', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'pxjson')));
+app.use(express.static(path.join(__dirname, 'zjson')));
 
 app.use('/', index);
 app.use('/api', api);
