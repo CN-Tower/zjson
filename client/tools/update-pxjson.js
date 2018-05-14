@@ -19,7 +19,7 @@ function updatePxjson() {
     deleteDirectory(pxjsonOldDir);
     fs.mkdirSync(pxjsonOldDir);
     copyDirectory(pxjsonSubFis);
-    deleteDirectory(pxjsonNewDir);
+    // deleteDirectory(pxjsonNewDir);
     console.log('\nCongratulations, Update Succeed!');
 
 }
