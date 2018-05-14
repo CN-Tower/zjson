@@ -79,12 +79,13 @@ export class Formatter extends FmterEles {
     }
 
     private arrayHandler(ps: any, onEnd: Function) {
+        let curIndent: string;
         if (ps.obj.length > 0) {
             ps.html += this.isExpand ? this.brcPre('[', 'arr', true) + this.brkline() : this.brcPre('[', 'arr');
             ps.json += this.isExpand ? '[\n' : '[';
             this.level++;
             for (let i = 0; i < ps.obj.length; i++) {
-                const curIndent = this.isExpand ? this.help.getCurIndent(this.baseIndent, this.level) : '';
+                curIndent = this.isExpand ? this.help.getCurIndent(this.baseIndent, this.level) : '';
                 const rtVal = this.valueHandler(ps.obj[i]);
                 ps.html += curIndent;
                 ps.html += rtVal[0];
@@ -98,7 +99,7 @@ export class Formatter extends FmterEles {
                     : i < ps.obj.length - 1 ? ',' : '';
             }
             this.level--;
-            const curIndent = this.isExpand ? this.help.getCurIndent(this.baseIndent, this.level) : '';
+            curIndent = this.isExpand ? this.help.getCurIndent(this.baseIndent, this.level) : '';
             ps.html += curIndent + this.brcEnd(']');
             ps.json += curIndent + ']';
         } else {
@@ -109,6 +110,7 @@ export class Formatter extends FmterEles {
     }
 
     private objectHandler(ps: any, onEnd: Function) {
+        let curIndent: string;
         if (fn.objLen(ps.obj) > 0) {
             ps.html += this.isExpand ? this.brcPre('{', 'obj', true) + this.brkline() : this.brcPre('{', 'obj');
             ps.json += this.isExpand ? '{\n' : '{';
@@ -121,7 +123,7 @@ export class Formatter extends FmterEles {
                     const prop = ps.isToJson
                         ? `"${key}"`
                         : ps.conf.isQuoteKey ? this.help.quoteVal(key, ps.conf.quotes) : key;
-                    const curIndent = this.isExpand ? this.help.getCurIndent(this.baseIndent, this.level) : '';
+                    curIndent = this.isExpand ? this.help.getCurIndent(this.baseIndent, this.level) : '';
                     const rtVal = this.valueHandler(ps.obj[key]);
                     ps.html += curIndent;
                     ps.html += this.propFmt(prop);
@@ -140,7 +142,7 @@ export class Formatter extends FmterEles {
                 }
             }
             this.level--;
-            const curIndent = this.isExpand ? this.help.getCurIndent(this.baseIndent, this.level) : '';
+            curIndent = this.isExpand ? this.help.getCurIndent(this.baseIndent, this.level) : '';
             ps.html += curIndent + this.brcEnd('}');
             ps.json += curIndent + '}';
         } else {
@@ -222,8 +224,12 @@ export class Formatter extends FmterEles {
         const rest = this.help.getSrcRest(this.dt.src);
         const restIdx = rest.indexOf(this.dt.src[0]);
         this.chkExpect(this.dt.src[0]);
-        if (restIdx > 0) {
-            this.dt.html += this.striFmt(this.dt.src.substr(0, restIdx + 2));
+        if (restIdx > -1) {
+            if (this.ck.exceptVal === 'ost') {
+                this.dt.html += this.propFmt(this.dt.src.substr(0, restIdx + 2));
+            } else {
+                this.dt.html += this.striFmt(this.dt.src.substr(0, restIdx + 2));
+            }
             this.dt.json += this.dt.src.substr(0, restIdx + 2);
             this.setExpect(this.dt.src[0]);
             this.dt.src = this.help.getSrcRest(this.dt.src, restIdx + 2);
@@ -361,8 +367,12 @@ export class Formatter extends FmterEles {
         const rest = this.help.getSrcRest(this.dt.src, 2);
         const restIdx = unicMts ? rest.indexOf('\'') : rest.indexOf('"');
         this.chkExpect('u');
-        if (restIdx > 0) {
-            this.dt.html += this.striFmt(this.dt.src.substr(0, restIdx + 3));
+        if (restIdx > -1) {
+            if (this.ck.exceptVal === 'ost') {
+                this.dt.html += this.propFmt(this.dt.src.substr(0, restIdx + 3));
+            } else {
+                this.dt.html += this.striFmt(this.dt.src.substr(0, restIdx + 3));
+            }
             this.dt.json += this.dt.src.substr(0, restIdx + 3);
             this.setExpect('u');
             this.dt.src = this.help.getSrcRest(this.dt.src, restIdx + 3);
@@ -442,57 +452,55 @@ export class Formatter extends FmterEles {
     }
 
     private setExpect(sig: string) {
-        if (this.st.isSrcValid) {
-            switch (sig) {
-                case ':':
-                    this.ck.exceptVal = 'val';
-                    break;
-                case ',':
-                    this.ck.exceptType === '{'
-                        ? this.ck.exceptVal = 'ost'
-                        : this.ck.exceptVal = 'val';
-                    break;
-                case '{':
-                    this.ck.exceptType = sig;
-                    this.ck.deepIdxCon += sig;
-                    this.ck.exceptVal = 'ost';
-                    break;
-                case '}':
-                    this.ck.deepIdxCon = this.ck.deepIdxCon.substr(0, this.ck.deepIdxCon.length - 1);
-                    this.ck.exceptType = this.ck.deepIdxCon.substr(-1);
-                    this.ck.exceptVal = 'end';
-                    break;
-                case '[':
-                    this.ck.exceptType = sig;
-                    this.ck.deepIdxCon += sig;
-                    this.ck.exceptVal = 'val';
-                    break;
-                case ']':
-                    this.ck.deepIdxCon = this.ck.deepIdxCon.substr(0, this.ck.deepIdxCon.length - 1);
-                    this.ck.exceptType = this.ck.deepIdxCon.substr(-1);
-                    this.ck.exceptVal = 'end';
-                    break;
-                case '(':
-                    this.ck.exceptType = sig;
-                    this.ck.deepIdxCon += sig;
-                    this.ck.exceptVal = 'val';
-                    break;
-                case ')':
-                    this.ck.deepIdxCon = this.ck.deepIdxCon.substr(0, this.ck.deepIdxCon.length - 1);
-                    this.ck.exceptType = this.ck.deepIdxCon.substr(-1);
-                    this.ck.exceptVal = 'end';
-                    break;
-                case 'u':
-                case 'n':
-                case 'b':
-                case 'N':
-                case '"':
-                case '\'':
-                    this.ck.exceptVal === 'ost'
-                        ? this.ck.exceptVal = 'col'
-                        : this.ck.exceptVal = 'end';
-                    break;
-            }
+        switch (sig) {
+            case ':':
+                this.ck.exceptVal = 'val';
+                break;
+            case ',':
+                this.ck.exceptType === '{'
+                    ? this.ck.exceptVal = 'ost'
+                    : this.ck.exceptVal = 'val';
+                break;
+            case '{':
+                this.ck.exceptType = sig;
+                this.ck.deepIdxCon += sig;
+                this.ck.exceptVal = 'ost';
+                break;
+            case '}':
+                this.ck.deepIdxCon = this.ck.deepIdxCon.substr(0, this.ck.deepIdxCon.length - 1);
+                this.ck.exceptType = this.ck.deepIdxCon.substr(-1);
+                this.ck.exceptVal = 'end';
+                break;
+            case '[':
+                this.ck.exceptType = sig;
+                this.ck.deepIdxCon += sig;
+                this.ck.exceptVal = 'val';
+                break;
+            case ']':
+                this.ck.deepIdxCon = this.ck.deepIdxCon.substr(0, this.ck.deepIdxCon.length - 1);
+                this.ck.exceptType = this.ck.deepIdxCon.substr(-1);
+                this.ck.exceptVal = 'end';
+                break;
+            case '(':
+                this.ck.exceptType = sig;
+                this.ck.deepIdxCon += sig;
+                this.ck.exceptVal = 'val';
+                break;
+            case ')':
+                this.ck.deepIdxCon = this.ck.deepIdxCon.substr(0, this.ck.deepIdxCon.length - 1);
+                this.ck.exceptType = this.ck.deepIdxCon.substr(-1);
+                this.ck.exceptVal = 'end';
+                break;
+            case 'u':
+            case 'n':
+            case 'b':
+            case 'N':
+            case '"':
+            case '\'':
+                this.ck.exceptVal === 'ost'
+                    ? this.ck.exceptVal = 'col'
+                    : this.ck.exceptVal = 'end';
+                break;
         }
     }
 
