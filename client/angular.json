@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "myapp": {
+    "pxjson": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/myapp",
+            "outputPath": "dist",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -23,9 +23,16 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "src/assets/css/themes.less",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/font-awesome/css/font-awesome.min.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/bootstrap/dist/js/bootstrap.min.js",
+              "node_modules/pxfunc/pxfunc.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -50,18 +57,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "myapp:build"
+            "browserTarget": "pxjson:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "myapp:build:production"
+              "browserTarget": "pxjson:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "myapp:build"
+            "browserTarget": "pxjson:build"
           }
         },
         "test": {
@@ -95,7 +102,7 @@
         }
       }
     },
-    "myapp-e2e": {
+    "pxjson-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "architect": {
@@ -103,7 +110,7 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "myapp:serve"
+            "devServerTarget": "pxjson:serve"
           }
         },
         "lint": {
@@ -118,5 +125,5 @@
       }
     }
   },
-  "defaultProject": "myapp"
+  "defaultProject": "pxjson"
 }

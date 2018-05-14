@@ -3,8 +3,6 @@ import { AppService } from './app.service';
 import { toggleSlid } from './animations/toggle-slid';
 import { Configs, FmtStatus, FmterEles } from './formatter/formatter.conf';
 import { Formatter } from './formatter/formatter.main';
-import { element } from 'protractor';
-import { setTimeout } from 'timers';
 
 @Component({
   selector: 'app-root',
