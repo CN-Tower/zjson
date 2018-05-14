@@ -9,14 +9,15 @@ function updatePxjson() {
     const tmpDist= __dirname.split(path.sep);
     tmpDist.splice(tmpDist.length-2, 2);
     const root = path.join(tmpDist.join('/'));
-    const pxjsonNewDir = path.join(root, 'client/dist');
+    const pxjsonNewDir = path.join(root, 'client/build/pxjson');
     const pxjsonSubFis = glob.sync(path.join(pxjsonNewDir, '**/*'));
     const pxjsonOldDir = path.join(root, 'server/pxjson');
+
+    console.log('\nCopy files ...\n');
     deleteDirectory(pxjsonOldDir);
     fs.mkdirSync(pxjsonOldDir);
-    console.log('\nMoving files ...');
     renameDirSubFls(pxjsonSubFis);
-    deleteDirectory(pxjsonNewDir);
+    // deleteDirectory(pxjsonNewDir);
     console.log('\nCongratulations, Update Succeed!');
 }
 
@@ -33,11 +34,12 @@ function deleteDirectory(dir) {
 
 function renameDirSubFls(files) {
     files.forEach(file => {
-        const target = path.join(file.replace(/client/, 'server').replace(/dist/, 'pxjson'));
+        const target = path.join(file.replace(/client[\\\/]build/, 'server'));
+        console.log(target);
         if (fs.statSync(file).isDirectory()) {
             fs.mkdirSync(target);
         } else {
-            fs.renameSync(file, target);
+            fs.createReadStream(file).pipe(fs.createWriteStream(target));
         }
     });
 }
