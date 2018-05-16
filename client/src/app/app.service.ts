@@ -9,21 +9,21 @@ export class AppService {
 
     constructor(private http: Http) {}
 
-    getThemeTitles(): any {
-        return {
-           default: 'Default',
-           nocolor: 'No Color',
-           darktheme: 'Dark Theme',
-           lighttheme: 'Light Theme'
-        };
+    getThemes(): any {
+        return [
+            {name: 'default', text: 'Default'},
+            {name: 'nocolor', text: 'No Color'},
+            // {name: 'darktheme', text: 'Dark Theme'},
+            // {name: 'lighttheme', text: 'Light Theme'}
+        ];
     }
 
     getGreeting(): string {
         const greetings = [
-            'Have a nice day!',
-            'Nice to meet you!',
-            'You\'ll have good luck!',
-            'God bless you!'
+            'Have a nice day',
+            'Nice to meet you',
+            'You\'ll have good luck',
+            'God bless you'
         ];
         return greetings[fn.random(greetings.length)];
     }
@@ -36,6 +36,26 @@ export class AppService {
         if (id) {
             window.localStorage['userId'] = id;
         }
+    }
+
+    getFmtHists() {
+        const fmtHists = window.localStorage['fmtHists'];
+        return fmtHists ? JSON.parse(fmtHists) : [];
+    }
+
+    setFmtHists(hist: any) {
+        const fmtHists = this.getFmtHists();
+        fmtHists.unshift(hist);
+        if (fmtHists.length > 8) {
+            fmtHists.shift();
+        }
+        window.localStorage['fmtHists'] = JSON.stringify(fmtHists);
+    }
+
+    rmvFmtHists(hist: any) {
+        let fmtHists = this.getFmtHists();
+        fmtHists = fmtHists.filter(ht => ht.name !== hist.name);
+        window.localStorage['fmtHists'] = JSON.stringify(fmtHists);
     }
 
     getVistCount(id: string) {
