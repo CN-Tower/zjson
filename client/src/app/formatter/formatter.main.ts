@@ -7,6 +7,7 @@ export class Formatter extends FmterEles {
     }
     /**
      * 描述: 初始化格式器
+     * ===================================================
      * @arg source [string]
      * @arg conf [Configs] 配置参数
      * @arg onFmted [Function] 回调
@@ -52,7 +53,8 @@ export class Formatter extends FmterEles {
     }
 
     /**
-     * 描述: 获取格式化的对象或Json对象字符串
+     * 描述: 格式化正确的OBJ
+     * ===================================================
      * @arg object [object]
      * @arg conf [object, opt.] 配置参数
      * */
@@ -78,6 +80,10 @@ export class Formatter extends FmterEles {
         return [ps.html, ps.json, true];
     }
 
+    /**
+     * 对数组的处理
+     * ============================
+     */
     private arrayHandler(ps: any, onEnd: Function) {
         let curIndent: string;
         if (ps.obj.length > 0) {
@@ -109,6 +115,10 @@ export class Formatter extends FmterEles {
         onEnd(ps);
     }
 
+    /**
+     * 对对象的处理
+     * ============================
+     */
     private objectHandler(ps: any, onEnd: Function) {
         let curIndent: string;
         if (fn.objLen(ps.obj) > 0) {
@@ -152,6 +162,10 @@ export class Formatter extends FmterEles {
         onEnd(ps);
     }
 
+    /**
+     * 对值的分类和处理
+     * ============================
+     */
     private valueHandler(value: any): any[] {
         const conf = this.dt.conf;
         switch (typeof value) {
@@ -177,6 +191,7 @@ export class Formatter extends FmterEles {
 
     /**
      * 描述: 格式化错误的JSON
+     * ===================================================
      * @param src [string]
      * @param conf [Configs]
      */
@@ -217,6 +232,10 @@ export class Formatter extends FmterEles {
         }
     }
 
+    /**
+     * 引号
+     * ============================
+     */
     private quotaHandler() {
         if (this.dt.src[0] === '\'') {
             this.ck.isSrcJson = false;
@@ -243,6 +262,10 @@ export class Formatter extends FmterEles {
         }
     }
 
+    /**
+     * 冒号
+     * ============================
+     */
     private colonHandler() {
         this.dt.html += this.isExpand ? this.colon_ : this.colon;
         this.dt.json += this.isExpand ? ': ' : ':';
@@ -252,6 +275,10 @@ export class Formatter extends FmterEles {
         this.doFormate2();
     }
 
+    /**
+     * 逗号
+     * ============================
+     */
     private commaHandler() {
         const curIndent = this.help.getCurIndent(this.baseIndent, this.level);
         const bklIdt = this.isExpand ? this.brkline() + curIndent : '';
@@ -263,6 +290,10 @@ export class Formatter extends FmterEles {
         this.doFormate2();
     }
 
+    /**
+     * 大括号（前）
+     * ============================
+     */
     private objPreHandler() {
         this.chkExpect(this.dt.src[0]);
         this.setExpect(this.dt.src[0]);
@@ -284,6 +315,10 @@ export class Formatter extends FmterEles {
         }
     }
 
+    /**
+     * 大括号（后）
+     * ============================
+     */
     private objEndHandler() {
         this.level --;
         const curIndent = this.help.getCurIndent(this.baseIndent, this.level);
@@ -296,6 +331,10 @@ export class Formatter extends FmterEles {
         this.doFormate2();
     }
 
+    /**
+     * 中括号（前）
+     * ============================
+     */
     private arrPreHandler() {
         this.chkExpect(this.dt.src[0]);
         this.setExpect(this.dt.src[0]);
@@ -317,6 +356,10 @@ export class Formatter extends FmterEles {
         }
     }
 
+    /**
+     * 中括号（后）
+     * ============================
+     */
     private arrEndHandler() {
         this.level --;
         const curIndent = this.help.getCurIndent(this.baseIndent, this.level);
@@ -329,6 +372,10 @@ export class Formatter extends FmterEles {
         this.doFormate2();
     }
 
+    /**
+     * 括号（前）
+     * ============================
+     */
     private tupPreHandler() {
         this.ck.srcAcType = this.ck.srcAcType || 'pyMap';
         this.chkExpect(this.dt.src[0]);
@@ -350,6 +397,10 @@ export class Formatter extends FmterEles {
         }
     }
 
+    /**
+     * 括号（后）
+     * ============================
+     */
     private tupEndHandler() {
         this.level --;
         const curIndent = this.help.getCurIndent(this.baseIndent, this.level);
@@ -362,6 +413,10 @@ export class Formatter extends FmterEles {
         this.doFormate2();
     }
 
+    /**
+     * Unicode
+     * ============================
+     */
     private unicHandler(unicMts) {
         this.ck.srcAcType = this.ck.srcAcType || 'pyMap';
         const rest = this.help.getSrcRest(this.dt.src, 2);
@@ -386,6 +441,10 @@ export class Formatter extends FmterEles {
         }
     }
 
+    /**
+     * 数字
+     * ============================
+     */
     private numbHandler(numbMt) {
         this.dt.html += this.numbFmt(numbMt[0]);
         this.dt.json += numbMt[0];
@@ -395,6 +454,10 @@ export class Formatter extends FmterEles {
         this.doFormate2();
     }
 
+    /**
+     * 布尔
+     * ============================
+     */
     private boolHandler(boolMt) {
         this.ck.srcAcType = this.ck.srcAcType || (['True', 'False'].includes(boolMt[0]) ? 'pyMap' : 'jsObj');
         this.dt.html += this.boolFmt(boolMt[0]);
@@ -405,6 +468,10 @@ export class Formatter extends FmterEles {
         this.doFormate2();
     }
 
+    /**
+     * 空
+     * ============================
+     */
     private nullHandler(nullMt) {
         this.ck.srcAcType = this.ck.srcAcType || (['None'].includes(nullMt[0]) ? 'pyMap' : 'jsObj');
         this.dt.html += this.nullFmt(nullMt[0]);
@@ -415,6 +482,10 @@ export class Formatter extends FmterEles {
         this.doFormate2();
     }
 
+    /**
+     * 非法字符
+     * ============================
+     */
     private otheHandler() {
         const strMatch = this.dt.src.match(/^[^\{\}\[\]:,]*/);
         const strMated = strMatch && strMatch[0] || '';
@@ -427,6 +498,10 @@ export class Formatter extends FmterEles {
         }
     }
 
+    /**
+     * 与期待值匹配
+     * ============================
+     */
     private chkExpect(sig: string) {
         if (this.st.isSrcValid) {
             switch (this.ck.exceptVal) {
@@ -451,6 +526,10 @@ export class Formatter extends FmterEles {
         }
     }
 
+    /**
+     * 设置期待值
+     * ============================
+     */
     private setExpect(sig: string) {
         switch (sig) {
             case ':':
@@ -504,6 +583,10 @@ export class Formatter extends FmterEles {
         }
     }
 
+    /**
+     * 期待返回设置
+     * ============================
+     */
     private expection(type: string, brc: string = '') {
         const expInfo = this.getExpInfo(type, brc);
         if (['ost', 'col', 'val', 'end'].includes(type)) {
