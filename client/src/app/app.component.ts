@@ -40,6 +40,7 @@ export class AppComponent implements AfterViewInit {
   fmtHists: any[] = [];
   saveFmtTime: string;
   fmtSourcest: string;
+
   constructor(private appService: AppService) {
     const userId = this.appService.getUserId() || 'z-id';
     this.getFmtHists();
@@ -49,6 +50,10 @@ export class AppComponent implements AfterViewInit {
     });
   }
 
+  /**
+   * 执行格式化
+   * =================================
+   */
   doFormate() {
     this.formatter.init(this.sourcest, this.conf , (html, json, fmtSt) => {
       // this.isShowAlerts = status ? 'hide' : 'show';
@@ -68,6 +73,10 @@ export class AppComponent implements AfterViewInit {
     });
   }
 
+  /**
+   * 格式化后的代码折叠和展开事件
+   * =================================
+   */
   trigglerEvents() {
     const $oprs = $('.operator').click(function() {
       const $this = $(this);
@@ -102,6 +111,10 @@ export class AppComponent implements AfterViewInit {
     }
   }
 
+  /**
+   * 最大化、最小化代码窗口
+   * =================================
+   */
   maximalPanel(type: 'src'|'fmt') {
     $(document).scrollTop(0);
     const $body = $('html, body').addClass('o-h');
@@ -120,7 +133,6 @@ export class AppComponent implements AfterViewInit {
         break;
     }
   }
-
   minimalPanel(type: 'src'|'fmt') {
     $('html, body').removeClass('o-h');
     this.maxSrcSize = null;
@@ -129,6 +141,10 @@ export class AppComponent implements AfterViewInit {
     this.isFmtMax = false;
   }
 
+  /**
+   * 格式化相关操作
+   * =================================
+   */
   saveFmted() {
     const svTime = moment().format('MM-DD HH:mm:ss');
     if (this.fmtSourcest && this.saveFmtTime !== svTime) {
@@ -141,7 +157,6 @@ export class AppComponent implements AfterViewInit {
       this.getFmtHists();
     }
   }
-
   showOrRmFmtHist(e: any, hist: any) {
     if (e.target.tagName === 'I') {
       this.appService.rmvFmtHists(hist);
@@ -151,7 +166,6 @@ export class AppComponent implements AfterViewInit {
       this.doFormate();
     }
   }
-
   copyFmted() {
     if ($('.z-canvas').html()) {
       const $tmpIpt = $('<textarea></textarea>');
@@ -161,20 +175,17 @@ export class AppComponent implements AfterViewInit {
       $tmpIpt.remove();
     }
   }
-
   clearFmted() {
     $('.z-canvas').html('');
     this.alertType = 'info';
     this.formated = '';
     this.fmtSourcest = '';
   }
-
   expandAll() {
     if ($('.z-canvas').html()) {
       this.doFormate();
     }
   }
-
   collapseAll() {
     const $firstOpBtn = $('.operator').eq(0);
     if ($firstOpBtn.hasClass('expanded')) {
@@ -182,6 +193,10 @@ export class AppComponent implements AfterViewInit {
     }
   }
 
+  /**
+   * 隐藏和显示下拉菜单
+   * =================================
+   */
   toggleOptions(tp: string) {
     const $opts = $(`.z-${tp}-opts`);
     if ($opts.hasClass('show')) {
@@ -192,6 +207,10 @@ export class AppComponent implements AfterViewInit {
     }
   }
 
+  /**
+   * 代码行号索引水平不滚动及左右拖动代码窗
+   * ===================================
+   */
   ngAfterViewInit() {
     const that = this;
     $('#z-container').scroll(function() {
