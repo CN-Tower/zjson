@@ -255,11 +255,11 @@ export class AppComponent implements AfterViewInit {
         const jw = $zJson.width() - dx;
         if (sw > 200 && jw > 200) {
           if (dx < 0) {
-            $zSrce.width($zSrce.width() + dx);
-            $zJson.width($zJson.width() - dx);
+            $zSrce.width(sw);
+            $zJson.width(jw);
           } else {
-            $zJson.width($zJson.width() - dx);
-            $zSrce.width($zSrce.width() + dx);
+            $zJson.width(jw);
+            $zSrce.width(sw);
           }
           const sp = ($zSrce.width() / ww) * 100;
           const jp = 99 - sp;
