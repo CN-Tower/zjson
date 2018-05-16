@@ -16,3 +16,22 @@
 .bg-red {
     background: rgb(250, 54, 54) !important;
 }
+.cl-red {
+    color: rgb(250, 54, 54) !important;
+}
+.no-select {
+    user-select: none;
+    -webkit-touch-callout: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+.o-h {
+    overflow: hidden;
+}
+
+.z-op-icon {
+    cursor: pointer;
+    &:hover {
+        font-size: 15px;
+    }
+}
