@@ -3,6 +3,8 @@ import { AppService } from './app.service';
 import { toggleSlid } from './animations/toggle-slid';
 import { Configs, FmtStatus, FmterEles } from './formatter/formatter.conf';
 import { Formatter } from './formatter/formatter.main';
+import { window } from 'rxjs/operator/window';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +16,8 @@ import { Formatter } from './formatter/formatter.main';
 export class AppComponent implements AfterViewInit {
   sourcest: string = '';
   formated: string = '';
-  theme: string = 'default';
+  themeTts: any = this.appService.getThemes();
+  theme: string = this.themeTts[0];
   isShowAlerts: string = 'hide';
   isModelExpand: boolean = false;
   isFmtedEditAb: boolean = true;
@@ -23,66 +26,29 @@ export class AppComponent implements AfterViewInit {
   alertType: 'info'|'success'|'warning'|'danger' = 'info';
   srcPlaceHolder: string = this.appService.srcPlaceHolder;
   greeting: string = this.appService.getGreeting();
-  themeTts: any = this.appService.getThemeTitles();
   conf: Configs = new Configs();
   eles: FmterEles = new FmterEles();
   fmtSt: FmtStatus = new FmtStatus();
   formatter: Formatter = new Formatter();
   clearSourc: Function = () => this.sourcest = '';
   setRowIdxWpHeight: Function = () => $('.z-canvas').height() + 12 + 'px';
-  clearFmted: Function = () => {
-    $('.z-canvas').html('');
-    this.alertType = 'info';
-  }
-  expandAll: Function = () => {
-    if ($('.z-canvas').html()) {
-      this.doFormate();
-    }
-  }
-  collapseAll: Function = () => {
-    const $firstOpBtn = $('.operator').eq(0);
-    if ($firstOpBtn.hasClass('expanded')) {
-      $firstOpBtn.click();
-    }
-  }
-  copyFmted: Function = () => {
-    if ($('.z-canvas').html()) {
-      const $tmpIpt = $('<textarea></textarea>');
-      $('body').append($tmpIpt);
-      $tmpIpt.val(this.formated).select();
-      document.execCommand('Copy');
-      $tmpIpt.remove();
-    }
-  }
-  toggleOptions: Function = tp => {
-    const $opts = $(`.z-${tp}-opts`);
-    if ($opts.hasClass('show')) {
-      $opts.removeClass('show')
-    } else {
-      $opts.addClass('show');
-      setTimeout(() => $(document).one('click', () => $opts.removeClass('show')), 0);
-    }
-  }
-
+  getFmtHists: Function = () => this.fmtHists = this.appService.getFmtHists();
+  isSrcMax: boolean = false;
+  isFmtMax: boolean = false;
+  maxSrcSize: any = null;
+  maxFmtSize: any = null;
+  fmtHists: any[] = [];
+  saveFmtTime: string;
+  fmtSourcest: string;
   constructor(private appService: AppService) {
     const userId = this.appService.getUserId() || 'z-id';
+    this.getFmtHists();
     this.appService.getVistCount(userId).subscribe((vst: any) => {
       this.visitCount = vst.nb;
       this.appService.setUserId(vst.id);
     });
   }
 
-  ngAfterViewInit() {
-    const that = this;
-    $('#z-container').scroll(function(e) {
-      $('#z-index').css('left', this.scrollLeft + 'px');
-      $('.z-row-index').css('left', (this.scrollLeft - 2) + 'px');
-    });
-  }
-
-  /**
-   * 描述: 格式化Json对象
-   */
   doFormate() {
     this.formatter.init(this.sourcest, this.conf , (html, json, fmtSt) => {
       // this.isShowAlerts = status ? 'hide' : 'show';
@@ -97,13 +63,11 @@ export class AppComponent implements AfterViewInit {
         const $zCanvas = $('.z-canvas');
         $zCanvas.html(html);
         this.trigglerEvents();
+        this.fmtSourcest = this.sourcest;
       }, 0);
     });
   }
 
-  /**
-   * 描述: 折叠和展开的按钮事件
-   */
   trigglerEvents() {
     const $oprs = $('.operator').click(function() {
       const $this = $(this);
@@ -135,6 +99,134 @@ export class AppComponent implements AfterViewInit {
         }
       }
       redNext($errRow.next());
+    }
+  }
+
+  maximalPanel(type: 'src'|'fmt') {
+    $(document).scrollTop(0);
+    const $body = $('html, body').addClass('o-h');
+    const bodyH = $body.height() - 94;
+    const bodyW = $body.width();
+    const pH =  bodyH> 500 ? bodyH : 500;
+    const pW = bodyW - 40;
+    switch (type) {
+      case 'src':
+        this.maxSrcSize = {height: pH + 'px', width: pW + 'px'};
+        this.isSrcMax = true;
+        break;
+      case 'fmt':
+        this.maxFmtSize = {height: pH + 'px', width: pW + 'px'};
+        this.isFmtMax = true;
+        break;
+    }
+  }
+
+  minimalPanel(type: 'src'|'fmt') {
+    $('html, body').removeClass('o-h');
+    this.maxSrcSize = null;
+    this.maxFmtSize = null;
+    this.isSrcMax = false;
+    this.isFmtMax = false;
+  }
+
+  saveFmted() {
+    const svTime = moment().format('MM-DD HH:mm:ss');
+    if (this.fmtSourcest && this.saveFmtTime !== svTime) {
+      this.saveFmtTime = svTime;
+      const fmtPre = this.fmtSourcest.replace(/[\s\n]/mg, '')
+      const appdix = fmtPre.length > 15 ? fmtPre.substr(0, 15) + ' ...' : fmtPre;
+      const histName = this.saveFmtTime + ` ( ${appdix} )`;
+      const hist = {src: this.fmtSourcest, name: histName};
+      const prefix = this.appService.setFmtHists(hist);
+      this.getFmtHists();
+    }
+  }
+
+  showOrRmFmtHist(e: any, hist: any) {
+    if (e.target.tagName === 'I') {
+      this.appService.rmvFmtHists(hist);
+      this.getFmtHists();
+    } else {
+      this.sourcest = hist.src;
+      this.doFormate();
+    }
+  }
+
+  copyFmted() {
+    if ($('.z-canvas').html()) {
+      const $tmpIpt = $('<textarea></textarea>');
+      $('body').append($tmpIpt);
+      $tmpIpt.val(this.formated).select();
+      document.execCommand('Copy');
+      $tmpIpt.remove();
+    }
+  }
+
+  clearFmted() {
+    $('.z-canvas').html('');
+    this.alertType = 'info';
+    this.formated = '';
+    this.fmtSourcest = '';
+  }
+
+  expandAll() {
+    if ($('.z-canvas').html()) {
+      this.doFormate();
+    }
+  }
+
+  collapseAll() {
+    const $firstOpBtn = $('.operator').eq(0);
+    if ($firstOpBtn.hasClass('expanded')) {
+      $firstOpBtn.click();
+    }
+  }
+
+  toggleOptions(tp: string) {
+    const $opts = $(`.z-${tp}-opts`);
+    if ($opts.hasClass('show')) {
+      $opts.removeClass('show')
+    } else {
+      $opts.addClass('show');
+      setTimeout(() => $(document).one('click', () => $opts.removeClass('show')), 0);
+    }
+  }
+
+  ngAfterViewInit() {
+    const that = this;
+    $('#z-container').scroll(function() {
+      $('#z-index').css('left', this.scrollLeft + 'px');
+      $('.z-row-index').css('left', (this.scrollLeft - 2) + 'px');
+    });
+    const $zSrce = $('#z-source');
+    const $zJson = $('#z-jsonwd');
+    let dx, nx, ox;
+    $('#z-resize').mousedown(function(e) {
+      ox = e.clientX;
+      $(window).on('mousemove', resizeCodeZone)
+      .mouseup(function() {
+        $(this).off('mousemove', resizeCodeZone);
+      });
+    });
+    function resizeCodeZone(e: any) {
+      $('.src-text').blur();
+      const ww = $('#worker').width();
+      nx = e.clientX;
+      if (nx != ox) {
+        dx = nx - ox;
+        if (dx < 0) {
+          $zSrce.width($zSrce.width() + dx);
+          $zJson.width($zJson.width() - dx);
+        } else {
+          $zJson.width($zJson.width() - dx);
+          $zSrce.width($zSrce.width() + dx);
+        }
+        const sp = ($zSrce.width() / ww) * 100;
+        const jp = 99 - sp;
+        $zJson.css('width', jp + '%');
+        $zSrce.css('width', sp + '%');
+        ox = nx;
+      }
     }
   }
 }
