@@ -1,4 +1,7 @@
 <div id="z-json">
+  <!--=================================================================-->
+  <!--========================== Z-JSON HEADER ========================-->
+  <!--=================================================================-->
   <header>
     <h4 class="fl">Visit Count: <strong>{{visitCount}}</strong></h4>
     <h2 class="ct z-json-hd">
@@ -12,12 +15,17 @@
     </div>
   </section>
   
+  <!--=================================================================-->
+  <!--========================== Z-JSON CONFIGS =======================-->
+  <!--=================================================================-->
   <section id="configs">
     <div class="panel panel-primary">
       <div class="panel-heading">
         <h3 class="panel-title">Config</h3>
       </div>
       <div class="panel-body row">
+
+        <!-- ============= MODEL CONFIG ============= -->
         <div class="conf-item fl">
           <h4 class="conf-tt fl">Model</h4>
           <div class="conf-con fl">
@@ -36,8 +44,9 @@
               </label>
             </div>
           </div>
-        </div>
+        </div><!-- MODEL END -->
 
+        <!-- ============== TYPE CONFIG ============== -->
         <div class="conf-item fl">
           <h4 class="conf-tt fl">Type</h4>
           <div class="conf-con fl">
@@ -56,14 +65,16 @@
               </label>
             </div>
           </div>
-        </div>
+        </div><!-- TYPE END -->
 
+        <!-- ============= INDENT CONFIG ============= -->
         <div class="conf-item fl">
           <h4 class="conf-tt fl">Indent</h4>
           <div class="conf-con fl">
             <div class="dropdown z-drop z-indent-drop">
               <button class="btn btn-default dropdown-toggle"
-                      [disabled]="conf.model!='expand'" (click)="toggleOptions('indent')" type="button">
+                      [disabled]="conf.model!='expand'"
+                      (click)="toggleOptions('indent')" type="button">
                 {{conf.indent}} Space <span class="caret"></span>
               </button>
               <ul class="dropdown-menu z-indent-opts">
@@ -73,8 +84,9 @@
               </ul>
             </div>
           </div>
-        </div>
+        </div><!-- INDENT END -->
 
+        <!-- ============= THEME CONFIG ============= -->
         <div class="conf-item fl">
           <div class="fl conf-theme-tt">
             <h4 class="conf-tt">Theme</h4>
@@ -82,43 +94,31 @@
           </div>
           <div class="conf-con fl">
             <div class="dropdown z-drop z-theme-drop">
-              <button class="btn btn-default dropdown-toggle" (click)="toggleOptions('theme')" type="button">
+              <button class="btn btn-default dropdown-toggle"
+                      (click)="toggleOptions('theme')" type="button">
                   {{theme?.text}} <span class="caret"></span>
               </button>
               <ul class="dropdown-menu z-theme-opts">
                 <li *ngFor="let them of themeTts">
                   <a href="javascript:;" (click)="theme=them">{{them?.text}}</a>
                 </li>
-                <li><a href="javascript:;" (click)="theme=them">{{them?.text}}</a></li>
+                <li>
+                  <a href="javascript:;" (click)="theme=them">{{them?.text}}</a>
+                </li>
               </ul>
             </div>
           </div>
-        </div>
+        </div><!-- THEME END -->
       </div>
     </div>
   </section>
   
+  <!--=================================================================-->
+  <!--========================== Z-JSON OPERATE =======================-->
+  <!--=================================================================-->
   <section id="operate">
-    <div class="z-src-btn fl">
-      <button type="button" class="btn btn-danger src-op-btn" (click)="clearSourc()" #btn>Clear Source</button>
-      <button type="button" class="btn btn-primary src-op-btn" (click)="doFormate()">Formatting</button>
-      <div class="dropdown z-drop z-indent-drop src-op-btn">
-        <button class="btn btn-default dropdown-toggle"
-                [disabled]="fmtHists.length==0"
-                [attr.title]="fmtHists.length==0?'No history!':null"
-                [style.height]="btn.height+1" (click)="toggleOptions('history')" type="button">
-          Save History <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu z-history-opts">
-          <li *ngFor="let hist of fmtHists">
-            <a href="javascript:;" (click)="showOrRmFmtHist($event, hist)">
-              <i class="fa fa-trash z-op-icon"></i>&nbsp;&nbsp;{{hist.name}}
-            </a>
-          </li>
-        </ul>
-      </div>
-    </div>
 
+    <!-- ============= STATUS ALERTS ============= -->
     <div class="z-fmt-alts" [ngSwitch]="alertType">
       <div class="alert alert-success alert-dismissible" *ngSwitchCase="'success'">
         <strong class="fl alt-tt">Congratulations:</strong> {{alertMsg}}
@@ -132,8 +132,33 @@
       <div class="alert alert-info alert-dismissible" *ngSwitchDefault>
         <strong class="fl alt-tt">Welcome:</strong> {{greeting}}
       </div>
-    </div>
+    </div><!-- ALERTS END -->
 
+    <!-- ============= SOURECE OPERATES ============= -->
+    <div class="z-src-btn fl">
+      <button type="button" class="btn btn-danger src-op-btn"
+              (click)="clearSourc()" #btn>Clear Source</button>
+      <button type="button" class="btn btn-primary src-op-btn"
+              (click)="doFormate()">Format Source</button>
+      <div class="dropdown z-drop z-indent-drop src-op-btn">
+        <button class="btn btn-default dropdown-toggle"
+                [style.height]="btn.height+1"
+                [disabled]="fmtHists.length==0"
+                [attr.title]="fmtHists.length==0?'No history!':null"
+                (click)="toggleOptions('history')" type="button">
+          Save History <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu z-history-opts">
+          <li *ngFor="let hist of fmtHists">
+            <a href="javascript:;" (click)="showOrRmFmtHist($event, hist)">
+              <i class="fa fa-trash z-op-icon"></i>&nbsp;&nbsp;{{hist.name}}
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div><!-- SOURECE END -->
+
+    <!-- ============= FORMATTER OPERATES ============= -->
     <div class="z-fmt-btn fr">
       <div class="btn-group">
         <button type="button" class="btn btn-default" (click)="saveFmted()">
@@ -149,19 +174,25 @@
       <div class="dropdown z-drop z-more-drop">
         <button class="btn btn-default dropdown-toggle"
                 [style.height]="btn.height+1" (click)="toggleOptions('more')" type="button">
-          More Opt. <span class="caret"></span>
+          More Operate <span class="caret"></span>
         </button>
         <ul class="dropdown-menu dropdown-menu-right z-more-opts">
           <li><a href="javascript:;" (click)="expandAll()">Expand All</a></li>
           <li><a href="javascript:;" (click)="collapseAll()">Collapse All</a></li>
         </ul>
       </div>
-    </div>
+    </div><!-- FORMATTER END -->
   </section>
   
+  <!--=================================================================-->
+  <!--========================== Z-JSON STAGE =========================-->
+  <!--=================================================================-->
   <section id="worker">
+
+    <!-- ============= SOURCE WINDOWS ============= -->
     <div id="z-source">
-      <div class="panel panel-primary" [ngClass]="{'z-maximal': isSrcMax}" [ngStyle]="maxSrcSize">
+      <div class="panel panel-primary"
+           [ngClass]="{'z-maximal': isSrcMax}" [ngStyle]="maxSrcSize">
         <div class="panel-heading">
             <span *ngIf="!isSrcMax" class="z-win" (click)="maximalPanel('src')">
               <i class="fa fa-window-maximize z-op-icon" title="maximal"></i>
@@ -172,13 +203,18 @@
           <h3 class="panel-title">Source</h3>
         </div>
         <div class="panel-body">
-          <textarea class="form-control src-text" rows="20" placeholder="{{srcPlaceHolder}}" [(ngModel)]="sourcest"></textarea>
+          <textarea class="form-control src-text" rows="20"
+                    placeholder="{{srcPlaceHolder}}" [(ngModel)]="sourcest"></textarea>
         </div>
       </div>
-    </div>
+    </div><!-- SOURCE END -->
+
     <div id="z-resize"></div>
+
+    <!-- ============= FMTED WINDOWS ============= -->
     <div id="z-jsonwd">
-      <div class="panel panel-primary" [ngClass]="{'z-maximal': isFmtMax}" [ngStyle]="maxFmtSize">
+      <div class="panel panel-primary"
+           [ngClass]="{'z-maximal': isFmtMax}" [ngStyle]="maxFmtSize">
         <div class="panel-heading">
           <span *ngIf="!isFmtMax" class="z-win" (click)="maximalPanel('fmt')">
             <i class="fa fa-window-maximize z-op-icon" title="maximal"></i>
@@ -192,12 +228,16 @@
           <div id="z-container">
             <div id="z-stage" [class.fullWidth]="!isModelExpand">
               <div id="z-index" [style.height]="setRowIdxWpHeight()"></div>
-              <pre *ngIf="isModelExpand" class="z-canvas theme-{{theme?.name}}" [attr.contenteditable]="isFmtedEditAb"></pre>
-              <div *ngIf="!isModelExpand" class="z-canvas theme-{{theme?.name}} z-colp" [attr.contenteditable]="isFmtedEditAb"></div> 
+              <pre *ngIf="isModelExpand"
+                   class="z-canvas theme-{{theme?.name}}"
+                   [attr.contenteditable]="isFmtedEditAb"></pre>
+              <div *ngIf="!isModelExpand"
+                   class="z-canvas theme-{{theme?.name}} z-colp"
+                   [attr.contenteditable]="isFmtedEditAb"></div> 
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </div><!-- FMTED END -->
   </section>
 </div>
