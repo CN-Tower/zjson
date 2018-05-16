@@ -28,10 +28,3 @@
 .o-h {
     overflow: hidden;
 }
-
-.z-op-icon {
-    cursor: pointer;
-    &:hover {
-        font-size: 15px;
-    }
-}
