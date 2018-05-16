@@ -1,4 +1,10 @@
 #z-json {
+    .z-op-icon {
+        cursor: pointer;
+        &:hover {
+            font-size: 15px;
+        }
+    }
     /* ======================== Z-JSON HEADER ========================= */
     header {
         padding: 0 20px;
@@ -93,12 +99,19 @@
                     left: 20px;
                     z-index: 999;
                 }
+                .panel-heading {
+                    .z-panel-icos {
+                        float: right;
+                        span {
+                            display: inline-block;
+                            width: 15px;
+                            margin-left: 10px;
+                        }
+                    }
+                }
                 .panel-body {
                     height: calc(~"(100% - 38px)");
                 }
-            }
-            .z-win {
-                float: right;
             }
             &#z-source {
                 width: 49.5%;
