@@ -1,7 +1,5 @@
 #z-json {
-    .z-maximal {
-
-    }
+    /* ======================== Z-JSON HEADER ========================= */
     header {
         padding: 0 20px;
         strong {
@@ -23,6 +21,7 @@
         position: fixed;
         top: 0;
     }
+    /* ======================== Z-JSON CONFIGS ======================== */
     #configs .conf-item {
         width: 22%;
         margin-bottom: 0;
@@ -45,20 +44,15 @@
             }
         }
     }
+    /* ======================== Z-JSON OPERATE ========================== */
     #operate {
         height: 55px;
         position: relative;
-        .z-src-btn {
-            .src-op-btn {
-                float: left;
-                margin-right: 6px;
-            }
-        }
         .z-fmt-alts {
             position: absolute;
             left: 0;
             right: 0;
-            width: 480px;
+            width: 35%;
             margin: auto;
             .alert {
                 position: relative;
@@ -73,12 +67,19 @@
                 line-height: 50px;
             }
         }
+        .z-src-btn {
+            .src-op-btn {
+                float: left;
+                margin-right: 6px;
+            }
+        }
         .z-fmt-btn {
             .z-more-drop {
                 display: inline-block;
             }
         }
     }
+    /* ======================== Z-JSON STAGE ========================= */
     #worker {
         & > div {
             height: 500px;
@@ -110,6 +111,7 @@
                 width: 1%;
                 cursor: col-resize;
             }
+            /* ------------------- Z-JSON STAGE ------------------- */
             &#z-jsonwd {
                 width: 49.5%;
                 #z-container {
