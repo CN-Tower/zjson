@@ -250,18 +250,22 @@ export class AppComponent implements AfterViewInit {
       nx = e.clientX;
       if (nx != ox) {
         dx = nx - ox;
-        if (dx < 0) {
-          $zSrce.width($zSrce.width() + dx);
-          $zJson.width($zJson.width() - dx);
-        } else {
-          $zJson.width($zJson.width() - dx);
-          $zSrce.width($zSrce.width() + dx);
-        }
-        const sp = ($zSrce.width() / ww) * 100;
-        const jp = 99 - sp;
-        $zJson.css('width', jp + '%');
-        $zSrce.css('width', sp + '%');
         ox = nx;
+        const sw = $zSrce.width() + dx;
+        const jw = $zJson.width() - dx;
+        if (sw > 200 && jw > 200) {
+          if (dx < 0) {
+            $zSrce.width($zSrce.width() + dx);
+            $zJson.width($zJson.width() - dx);
+          } else {
+            $zJson.width($zJson.width() - dx);
+            $zSrce.width($zSrce.width() + dx);
+          }
+          const sp = ($zSrce.width() / ww) * 100;
+          const jp = 99 - sp;
+          $zJson.css('width', jp + '%');
+          $zSrce.css('width', sp + '%');
+        }
       }
     }
   }
