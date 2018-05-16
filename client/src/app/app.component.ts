@@ -16,30 +16,31 @@ import * as moment from 'moment';
 export class AppComponent implements AfterViewInit {
   sourcest: string = '';
   formated: string = '';
-  themeTts: any = this.appService.getThemes();
-  theme: string = this.themeTts[0];
+  visitCount: number = NaN;
+  alertMsg: string = '';
+  saveFmtTime: string;
+  fmtSourcest: string;
+  fmtHists: any[] = [];
+  maxSrcSize: any = null;
+  maxFmtSize: any = null;
+  isSrcMax: boolean = false;
+  isFmtMax: boolean = false;
   isShowAlerts: string = 'hide';
   isModelExpand: boolean = false;
   isFmtedEditAb: boolean = true;
-  alertMsg: string = '';
-  visitCount: number = NaN;
-  alertType: 'info'|'success'|'warning'|'danger' = 'info';
-  srcPlaceHolder: string = this.appService.srcPlaceHolder;
-  greeting: string = this.appService.getGreeting();
+  themeTts: any = this.appService.getThemes();
+  theme: string = this.themeTts[0];
   conf: Configs = new Configs();
   eles: FmterEles = new FmterEles();
   fmtSt: FmtStatus = new FmtStatus();
   formatter: Formatter = new Formatter();
+  alertType: 'info'|'success'|'warning'|'danger' = 'info';
+  srcPlaceHolder: string = this.appService.srcPlaceHolder;
+  greeting: string = this.appService.getGreeting();
   clearSourc: Function = () => this.sourcest = '';
   setRowIdxWpHeight: Function = () => $('.z-canvas').height() + 12 + 'px';
+  getTimeStr: Function = () => moment().format('MM-DD HH:mm:ss');
   getFmtHists: Function = () => this.fmtHists = this.appService.getFmtHists();
-  isSrcMax: boolean = false;
-  isFmtMax: boolean = false;
-  maxSrcSize: any = null;
-  maxFmtSize: any = null;
-  fmtHists: any[] = [];
-  saveFmtTime: string;
-  fmtSourcest: string;
 
   constructor(private appService: AppService) {
     const userId = this.appService.getUserId() || 'z-id';
@@ -145,8 +146,24 @@ export class AppComponent implements AfterViewInit {
    * 格式化相关操作
    * =================================
    */
+  download(type: 'src'|'fmt') {
+    let blob;
+    switch (type) {
+      case 'src':
+        if (this.sourcest) {
+          blob = new Blob([this.sourcest], {type: ''});
+        } break;
+      case 'fmt':
+        if (this.formated) {
+          blob = new Blob([this.formated], {type: ''})
+        } break;
+    }
+    if (blob) {
+      saveAs(blob, `zjson-${fn.time()}.json`);
+    }
+  }
   saveFmted() {
-    const svTime = moment().format('MM-DD HH:mm:ss');
+    const svTime = this.getTimeStr();
     if (this.fmtSourcest && this.saveFmtTime !== svTime) {
       this.saveFmtTime = svTime;
       const fmtPre = this.fmtSourcest.replace(/[\s\n]/mg, '')
