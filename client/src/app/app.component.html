@@ -196,12 +196,17 @@
       <div class="panel panel-primary"
            [ngClass]="{'z-maximal': isSrcMax}" [ngStyle]="maxSrcSize">
         <div class="panel-heading">
-            <span *ngIf="!isSrcMax" class="z-win" (click)="maximalPanel('src')">
-              <i class="fa fa-window-maximize z-op-icon" title="maximal"></i>
+          <div class="z-panel-icos">
+            <span (click)="download('src')">
+              <i class="fa fa-download z-op-icon" title="Download"></i>
             </span>
-            <span *ngIf="isSrcMax" class="z-win" (click)="minimalPanel('src')">
-              <i class="fa fa-window-restore z-op-icon" title="minimal"></i>
+            <span *ngIf="!isSrcMax" (click)="maximalPanel('src')">
+              <i class="fa fa-window-maximize z-op-icon" title="Maximal"></i>
+            </span>
+            <span *ngIf="isSrcMax" (click)="minimalPanel('src')">
+              <i class="fa fa-window-restore z-op-icon" title="Minimal"></i>
             </span>  
+          </div>
           <h3 class="panel-title">Source</h3>
         </div>
         <div class="panel-body">
@@ -218,12 +223,17 @@
       <div class="panel panel-primary"
            [ngClass]="{'z-maximal': isFmtMax}" [ngStyle]="maxFmtSize">
         <div class="panel-heading">
-          <span *ngIf="!isFmtMax" class="z-win" (click)="maximalPanel('fmt')">
-            <i class="fa fa-window-maximize z-op-icon" title="maximal"></i>
-          </span>
-          <span *ngIf="isFmtMax" class="z-win" (click)="minimalPanel('fmt')">
-            <i class="fa fa-window-restore z-op-icon" title="minimal"></i>
-          </span>
+          <div class="z-panel-icos">
+            <span (click)="download('fmt')">
+              <i class="fa fa-download z-op-icon" title="Download"></i>
+            </span>
+            <span *ngIf="!isFmtMax" (click)="maximalPanel('fmt')">
+              <i class="fa fa-window-maximize z-op-icon" title="Maximal"></i>
+            </span>
+            <span *ngIf="isFmtMax" (click)="minimalPanel('fmt')">
+              <i class="fa fa-window-restore z-op-icon" title="Minimal"></i>
+            </span>
+          </div>
           <h3 class="panel-title">Formated</h3>
         </div>
         <div class="panel-body">
