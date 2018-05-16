@@ -100,7 +100,7 @@ module.exports = ".theme-default .z-code-container {\n  margin-top: 0;\n  margin
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = ".ct {\n    text-align: center;\n}\n.fl {\n    float: left;\n}\n.fr {\n    float: right;\n}\n.show {\n    display: block;\n}\n.hide {\n    display: none;\n}\n.bg-red {\n    background: rgb(250, 54, 54) !important;\n}"
+module.exports = ".ct {\r\n    text-align: center;\r\n}\r\n.fl {\r\n    float: left;\r\n}\r\n.fr {\r\n    float: right;\r\n}\r\n.show {\r\n    display: block;\r\n}\r\n.hide {\r\n    display: none;\r\n}\r\n.bg-red {\r\n    background: rgb(250, 54, 54) !important;\r\n}\r\n.cl-red {\r\n    color: rgb(250, 54, 54) !important;\r\n}\r\n.no-select {\r\n    -webkit-user-select: none;\r\n            user-select: none;\r\n    -webkit-touch-callout: none;\r\n    -moz-user-select: none;\r\n    -ms-user-select: none;\r\n}\r\n.o-h {\r\n    overflow: hidden;\r\n}\r\n"
 
 /***/ }),
 

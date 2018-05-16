@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ViewEncapsulation } from '@angular/core';
+import { Component, AfterViewInit, ViewEncapsulation, HostListener } from '@angular/core';
 import { AppService } from './app.service';
 import { toggleSlid } from './animations/toggle-slid';
 import { Configs, FmtStatus, FmterEles } from './formatter/formatter.conf';
@@ -42,7 +42,9 @@ export class AppComponent implements AfterViewInit {
   getTimeStr: Function = () => moment().format('MM-DD HH:mm:ss');
   getFmtHists: Function = () => this.fmtHists = this.appService.getFmtHists();
 
-  constructor(private appService: AppService) {
+  constructor(
+    private appService: AppService
+  ) {
     const userId = this.appService.getUserId() || 'z-json';
     this.getFmtHists();
     this.appService.getVistCount(userId).subscribe((vst: any) => {
@@ -55,8 +57,8 @@ export class AppComponent implements AfterViewInit {
    * 执行格式化
    * =================================
    */
-  doFormate() {
-    this.formatter.init(this.sourcest, this.conf , (html, json, fmtSt) => {
+  doFormate(fmtSrc: string) {
+    this.formatter.init(fmtSrc, this.conf , (html, json, fmtSt) => {
       // this.isShowAlerts = status ? 'hide' : 'show';
       this.formated = json;
       this.fmtSt = fmtSt;
@@ -69,7 +71,7 @@ export class AppComponent implements AfterViewInit {
         const $zCanvas = $('.z-canvas');
         $zCanvas.html(html);
         this.trigglerEvents();
-        this.fmtSourcest = this.sourcest;
+        this.fmtSourcest = fmtSrc;
       }, 0);
     });
   }
@@ -116,13 +118,25 @@ export class AppComponent implements AfterViewInit {
    * 最大化、最小化代码窗口
    * =================================
    */
+  @HostListener('window:resize', ['$event'])
+  onResize(e) {
+    const $maxPanel = $('.z-maximal');
+    if ($maxPanel.length > 0) {
+      const ww = e.target.innerWidth;
+      $maxPanel.width(ww - 40);
+    }
+  }
+  setMaximalPanelTop() {
+    const dT = $(this).scrollTop();
+    $('.z-maximal').css('top', 74 - dT);
+  }
   maximalPanel(type: 'src'|'fmt') {
-    $(document).scrollTop(0);
-    const $body = $('html, body').addClass('o-h');
+    $(document).scrollTop(0).on('scroll', this.setMaximalPanelTop);
+    const $body = $('html, body');
     const bodyH = $body.height() - 94;
     const bodyW = $body.width();
-    const pH =  bodyH> 500 ? bodyH : 500;
     const pW = bodyW - 40;
+    const pH =  bodyH > 500 ? bodyH : 500;
     switch (type) {
       case 'src':
         this.maxSrcSize = {height: pH + 'px', width: pW + 'px'};
@@ -135,11 +149,11 @@ export class AppComponent implements AfterViewInit {
     }
   }
   minimalPanel(type: 'src'|'fmt') {
-    $('html, body').removeClass('o-h');
-    this.maxSrcSize = null;
-    this.maxFmtSize = null;
+    $(document).off('scroll', this.setMaximalPanelTop);
     this.isSrcMax = false;
     this.isFmtMax = false;
+    this.maxSrcSize = null;
+    this.maxFmtSize = null;
   }
 
   /**
@@ -159,7 +173,7 @@ export class AppComponent implements AfterViewInit {
         } break;
     }
     if (blob) {
-      saveAs(blob, `zjson-${fn.time()}.json`);
+      saveAs(blob, `ZJSON-${String(fn.time()).substr(-6)}.json`);
     }
   }
   saveFmted() {
@@ -180,7 +194,7 @@ export class AppComponent implements AfterViewInit {
       this.getFmtHists();
     } else {
       this.sourcest = hist.src;
-      this.doFormate();
+      this.doFormate(this.sourcest);
     }
   }
   copyFmted() {
@@ -200,7 +214,7 @@ export class AppComponent implements AfterViewInit {
   }
   expandAll() {
     if ($('.z-canvas').html()) {
-      this.doFormate();
+      this.doFormate(this.fmtSourcest);
     }
   }
   collapseAll() {
@@ -248,7 +262,7 @@ export class AppComponent implements AfterViewInit {
       $('.src-text').blur();
       const ww = $('#worker').width();
       nx = e.clientX;
-      if (nx != ox) {
+      if (nx !== ox) {
         dx = nx - ox;
         ox = nx;
         const sw = $zSrce.width() + dx;

@@ -82,20 +82,22 @@
         .z-fmt-btn {
             .z-more-drop {
                 display: inline-block;
+                margin-left: 6px;
             }
         }
     }
     /* ======================== Z-JSON STAGE ========================= */
     #worker {
+        min-height: 500px;
         & > div {
             height: 500px;
             box-sizing: border-box;
             float: left;
             .panel {
-                height: 480px;
+                height: calc(~"(100% - 20px)");
                 &.z-maximal{
                     position: fixed;
-                    top: 74px;
+                    top: 72px;
                     left: 20px;
                     z-index: 999;
                 }
