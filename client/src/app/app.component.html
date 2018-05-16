@@ -67,14 +67,9 @@
                 {{conf.indent}} Space <span class="caret"></span>
               </button>
               <ul class="dropdown-menu z-indent-opts">
-                <li><a href="javascript:;" (click)="conf.indent=1">1 Space</a></li>
-                <li><a href="javascript:;" (click)="conf.indent=2">2 Space</a></li>
-                <li><a href="javascript:;" (click)="conf.indent=3">3 Space</a></li>
-                <li><a href="javascript:;" (click)="conf.indent=4">4 Space</a></li>
-                <li><a href="javascript:;" (click)="conf.indent=5">5 Space</a></li>
-                <li><a href="javascript:;" (click)="conf.indent=6">6 Space</a></li>
-                <li><a href="javascript:;" (click)="conf.indent=7">7 Space</a></li>
-                <li><a href="javascript:;" (click)="conf.indent=8">8 Space</a></li>
+                <li *ngFor="let i of [1,2,3,4,5,6,7,8];">
+                  <a href="javascript:;" (click)="conf.indent = i">{{i}} Space</a>
+                </li>
               </ul>
             </div>
           </div>
@@ -88,13 +83,13 @@
           <div class="conf-con fl">
             <div class="dropdown z-drop z-theme-drop">
               <button class="btn btn-default dropdown-toggle" (click)="toggleOptions('theme')" type="button">
-                  {{themeTts[theme]}} <span class="caret"></span>
+                  {{theme?.text}} <span class="caret"></span>
               </button>
               <ul class="dropdown-menu z-theme-opts">
-                <li><a href="javascript:;" (click)="theme='default'">{{themeTts['default']}}</a></li>
-                <li><a href="javascript:;" (click)="theme='nocolor'">{{themeTts['nocolor']}}</a></li>
-                <!-- <li><a href="javascript:;" (click)="theme='darktheme'">{{themeTts['darktheme']}}</a></li>
-                <li><a href="javascript:;" (click)="theme='lighttheme'">{{themeTts['lighttheme']}}</a></li> -->
+                <li *ngFor="let them of themeTts">
+                  <a href="javascript:;" (click)="theme=them">{{them?.text}}</a>
+                </li>
+                <li><a href="javascript:;" (click)="theme=them">{{them?.text}}</a></li>
               </ul>
             </div>
           </div>
@@ -104,46 +99,76 @@
   </section>
   
   <section id="operate">
-    <div class="fl">
-      <button type="button" class="btn btn-danger src-op-btn" (click)="clearSourc()">Clear Source</button>
+    <div class="z-src-btn fl">
+      <button type="button" class="btn btn-danger src-op-btn" (click)="clearSourc()" #btn>Clear Source</button>
       <button type="button" class="btn btn-primary src-op-btn" (click)="doFormate()">Formatting</button>
+      <div class="dropdown z-drop z-indent-drop src-op-btn">
+        <button class="btn btn-default dropdown-toggle"
+                [disabled]="fmtHists.length==0"
+                [attr.title]="fmtHists.length==0?'No history!':null"
+                [style.height]="btn.height+1" (click)="toggleOptions('history')" type="button">
+          Save History <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu z-history-opts">
+          <li *ngFor="let hist of fmtHists">
+            <a href="javascript:;" (click)="showOrRmFmtHist($event, hist)">
+              <i class="fa fa-trash z-op-icon"></i>&nbsp;&nbsp;{{hist.name}}
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
 
     <div class="z-fmt-alts" [ngSwitch]="alertType">
-        
       <div class="alert alert-success alert-dismissible" *ngSwitchCase="'success'">
         <strong class="fl alt-tt">Congratulations:</strong> {{alertMsg}}
       </div>
-  
       <div class="alert alert-warning alert-dismissible" *ngSwitchCase="'warning'">
         <strong class="fl alt-tt">Warn:</strong> {{alertMsg}}
       </div>
-  
       <div class="alert alert-danger alert-dismissible" *ngSwitchCase="'danger'">
         <strong class="fl alt-tt">Error:</strong> {{alertMsg}}
       </div>
-
       <div class="alert alert-info alert-dismissible" *ngSwitchDefault>
         <strong class="fl alt-tt">Welcome:</strong> {{greeting}}
       </div>
     </div>
 
-    <div class="btn-group fr">
-      <button type="button" class="btn btn-default" (click)="copyFmted()">
-        <i class="fa fa-copy"></i>&nbsp;Copy
-      </button>
-      <button type="button" class="btn btn-default" (click)="clearFmted()">
+    <div class="z-fmt-btn fr">
+      <div class="btn-group">
+        <button type="button" class="btn btn-default" (click)="saveFmted()">
+          <i class="fa fa-database"></i>&nbsp;Save
+        </button>
+        <button type="button" class="btn btn-default" (click)="copyFmted()">
+          <i class="fa fa-copy"></i>&nbsp;Copy
+        </button>
+        <button type="button" class="btn btn-default" (click)="clearFmted()">
           <i class="fa fa-eraser"></i>&nbsp;Clear
-      </button>
-      <button type="button" class="btn btn-default" (click)="expandAll()">Expand All</button>
-      <button type="button" class="btn btn-default" (click)="collapseAll()">Collapse All</button>
+        </button>
+      </div>
+      <div class="dropdown z-drop z-more-drop">
+        <button class="btn btn-default dropdown-toggle"
+                [style.height]="btn.height+1" (click)="toggleOptions('more')" type="button">
+          More Opt. <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right z-more-opts">
+          <li><a href="javascript:;" (click)="expandAll()">Expand All</a></li>
+          <li><a href="javascript:;" (click)="collapseAll()">Collapse All</a></li>
+        </ul>
+      </div>
     </div>
   </section>
   
   <section id="worker">
-    <div class="source">
-      <div class="panel panel-primary">
+    <div id="z-source">
+      <div class="panel panel-primary" [ngClass]="{'z-maximal': isSrcMax}" [ngStyle]="maxSrcSize">
         <div class="panel-heading">
+            <span *ngIf="!isSrcMax" class="z-win" (click)="maximalPanel('src')">
+              <i class="fa fa-window-maximize z-op-icon" title="maximal"></i>
+            </span>
+            <span *ngIf="isSrcMax" class="z-win" (click)="minimalPanel('src')">
+              <i class="fa fa-window-restore z-op-icon" title="minimal"></i>
+            </span>  
           <h3 class="panel-title">Source</h3>
         </div>
         <div class="panel-body">
@@ -151,17 +176,24 @@
         </div>
       </div>
     </div>
-    <div class="zjson">
-      <div class="panel panel-primary">
+    <div id="z-resize"></div>
+    <div id="z-jsonwd">
+      <div class="panel panel-primary" [ngClass]="{'z-maximal': isFmtMax}" [ngStyle]="maxFmtSize">
         <div class="panel-heading">
+          <span *ngIf="!isFmtMax" class="z-win" (click)="maximalPanel('fmt')">
+            <i class="fa fa-window-maximize z-op-icon" title="maximal"></i>
+          </span>
+          <span *ngIf="isFmtMax" class="z-win" (click)="minimalPanel('fmt')">
+            <i class="fa fa-window-restore z-op-icon" title="minimal"></i>
+          </span>
           <h3 class="panel-title">Formated</h3>
         </div>
         <div class="panel-body">
           <div id="z-container">
             <div id="z-stage" [class.fullWidth]="!isModelExpand">
               <div id="z-index" [style.height]="setRowIdxWpHeight()"></div>
-              <pre *ngIf="isModelExpand" class="z-canvas theme-{{theme}}" [attr.contenteditable]="isFmtedEditAb"></pre>
-              <div *ngIf="!isModelExpand" class="z-canvas theme-{{theme}} z-colp" [attr.contenteditable]="isFmtedEditAb"></div> 
+              <pre *ngIf="isModelExpand" class="z-canvas theme-{{theme?.name}}" [attr.contenteditable]="isFmtedEditAb"></pre>
+              <div *ngIf="!isModelExpand" class="z-canvas theme-{{theme?.name}} z-colp" [attr.contenteditable]="isFmtedEditAb"></div> 
             </div>
           </div>
         </div>
