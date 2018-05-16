@@ -1,5 +1,9 @@
 import { FmtHelp } from './formatter.help';
 
+/**
+ * 格式化配置
+ * =======================================
+ */
 export class Configs {
     public model: 'expand'|'collapse' = 'expand';
     public type: 'json'|'jsObj'|'pyMap' = 'json';
@@ -19,6 +23,10 @@ export class Configs {
     }
 }
 
+/**
+ * 格式化数据容器
+ * =======================================
+ */
 export class FmtData {
     public html: string = '';
     public json: string = '';
@@ -26,6 +34,10 @@ export class FmtData {
     public conf: Configs;
 }
 
+/**
+ * 格式化状态容器
+ * =======================================
+ */
 export class FmtStatus {
     public isSrcValid: boolean = true;
     public fmtedRows: number = 0;
@@ -37,6 +49,10 @@ export class FmtStatus {
     public fmtedType: 'json'|'jsObj'|'pyMap'|'other'|'' = 'json';
 }
 
+/**
+ * 格式化期望容器
+ * =======================================
+ */
 export class FmtChecker {
     public exceptVal: string = '';
     public exceptType: string = '';
@@ -45,6 +61,10 @@ export class FmtChecker {
     public srcAcType: 'json'|'jsObj'|'pyMap'|'other'|'' = '';
 }
 
+/**
+ * 格式化基类，不同值对应的HTML元素
+ * =======================================
+ */
 export class FmterEles {
     public dt: FmtData    = new FmtData();
     public st: FmtStatus  = new FmtStatus();
