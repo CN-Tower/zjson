@@ -10,7 +10,9 @@
   </header>
   <section id="alerts" [@toggleSlid]="isShowAlerts">
     <div class="alert alert-danger alert-dismissible" role="alert">
-      <button type="button" class="close" (click)="isShowAlerts='hide'"><span aria-hidden="true">&times;</span></button>
+      <button type="button" class="close" (click)="isShowAlerts='hide'">
+        <span aria-hidden="true">&times;</span>
+      </button>
       <strong>Error!</strong> Invalid Json or JsObj string!
     </div>
   </section>
