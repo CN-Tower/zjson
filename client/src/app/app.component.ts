@@ -43,7 +43,7 @@ export class AppComponent implements AfterViewInit {
   getFmtHists: Function = () => this.fmtHists = this.appService.getFmtHists();
 
   constructor(private appService: AppService) {
-    const userId = this.appService.getUserId() || 'z-id';
+    const userId = this.appService.getUserId() || 'z-json';
     this.getFmtHists();
     this.appService.getVistCount(userId).subscribe((vst: any) => {
       this.visitCount = vst.nb;
