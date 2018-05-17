@@ -28,25 +28,42 @@
         top: 0;
     }
     /* ======================== Z-JSON CONFIGS ======================== */
-    #configs .conf-item {
-        width: 22%;
-        margin-bottom: 0;
-        margin-left: 2.4%;
-        padding: 10px 20px;
-        box-sizing: border-box;
-        border: 1px solid #ccc;
-        position: relative;
-        .conf-theme-tt {
-            color: #ac2925;
-            .conf-tt {
-                margin-bottom: 0;
+    #configs {
+        .z-conf-btn {
+            float: right;
+            color: #fff;
+        }
+        .z-conf-info {
+            margin-left: 15px;
+            // display: none;
+            .z-conf-val {
+                margin: 0 20px 0 6px;
+                color: #ac2925;
             }
         }
-        .conf-con {
-            height: 65px;
-            margin-left: 28px;
-            .z-drop {
-                margin-top: 10px;
+        .z-conf-item {
+            margin-top: 10px;
+            .conf-item {
+                width: 22%;
+                margin-bottom: 0;
+                margin-left: 2.4%;
+                padding: 10px 20px;
+                box-sizing: border-box;
+                border: 1px solid #ccc;
+                position: relative;
+                .conf-theme-tt {
+                    color: #ac2925;
+                    .conf-tt {
+                        margin-bottom: 0;
+                    }
+                }
+                .conf-con {
+                    height: 65px;
+                    margin-left: 28px;
+                    .z-drop {
+                        margin-top: 10px;
+                    }
+                }
             }
         }
     }
@@ -88,9 +105,7 @@
     }
     /* ======================== Z-JSON STAGE ========================= */
     #worker {
-        min-height: 500px;
         & > div {
-            height: 500px;
             box-sizing: border-box;
             float: left;
             .panel {
@@ -124,7 +139,24 @@
             }
             &#z-resize {
                 width: 1%;
+                height: 100%;
                 cursor: col-resize;
+                position: relative;
+                .z-drager {
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    margin: auto;
+                    width: 1px;
+                    height: 20px;
+                    background: #000;
+                    &:nth-child(1) {
+                        left: 35%;
+                    }
+                    &:nth-child(2) {
+                        left: 55%;
+                    }
+                }
             }
             /* ------------------- Z-JSON STAGE ------------------- */
             &#z-jsonwd {
@@ -251,4 +283,3 @@
         }
     }
 }
-
