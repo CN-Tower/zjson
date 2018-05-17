@@ -30,7 +30,8 @@ export class AppComponent implements AfterViewInit {
   isFmtedEditAb: boolean = true;
   isShowConfigs: boolean = true;
   isConfOnSlid: boolean = false;
-  themeTts: any = this.appService.getThemes();
+  warningMsg: string;
+  themeTts: any[] = this.appService.getThemes();
   theme: string = this.themeTts[0];
   conf: Configs = new Configs();
   eles: FmterEles = new FmterEles();
@@ -169,6 +170,9 @@ export class AppComponent implements AfterViewInit {
     }
     if (blob) {
       saveAs(blob, `ZJSON-${String(fn.time()).substr(-6)}.json`);
+    } else {
+      this.isShowAlerts = 'show';
+      this.warningMsg = 'Download';
     }
   }
   pushToLeft() {
@@ -180,14 +184,19 @@ export class AppComponent implements AfterViewInit {
   }
   saveFmted() {
     const svTime = this.getTimeStr();
-    if (this.fmtSourcest && this.saveFmtTime !== svTime) {
-      this.saveFmtTime = svTime;
-      const fmtPre = this.fmtSourcest.replace(/[\s\n]/mg, '')
-      const appdix = fmtPre.length > 15 ? fmtPre.substr(0, 15) + ' ...' : fmtPre;
-      const histName = this.saveFmtTime + ` ( ${appdix} )`;
-      const hist = {src: this.fmtSourcest, name: histName};
-      const prefix = this.appService.setFmtHists(hist);
-      this.getFmtHists();
+    if (this.fmtSourcest) {
+      if (this.saveFmtTime !== svTime) {
+        this.saveFmtTime = svTime;
+        const fmtPre = this.fmtSourcest.replace(/[\s\n]/mg, '')
+        const appdix = fmtPre.length > 15 ? fmtPre.substr(0, 15) + ' ...' : fmtPre;
+        const histName = this.saveFmtTime + ` ( ${appdix} )`;
+        const hist = {src: this.fmtSourcest, name: histName};
+        const prefix = this.appService.setFmtHists(hist);
+        this.getFmtHists();
+      }
+    } else {
+      this.isShowAlerts = 'show';
+      this.warningMsg = 'Save';
     }
   }
   showOrRmFmtHist(e: any, hist: any) {
@@ -206,6 +215,9 @@ export class AppComponent implements AfterViewInit {
       $tmpIpt.val(this.formated).select();
       document.execCommand('Copy');
       $tmpIpt.remove();
+    } else {
+      this.isShowAlerts = 'show';
+      this.warningMsg = 'Copy';
     }
   }
   clearFmted() {
@@ -217,12 +229,18 @@ export class AppComponent implements AfterViewInit {
   expandAll() {
     if ($('.z-canvas').html()) {
       this.doFormate(this.fmtSourcest);
+    } else {
+      this.isShowAlerts = 'show';
+      this.warningMsg = 'Expand';
     }
   }
   collapseAll() {
     const $firstOpBtn = $('.operator').eq(0);
     if ($firstOpBtn.hasClass('expanded')) {
       $firstOpBtn.click();
+    } else {
+      this.isShowAlerts = 'show';
+      this.warningMsg = 'Collapse';
     }
   }
   toggleConfigs() {
