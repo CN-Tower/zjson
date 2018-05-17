@@ -2,6 +2,7 @@
 declare var jQuery: any;
 declare var $: any;
 declare var fn: any;
+declare var win: any;
 declare var saveAs: any;
 declare var window: Window;
 declare var module: NodeModule;
