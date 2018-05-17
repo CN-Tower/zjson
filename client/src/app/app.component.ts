@@ -28,6 +28,8 @@ export class AppComponent implements AfterViewInit {
   isShowAlerts: string = 'hide';
   isModelExpand: boolean = false;
   isFmtedEditAb: boolean = true;
+  isShowConfigs: boolean = true;
+  isConfOnSlid: boolean = false;
   themeTts: any = this.appService.getThemes();
   theme: string = this.themeTts[0];
   conf: Configs = new Configs();
@@ -118,25 +120,17 @@ export class AppComponent implements AfterViewInit {
    * 最大化、最小化代码窗口
    * =================================
    */
-  @HostListener('window:resize', ['$event'])
-  onResize(e) {
-    const $maxPanel = $('.z-maximal');
-    if ($maxPanel.length > 0) {
-      const ww = e.target.innerWidth;
-      $maxPanel.width(ww - 40);
-    }
-  }
   setMaximalPanelTop() {
     const dT = $(this).scrollTop();
     $('.z-maximal').css('top', 74 - dT);
   }
   maximalPanel(type: 'src'|'fmt') {
     $(document).scrollTop(0).on('scroll', this.setMaximalPanelTop);
-    const $body = $('html, body');
-    const bodyH = $body.height() - 94;
-    const bodyW = $body.width();
-    const pW = bodyW - 40;
-    const pH =  bodyH > 500 ? bodyH : 500;
+    const $win = $(win);
+    const winH = $win.height() - 85;
+    const winW = $win.width();
+    const pW = winW - 40;
+    const pH =  winH > 500 ? winH : 500;
     switch (type) {
       case 'src':
         this.maxSrcSize = {height: pH + 'px', width: pW + 'px'};
@@ -154,10 +148,11 @@ export class AppComponent implements AfterViewInit {
     this.isFmtMax = false;
     this.maxSrcSize = null;
     this.maxFmtSize = null;
+    setTimeout(() => this.onWindowResize(), 0);
   }
 
   /**
-   * 格式化相关操作
+   * 相关操作
    * =================================
    */
   download(type: 'src'|'fmt') {
@@ -175,6 +170,13 @@ export class AppComponent implements AfterViewInit {
     if (blob) {
       saveAs(blob, `ZJSON-${String(fn.time()).substr(-6)}.json`);
     }
+  }
+  pushToLeft() {
+    const ww = $('#worker').width();
+    const ps = 200 / ww * 100;
+    const pj = 99 - ps;
+    $('#z-source').animate({width: ps + '%'}, 500);
+    $('#z-jsonwd').animate({width: pj + '%'}, 500);
   }
   saveFmted() {
     const svTime = this.getTimeStr();
@@ -223,11 +225,23 @@ export class AppComponent implements AfterViewInit {
       $firstOpBtn.click();
     }
   }
-
-  /**
-   * 隐藏和显示下拉菜单
-   * =================================
-   */
+  toggleConfigs() {
+    if (!this.isConfOnSlid) {
+      this.isConfOnSlid = true;
+      if (this.isShowConfigs) {
+        $('.z-conf-item').slideUp(380, 'linear', () => {
+          this.isConfOnSlid = false;
+          this.isShowConfigs = false;
+        });
+      } else {
+        $('.z-conf-item').slideDown(380, 'linear', () => {
+          this.isConfOnSlid = false;
+          this.isShowConfigs = true;
+        });
+      }
+      this.onWindowResize(true);
+    }
+  }
   toggleOptions(tp: string) {
     const $opts = $(`.z-${tp}-opts`);
     if ($opts.hasClass('show')) {
@@ -239,26 +253,55 @@ export class AppComponent implements AfterViewInit {
   }
 
   /**
+   * 改变window大小
+   * ===================================
+   */
+  onWindowResize(isAnimate: boolean = false) {
+    const $win = $(win);
+    const $conf = $('.z-conf-item');
+    const $maxPanel = $('.z-maximal');
+    const $work = $('#worker');
+    const $panel = $work.find('.panel:not(.z-maximal)');
+    const bH = $win.height();
+    const cH = $conf.css('display') === 'none' ? 85 : $conf.height();
+    let wH = bH + cH  - 370;
+    let pH = bH + cH  - 380;
+    if (wH < 210) {
+      wH = 210;
+    }
+    if (pH < 200) {
+      pH = 200;
+    }
+    if (isAnimate) {
+      $work.animate({height: wH}, 300, 'linear');
+      $panel.animate({height: pH}, 300, 'linear');
+    } else {
+      $work.height(wH);
+      $panel.height(pH);
+    }
+    if ($maxPanel.length > 0) {
+      const ww = $win.width();
+      const wh = $win.height();
+      $maxPanel.width(ww - 40).height(wh - 85);
+    }
+  }
+
+  /**
    * 代码行号索引水平不滚动及左右拖动代码窗
    * ===================================
    */
   ngAfterViewInit() {
     const that = this;
+    this.onWindowResize();
+    $(win).resize(() => this.onWindowResize());
     $('#z-container').scroll(function() {
       $('#z-index').css('left', this.scrollLeft + 'px');
       $('.z-row-index').css('left', (this.scrollLeft - 2) + 'px');
     });
+    let dx, nx, ox;
     const $zSrce = $('#z-source');
     const $zJson = $('#z-jsonwd');
-    let dx, nx, ox;
-    $('#z-resize').mousedown(function(e) {
-      ox = e.clientX;
-      $(window).on('mousemove', resizeCodeZone)
-      .mouseup(function() {
-        $(this).off('mousemove', resizeCodeZone);
-      });
-    });
-    function resizeCodeZone(e: any) {
+    const resizeCodeZone: Function = e => {
       $('.src-text').blur();
       const ww = $('#worker').width();
       nx = e.clientX;
@@ -282,7 +325,12 @@ export class AppComponent implements AfterViewInit {
         }
       }
     }
+    $('#z-resize').mousedown(function(e) {
+      ox = e.clientX;
+      $(document).on('mousemove', resizeCodeZone).mouseup(function() {
+        $(this).off('mousemove', resizeCodeZone);
+      });
+    });
   }
 }
-
 
