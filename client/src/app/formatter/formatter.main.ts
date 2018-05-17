@@ -379,6 +379,7 @@ export class Formatter extends FmterEles {
     private tupPreHandler() {
         this.ck.srcAcType = this.ck.srcAcType || 'pyMap';
         this.chkExpect(this.dt.src[0]);
+        this.setExpect(this.dt.src[0]);
         if (this.dt.src[1] && this.dt.src[1] === ')') {
             this.dt.html += this.brcPre('(', 'arr') + this.brcEnd(')');
             this.dt.json += '()';
@@ -487,7 +488,7 @@ export class Formatter extends FmterEles {
      * ============================
      */
     private otheHandler() {
-        const strMatch = this.dt.src.match(/^[^\{\}\[\]:,]*/);
+        const strMatch = this.dt.src.match(/^[^\{\}\[\]\(\):,]*/);
         const strMated = strMatch && strMatch[0] || '';
         if (strMated) {
             this.dt.html += this.nullFmt(strMated);
