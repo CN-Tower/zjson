@@ -195,6 +195,7 @@
       </div><div class="dropdown z-drop z-more-drop">
         <button class="btn btn-default dropdown-toggle"
                 [style.height]="btn.height+1"
+                [disabled]="!fmtSourcest"
                 (click)="toggleOptions('more')" type="button">
           More Operate
           <span class="caret"></span>
