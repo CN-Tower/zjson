@@ -229,18 +229,12 @@ export class AppComponent implements AfterViewInit {
   expandAll() {
     if ($('.z-canvas').html()) {
       this.doFormate(this.fmtSourcest);
-    } else {
-      this.isShowAlerts = 'show';
-      this.warningMsg = 'Expand';
     }
   }
   collapseAll() {
     const $firstOpBtn = $('.operator').eq(0);
     if ($firstOpBtn.hasClass('expanded')) {
       $firstOpBtn.click();
-    } else {
-      this.isShowAlerts = 'show';
-      this.warningMsg = 'Collapse';
     }
   }
   toggleConfigs() {
