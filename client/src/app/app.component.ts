@@ -182,6 +182,10 @@ export class AppComponent implements AfterViewInit {
     $('#z-source').animate({width: ps + '%'}, 500);
     $('#z-jsonwd').animate({width: pj + '%'}, 500);
   }
+  showInLeft() {
+    this.sourcest = this.formated;
+    $('.src-text').scrollTop(0);
+  }
   saveFmted() {
     const svTime = this.getTimeStr();
     if (this.fmtSourcest) {
