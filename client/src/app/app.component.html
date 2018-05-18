@@ -156,27 +156,27 @@
 
     <!-- ============= SOURECE OPERATES ============= -->
     <div class="z-src-btn fl">
-      <button type="button" class="btn btn-danger src-op-btn"
-              (click)="clearSourc()" #btn>Clear Source</button>
-      <button type="button" class="btn btn-primary src-op-btn"
-              (click)="doFormate(sourcest)">Format Source</button>
       <div class="dropdown z-drop z-indent-drop src-op-btn">
         <button class="btn btn-default dropdown-toggle"
                 [style.height]="btn.height+1"
                 [disabled]="fmtHists.length==0"
                 [attr.title]="fmtHists.length==0?'No history!':null"
                 (click)="toggleOptions('history')" type="button">
-          Save History
+          Saved
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu z-history-opts">
           <li *ngFor="let hist of fmtHists">
             <a href="javascript:;" (click)="showOrRmFmtHist($event, hist)">
-              <i class="fa fa-trash-o z-op-icon"></i>&nbsp;&nbsp;{{hist.name}}
+              <i class="fa fa-trash z-op-icon"></i>&nbsp;&nbsp;{{hist.name}}
             </a>
           </li>
         </ul>
       </div>
+      <button type="button" class="btn btn-danger src-op-btn"
+              (click)="clearSourc()" #btn>Clear Source</button>
+      <button type="button" class="btn btn-primary src-op-btn"
+              (click)="doFormate(sourcest)">Format Source</button>
     </div>
     <!-- SOURECE END -->
 
@@ -196,15 +196,19 @@
         <button class="btn btn-default dropdown-toggle"
                 [style.height]="btn.height+1"
                 (click)="toggleOptions('more')" type="button">
-          More Operate
+          More
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu dropdown-menu-right z-more-opts">
           <li>
-            <a href="javascript:;" (click)="expandAll()">Expand All</a>
+            <a href="javascript:;" (click)="expandAll()">
+              <i class="fa fa-minus-square"></i>&nbsp;&nbsp;Expand All
+            </a>
           </li>
           <li>
-            <a href="javascript:;" (click)="collapseAll()">Collapse All</a>
+            <a href="javascript:;" (click)="collapseAll()">
+              <i class="fa fa-plus-square"></i>&nbsp;&nbsp;Collapse All
+            </a>
           </li>
         </ul>
       </div>
