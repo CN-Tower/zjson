@@ -1,30 +1,6 @@
 html, body {
     min-height: 100%;
 }
-@media (min-width: 1025px) {
-    html, body {
-        overflow: hidden;
-    }
-}
-@media (max-width: 680px) {
-    .z-conf-item, .z-conf-btn, .z-to-left, .z-ico-download {
-        display: none !important;
-    }
-    #configs .panel {
-        margin-bottom: 0;
-    }
-}
-@media (max-width: 1025px) {
-    .conf-item {
-        height: 134px;
-    }
-    .conf-tt.fl {
-        float: none;
-    }
-    .z-fmt-alts {
-        display: none;
-    }
-}
 .ct {
     text-align: center;
 }
@@ -40,6 +16,9 @@ html, body {
 .hide {
     display: none;
 }
+.o-h {
+    overflow: hidden;
+}
 .bg-red {
     background: rgb(250, 54, 54) !important;
 }
@@ -52,6 +31,4 @@ html, body {
     -moz-user-select: none;
     -ms-user-select: none;
 }
-.o-h {
-    overflow: hidden;
-}
+
