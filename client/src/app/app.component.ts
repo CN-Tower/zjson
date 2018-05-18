@@ -122,8 +122,7 @@ export class AppComponent implements AfterViewInit {
    * =================================
    */
   setMaximalPanelTop() {
-    const dT = $(this).scrollTop();
-    $('.z-maximal').css('top', 74 - dT);
+    $('.z-maximal').css('top', 74 - $(this).scrollTop());
   }
   maximalPanel(type: 'src'|'fmt') {
     $(document).scrollTop(0).on('scroll', this.setMaximalPanelTop);
