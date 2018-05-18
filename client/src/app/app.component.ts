@@ -177,7 +177,7 @@ export class AppComponent implements AfterViewInit {
   }
   pushToLeft() {
     const ww = $('#worker').width();
-    const ps = 200 / ww * 100;
+    const ps = 340 / ww * 100;
     const pj = 99 - ps;
     $('#z-source').animate({width: ps + '%'}, 500);
     $('#z-jsonwd').animate({width: pj + '%'}, 500);
@@ -328,11 +328,11 @@ export class AppComponent implements AfterViewInit {
         ox = nx;
         const sw = $zSrce.width() + dx;
         const jw = $zJson.width() - dx;
-        if (sw > 200 && jw > 200) {
-          if (dx < 0) {
+        if (sw > 340 || jw > 340) {
+          if (dx < 0 && sw > 340) {
             $zSrce.width(sw);
             $zJson.width(jw);
-          } else {
+          } else if (dx > 0 && jw > 340) {
             $zJson.width(jw);
             $zSrce.width(sw);
           }
