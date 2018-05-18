@@ -24,14 +24,14 @@
   <!--========================== Z-JSON CONFIGS =======================-->
   <!--=================================================================-->
   <section id="configs">
-    <div class="panel panel-primary">
+    <div class="panel panel-default">
       <div class="panel-heading">
-        <span class="z-conf-btn"
+        <span class="z-conf-btn fr"
               (click)="toggleConfigs()"
-              [attr.title]="isShowConfigs?'Hide Conf':'Show Conf'">
+              [attr.title]="isShowConfigs?'Hide Confs':'Show Confs'">
           <i class="fa fa-bars z-op-icon no-select"></i>
         </span>
-        <h3 class="panel-title">Configs</h3>
+        <h3 class="panel-title no-select">Configs</h3>
       </div>
       <div class="panel-body row">
         <div class="z-conf-info">
@@ -201,13 +201,13 @@
         </button>
         <ul class="dropdown-menu dropdown-menu-right z-more-opts">
           <li>
-            <a href="javascript:;" (click)="expandAll()">
-              <i class="fa fa-minus-square"></i>&nbsp;&nbsp;Expand All
+            <a href="javascript:;" (click)="collapseAll()">
+              <i class="fa fa-plus-square"></i>&nbsp;&nbsp;Collapse All
             </a>
           </li>
           <li>
-            <a href="javascript:;" (click)="collapseAll()">
-              <i class="fa fa-plus-square"></i>&nbsp;&nbsp;Collapse All
+            <a href="javascript:;" (click)="expandAll()">
+              <i class="fa fa-minus-square"></i>&nbsp;&nbsp;Expand All
             </a>
           </li>
         </ul>
@@ -223,13 +223,13 @@
 
     <!-- ============= SOURCE WINDOWS ============= -->
     <div id="z-source">
-      <div class="panel panel-primary" [ngClass]="{'z-maximal': isSrcMax}" [ngStyle]="maxSrcSize">
+      <div class="panel panel-default" [ngClass]="{'z-maximal': isSrcMax}" [ngStyle]="maxSrcSize">
         <div class="panel-heading">
           <div class="z-panel-icos">
             <span class="z-to-left" (click)="pushToLeft()">
               <i class="fa fa-step-backward z-op-icon" title="Push To Left"></i>
             </span>
-            <span (click)="download('src')">
+            <span class="z-ico-download" (click)="download('src')">
               <i class="fa fa-download z-op-icon" title="Download"></i>
             </span>
             <span *ngIf="!isSrcMax" (click)="maximalPanel('src')">
@@ -239,7 +239,7 @@
               <i class="fa fa-window-restore z-op-icon" title="Minimal"></i>
             </span>
           </div>
-          <h3 class="panel-title">Source</h3>
+          <h3 class="panel-title no-select">Source</h3>
         </div>
         <div class="panel-body">
           <textarea class="form-control src-text" rows="20"
@@ -256,13 +256,13 @@
 
     <!-- ============= FMTED WINDOWS ============= -->
     <div id="z-jsonwd">
-      <div class="panel panel-primary" [ngClass]="{'z-maximal': isFmtMax}" [ngStyle]="maxFmtSize">
+      <div class="panel panel-default" [ngClass]="{'z-maximal': isFmtMax}" [ngStyle]="maxFmtSize">
         <div class="panel-heading">
           <div class="z-panel-icos">
             <span (click)="showInLeft()">
               <i class="fa fa-arrow-left z-op-icon" title="Show In Left"></i>
             </span>
-            <span (click)="download('fmt')">
+            <span class="z-ico-download" (click)="download('fmt')">
               <i class="fa fa-download z-op-icon" title="Download"></i>
             </span>
             <span *ngIf="!isFmtMax" (click)="maximalPanel('fmt')">
@@ -272,7 +272,7 @@
               <i class="fa fa-window-restore z-op-icon" title="Minimal"></i>
             </span>
           </div>
-          <h3 class="panel-title">Formated</h3>
+          <h3 class="panel-title no-select">Formated</h3>
         </div>
         <div class="panel-body">
           <div id="z-container">

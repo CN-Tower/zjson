@@ -7,8 +7,11 @@ html, body {
     }
 }
 @media (max-width: 680px) {
-    .z-conf-item,.z-conf-btn,.z-to-left {
+    .z-conf-item, .z-conf-btn, .z-to-left, .z-ico-download {
         display: none !important;
+    }
+    #configs .panel {
+        margin-bottom: 0;
     }
 }
 @media (max-width: 1025px) {

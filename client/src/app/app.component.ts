@@ -40,7 +40,6 @@ export class AppComponent implements AfterViewInit {
   alertType: 'info'|'success'|'warning'|'danger' = 'info';
   srcPlaceHolder: string = this.appService.srcPlaceHolder;
   greeting: string = this.appService.getGreeting();
-  clearSourc: Function = () => this.sourcest = '';
   setRowIdxWpHeight: Function = () => $('.z-canvas').height() + 12 + 'px';
   getTimeStr: Function = () => moment().format('MM-DD HH:mm:ss');
   getFmtHists: Function = () => this.fmtHists = this.appService.getFmtHists();
@@ -61,6 +60,10 @@ export class AppComponent implements AfterViewInit {
    * =================================
    */
   doFormate(fmtSrc: string) {
+    if (!this.sourcest && !this.fmtSourcest) {
+      this.isShowAlerts = 'show';
+      this.warningMsg = 'Format';
+    }
     this.formatter.init(fmtSrc, this.conf , (html, json, fmtSt) => {
       // this.isShowAlerts = status ? 'hide' : 'show';
       this.formated = json;
@@ -223,11 +226,24 @@ export class AppComponent implements AfterViewInit {
       this.warningMsg = 'Copy';
     }
   }
+  clearSourc() {
+    if (this.sourcest) {
+      this.sourcest = '';
+    } else {
+      this.isShowAlerts = 'show';
+      this.warningMsg = 'Clear';
+    }
+  }
   clearFmted() {
-    $('.z-canvas').html('');
-    this.alertType = 'info';
-    this.formated = '';
-    this.fmtSourcest = '';
+    if (this.fmtSourcest) {
+      $('.z-canvas').html('');
+      this.alertType = 'info';
+      this.formated = '';
+      this.fmtSourcest = '';
+    } else {
+      this.isShowAlerts = 'show';
+      this.warningMsg = 'Clear';
+    }
   }
   expandAll() {
     if ($('.z-canvas').html()) {
