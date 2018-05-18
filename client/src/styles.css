@@ -1,3 +1,27 @@
+html, body {
+    min-height: 100%;
+}
+@media (min-width: 1025px) {
+    html, body {
+        overflow: hidden;
+    }
+}
+@media (max-width: 680px) {
+    .z-conf-item,.z-conf-btn,.z-to-left {
+        display: none !important;
+    }
+}
+@media (max-width: 1025px) {
+    .conf-item {
+        height: 134px;
+    }
+    .conf-tt.fl {
+        float: none;
+    }
+    .z-fmt-alts {
+        display: none;
+    }
+}
 .ct {
     text-align: center;
 }
@@ -21,9 +45,9 @@
 }
 .no-select {
     user-select: none;
-    webkit-touch-callout: none;
-    moz-user-select: none;
-    ms-user-select: none;
+    -webkit-touch-callout: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 .o-h {
     overflow: hidden;
