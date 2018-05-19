@@ -1,9 +1,11 @@
 #z-json {
     /* ======================== Z-JSON COMMON ========================= */
-    @media (max-width: 688px) {
-        .z-conf-item, .z-conf-btn, .z-to-left,
-        .z-ico-download, .z-drager, .z-j-b, .z-vc-l {
+    @media (max-width: 768px) {
+        .z-to-left, .z-ico-download, .z-drager, .z-j-b, .z-vc-l {
             display: none !important;
+        }
+        .z-conf-item {
+            display: none;
         }
         .conf-info-item, .z-j-s.hide {
             display: block !important;
@@ -11,19 +13,13 @@
         .z-vc-s {
             display: inline !important;
         }
-        .z-fmt-btn.fr {
-            float: left;
+        .z-src-btn.fl, .z-fmt-btn.fr {
+            float: none;
         }
     }
     @media (max-width: 1025px) {
         #configs .panel {
             margin-bottom: 0;
-        }
-        .conf-item {
-            height: 134px;
-        }
-        .conf-tt.fl {
-            float: none;
         }
         .z-fmt-alts {
             display: none;
@@ -35,16 +31,23 @@
             font-size: 15px;
         }
     }
+    .cl {
+        &:after {
+            content:"";
+            display:block;
+            clear:both;
+        }
+    }
     /* ======================== Z-JSON HEADER ========================= */
     header {
         padding: 0 20px;
         position: relative;
+        overflow: hidden;
         strong {
             color: #ac2925;
         }
         .z-visit-count {
-            margin: 0;
-            margin-top: 20px;
+            top: 30px;
             font-weight: bold;
             position: absolute;
         }
@@ -56,8 +59,8 @@
         }
     }
     section {
+        .cl;
         padding: 10px 20px;
-        clear: both;
     }
     #alerts {
         position: fixed;
@@ -66,32 +69,36 @@
     /* ======================== Z-JSON CONFIGS ======================== */
     #configs {
         .z-conf-info {
-            margin-left: 15px;
-            // display: none;
+            .z-conf-tt {
+                width: 48px;
+                display: inline-block;
+            }
             .z-conf-val {
-                margin: 0 20px 0 6px;
+                width: 62px;
+                display: inline-block;
+                margin: 0 10px 0 6px;
                 color: #ac2925;
             }
         }
         .z-conf-item {
             margin-top: 10px;
             .conf-item {
-                width: 22%;
                 margin-bottom: 0;
-                margin-left: 2.4%;
-                padding: 10px 20px;
-                box-sizing: border-box;
-                border: 1px solid #ccc;
+                padding: 10px 15px;
                 position: relative;
+                .conf-tt {
+                    width: 80px;
+                }
                 .conf-theme-tt {
                     color: #ac2925;
                     .conf-tt {
+                        width: 80px;
                         margin-bottom: 0;
                     }
                 }
                 .conf-con {
                     height: 65px;
-                    margin-left: 28px;
+                    margin-left: 15px;
                     .z-drop {
                         margin-top: 10px;
                     }
@@ -101,7 +108,7 @@
     }
     /* ======================== Z-JSON OPERATE ========================== */
     #operate {
-        height: 55px;
+        padding-bottom: 0;
         position: relative;
         .z-fmt-alts {
             position: absolute;
@@ -111,31 +118,38 @@
             margin: auto;
             .alert {
                 position: relative;
-                .alt-tt {
-                    position: absolute;
-                    left: 20px;
-                }
                 height: 50px;
                 margin-top: -16px;
                 padding: 0 0 0 20px;
                 text-align: center;
                 line-height: 50px;
+                .alt-tt {
+                    position: absolute;
+                    left: 20px;
+                }
+                .z-greetings {
+                    margin: 0 auto;
+                    overflow: hidden;
+                }
             }
         }
         .z-src-btn {
             min-width: 325px;
             margin-bottom: 10px;
+            .cl;
             .src-op-btn {
                 float: left;
                 margin-right: 6px;
             }
         }
         .z-fmt-btn {
-            min-width: 306px;
             margin-bottom: 10px;
-            .z-more-drop {
-                display: inline-block;
-                margin-left: 6px;
+            .z-fmt-btn-wp {
+                min-width: 306px;
+                .z-more-drop {
+                    display: inline-block;
+                    margin-left: 6px;
+                }
             }
         }
     }

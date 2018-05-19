@@ -20,12 +20,32 @@ export class AppService {
 
     getGreeting(): string {
         const greetings = [
-            'Have a nice day',
-            'Nice to meet you',
-            'You\'ll have good luck',
-            'God bless you'
+            'Have a nice day !',
+            'Nice to meet you again !',
+            'You\'ll have good luck !',
+            'God bless you !',
+            'Wish you receive your expected answer soon !',
+            'May happiness be with you forever !',
+            'May joy and health be with you always !',
+            'Take your passion and make it come true !',
+            'Wish all the best wishes for you !'
         ];
         return greetings[fn.random(greetings.length)];
+    }
+
+    getAnimateClass(type: 'in'|'out') {
+        const classes = {
+            'in': [
+                'bounceIn', 'bounceInLeft', 'bounceInUp', 'fadeIn', 'fadeInLeft',
+                'fadeInUp', 'flipInX', 'rotateIn', 'slideInLeft', 'slideInUp', 'rollIn'
+            ],
+            'out': [
+                'bounceOut', 'bounceOutRight', 'bounceOutDown', 'fadeOut', 'fadeOutRight',
+                'fadeOutDown', 'flipOutX', 'rotateOut', 'slideOutRight', 'slideOutDown', 'rollOut'
+            ]
+        };
+        const tpCls = classes[type];
+        return tpCls[fn.random(tpCls.length)];
     }
 
     getUserId() {

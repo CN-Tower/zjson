@@ -28,9 +28,10 @@ export class AppComponent implements AfterViewInit {
   isShowAlerts: string = 'hide';
   isModelExpand: boolean = false;
   isFmtedEditAb: boolean = true;
-  isShowConfigs: boolean = true;
+  isShowConfigs: boolean;
   isConfOnSlid: boolean = false;
   warningMsg: string;
+  isWindowBig: boolean;
   conf: Configs;
   themeTts: any[] = this.appService.getThemes();
   theme: any = {name: 'default', text: 'Default'};
@@ -73,6 +74,7 @@ export class AppComponent implements AfterViewInit {
       if (html) {
         this.alertType = this.fmtSt.altType;
         this.alertMsg  = this.fmtSt.altMesg;
+        this.animateGreeting();
       }
       this.isModelExpand = this.conf.model === 'expand';
       setTimeout(() => {
@@ -248,6 +250,7 @@ export class AppComponent implements AfterViewInit {
       this.isShowAlerts = 'show';
       this.warningMsg = 'Clear';
     }
+    this.animateGreeting();
   }
   expandAll() {
     if ($('.z-canvas').html()) {
@@ -270,14 +273,16 @@ export class AppComponent implements AfterViewInit {
     if (!this.isConfOnSlid) {
       this.isConfOnSlid = true;
       if (this.isShowConfigs) {
-        $('.z-conf-item').slideUp(380, 'linear', () => {
+        $('.z-conf-item').slideUp(380, () => {
           this.isConfOnSlid = false;
           this.isShowConfigs = false;
+          this.onWindowResize(true);
         });
       } else {
-        $('.z-conf-item').slideDown(380, 'linear', () => {
+        $('.z-conf-item').slideDown(380, () => {
           this.isConfOnSlid = false;
           this.isShowConfigs = true;
+          this.onWindowResize(true);
         });
       }
       this.onWindowResize(true);
@@ -294,36 +299,71 @@ export class AppComponent implements AfterViewInit {
   }
 
   /**
+   * 问候语动画
+   * ===================================
+   */
+  animateGreeting(isStart: boolean = true) {
+    if (this.alertType === 'info' && isStart) {
+      setTimeout(() => {
+        const $greeting = $('#z-greeting');
+        const greetingIn = () => {
+          this.greeting = this.appService.getGreeting();
+          $greeting.removeClass().addClass(`${this.appService.getAnimateClass('in')} animated`);
+        };
+        greetingIn();
+        fn.polling('greeting', 5000, () => {
+          $greeting.removeClass().addClass(`${this.appService.getAnimateClass('out')} animated`);
+          setTimeout(() => {
+            greetingIn();
+            setTimeout(() => $greeting.removeClass(), 1000);
+          }, 500);
+        });
+      }, 0);
+    } else {
+      fn.polling('greeting', false);
+    }
+  }
+
+  /**
    * 改变window大小
    * ===================================
    */
   onWindowResize(isAnimate: boolean = false) {
+    this.isShowConfigs = $('.z-conf-item').css('display') === 'block';
     const $win = $(win);
     const $conf = $('.z-conf-item');
     const $maxPanel = $('.z-maximal');
     const $work = $('#worker');
     const $panel = $work.find('.panel:not(.z-maximal)');
-    const bH = $win.height();
-    const cH = $conf.css('display') === 'none' ? 85 : $conf.height();
-    let wH = bH + cH  - 370;
-    let pH = bH + cH  - 380;
+    const hH = $('header').height();
+    const cH = $('#configs').height();
+    const oH = $('#operate').height();
+    const winW = $win.width();
+    const winH = $win.height();
+    let wH = winH - hH - cH - oH - 50;
     if (wH < 210) {
       wH = 210;
     }
-    if (pH < 200) {
-      pH = 200;
-    }
     if (isAnimate) {
-      $work.animate({height: wH}, 300, 'linear');
-      $panel.animate({height: pH}, 300, 'linear');
+      $work.animate({height: wH}, 200);
+      $panel.animate({height: wH - 10}, 200);
     } else {
       $work.height(wH);
-      $panel.height(pH);
+      $panel.height(wH - 10);
+    }
+    if (winW >= 1025) {
+      if (!this.isWindowBig) {
+        this.animateGreeting();
+        this.isWindowBig = true;
+      }
+    } else {
+      if (this.isWindowBig) {
+        this.animateGreeting(false);
+        this.isWindowBig = false;
+      }
     }
     if ($maxPanel.length > 0) {
-      const ww = $win.width();
-      const wh = $win.height();
-      $maxPanel.width(ww - 40).height(wh - 85);
+      $maxPanel.width(winW - 40).height(winH - 85);
     }
   }
 
@@ -333,8 +373,11 @@ export class AppComponent implements AfterViewInit {
    */
   ngAfterViewInit() {
     const that = this;
+    const $win = $(win);
+    this.animateGreeting();
+    this.isWindowBig = $win.width() >= 1025;
     this.onWindowResize();
-    $(win).resize(() => this.onWindowResize());
+    $win.resize(() => this.onWindowResize());
     $('#z-container').scroll(function() {
       $('#z-index').css('left', this.scrollLeft + 'px');
       $('.z-row-index').css('left', (this.scrollLeft - 2) + 'px');

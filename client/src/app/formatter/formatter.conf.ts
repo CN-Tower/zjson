@@ -99,14 +99,14 @@ export class FmterEles {
         const operator = id ? `<span class="operator expanded" data-id="${id}"></span>` : '';
         return `${operator}<span ${eleId} class="z-code z-brace z-${cls}-brace ${expanded}">${sig}<span class="z-obj-val">`;
     };
-    public brcEnd: Function = sig => `</span><span class="z-ellipsis"></span>${sig}</span>`
+    public brcEnd: Function = sig => `</span><span class="z-ellipsis"></span>${sig}</span>`;
     public getExpInfo: Function = (type, brc) => {
         const exps = {
             ost: {Tpe: 'danger', msg: `Expect a string in line: ${this.rowIdx} !`},
             col: {Tpe: 'danger', msg: `Expect a colon in line: ${this.rowIdx} !`},
             val: {Tpe: 'danger', msg: `Invalid value in line: ${this.rowIdx} !`},
             end: {Tpe: 'danger', msg: `Expect a comma or a "${brc}" in line: ${this.rowIdx} !`},
-            war: {Tpe: 'warning', msg: 'Formate success, But the source is not a regular JSON!'},
+            war: {Tpe: 'warning', msg: 'Format success, But not a regular JSON!'},
             scc: {Tpe: 'success', msg: `Success formated ${this.rowIdx} lines !`}
         }
         return exps[type];

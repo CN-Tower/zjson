@@ -35,20 +35,22 @@
         </span>
         <h3 class="panel-title">Configs</h3>
       </div>
-      <div class="panel-body row">
-        <div class="z-conf-info">
-          <span class="conf-info-item">
-            <strong>Model:</strong><span class="z-conf-val">{{conf.model}}</span>
-            <strong>Type:</strong><span class="z-conf-val">{{conf.type}}</span>
-          </span>
-          <span class="conf-info-item">
-            <strong>Indent:</strong><span class="z-conf-val">{{conf.indent}} Space</span>
-            <strong>Theme:</strong><span class="z-conf-val">{{theme.text}}</span>
-          </span>
+      <div class="panel-body container-fluid">
+        <div class="row">
+          <div class="z-conf-info col-xs-12">
+            <span class="conf-info-item">
+              <strong class="z-conf-tt">Model:</strong><span class="z-conf-val">{{conf.model}}</span>
+              <strong class="z-conf-tt">Type:</strong><span class="z-conf-val">{{conf.type}}</span>
+            </span>
+            <span class="conf-info-item">
+              <strong>Indent:</strong><span class="z-conf-val">{{conf.indent}} Space</span>
+              <strong>Theme:</strong><span class="z-conf-val">{{theme.text}}</span>
+            </span>
+          </div>
         </div>
-        <div class="z-conf-item">
+        <div class="z-conf-item row">
           <!-- ============= MODEL CONFIG ============= -->
-          <div class="conf-item fl">
+          <div class="conf-item col-lg-3 col-sm-6 col-xs-12">
             <h4 class="conf-tt fl">Model</h4>
             <div class="conf-con fl">
               <div class="radio">
@@ -68,7 +70,7 @@
           <!-- MODEL END -->
 
           <!-- ============== TYPE CONFIG ============== -->
-          <div class="conf-item fl">
+          <div class="conf-item col-lg-3 col-sm-6 col-xs-12">
             <h4 class="conf-tt fl">Type</h4>
             <div class="conf-con fl">
               <div class="radio">
@@ -88,7 +90,7 @@
           <!-- TYPE END -->
 
           <!-- ============= INDENT CONFIG ============= -->
-          <div class="conf-item fl">
+          <div class="conf-item col-lg-3 col-sm-6 col-xs-12">
             <h4 class="conf-tt fl">Indent</h4>
             <div class="conf-con fl">
               <div class="dropdown z-drop z-indent-drop">
@@ -109,7 +111,7 @@
           <!-- INDENT END -->
 
           <!-- ============= THEME CONFIG ============= -->
-          <div class="conf-item fl">
+          <div class="conf-item col-lg-3 col-sm-6 col-xs-12">
             <div class="fl conf-theme-tt">
               <h4 class="conf-tt">Theme</h4>
               <div class="sub-conf-tt">( In Time )</div>
@@ -152,7 +154,8 @@
         <strong class="fl alt-tt">Error:</strong> {{alertMsg}}
       </div>
       <div class="alert alert-info alert-dismissible" *ngSwitchDefault>
-        <strong class="fl alt-tt">Welcome:</strong> {{greeting}}
+        <strong class="fl alt-tt">Welcome:</strong>
+        <div class="z-greetings"><div id="z-greeting">{{greeting}}</div></div>
       </div>
     </div>
     <!-- ALERTS END -->
@@ -185,35 +188,36 @@
 
     <!-- ============= FORMATTER OPERATES ============= -->
     <div class="z-fmt-btn fr">
-      <div class="btn-group">
-        <button type="button" class="btn btn-default" (click)="saveFmted()">
-          <i class="fa fa-database"></i>&nbsp;Save
-        </button>
-        <button type="button" class="btn btn-default" (click)="copyFmted()">
-          <i class="fa fa-copy"></i>&nbsp;Copy
-        </button>
-        <button type="button" class="btn btn-default" (click)="clearFmted()">
-          <i class="fa fa-eraser"></i>&nbsp;Clear
-        </button>
-      </div><div class="dropdown z-drop z-more-drop">
-        <button class="btn btn-default dropdown-toggle"
-                [style.height]="btn.height+1"
-                (click)="toggleOptions('more')" type="button">
-          More
-          <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu dropdown-menu-right z-more-opts">
-          <li>
-            <a href="javascript:;" (click)="collapseAll()">
-              <i class="fa fa-plus-square"></i>&nbsp;&nbsp;Collapse All
-            </a>
-          </li>
-          <li>
-            <a href="javascript:;" (click)="expandAll()">
-              <i class="fa fa-minus-square"></i>&nbsp;&nbsp;Expand All
-            </a>
-          </li>
-        </ul>
+      <div class="z-fmt-btn-wp">
+        <div class="btn-group">
+          <button type="button" class="btn btn-default" (click)="saveFmted()">
+            <i class="fa fa-database"></i>&nbsp;Save
+          </button>
+          <button type="button" class="btn btn-default" (click)="copyFmted()">
+            <i class="fa fa-copy"></i>&nbsp;Copy
+          </button>
+          <button type="button" class="btn btn-default" (click)="clearFmted()">
+            <i class="fa fa-eraser"></i>&nbsp;Clear
+          </button>
+        </div><div class="dropdown z-drop z-more-drop">
+          <button class="btn btn-default dropdown-toggle"
+                  (click)="toggleOptions('more')" type="button">
+            More
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-right z-more-opts">
+            <li>
+              <a href="javascript:;" (click)="collapseAll()">
+                <i class="fa fa-plus-square"></i>&nbsp;&nbsp;Collapse All
+              </a>
+            </li>
+            <li>
+              <a href="javascript:;" (click)="expandAll()">
+                <i class="fa fa-minus-square"></i>&nbsp;&nbsp;Expand All
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
     <!-- FORMATTER END -->
