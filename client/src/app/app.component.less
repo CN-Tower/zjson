@@ -1,22 +1,11 @@
 #z-json {
     /* ======================== Z-JSON COMMON ========================= */
-    .z-op-icon {
-        cursor: pointer;
-        &:hover {
-            font-size: 15px;
-        }
-    }
-    @media (min-width: 1025px) {
-        html, body {
-            overflow: hidden;
-        }
-    }
     @media (max-width: 680px) {
-        .z-conf-item, .z-conf-btn, .z-to-left, .z-ico-download, .z-drager {
+        .z-conf-item, .z-conf-btn, .z-to-left, .z-ico-download, .z-drager, .z-j-b {
             display: none !important;
         }
-        .conf-info-item {
-            display: block;
+        .conf-info-item, .z-j-s.hide {
+            display: block !important;
         }
         #configs .panel {
             margin-bottom: 0;
@@ -31,6 +20,12 @@
         }
         .z-fmt-alts {
             display: none;
+        }
+    }
+    .z-op-icon {
+        cursor: pointer;
+        &:hover {
+            font-size: 15px;
         }
     }
     /* ======================== Z-JSON HEADER ========================= */
