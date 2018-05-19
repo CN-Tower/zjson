@@ -31,9 +31,9 @@ export class AppComponent implements AfterViewInit {
   isShowConfigs: boolean = true;
   isConfOnSlid: boolean = false;
   warningMsg: string;
+  conf: Configs;
   themeTts: any[] = this.appService.getThemes();
-  theme: string = this.themeTts[0];
-  conf: Configs = new Configs();
+  theme: any = {name: 'default', text: 'Default'};
   eles: FmterEles = new FmterEles();
   fmtSt: FmtStatus = new FmtStatus();
   formatter: Formatter = new Formatter();
@@ -47,6 +47,8 @@ export class AppComponent implements AfterViewInit {
   constructor(
     private appService: AppService
   ) {
+    this.theme = this.themeTts[0];
+    this.conf = new Configs();
     const userId = this.appService.getUserId() || 'z-json';
     this.getFmtHists();
     this.appService.getVistCount(userId).subscribe((vst: any) => {
@@ -370,4 +372,3 @@ export class AppComponent implements AfterViewInit {
     });
   }
 }
-
