@@ -1,7 +1,8 @@
 #z-json {
     /* ======================== Z-JSON COMMON ========================= */
-    @media (max-width: 680px) {
-        .z-conf-item, .z-conf-btn, .z-to-left, .z-ico-download, .z-drager, .z-j-b {
+    @media (max-width: 688px) {
+        .z-conf-item, .z-conf-btn, .z-to-left,
+        .z-ico-download, .z-drager, .z-j-b, .z-visit-count {
             display: none !important;
         }
         .conf-info-item, .z-j-s.hide {
@@ -9,6 +10,9 @@
         }
         #configs .panel {
             margin-bottom: 0;
+        }
+        .z-fmt-btn.fr {
+            float: left;
         }
     }
     @media (max-width: 1025px) {
@@ -31,11 +35,16 @@
     /* ======================== Z-JSON HEADER ========================= */
     header {
         padding: 0 20px;
+        position: relative;
         strong {
             color: #ac2925;
         }
+        .z-visit-count {
+            margin: 0;
+            margin-top: 20px;
+            position: absolute;
+        }
         h2.z-json-hd {
-            padding-right: 98px;
             font-weight: bold;
         }
         h5.z-sub-hd {
@@ -118,7 +127,7 @@
             }
         }
         .z-fmt-btn {
-            min-width: 304px;
+            min-width: 306px;
             margin-bottom: 10px;
             .z-more-drop {
                 display: inline-block;
