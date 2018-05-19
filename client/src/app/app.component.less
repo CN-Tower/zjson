@@ -1,11 +1,8 @@
 #z-json {
     /* ======================== Z-JSON COMMON ========================= */
     @media (max-width: 768px) {
-        .z-to-left, .z-ico-download, .z-drager, .z-j-b, .z-vc-l {
+        .z-ico-download, .z-drager, .z-j-b, .z-vc-l {
             display: none !important;
-        }
-        .z-conf-item {
-            display: none;
         }
         .conf-info-item, .z-j-s.hide {
             display: block !important;
@@ -21,8 +18,11 @@
         #configs .panel {
             margin-bottom: 0;
         }
-        .z-fmt-alts {
+        .z-conf-item {
             display: none;
+        }
+        .z-to-left, .z-fmt-alts {
+            display: none !important;
         }
     }
     .z-op-icon {
@@ -144,11 +144,14 @@
         }
         .z-fmt-btn {
             margin-bottom: 10px;
+            button {
+                width: 78px;
+            }
             .z-fmt-btn-wp {
                 min-width: 306px;
                 .z-more-drop {
-                    display: inline-block;
                     margin-left: 6px;
+                    display: inline-block;
                 }
             }
         }
