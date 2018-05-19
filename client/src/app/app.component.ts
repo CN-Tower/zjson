@@ -131,6 +131,7 @@ export class AppComponent implements AfterViewInit {
   }
   maximalPanel(type: 'src'|'fmt') {
     $(document).scrollTop(0).on('scroll', this.setMaximalPanelTop);
+    $('.z-to-left, .z-show-left').addClass('hide');
     const $win = $(win);
     const winH = $win.height() - 85;
     const winW = $win.width();
@@ -149,6 +150,7 @@ export class AppComponent implements AfterViewInit {
   }
   minimalPanel(type: 'src'|'fmt') {
     $(document).off('scroll', this.setMaximalPanelTop);
+     $('.z-to-left, .z-show-left').removeClass('hide');
     this.isSrcMax = false;
     this.isFmtMax = false;
     this.maxSrcSize = null;
