@@ -423,8 +423,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.isWindowBig = $win.width() >= 1025;
     this.animateGreeting();
     this.onWindowResize();
-    setTimeout(() => this.onWindowResize());
     $win.resize(() => this.onWindowResize());
+    setTimeout(() => this.onWindowResize(), 500);
     $('#z-container').scroll(function() {
       $('#z-index').css('left', this.scrollLeft + 'px');
       $('.z-row-index').css('left', (this.scrollLeft - 2) + 'px');
