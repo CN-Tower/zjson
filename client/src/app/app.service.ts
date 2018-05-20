@@ -1,36 +1,38 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 
 @Injectable()
 export class AppService {
-    srcPlaceHolder: string = 'Paste your source code to here!';
+    constructor(private http: HttpClient) {}
 
-    constructor(private http: Http) {}
-
-    getThemes(): any {
-        return [
-            {name: 'default', text: 'Default'},
-            {name: 'nocolor', text: 'No Color'},
-            // {name: 'darktheme', text: 'Dark Theme'},
-            // {name: 'lighttheme', text: 'Light Theme'}
-        ];
-    }
-
-    getGreeting(): string {
-        const greetings = [
-            'Have a nice day !',
-            'Nice to meet you again !',
-            'You\'ll have good luck !',
-            'God bless you !',
-            'Wish you receive your expected answer soon !',
-            'May happiness be with you forever !',
-            'May joy and health be with you always !',
-            'Take your passion and make it come true !',
-            'Wish all the best wishes for you !'
-        ];
-        return greetings[fn.random(greetings.length)];
+    getGreeting(lang: string): string {
+        const greetings = {
+            en: [
+                'Hello World, How are you ?',
+                'Have a nice day !',
+                'Nice to meet you again !',
+                'You\'ll have good luck !',
+                'God bless you !',
+                'Wish you receive your expected answer soon !',
+                'May happiness be with you forever !',
+                'May joy and health be with you always !',
+                'Take your passion and make it come true !',
+                'Wish all the best wishes for you !'
+            ],
+            zh: [
+                '很高兴再次见到你, 吃了没？',
+                '如果用的顺心的话请帮忙推广下哦！',
+                '修身齐家治天下，洗脸刷牙写代码！',
+                '语言定义世界，代码改变生活！',
+                '每天进步一小点，有朝一日成大牛！',
+                '程序员有三种美德:懒惰,急躁和傲慢...',
+                '程序要像女人的裙子，越短才越好~',
+                '学习不用功，注定当码农！'
+            ]
+        };
+        return greetings[lang][fn.random(greetings[lang].length)];
     }
 
     getAnimateClass(type: 'in'|'out') {
@@ -79,6 +81,6 @@ export class AppService {
     }
 
     getVistCount(id: string) {
-        return this.http.get(`/api/visitCount/${id}`).map(res => res.json());
+        return this.http.get(`/api/visitCount/${id}`);
     }
 }

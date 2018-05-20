@@ -5,7 +5,7 @@ import { FmtHelp } from './formatter.help';
  * =======================================
  */
 export class Configs {
-    public model: 'expand'|'collapse' = 'expand';
+    public model: 'expand'|'combine' = 'expand';
     public type: 'json'|'jsObj'|'pyMap' = 'json';
     public indent: 1|2|3|4 = 2;
     public sgIndent: string = ' ';
@@ -43,9 +43,9 @@ export class FmtStatus {
     public fmtedRows: number = 0;
     public errRowStr: number = 0;
     public errRowIdx: number = 0;
-    public altMesg: string = '';
     public fmtedLines: number = 0;
     public altType: 'info'|'success'|'warning'|'danger' = 'info';
+    public altInfo: any = {type: '', idx: NaN, brc: ''};
     public fmtedType: 'json'|'jsObj'|'pyMap'|'other'|'' = 'json';
 }
 
@@ -100,16 +100,5 @@ export class FmterEles {
         return `${operator}<span ${eleId} class="z-code z-brace z-${cls}-brace ${expanded}">${sig}<span class="z-obj-val">`;
     };
     public brcEnd: Function = sig => `</span><span class="z-ellipsis"></span>${sig}</span>`;
-    public getExpInfo: Function = (type, brc) => {
-        const exps = {
-            ost: {Tpe: 'danger', msg: `Expect a string in line: ${this.rowIdx} !`},
-            col: {Tpe: 'danger', msg: `Expect a colon in line: ${this.rowIdx} !`},
-            val: {Tpe: 'danger', msg: `Invalid value in line: ${this.rowIdx} !`},
-            end: {Tpe: 'danger', msg: `Expect a comma or a "${brc}" in line: ${this.rowIdx} !`},
-            war: {Tpe: 'warning', msg: 'Format success, But not a regular JSON!'},
-            scc: {Tpe: 'success', msg: `Success formated ${this.rowIdx} lines !`}
-        }
-        return exps[type];
-    }
     constructor () { }
 }

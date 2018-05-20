@@ -4,21 +4,32 @@
   <!--=================================================================-->
   <header>
     <h5 class="z-visit-count">
-      <span class="z-vc-l">Visit Count:</span>
-      <span class="z-vc-s hide">VC:</span>
-      <strong>{{visitCount}}</strong>
+      <span class="z-vc-long">{{'VC_' | translate}}</span>
+      <span class="z-vc-short hide">{{'VC' | translate}}</span>
+      <strong>&nbsp;{{visitCount}}</strong>
     </h5>
+    <div class="dropdown z-drop z-language-drop src-op-btn">
+      <button class="btn btn-default dropdown-toggle"
+              (click)="toggleOptions('language')" type="button">
+        <span class="z-lang-bg">{{languages[lang].long}} </span><span class="z-lang-sm hide">{{languages[lang].short}} </span>
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-right z-language-opts">
+        <li><a href="javascript:;" (click)="selectLanguage('en')">English</a></li>
+        <li><a href="javascript:;" (click)="selectLanguage('zh')">中文(简体)</a></li>
+      </ul>
+    </div>
     <h2 class="ct z-json-hd">
-      转 杰 森
-      <h5 class="z-sub-hd">刀 耐</h5>
+      {{'zjson' | translate}}
+      <h5 class="z-sub-hd">{{'dotNet' | translate}}</h5>
     </h2>
-  </header>
+  </header> 
   <section id="alerts" [@toggleSlid]="isShowAlerts">
     <div class="alert alert-danger alert-dismissible" role="alert">
       <button type="button" class="close" (click)="isShowAlerts='hide'">
         <span aria-hidden="true">&times;</span>
       </button>
-      <strong>Warning!</strong>&nbsp;&nbsp;Nothing to {{warningMsg}} !
+      <strong>{{'warning' | translate}}</strong>&nbsp;&nbsp;无内容可{{warningMsg}} !
     </div>
   </section>
 
@@ -30,39 +41,39 @@
       <div class="panel-heading no-select">
         <span class="z-conf-btn fr"
               (click)="toggleConfigs()"
-              [attr.title]="isShowConfigs?'Hide Confs':'Show Confs'">
+              [attr.title]="isShowConfigs ? i18n.confs.hide : i18n.confs.show">
           <i class="fa fa-bars z-op-icon"></i>
         </span>
-        <h3 class="panel-title">Configs</h3>
+        <h3 class="panel-title">{{'configs' | translate}}</h3>
       </div>
       <div class="panel-body container-fluid">
         <div class="row">
           <div class="z-conf-info col-xs-12">
             <span class="conf-info-item">
-              <strong class="z-conf-tt">Model:</strong><span class="z-conf-val">{{conf.model}}</span>
-              <strong class="z-conf-tt">Type:</strong><span class="z-conf-val">{{conf.type}}</span>
+              <strong class="z-conf-tt">{{'model_' | translate}}</strong><span class="z-conf-val">{{i18n.model[conf.model]}}</span>
+              <strong class="z-conf-tt">{{'type_' | translate}}</strong><span class="z-conf-val">{{i18n.type[conf.type]}}</span>
             </span>
             <span class="conf-info-item">
-              <strong>Indent:</strong><span class="z-conf-val">{{conf.indent}} Space</span>
-              <strong>Theme:</strong><span class="z-conf-val">{{theme.text}}</span>
+              <strong>{{'indent_' | translate}}</strong><span class="z-conf-val">{{conf.indent}} {{'space' | translate}}</span>
+              <strong>{{'theme_' | translate}}</strong><span class="z-conf-val">{{i18n.theme[theme]}}</span>
             </span>
           </div>
         </div>
         <div class="z-conf-item row">
           <!-- ============= MODEL CONFIG ============= -->
           <div class="conf-item col-lg-3 col-sm-6 col-xs-12">
-            <h4 class="conf-tt fl">Model</h4>
+            <h4 class="conf-tt fl">{{'model' | translate}}</h4>
             <div class="conf-con fl">
               <div class="radio">
                 <label>
                   <input type="radio" name="model" id="model1"
-                         value="expand" [(ngModel)]="conf.model" checked>Expand
+                         value="expand" [(ngModel)]="conf.model" checked>{{i18n.model.expand}}
                 </label>
               </div>
               <div class="radio">
                 <label>
                   <input type="radio" name="model" id="model2"
-                         value="combine" [(ngModel)]="conf.model">Combine
+                         value="combine" [(ngModel)]="conf.model">{{i18n.model.combine}}
                 </label>
               </div>
             </div>
@@ -71,18 +82,18 @@
 
           <!-- ============== TYPE CONFIG ============== -->
           <div class="conf-item col-lg-3 col-sm-6 col-xs-12">
-            <h4 class="conf-tt fl">Type</h4>
+            <h4 class="conf-tt fl">{{'type' | translate}}</h4>
             <div class="conf-con fl">
               <div class="radio">
                 <label>
                   <input type="radio" name="type" id="type1" value="json"
-                         [(ngModel)]="conf.type" checked>Json
+                         [(ngModel)]="conf.type" checked>{{i18n.type.json}}
                 </label>
               </div>
               <div class="radio">
                 <label>
                   <input type="radio" name="type" id="type2" value="jsobj"
-                         [(ngModel)]="conf.type">JsObj
+                         [(ngModel)]="conf.type">{{i18n.type.jsobj}}
                 </label>
               </div>
             </div>
@@ -91,18 +102,18 @@
 
           <!-- ============= INDENT CONFIG ============= -->
           <div class="conf-item col-lg-3 col-sm-6 col-xs-12">
-            <h4 class="conf-tt fl">Indent</h4>
+            <h4 class="conf-tt fl">{{'indent' | translate}}</h4>
             <div class="conf-con fl">
               <div class="dropdown z-drop z-indent-drop">
                 <button class="btn btn-default dropdown-toggle"
                         [disabled]="conf.model!='expand'"
                         (click)="toggleOptions('indent')" type="button">
-                  {{conf.indent}} Space
+                  {{conf.indent}} {{'space' | translate}}&nbsp;
                   <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu z-indent-opts">
                   <li *ngFor="let i of [1,2,3,4,5,6,7,8];">
-                    <a href="javascript:;" (click)="conf.indent = i">{{i}} Space</a>
+                    <a href="javascript:;" (click)="conf.indent = i">{{i}} {{'space' | translate}}</a>
                   </li>
                 </ul>
               </div>
@@ -113,19 +124,19 @@
           <!-- ============= THEME CONFIG ============= -->
           <div class="conf-item col-lg-3 col-sm-6 col-xs-12">
             <div class="fl conf-theme-tt">
-              <h4 class="conf-tt">Theme</h4>
-              <div class="sub-conf-tt">( In Time )</div>
+              <h4 class="conf-tt">{{'theme' | translate}}</h4>
+              <div class="sub-conf-tt">( {{'inTime' | translate}} )</div>
             </div>
             <div class="conf-con fl">
               <div class="dropdown z-drop z-theme-drop">
                 <button class="btn btn-default dropdown-toggle"
                         (click)="toggleOptions('theme')" type="button">
-                  {{theme?.text}}
+                  {{i18n.theme[theme]}}
                   <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu z-theme-opts">
-                  <li *ngFor="let them of themeTts">
-                    <a href="javascript:;" (click)="theme=them">{{them?.text}}</a>
+                  <li *ngFor="let them of themes">
+                    <a href="javascript:;" (click)="theme=them">{{i18n.theme[them]}}</a>
                   </li>
                 </ul>
               </div>
@@ -145,16 +156,16 @@
     <!-- ============= STATUS ALERTS ============= -->
     <div class="z-fmt-alts" [ngSwitch]="alertType">
       <div class="alert alert-success alert-dismissible" *ngSwitchCase="'success'">
-        <strong class="fl alt-tt">Congratulations:</strong> {{alertMsg}}
+        <strong class="fl alt-tt">{{'success' | translate}}</strong> {{alertMsg}}
       </div>
       <div class="alert alert-warning alert-dismissible" *ngSwitchCase="'warning'">
-        <strong class="fl alt-tt">Warn:</strong> {{alertMsg}}
+        <strong class="fl alt-tt">{{'warning' | translate}}</strong> {{alertMsg}}
       </div>
       <div class="alert alert-danger alert-dismissible" *ngSwitchCase="'danger'">
-        <strong class="fl alt-tt">Error:</strong> {{alertMsg}}
+        <strong class="fl alt-tt">{{'error' | translate}}</strong> {{alertMsg}}
       </div>
       <div class="alert alert-info alert-dismissible" *ngSwitchDefault>
-        <strong class="fl alt-tt">Welcome:</strong>
+        <strong class="fl alt-tt">{{'welecome'| translate}}</strong>
         <div class="z-greetings"><div id="z-greeting">{{greeting}}</div></div>
       </div>
     </div>
@@ -168,7 +179,7 @@
                 [disabled]="fmtHists.length==0"
                 [attr.title]="fmtHists.length==0?'No Saved!':null"
                 (click)="toggleOptions('history')" type="button">
-          Saved
+          {{'saved' | translate}}
           <span class="caret"></span>
         </button>
         <ul class="dropdown-menu z-history-opts">
@@ -178,11 +189,11 @@
             </a>
           </li>
         </ul>
-      </div>
-      <button type="button" class="btn btn-danger src-op-btn"
-              (click)="clearSourc()" #btn>Clear Source</button>
-      <button type="button" class="btn btn-primary src-op-btn"
-              (click)="doFormate(sourcest)">Format Source</button>
+      </div><button type="button" class="btn btn-danger src-op-btn"
+              (click)="clearSourc()" #btn>{{'clearSrc' | translate}}
+      </button><button type="button" class="btn btn-primary src-op-btn"
+              (click)="doFormate(sourcest)">{{'format' | translate}}
+      </button>
     </div>
     <!-- SOURECE END -->
 
@@ -191,29 +202,27 @@
       <div class="z-fmt-btn-wp">
         <div class="btn-group">
           <button type="button" class="btn btn-default" (click)="saveFmted()">
-            <i class="fa fa-database"></i>&nbsp;Save
-          </button>
-          <button type="button" class="btn btn-default" (click)="copyFmted()">
-            <i class="fa fa-copy"></i>&nbsp;Copy
-          </button>
-          <button type="button" class="btn btn-default" (click)="clearFmted()">
-            <i class="fa fa-eraser"></i>&nbsp;Clear
+            <i class="fa fa-database"></i>&nbsp;{{'save' | translate}}
+          </button><button type="button" class="btn btn-default" (click)="copyFmted()">
+            <i class="fa fa-copy"></i>&nbsp;{{'copy' | translate}}
+          </button><button type="button" class="btn btn-default" (click)="clearFmted()">
+            <i class="fa fa-eraser"></i>&nbsp;{{'clear' | translate}}
           </button>
         </div><div class="dropdown z-drop z-more-drop">
           <button class="btn btn-default dropdown-toggle"
                   (click)="toggleOptions('more')" type="button">
-            More
+            {{'more' | translate}}
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu dropdown-menu-right z-more-opts">
             <li>
               <a href="javascript:;" (click)="collapseAll()">
-                <i class="fa fa-plus-square"></i>&nbsp;&nbsp;Collapse All
+                <i class="fa fa-compress"></i>&nbsp;&nbsp;{{'colAll' | translate}}
               </a>
             </li>
             <li>
               <a href="javascript:;" (click)="expandAll()">
-                <i class="fa fa-minus-square"></i>&nbsp;&nbsp;Expand All
+                <i class="fa fa-expand"></i>&nbsp;&nbsp;{{'expAll' | translate}}
               </a>
             </li>
           </ul>
@@ -234,23 +243,24 @@
         <div class="panel-heading no-select">
           <div class="z-panel-icos">
             <span class="z-to-left" (click)="pushToLeft()">
-              <i class="fa fa-step-backward z-op-icon" title="Push To Left"></i>
+              <i class="fa fa-step-backward z-op-icon" title="{{'pushToLeft' | translate}}"></i>
             </span>
             <span class="z-ico-download" (click)="download('src')">
-              <i class="fa fa-download z-op-icon" title="Download"></i>
+              <i class="fa fa-download z-op-icon" title="{{'download' | translate}}"></i>
             </span>
             <span *ngIf="!isSrcMax" (click)="maximalPanel('src')">
-              <i class="fa fa-window-maximize z-op-icon" title="Maximal"></i>
+              <i class="fa fa-window-maximize z-op-icon" title="{{'maximal' | translate}}"></i>
             </span>
             <span *ngIf="isSrcMax" (click)="minimalPanel('src')">
-              <i class="fa fa-window-restore z-op-icon" title="Minimal"></i>
+              <i class="fa fa-window-restore z-op-icon" title="{{'minimal' | translate}}"></i>
             </span>
           </div>
-          <h3 class="panel-title">Source</h3>
+          <h3 class="panel-title z-ptt-long">{{'source_' | translate}}</h3>
+          <h3 class="panel-title z-ptt-short hide">{{'source' | translate}}</h3>
         </div>
         <div class="panel-body">
           <textarea class="form-control src-text" rows="20"
-                    placeholder="{{srcPlaceHolder}}" [(ngModel)]="sourcest"></textarea>
+                    placeholder="{{'placeHolder' | translate}}" [(ngModel)]="sourcest"></textarea>
         </div>
       </div>
     </div>
@@ -267,28 +277,28 @@
         <div class="panel-heading no-select">
           <div class="z-panel-icos">
             <span class="z-show-left" (click)="showInLeft()">
-              <i class="fa fa-arrow-left z-op-icon" title="Show In Left"></i>
+              <i class="fa fa-arrow-left z-op-icon" title="{{'showInLeft' | translate}}"></i>
             </span>
             <span class="z-ico-download" (click)="download('fmt')">
-              <i class="fa fa-download z-op-icon" title="Download"></i>
+              <i class="fa fa-download z-op-icon" title="{{'download' | translate}}"></i>
             </span>
             <span *ngIf="!isFmtMax" (click)="maximalPanel('fmt')">
-              <i class="fa fa-window-maximize z-op-icon" title="Maximal"></i>
+              <i class="fa fa-window-maximize z-op-icon" title="{{'maximal' | translate}}"></i>
             </span>
             <span *ngIf="isFmtMax" (click)="minimalPanel('fmt')">
-              <i class="fa fa-window-restore z-op-icon" title="Minimal"></i>
+              <i class="fa fa-window-restore z-op-icon" title="{{'minimal' | translate}}"></i>
             </span>
           </div>
-          <h3 class="panel-title z-j-b">Formated</h3>
-          <h3 class="panel-title z-j-s hide">Fmted</h3>
+          <h3 class="panel-title z-ptt-long">{{'fmted_' | translate}}</h3>
+          <h3 class="panel-title z-ptt-short hide">{{'fmted' | translate}}</h3>
         </div>
         <div class="panel-body">
           <div id="z-container">
             <div id="z-stage" [class.fullWidth]="!isModelExpand">
               <div id="z-index" [style.height]="setRowIdxWpHeight()"></div>
-              <pre *ngIf="isModelExpand" class="z-canvas theme-{{theme?.name}}"
+              <pre *ngIf="isModelExpand" class="z-canvas theme-{{theme}}"
                     [attr.contenteditable]="isFmtedEditAb"></pre>
-              <div *ngIf="!isModelExpand" class="z-canvas theme-{{theme?.name}} z-colp"
+              <div *ngIf="!isModelExpand" class="z-canvas theme-{{theme}} z-colp"
                     [attr.contenteditable]="isFmtedEditAb"></div>
             </div>
           </div>

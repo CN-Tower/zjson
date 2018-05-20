@@ -1,17 +1,20 @@
 #z-json {
     /* ======================== Z-JSON COMMON ========================= */
     @media (max-width: 768px) {
-        .z-ico-download, .z-drager, .z-j-b, .z-vc-l {
+        .z-lang-bg, .z-ico-download, .z-drager, .z-ptt-long, .z-vc-long {
             display: none !important;
         }
-        .conf-info-item, .z-j-s.hide {
+        .conf-info-item, .z-ptt-short.hide {
             display: block !important;
         }
-        .z-vc-s {
+        .z-lang-sm, .z-vc-short {
             display: inline !important;
         }
         .z-src-btn.fl, .z-fmt-btn.fr {
             float: none;
+        }
+        .z-fmt-btn-wp {
+            min-width: 320px;
         }
     }
     @media (max-width: 1025px) {
@@ -42,14 +45,16 @@
     header {
         padding: 0 20px;
         position: relative;
-        overflow: hidden;
-        strong {
-            color: #ac2925;
+        .z-language-drop {
+            position: absolute;
+            right: 20px;
         }
         .z-visit-count {
-            top: 30px;
-            font-weight: bold;
             position: absolute;
+            top: 5px;
+            strong {
+                color: #ac2925;
+            }
         }
         h2.z-json-hd {
             font-weight: bold;
@@ -144,11 +149,7 @@
         }
         .z-fmt-btn {
             margin-bottom: 10px;
-            button {
-                width: 78px;
-            }
             .z-fmt-btn-wp {
-                min-width: 306px;
                 .z-more-drop {
                     margin-left: 6px;
                     display: inline-block;

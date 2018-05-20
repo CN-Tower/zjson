@@ -589,12 +589,15 @@ export class Formatter extends FmterEles {
      * ============================
      */
     private expection(type: string, brc: string = '') {
-        const expInfo = this.getExpInfo(type, brc);
+        const altTypes = {
+            ost: 'danger', col: 'danger', val: 'danger',
+            end: 'danger', war: 'warning', scc: 'success'
+        }
         if (['ost', 'col', 'val', 'end'].includes(type)) {
             this.st.isSrcValid = false;
             this.st.errRowIdx = this.rowIdx;
         }
-        this.st.altType = expInfo.Tpe;
-        this.st.altMesg = expInfo.msg;
+        this.st.altType = altTypes[type];
+        this.st.altInfo = {type: type, idx: this.rowIdx, brc: brc};
     }
 }

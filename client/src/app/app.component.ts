@@ -1,4 +1,5 @@
-import { Component, AfterViewInit, ViewEncapsulation, HostListener } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewEncapsulation, HostListener } from '@angular/core';
+import { TranslateService, TranslationChangeEvent } from '@ngx-translate/core';
 import { AppService } from './app.service';
 import { toggleSlid } from './animations/toggle-slid';
 import { Configs, FmtStatus, FmterEles } from './formatter/formatter.conf';
@@ -13,7 +14,11 @@ import * as moment from 'moment';
   animations: [toggleSlid],
   encapsulation: ViewEncapsulation.None
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements OnInit, AfterViewInit {
+  conf: Configs;
+  lang: string;
+  warningMsg: string;
+  isWindowBig: boolean;
   sourcest: string = '';
   formated: string = '';
   visitCount: number = NaN;
@@ -30,31 +35,57 @@ export class AppComponent implements AfterViewInit {
   isFmtedEditAb: boolean = true;
   isShowConfigs: boolean;
   isConfOnSlid: boolean = false;
-  warningMsg: string;
-  isWindowBig: boolean;
-  conf: Configs;
-  themeTts: any[] = this.appService.getThemes();
-  theme: any = {name: 'default', text: 'Default'};
+  toggleConfTiele: string;
+  themes: any[] = ['default', 'nocolor'];
+  theme: string = 'default';
   eles: FmterEles = new FmterEles();
   fmtSt: FmtStatus = new FmtStatus();
   formatter: Formatter = new Formatter();
+  alertInfo: any = {type: '', idx: NaN, brc: ''};
   alertType: 'info'|'success'|'warning'|'danger' = 'info';
-  srcPlaceHolder: string = this.appService.srcPlaceHolder;
-  greeting: string = this.appService.getGreeting();
+  greeting: string;
+  languages: any = {
+    en: {long: 'English', short: 'EN'},
+    zh: {long: '中文（简体）', short: '中文'}
+  };
+  i18n: any = {
+    confs: {show: '', hide: ''},
+    model: {expand: '', combine: ''},
+    type: {json: 'Json', jsobj: 'Js Obj'},
+    theme: {default: '', nocolor: ''},
+    alert: {ost: '', col: '', val: '', end: '', war: '', scc: ''}
+  };
+  altMsgs: any = {
+
+  };
   setRowIdxWpHeight: Function = () => $('.z-canvas').height() + 12 + 'px';
   getTimeStr: Function = () => moment().format('MM-DD HH:mm:ss');
   getFmtHists: Function = () => this.fmtHists = this.appService.getFmtHists();
 
   constructor(
+    private translate: TranslateService,
     private appService: AppService
   ) {
-    this.theme = this.themeTts[0];
+    const broswerLang = translate.getBrowserLang();
+    translate.addLangs(['zh', 'en']);
+    translate.setDefaultLang('zh');
+    this.lang = broswerLang.match(/en|zh/) ? broswerLang : 'zh';
+    translate.use(this.lang);
+    this.greeting = this.appService.getGreeting(this.lang);
     this.conf = new Configs();
     const userId = this.appService.getUserId() || 'z-json';
     this.getFmtHists();
     this.appService.getVistCount(userId).subscribe((vst: any) => {
       this.visitCount = vst.nb;
       this.appService.setUserId(vst.id);
+    });
+  }
+
+  ngOnInit() {
+    this.doTranslate();
+    this.translate.onLangChange.subscribe((event: TranslationChangeEvent) => {
+      this.doTranslate();
+      this.translateAltMsgs();
     });
   }
 
@@ -68,12 +99,12 @@ export class AppComponent implements AfterViewInit {
       this.warningMsg = 'Format';
     }
     this.formatter.init(fmtSrc, this.conf , (html, json, fmtSt) => {
-      // this.isShowAlerts = status ? 'hide' : 'show';
       this.formated = json;
       this.fmtSt = fmtSt;
       if (html) {
         this.alertType = this.fmtSt.altType;
-        this.alertMsg  = this.fmtSt.altMesg;
+        this.alertInfo = this.fmtSt.altInfo;
+        this.translateAltMsgs();
         this.animateGreeting();
       }
       this.isModelExpand = this.conf.model === 'expand';
@@ -84,6 +115,16 @@ export class AppComponent implements AfterViewInit {
         this.fmtSourcest = fmtSrc;
       }, 0);
     });
+  }
+
+  /**
+   * 设置言语
+   * =================================
+   */
+  selectLanguage(type: 'zh'|'en') {
+    this.lang = type;
+    this.translate.use(type);
+    this.animateGreeting();
   }
 
   /**
@@ -100,7 +141,7 @@ export class AppComponent implements AfterViewInit {
         $this.removeClass('collapsed').addClass('expanded');
         $(`#${$this.data('id')}`).removeClass('collapsed').addClass('expanded');
       }
-    })
+    });
     const $elps = $('.z-ellipsis').click(function() {
       $(this)
       .parent().removeClass('collapsed').addClass('expanded')
@@ -288,6 +329,11 @@ export class AppComponent implements AfterViewInit {
       this.onWindowResize(true);
     }
   }
+
+  /**
+   * 下拉菜单
+   * =================================
+   */
   toggleOptions(tp: string) {
     const $opts = $(`.z-${tp}-opts`);
     if ($opts.hasClass('show')) {
@@ -302,12 +348,12 @@ export class AppComponent implements AfterViewInit {
    * 问候语动画
    * ===================================
    */
-  animateGreeting(isStart: boolean = true) {
-    if (this.alertType === 'info' && isStart) {
+  animateGreeting() {
+    if (this.alertType === 'info' && this.isWindowBig) {
       setTimeout(() => {
         const $greeting = $('#z-greeting');
         const greetingIn = () => {
-          this.greeting = this.appService.getGreeting();
+          this.greeting = this.appService.getGreeting(this.lang);
           $greeting.removeClass().addClass(`${this.appService.getAnimateClass('in')} animated`);
         };
         greetingIn();
@@ -340,7 +386,7 @@ export class AppComponent implements AfterViewInit {
     const oH = $('#operate').height();
     const winW = $win.width();
     const winH = $win.height();
-    let wH = winH - hH - cH - oH - 50;
+    let wH = winH - hH - cH - oH - 75;
     if (wH < 210) {
       wH = 210;
     }
@@ -353,13 +399,13 @@ export class AppComponent implements AfterViewInit {
     }
     if (winW >= 1025) {
       if (!this.isWindowBig) {
-        this.animateGreeting();
         this.isWindowBig = true;
+        this.animateGreeting();
       }
     } else {
       if (this.isWindowBig) {
-        this.animateGreeting(false);
         this.isWindowBig = false;
+        this.animateGreeting();
       }
     }
     if ($maxPanel.length > 0) {
@@ -374,9 +420,10 @@ export class AppComponent implements AfterViewInit {
   ngAfterViewInit() {
     const that = this;
     const $win = $(win);
-    this.animateGreeting();
     this.isWindowBig = $win.width() >= 1025;
+    this.animateGreeting();
     this.onWindowResize();
+    setTimeout(() => this.onWindowResize());
     $win.resize(() => this.onWindowResize());
     $('#z-container').scroll(function() {
       $('#z-index').css('left', this.scrollLeft + 'px');
@@ -415,5 +462,58 @@ export class AppComponent implements AfterViewInit {
         $(this).off('mousemove', resizeCodeZone);
       });
     });
+  }
+
+  /**
+   * i18n国际化
+   * =================================
+   */
+  doTranslate() {
+    this.i18n.confs.show = this.translate.instant('showConfs');
+    this.i18n.confs.hide = this.translate.instant('hideConfs');
+    this.i18n.model.expand = this.translate.instant('expand');
+    this.i18n.model.combine = this.translate.instant('combine');
+    this.i18n.theme.default = this.translate.instant('default');
+    this.i18n.theme.nocolor = this.translate.instant('noColor');
+  }
+
+  /**
+   * 国际化提示信息
+   * =================================
+   */
+  translateAltMsgs() {
+    switch (this.alertInfo.type) {
+      case 'ost':
+        this.i18n.alert.ost = this.translate.instant('alert.ost', {
+          rowIdx: this.alertInfo.idx
+        });
+        break;
+      case 'col':
+        this.i18n.alert.col = this.translate.instant('alert.col', {
+          rowIdx: this.alertInfo.idx
+        });
+        break;
+      case 'val':
+        this.i18n.alert.val = this.translate.instant('alert.val', {
+          rowIdx: this.alertInfo.idx
+        });
+        break;
+      case 'scc':
+        this.i18n.alert.scc = this.translate.instant('alert.scc', {
+          rowIdx: this.alertInfo.idx
+        });
+        break;
+      case 'war':
+        this.i18n.alert.war = this.translate.instant('alert.war', {
+          rowIdx: this.alertInfo.idx
+        });
+        break;
+      case 'end':
+        this.i18n.alert.end = this.translate.instant('alert.end', {
+          rowIdx: this.alertInfo.idx, brc: this.alertInfo.brc
+        });
+        break;
+    }
+    this.alertMsg  = this.i18n.alert[this.alertInfo.type];
   }
 }

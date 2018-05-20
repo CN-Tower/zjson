@@ -25,13 +25,12 @@
     font-weight: bold;
     letter-spacing: 3px;
     line-height: 38px;
-    margin: 0 !important;
 }
 .loadingText h5 {
     display: inline-block;
-    margin: 0 !important;
 }
 .loadingText p {
+    margin-top: 0;
     margin-bottom: 20px;
 }
 .loadingText .loadingGif {
