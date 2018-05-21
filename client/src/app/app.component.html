@@ -38,9 +38,8 @@
   <!--=================================================================-->
   <section id="configs">
     <div class="panel panel-default">
-      <div class="panel-heading no-select">
+      <div class="panel-heading no-select" (click)="toggleConfigs()">
         <span class="z-conf-btn fr"
-              (click)="toggleConfigs()"
               [attr.title]="isShowConfigs ? i18n.confs.hide : i18n.confs.show">
           <i class="fa fa-bars z-op-icon"></i>
         </span>
@@ -217,12 +216,12 @@
           <ul class="dropdown-menu dropdown-menu-right z-more-opts">
             <li>
               <a href="javascript:;" (click)="collapseAll()">
-                <i class="fa fa-compress"></i>&nbsp;&nbsp;{{'colAll' | translate}}
+                <i class="fa fa-plus-square"></i>&nbsp;&nbsp;{{'colAll' | translate}}
               </a>
             </li>
             <li>
               <a href="javascript:;" (click)="expandAll()">
-                <i class="fa fa-expand"></i>&nbsp;&nbsp;{{'expAll' | translate}}
+                <i class="fa fa-minus-square"></i>&nbsp;&nbsp;{{'expAll' | translate}}
               </a>
             </li>
           </ul>
