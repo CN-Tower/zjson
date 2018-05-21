@@ -33,7 +33,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   isShowAlerts: string = 'hide';
   isModelExpand: boolean = false;
   isFmtedEditAb: boolean = true;
-  isShowConfigs: boolean;
+  isShowConfigs: boolean = false;
   isConfOnSlid: boolean = false;
   toggleConfTiele: string;
   themes: any[] = ['default', 'nocolor'];
@@ -96,7 +96,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   doFormate(fmtSrc: string) {
     if (!this.sourcest && !this.fmtSourcest) {
       this.isShowAlerts = 'show';
-      this.warningMsg = 'Format';
+      this.warningMsg = this.translate.instant('_format');
     }
     this.formatter.init(fmtSrc, this.conf , (html, json, fmtSt) => {
       this.formated = json;
@@ -221,7 +221,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       saveAs(blob, `ZJSON-${String(fn.time()).substr(-6)}.json`);
     } else {
       this.isShowAlerts = 'show';
-      this.warningMsg = 'Download';
+      this.warningMsg = this.translate.instant('_download');
     }
   }
   pushToLeft() {
@@ -249,7 +249,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       }
     } else {
       this.isShowAlerts = 'show';
-      this.warningMsg = 'Save';
+      this.warningMsg = this.translate.instant('_save');
     }
   }
   showOrRmFmtHist(e: any, hist: any) {
@@ -270,7 +270,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       $tmpIpt.remove();
     } else {
       this.isShowAlerts = 'show';
-      this.warningMsg = 'Copy';
+      this.warningMsg = this.translate.instant('_copy');
     }
   }
   clearSourc() {
@@ -278,7 +278,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.sourcest = '';
     } else {
       this.isShowAlerts = 'show';
-      this.warningMsg = 'Clear';
+      this.warningMsg = this.translate.instant('_clear');
     }
   }
   clearFmted() {
@@ -289,7 +289,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.fmtSourcest = '';
     } else {
       this.isShowAlerts = 'show';
-      this.warningMsg = 'Clear';
+      this.warningMsg = this.translate.instant('_clear');
     }
     this.animateGreeting();
   }
@@ -298,7 +298,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.doFormate(this.fmtSourcest);
     } else {
       this.isShowAlerts = 'show';
-      this.warningMsg = 'Expand';
+      this.warningMsg = this.translate.instant('_expand');
     }
   }
   collapseAll() {
@@ -307,7 +307,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       $firstOpBtn.click();
     } else {
       this.isShowAlerts = 'show';
-      this.warningMsg = 'Collapse';
+      this.warningMsg = this.translate.instant('_collapse');
     }
   }
   toggleConfigs() {
@@ -375,18 +375,21 @@ export class AppComponent implements OnInit, AfterViewInit {
    * ===================================
    */
   onWindowResize(isAnimate: boolean = false) {
-    this.isShowConfigs = $('.z-conf-item').css('display') === 'block';
     const $win = $(win);
     const $conf = $('.z-conf-item');
     const $maxPanel = $('.z-maximal');
     const $work = $('#worker');
     const $panel = $work.find('.panel:not(.z-maximal)');
-    const hH = $('header').height();
-    const cH = $('#configs').height();
-    const oH = $('#operate').height();
+    const cH = this.isShowConfigs ? $conf.height() + 10 : 0;
     const winW = $win.width();
     const winH = $win.height();
-    let wH = winH - hH - cH - oH - 75;
+    let fixH = 265;
+    if (winW < 1025 && winW > 768) {
+      fixH = 245;
+    } else if (winW <= 768) {
+      fixH = 310;
+    }
+    let wH = winH - cH - fixH;
     if (wH < 210) {
       wH = 210;
     }
