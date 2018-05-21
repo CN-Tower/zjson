@@ -412,7 +412,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       }
     }
     if ($maxPanel.length > 0) {
-      $maxPanel.width(winW - 40).height(winH - 85);
+      $maxPanel.width(winW - 40).height(winH - 30);
     }
   }
 
