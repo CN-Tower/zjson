@@ -170,13 +170,13 @@ export class AppComponent implements OnInit, AfterViewInit {
    * =================================
    */
   setMaximalPanelTop() {
-    $('.z-maximal').css('top', 74 - $(this).scrollTop());
+    $('.z-maximal').css('top', 15 - $(this).scrollTop());
   }
   maximalPanel(type: 'src'|'fmt') {
     $(document).scrollTop(0).on('scroll', this.setMaximalPanelTop);
     $('.z-to-left, .z-show-left').addClass('hide');
     const $win = $(win);
-    const winH = $win.height() - 85;
+    const winH = $win.height() - 30;
     const winW = $win.width();
     const pW = winW - 40;
     const pH =  winH > 500 ? winH : 500;
