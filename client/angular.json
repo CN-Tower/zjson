@@ -32,7 +32,7 @@
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/bootstrap/dist/js/bootstrap.min.js",
-              "node_modules/pxfunc/pxfunc.js",
+              "node_modules/funclib/funclib.js",
               "src/assets/lib/FileSaver.js"
             ]
           },
