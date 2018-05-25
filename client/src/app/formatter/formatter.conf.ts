@@ -93,7 +93,7 @@ export class FmterEles {
         return `<span class="z-row-index no-select z-row-${idx}">${rowIdxes}</span></span>`;
     };
     public brcPre: Function = (sig, cls, isNotEmpty = false) => {
-        const id = isNotEmpty ? fn.uuid() : '';
+        const id = isNotEmpty ? fn.gnid() : '';
         const eleId = id ? `id="${id}"` : '';
         const expanded = id ? 'expandable expanded' : '';
         const operator = id ? `<span class="operator expanded" data-id="${id}"></span>` : '';
