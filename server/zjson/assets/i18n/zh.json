@@ -4,7 +4,7 @@
     "warning": "提 示：",
     "VC_": "访问统计：",
     "VC": "访问：",
-    "configs": "设 置",
+    "configs": "配 置",
     "model_": "模 式：",
     "type_": "类 型：",
     "indent_": "缩 进：",
@@ -55,7 +55,7 @@
         "col": "第{{rowIdx}}行，期望一个“冒号”！",
         "val": "第{{rowIdx}}行，不是一个合法的值！",
         "end": "第{{rowIdx}}行，期望一个“逗号”或一个“{{brc}}”！",
-        "war": "非常正常Json，行数：{{rowIdx}}行！",
+        "war": "非正常Json，行数：{{rowIdx}}行！",
         "scc": "格式化成功，行数：{{rowIdx}}行！"
     }
 }

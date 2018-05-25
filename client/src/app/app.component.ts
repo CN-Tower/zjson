@@ -73,7 +73,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     translate.use(this.lang);
     this.greeting = this.appService.getGreeting(this.lang);
     this.conf = new Configs();
-    const userId = this.appService.getUserId() || 'z-json';
+    const userId = this.appService.getUserId() || 'ZJSON-NEWID';
     this.getFmtHists();
     this.appService.getVistCount(userId).subscribe((vst: any) => {
       this.visitCount = vst.nb;
@@ -93,8 +93,8 @@ export class AppComponent implements OnInit, AfterViewInit {
    * 执行格式化
    * =================================
    */
-  doFormate(fmtSrc: string) {
-    if (!this.sourcest && !this.fmtSourcest) {
+  doFormate(fmtSrc: string, isSilence?: boolean) {
+    if (!this.sourcest && !this.fmtSourcest && !isSilence) {
       this.isShowAlerts = 'show';
       this.warningMsg = this.translate.instant('_format');
     }
@@ -160,7 +160,7 @@ export class AppComponent implements OnInit, AfterViewInit {
           $next.addClass('bg-red');
           redNext($next.next());
         }
-      }
+      };
       redNext($errRow.next());
     }
   }
@@ -218,7 +218,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         } break;
     }
     if (blob) {
-      saveAs(blob, `ZJSON-${String(fn.time()).substr(-6)}.json`);
+      saveAs(blob, `zjson-${String(fn.time()).substr(-6)}.json`);
     } else {
       this.isShowAlerts = 'show';
       this.warningMsg = this.translate.instant('_download');
@@ -310,13 +310,13 @@ export class AppComponent implements OnInit, AfterViewInit {
     if (!this.isConfOnSlid) {
       this.isConfOnSlid = true;
       if (this.isShowConfigs) {
-        $('.z-conf-item').slideUp(380, () => {
+        $('.z-conf-item').slideUp(() => {
           this.isConfOnSlid = false;
           this.isShowConfigs = false;
           this.onWindowResize(true);
         });
       } else {
-        $('.z-conf-item').slideDown(380, () => {
+        $('.z-conf-item').slideDown(() => {
           this.isConfOnSlid = false;
           this.isShowConfigs = true;
           this.onWindowResize(true);

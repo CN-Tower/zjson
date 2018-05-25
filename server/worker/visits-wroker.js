@@ -1,5 +1,5 @@
 var fs = require('fs');
-var fn = require('pxfunc');
+var fn = require('funclib');
 var visits;
 var users = [];
 
@@ -21,7 +21,7 @@ function doGetAndSet() {
 }
 
 function addUser() {
-    const userId = 'z-' + fn.uuid();
+    const userId = 'ZJSON-' + fn.gnid();
     const vtTime = fn.time();
     users.push({userId: userId, vtTime: vtTime});
     setTimeout(function () {

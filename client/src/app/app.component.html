@@ -46,7 +46,7 @@
         <h3 class="panel-title">{{'configs' | translate}}</h3>
       </div>
       <div class="panel-body container-fluid">
-        <div class="row">
+        <div class="row cursor-pointer" (click)="toggleConfigs()">
           <div class="z-conf-info col-xs-12">
             <span class="conf-info-item">
               <strong class="z-conf-tt">{{'model_' | translate}}</strong><span class="z-conf-val">{{i18n.model[conf.model]}}</span>
@@ -66,13 +66,13 @@
               <div class="radio">
                 <label>
                   <input type="radio" name="model" id="model1"
-                         value="expand" [(ngModel)]="conf.model" checked>{{i18n.model.expand}}
+                         value="expand" [(ngModel)]="conf.model" (ngModelChange)="doFormate(sourcest, true)" checked>{{i18n.model.expand}}
                 </label>
               </div>
               <div class="radio">
                 <label>
                   <input type="radio" name="model" id="model2"
-                         value="combine" [(ngModel)]="conf.model">{{i18n.model.combine}}
+                         value="combine" [(ngModel)]="conf.model" (ngModelChange)="doFormate(sourcest, true)">{{i18n.model.combine}}
                 </label>
               </div>
             </div>
@@ -86,13 +86,13 @@
               <div class="radio">
                 <label>
                   <input type="radio" name="type" id="type1" value="json"
-                         [(ngModel)]="conf.type" checked>{{i18n.type.json}}
+                         [(ngModel)]="conf.type" (ngModelChange)="doFormate(sourcest, true)" checked>{{i18n.type.json}}
                 </label>
               </div>
               <div class="radio">
                 <label>
                   <input type="radio" name="type" id="type2" value="jsobj"
-                         [(ngModel)]="conf.type">{{i18n.type.jsobj}}
+                         [(ngModel)]="conf.type" (ngModelChange)="doFormate(sourcest, true)">{{i18n.type.jsobj}}
                 </label>
               </div>
             </div>
@@ -110,7 +110,7 @@
                   {{conf.indent}} {{'space' | translate}}&nbsp;
                   <span class="caret"></span>
                 </button>
-                <ul class="dropdown-menu z-indent-opts">
+                <ul class="dropdown-menu z-indent-opts" (click)="doFormate(sourcest, true)">
                   <li *ngFor="let i of [1,2,3,4,5,6,7,8];">
                     <a href="javascript:;" (click)="conf.indent = i">{{i}} {{'space' | translate}}</a>
                   </li>
@@ -122,10 +122,7 @@
 
           <!-- ============= THEME CONFIG ============= -->
           <div class="conf-item col-lg-3 col-sm-6 col-xs-12">
-            <div class="fl conf-theme-tt">
-              <h4 class="conf-tt">{{'theme' | translate}}</h4>
-              <div class="sub-conf-tt">( {{'inTime' | translate}} )</div>
-            </div>
+            <h4 class="conf-tt fl">{{'theme' | translate}}</h4>
             <div class="conf-con fl">
               <div class="dropdown z-drop z-theme-drop">
                 <button class="btn btn-default dropdown-toggle"
@@ -133,7 +130,7 @@
                   {{i18n.theme[theme]}}
                   <span class="caret"></span>
                 </button>
-                <ul class="dropdown-menu z-theme-opts">
+                <ul class="dropdown-menu z-theme-opts" (click)="doFormate(sourcest, true)">
                   <li *ngFor="let them of themes">
                     <a href="javascript:;" (click)="theme=them">{{i18n.theme[them]}}</a>
                   </li>

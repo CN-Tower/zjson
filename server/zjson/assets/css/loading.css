@@ -26,6 +26,9 @@
     letter-spacing: 3px;
     line-height: 38px;
 }
+.loadingText h2.h2_spliter {
+    font-weight: normal;
+}
 .loadingText h5 {
     display: inline-block;
 }
