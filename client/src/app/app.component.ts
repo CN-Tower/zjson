@@ -263,11 +263,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
   copyFmted() {
     if ($('.z-canvas').html()) {
-      const $tmpIpt = $('<textarea></textarea>');
-      $('body').append($tmpIpt);
-      $tmpIpt.val(this.formated).select();
-      document.execCommand('Copy');
-      $tmpIpt.remove();
+      $.copyText(this.formated);
     } else {
       this.isShowAlerts = 'show';
       this.warningMsg = this.translate.instant('_copy');
