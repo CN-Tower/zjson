@@ -357,7 +357,7 @@ export class AppComponent implements OnInit, AfterViewInit {
           $greeting.removeClass().addClass(`${this.appService.getAnimateClass('in')} animated`);
         };
         greetingIn();
-        fn.polling('greeting', 5000, () => {
+        fn.interval('greeting', 5000, () => {
           $greeting.removeClass().addClass(`${this.appService.getAnimateClass('out')} animated`);
           setTimeout(() => {
             greetingIn();
@@ -366,7 +366,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         });
       }, 0);
     } else {
-      fn.polling('greeting', false);
+      fn.interval('greeting', false);
     }
   }
 
