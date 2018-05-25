@@ -60,81 +60,89 @@
         </div>
         <div class="z-conf-item row">
           <!-- ============= MODEL CONFIG ============= -->
-          <div class="conf-item col-lg-3 col-sm-6 col-xs-12">
-            <h4 class="conf-tt fl">{{'model' | translate}}</h4>
-            <div class="conf-con fl">
-              <div class="radio">
-                <label>
-                  <input type="radio" name="model" id="model1"
-                         value="expand" [(ngModel)]="conf.model" (ngModelChange)="doFormate(sourcest, true)" checked>{{i18n.model.expand}}
-                </label>
-              </div>
-              <div class="radio">
-                <label>
-                  <input type="radio" name="model" id="model2"
-                         value="combine" [(ngModel)]="conf.model" (ngModelChange)="doFormate(sourcest, true)">{{i18n.model.combine}}
-                </label>
+          <div class="conf-item-wp col-lg-3 col-sm-6 col-xs-12">
+            <div class="conf-item">
+              <h4 class="conf-tt fl">{{'model' | translate}}</h4>
+              <div class="conf-con fl">
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="model" id="model1"
+                            value="expand" [(ngModel)]="conf.model" (ngModelChange)="doFormate(sourcest, true)" checked>{{i18n.model.expand}}
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="model" id="model2"
+                            value="combine" [(ngModel)]="conf.model" (ngModelChange)="doFormate(sourcest, true)">{{i18n.model.combine}}
+                  </label>
+                </div>
               </div>
             </div>
           </div>
           <!-- MODEL END -->
 
           <!-- ============== TYPE CONFIG ============== -->
-          <div class="conf-item col-lg-3 col-sm-6 col-xs-12">
-            <h4 class="conf-tt fl">{{'type' | translate}}</h4>
-            <div class="conf-con fl">
-              <div class="radio">
-                <label>
-                  <input type="radio" name="type" id="type1" value="json"
-                         [(ngModel)]="conf.type" (ngModelChange)="doFormate(sourcest, true)" checked>{{i18n.type.json}}
-                </label>
-              </div>
-              <div class="radio">
-                <label>
-                  <input type="radio" name="type" id="type2" value="jsobj"
-                         [(ngModel)]="conf.type" (ngModelChange)="doFormate(sourcest, true)">{{i18n.type.jsobj}}
-                </label>
+          <div class="conf-item-wp col-lg-3 col-sm-6 col-xs-12">
+            <div class="conf-item">
+              <h4 class="conf-tt fl">{{'type' | translate}}</h4>
+              <div class="conf-con fl">
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="type" id="type1" value="json"
+                            [(ngModel)]="conf.type" (ngModelChange)="doFormate(sourcest, true)" checked>{{i18n.type.json}}
+                  </label>
+                </div>
+                <div class="radio">
+                  <label>
+                    <input type="radio" name="type" id="type2" value="jsobj"
+                            [(ngModel)]="conf.type" (ngModelChange)="doFormate(sourcest, true)">{{i18n.type.jsobj}}
+                  </label>
+                </div>
               </div>
             </div>
           </div>
           <!-- TYPE END -->
 
           <!-- ============= INDENT CONFIG ============= -->
-          <div class="conf-item col-lg-3 col-sm-6 col-xs-12">
-            <h4 class="conf-tt fl">{{'indent' | translate}}</h4>
-            <div class="conf-con fl">
-              <div class="dropdown z-drop z-indent-drop">
-                <button class="btn btn-default dropdown-toggle"
-                        [disabled]="conf.model!='expand'"
-                        (click)="toggleOptions('indent')" type="button">
-                  {{conf.indent}} {{'space' | translate}}&nbsp;
-                  <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu z-indent-opts" (click)="doFormate(sourcest, true)">
-                  <li *ngFor="let i of [1,2,3,4,5,6,7,8];">
-                    <a href="javascript:;" (click)="conf.indent = i">{{i}} {{'space' | translate}}</a>
-                  </li>
-                </ul>
+          <div class="conf-item-wp col-lg-3 col-sm-6 col-xs-12">
+            <div class="conf-item">
+              <h4 class="conf-tt fl">{{'indent' | translate}}</h4>
+              <div class="conf-con fl">
+                <div class="dropdown z-drop z-indent-drop">
+                  <button class="btn btn-default dropdown-toggle"
+                          [disabled]="conf.model!='expand'"
+                          (click)="toggleOptions('indent')" type="button">
+                    {{conf.indent}} {{'space' | translate}}&nbsp;
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu z-indent-opts" (click)="doFormate(sourcest, true)">
+                    <li *ngFor="let i of [1,2,3,4,5,6,7,8];">
+                      <a href="javascript:;" (click)="conf.indent = i">{{i}} {{'space' | translate}}</a>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
           <!-- INDENT END -->
 
           <!-- ============= THEME CONFIG ============= -->
-          <div class="conf-item col-lg-3 col-sm-6 col-xs-12">
-            <h4 class="conf-tt fl">{{'theme' | translate}}</h4>
-            <div class="conf-con fl">
-              <div class="dropdown z-drop z-theme-drop">
-                <button class="btn btn-default dropdown-toggle"
-                        (click)="toggleOptions('theme')" type="button">
-                  {{i18n.theme[theme]}}
-                  <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu z-theme-opts" (click)="doFormate(sourcest, true)">
-                  <li *ngFor="let them of themes">
-                    <a href="javascript:;" (click)="theme=them">{{i18n.theme[them]}}</a>
-                  </li>
-                </ul>
+          <div class="conf-item-wp col-lg-3 col-sm-6 col-xs-12">
+            <div class="conf-item">
+              <h4 class="conf-tt fl">{{'theme' | translate}}</h4>
+              <div class="conf-con fl">
+                <div class="dropdown z-drop z-theme-drop">
+                  <button class="btn btn-default dropdown-toggle"
+                          (click)="toggleOptions('theme')" type="button">
+                    {{i18n.theme[theme]}}
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu z-theme-opts" (click)="doFormate(sourcest, true)">
+                    <li *ngFor="let them of themes">
+                      <a href="javascript:;" (click)="theme=them">{{i18n.theme[them]}}</a>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>

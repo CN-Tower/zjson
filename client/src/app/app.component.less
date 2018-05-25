@@ -31,7 +31,7 @@
             font-size: 15px;
         }
     }
-    .cl {
+    .clear-fix {
         &:after {
             content:"";
             display:block;
@@ -61,7 +61,7 @@
         }
     }
     section {
-        .cl;
+        .clear-fix;
         padding: 10px 20px;
     }
     #alerts {
@@ -91,18 +91,23 @@
             .z-conf-item {
                 display: none;
                 padding-top: 10px;
-                .conf-item {
+                .conf-item-wp {
                     margin-bottom: 0;
                     padding: 10px 15px;
                     position: relative;
-                    .conf-tt {
-                        width: 80px;
-                    }
-                    .conf-con {
-                        height: 65px;
-                        margin-left: 15px;
-                        .z-drop {
-                            margin-top: 10px;
+                    .conf-item {
+                        .clear-fix;
+                        padding: 0 10px;
+                        border: 1px solid #ddd;
+                        .conf-tt {
+                            width: 80px;
+                        }
+                        .conf-con {
+                            height: 65px;
+                            margin-left: 15px;
+                            .z-drop {
+                                margin-top: 10px;
+                            }
                         }
                     }
                 }
@@ -139,7 +144,7 @@
         .z-src-btn {
             min-width: 325px;
             margin-bottom: 10px;
-            .cl;
+            .clear-fix;
             .src-op-btn {
                 float: left;
                 margin-right: 6px;
