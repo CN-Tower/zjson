@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { toggleSlid } from './animations/toggle-slid';
 import { Configs, FmtStatus, FmterEles } from './formatter/formatter.conf';
 import { Formatter } from './formatter/formatter.main';
-import { window } from 'rxjs/operator/window';
 import * as moment from 'moment';
 
 @Component({
@@ -55,9 +54,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     theme: {default: '', nocolor: ''},
     alert: {ost: '', col: '', val: '', end: '', war: '', scc: ''}
   };
-  altMsgs: any = {
-
-  };
+  altMsgs: any = {};
   setRowIdxWpHeight: Function = () => $('.z-canvas').height() + 12 + 'px';
   getTimeStr: Function = () => moment().format('MM-DD HH:mm:ss');
   getFmtHists: Function = () => this.fmtHists = this.appService.getFmtHists();
