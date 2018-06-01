@@ -95,7 +95,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.isShowAlerts = 'show';
       this.warningMsg = this.translate.instant('_format');
     }
-    this.formatter.init(fmtSrc, this.conf , (html, json, fmtSt) => {
+    this.formatter.init(fmtSrc.trim(), this.conf , (html, json, fmtSt) => {
       this.formated = json;
       this.fmtSt = fmtSt;
       if (html) {
@@ -103,6 +103,8 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.alertInfo = this.fmtSt.altInfo;
         this.translateAltMsgs();
         this.animateGreeting();
+      } else {
+        this.emptyFmt();
       }
       this.isModelExpand = this.conf.model === 'expand';
       setTimeout(() => {
@@ -215,7 +217,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         } break;
     }
     if (blob) {
-      saveAs(blob, `zjson-${String(fn.time()).substr(-6)}.json`);
+      saveAs(blob, `zjson-${String(fn.timeStamp()).substr(-6)}.json`);
     } else {
       this.isShowAlerts = 'show';
       this.warningMsg = this.translate.instant('_download');
@@ -274,16 +276,22 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.warningMsg = this.translate.instant('_clear');
     }
   }
+  pasteSourc() {
+    setTimeout(() => this.doFormate(this.sourcest));
+  }
   clearFmted() {
     if (this.fmtSourcest) {
-      $('.z-canvas').html('');
-      this.alertType = 'info';
-      this.formated = '';
-      this.fmtSourcest = '';
+      this.emptyFmt();
     } else {
       this.isShowAlerts = 'show';
       this.warningMsg = this.translate.instant('_clear');
     }
+  }
+  emptyFmt() {
+    $('.z-canvas').html('');
+    this.alertType = 'info';
+    this.formated = '';
+    this.fmtSourcest = '';
     this.animateGreeting();
   }
   expandAll() {
