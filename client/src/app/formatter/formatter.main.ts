@@ -121,12 +121,12 @@ export class Formatter extends FmterEles {
      */
     private objectHandler(ps: any, onEnd: Function) {
         let curIndent: string;
-        if (fn.len(ps.obj) > 0) {
+        if (fn.length(ps.obj) > 0) {
             ps.html += this.isExpand ? this.brcPre('{', 'obj', true) + this.brkline() : this.brcPre('{', 'obj');
             ps.json += this.isExpand ? '{\n' : '{';
             this.level++;
             let idx = 0;
-            const objLength = fn.len(ps.obj);
+            const objLength = fn.length(ps.obj);
             for (const key in ps.obj) {
                 if (ps.obj.hasOwnProperty(key)) {
                     idx++;
