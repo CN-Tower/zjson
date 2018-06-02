@@ -94,26 +94,27 @@ export class AppComponent implements OnInit, AfterViewInit {
     if (!this.sourcest && !this.fmtSourcest && !isSilence) {
       this.isShowAlerts = 'show';
       this.warningMsg = this.translate.instant('_format');
+    } else {
+      this.formatter.init(fmtSrc.trim(), this.conf , (html, json, fmtSt) => {
+        this.formated = json;
+        this.fmtSt = fmtSt;
+        if (html) {
+          this.alertType = this.fmtSt.altType;
+          this.alertInfo = this.fmtSt.altInfo;
+          this.translateAltMsgs();
+          this.animateGreeting();
+        } else {
+          this.emptyFmt(isSilence);
+        }
+        this.isModelExpand = this.conf.model === 'expand';
+        setTimeout(() => {
+          const $zCanvas = $('.z-canvas');
+          $zCanvas.html(html);
+          this.trigglerEvents();
+          this.fmtSourcest = fmtSrc;
+        }, 0);
+      });
     }
-    this.formatter.init(fmtSrc.trim(), this.conf , (html, json, fmtSt) => {
-      this.formated = json;
-      this.fmtSt = fmtSt;
-      if (html) {
-        this.alertType = this.fmtSt.altType;
-        this.alertInfo = this.fmtSt.altInfo;
-        this.translateAltMsgs();
-        this.animateGreeting();
-      } else {
-        this.emptyFmt();
-      }
-      this.isModelExpand = this.conf.model === 'expand';
-      setTimeout(() => {
-        const $zCanvas = $('.z-canvas');
-        $zCanvas.html(html);
-        this.trigglerEvents();
-        this.fmtSourcest = fmtSrc;
-      }, 0);
-    });
   }
 
   /**
@@ -277,7 +278,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
   }
   pasteSourc() {
-    setTimeout(() => this.doFormate(this.sourcest));
+    setTimeout(() => this.doFormate(this.sourcest, true));
   }
   clearFmted() {
     if (this.fmtSourcest) {
@@ -287,12 +288,14 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.warningMsg = this.translate.instant('_clear');
     }
   }
-  emptyFmt() {
+  emptyFmt(isSilence: boolean = false) {
     $('.z-canvas').html('');
     this.alertType = 'info';
     this.formated = '';
     this.fmtSourcest = '';
-    this.animateGreeting();
+    if (!isSilence) {
+      this.animateGreeting();
+    }
   }
   expandAll() {
     if ($('.z-canvas').html()) {
