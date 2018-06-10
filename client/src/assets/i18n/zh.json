@@ -57,5 +57,6 @@
         "end": "第{{rowIdx}}行，期望一个“逗号”或一个“{{brc}}”！",
         "war": "非正常Json，行数：{{rowIdx}}行！",
         "scc": "格式化成功，行数：{{rowIdx}}行！"
-    }
+    },
+    "zNotice": "亲，zjson.net和funclib.js（zjson依赖的一个函数库）已经开源啦，有兴趣的话就一起来玩吧！"
 }

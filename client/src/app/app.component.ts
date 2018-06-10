@@ -34,6 +34,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   isFmtedEditAb: boolean = true;
   isShowConfigs: boolean = false;
   isConfOnSlid: boolean = false;
+  isOriginEmpty: boolean = true;
   toggleConfTiele: string;
   themes: any[] = ['default', 'nocolor'];
   theme: string = 'default';
@@ -91,6 +92,7 @@ export class AppComponent implements OnInit, AfterViewInit {
    * =================================
    */
   doFormate(fmtSrc: string, isSilence?: boolean) {
+    this.isOriginEmpty = !this.formated;
     if (!this.sourcest && !this.fmtSourcest && !isSilence) {
       this.isShowAlerts = 'show';
       this.warningMsg = this.translate.instant('_format');
@@ -104,15 +106,15 @@ export class AppComponent implements OnInit, AfterViewInit {
           this.translateAltMsgs();
           this.animateGreeting();
         } else {
-          this.emptyFmt(isSilence);
+          this.emptyFmt();
         }
         this.isModelExpand = this.conf.model === 'expand';
-        setTimeout(() => {
+        fn.timeout(() => {
           const $zCanvas = $('.z-canvas');
           $zCanvas.html(html);
           this.trigglerEvents();
           this.fmtSourcest = fmtSrc;
-        }, 0);
+        });
       });
     }
   }
@@ -288,12 +290,12 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.warningMsg = this.translate.instant('_clear');
     }
   }
-  emptyFmt(isSilence: boolean = false) {
+  emptyFmt() {
     $('.z-canvas').html('');
     this.alertType = 'info';
     this.formated = '';
     this.fmtSourcest = '';
-    if (!isSilence) {
+    if (!this.isOriginEmpty) {
       this.animateGreeting();
     }
   }
@@ -344,7 +346,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       $opts.removeClass('show')
     } else {
       $opts.addClass('show');
-      setTimeout(() => $(document).one('click', () => $opts.removeClass('show')), 0);
+      fn.timeout(() => $(document).one('click', () => $opts.removeClass('show')));
     }
   }
 
@@ -354,7 +356,7 @@ export class AppComponent implements OnInit, AfterViewInit {
    */
   animateGreeting() {
     if (this.alertType === 'info' && this.isWindowBig) {
-      setTimeout(() => {
+      fn.timeout(() => {
         const $greeting = $('#z-greeting');
         const greetingIn = () => {
           this.greeting = this.appService.getGreeting(this.lang);
@@ -363,12 +365,12 @@ export class AppComponent implements OnInit, AfterViewInit {
         greetingIn();
         fn.interval('greeting', 5000, () => {
           $greeting.removeClass().addClass(`${this.appService.getAnimateClass('out')} animated`);
-          setTimeout(() => {
+          fn.timeout(500, () => {
             greetingIn();
-            setTimeout(() => $greeting.removeClass(), 1000);
-          }, 500);
+            fn.timeout(1000, () => $greeting.removeClass());
+          });
         });
-      }, 0);
+      });
     } else {
       fn.interval('greeting', false);
     }

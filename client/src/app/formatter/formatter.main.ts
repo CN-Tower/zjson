@@ -35,8 +35,9 @@ export class Formatter extends FmterEles {
                 this.st.fmtedType = this.ck.srcAcType;
             }
         } catch (e) {
-            this.doFormate2();
-            this.st.fmtedType = this.ck.srcAcType;
+            console.log(e);
+            // this.doFormate2();
+            // this.st.fmtedType = this.ck.srcAcType;
         }
         this.dt.html = this.dt.html === '' ? '' : this.rowIndex(1) + this.dt.html;
         if (this.st.isSrcValid) {
@@ -121,12 +122,12 @@ export class Formatter extends FmterEles {
      */
     private objectHandler(ps: any, onEnd: Function) {
         let curIndent: string;
-        if (fn.length(ps.obj) > 0) {
+        if (fn.len(ps.obj) > 0) {
             ps.html += this.isExpand ? this.brcPre('{', 'obj', true) + this.brkline() : this.brcPre('{', 'obj');
             ps.json += this.isExpand ? '{\n' : '{';
             this.level++;
             let idx = 0;
-            const objLength = fn.length(ps.obj);
+            const objLength = fn.len(ps.obj);
             for (const key in ps.obj) {
                 if (ps.obj.hasOwnProperty(key)) {
                     idx++;
@@ -157,7 +158,7 @@ export class Formatter extends FmterEles {
             ps.json += curIndent + '}';
         } else {
             ps.html += this.brcPre('{', 'obj') + this.brcEnd('}');
-            ps.json += '{}'
+            ps.json += '{}';
         }
         onEnd(ps);
     }

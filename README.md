@@ -1,9 +1,9 @@
 # 转杰森
 
 ### 访问地址
-- 内网地址0: http://10.63.244.252:8888 
-- 公网地址1: http://zjson.net （目前还在备案）
-- 公网地址2: http://nicengblog.com （zjson临时地址）
+- 公网地址: http://zjson.net
+- 内网地址: http://10.63.244.252:8888 
+
 <p align="center">
   <img width="100%" src="zjson.png">
 </p>

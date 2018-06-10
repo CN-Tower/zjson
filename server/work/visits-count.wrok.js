@@ -21,7 +21,7 @@ function doGetAndSet() {
 }
 
 function addUser() {
-    const userId = 'ZJSON-' + fn.gnid();
+    const userId = 'ZJSON-' + fn.rdid();
     const vtTime = fn.timeStamp();
     users.push({userId: userId, vtTime: vtTime});
     setTimeout(function () {
