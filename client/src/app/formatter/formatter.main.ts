@@ -35,9 +35,8 @@ export class Formatter extends FmterEles {
                 this.st.fmtedType = this.ck.srcAcType;
             }
         } catch (e) {
-            console.log(e);
-            // this.doFormate2();
-            // this.st.fmtedType = this.ck.srcAcType;
+            this.doFormate2();
+            this.st.fmtedType = this.ck.srcAcType;
         }
         this.dt.html = this.dt.html === '' ? '' : this.rowIndex(1) + this.dt.html;
         if (this.st.isSrcValid) {
