@@ -5,7 +5,7 @@
 - 内网地址: http://10.63.244.252:8888 
 
 <p align="center">
-  <img width="100%" src="">
+  <img width="100%" src="zjson.png">
 </p>
 
 ### 简单介绍
