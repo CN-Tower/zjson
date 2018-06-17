@@ -9,8 +9,8 @@ export class Configs {
     public type: 'json'|'jsObj'|'pyMap' = 'json';
     public indent: 1|2|3|4 = 2;
     public sgIndent: string = ' ';
-    public quotes: '\''|'"' = '\''
-    public isQuoteKey: boolean = false;
+    public quotes: '\''|'"' = '\'';
+    public isQuoteKey: boolean = true;
 
     constructor (conf?: any) {
         if (conf) {

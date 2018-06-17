@@ -5,6 +5,7 @@
     "VC_": "Visit Count: ",
     "VC": "VC: ",
     "configs": "Configs",
+    "lang": "Lang (语 言)",
     "model_": "Model:",
     "type_": "Type:",
     "indent_": "Indent:",
@@ -55,8 +56,9 @@
         "col": "Expect a colon in line: {{rowIdx}} !",
         "val": "Invalid value in line: {{rowIdx}} !",
         "end": "Expect a comma or a \"{{brc}}\" in line: {{rowIdx}} !",
-        "war": "Formated {{rowIdx}} lines, But not a regular JSON!",
+        "war": "Formated {{rowIdx}} lines, But not a regular JSON !",
         "scc": "Success formated {{rowIdx}} lines !"
     },
-    "zNotice": "Hi, zjson.net and funclib.js (a zjson dependency) are open source now. If you are interested, click the links below!"
+    "zNotice": "Dear code friends, zjson.net and funclib.js (a zjson dependency) are open source now. If you are interested, click the links below!",
+    "noHist": "No saved record !"
 }

@@ -5,6 +5,7 @@
     "VC_": "访问统计：",
     "VC": "访问：",
     "configs": "配 置",
+    "lang": "语言( Lang )",
     "model_": "模 式：",
     "type_": "类 型：",
     "indent_": "缩 进：",
@@ -58,5 +59,6 @@
         "war": "非正常Json，行数：{{rowIdx}}行！",
         "scc": "格式化成功，行数：{{rowIdx}}行！"
     },
-    "zNotice": "亲，zjson.net和funclib.js（zjson依赖的一个函数库）已经开源啦，有兴趣的话就一起来玩吧！"
+    "zNotice": "亲爱的码友们，zjson.net和funclib.js（zjson所依赖的一个函数库）已经开源啦，有兴趣的话就一起来玩吧！",
+    "noHist": "没有保存的历史！"
 }

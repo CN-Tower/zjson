@@ -1,7 +1,7 @@
 #z-json {
     /* ======================== Z-JSON COMMON ========================= */
     @media (max-width: 768px) {
-        .z-lang-bg, .z-ico-download, .z-drager, .z-ptt-long, .z-vc-long {
+        .z-lang-bg, .z-ico-hd, .z-drager, .z-ptt-long, .z-vc-long {
             display: none !important;
         }
         .conf-info-item, .z-ptt-short.hide {
@@ -21,7 +21,7 @@
         #configs .panel {
             margin-bottom: 0;
         }
-        .z-to-left, .z-fmt-alts {
+        .z-to-left, .z-fmt-alts, #z-notice-text {
             display: none !important;
         }
     }
@@ -38,26 +38,161 @@
             clear:both;
         }
     }
+    .model-shadow {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 998;
+    }
+    .rotate90 {
+        transform: rotate(90deg);
+    }
     /* ======================== Z-JSON HEADER ========================= */
     header {
         padding: 0 20px;
         position: relative;
-        .z-language-drop {
-            position: absolute;
-            right: 20px;
-        }
-        .z-visit-count {
-            position: absolute;
-            top: 5px;
-            strong {
-                color: #ac2925;
-            }
-        }
         h2.z-json-hd {
+            width: 200px;
+            margin: 25px auto 14px;
+            padding: 4px;
             font-weight: bold;
+            h5.z-sub-hd {
+                display: inline;
+            }
+            &:before, &:after{
+                content: " ";
+                display: block;
+                position: absolute;
+                width: 200px;
+                height: 50px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                z-index: 10;
+                box-sizing: border-box;
+                -webkit-animation: clipAni 16s infinite linear;
+                -o-animation: clipAni 16s infinite linear;
+                animation: clipAni 16s infinite linear;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+              }
+              &:before{
+                -webkit-animation-delay: -8s;
+                -moz-animation-delay: -8s;
+                -o-animation-delay: -8s;
+                animation-delay: -8s;
+              }
+              @keyframes  clipAni{
+                0%, 100%{
+                    clip:rect(49px,200px,51px,0px);
+                }
+                25%{
+                    clip:rect(0px,1px,51px,0px);
+                }
+                50%{
+                    clip:rect(0px,200px,1px,0px);
+                }
+                75%{
+                    clip:rect(0px,200px,51px,199px);
+                }
+              }
         }
-        h5.z-sub-hd {
-            display: inline;
+        .z-fmt-alts {
+            position: fixed;
+            top: 20px;
+            width: 35%;
+            .alert-info {
+                background-color: #f5f5f5;
+                border-color: #ddd;
+            }
+            &:nth-of-type(1) {
+                z-index: 999;
+                cursor: pointer;
+                .alert {    
+                    font-size: 14px;
+                    padding: 3px 38px 3px 12px;
+                    margin-bottom: 0;
+                    .z-conf-btn {
+                        position: absolute;
+                        right: 15px;
+                        top: 15px;
+                        transition: transform .5s;
+                    }
+                    .z-conf-table {
+                        width: 100%;
+                        th, td {
+                            padding: 0 10px;
+                            text-align: center;
+                            border: 1px solid #ccc;
+                            border-right: none;
+                            &:nth-child(1) {    
+                                border-left: none;
+                            }
+                        }
+                        th {
+                            border-top: none;
+                        }
+                        td {
+                            border-bottom: none;
+                        }
+                    }
+                }
+                .z-conf-wp {
+                    margin-top: 2px;
+                    display: none;
+                    background: #fff;
+                    border: 1px solid rgba(0,0,0,.15);
+                    border-radius: 4px;
+                    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+                    z-index: 998;
+                    .z-conf-item {
+                        .conf-item-wp {
+                            margin-bottom: 0;
+                            padding: 10px 15px;
+                            position: relative;
+                            .conf-item {
+                                .clear-fix;
+                                padding: 10px 15px;
+                                border: 1px solid #ddd;
+                                border-radius: 3px;
+                                .conf-tt {
+                                    width: 100px;
+                                    text-align: right;
+                                    margin-right: 25px;
+                                }
+                                .conf-con {
+                                    height: 65px;
+                                    margin-left: 15px;
+                                    .z-drop {
+                                        margin-top: 10px;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            &:nth-of-type(2) {
+                right: 20px;
+                .alert {
+                    position: relative;
+                    height: 50px;
+                    padding: 0 0 0 20px;
+                    text-align: center;
+                    line-height: 50px;
+                    .alt-tt {
+                        position: absolute;
+                        left: 20px;
+                    }
+                    .z-greetings {
+                        margin: 0 auto;
+                        overflow: hidden;
+                    }
+                }
+            }
         }
     }
     section {
@@ -66,100 +201,7 @@
     }
     #alerts {
         position: fixed;
-        top: 0;
-    }
-    /* ======================== Z-JSON CONFIGS ======================== */
-    #configs {
-        .panel-heading {
-            cursor: pointer;
-        }
-        .panel-body {
-            padding-top: 0;
-            .z-conf-info {
-                padding-top: 15px;
-                .z-conf-tt {
-                    width: 48px;
-                    display: inline-block;
-                }
-                .z-conf-val {
-                    width: 62px;
-                    display: inline-block;
-                    margin: 0 10px 0 6px;
-                    color: #ac2925;
-                }
-            }
-            .z-conf-item {
-                display: none;
-                padding-top: 10px;
-                .conf-item-wp {
-                    margin-bottom: 0;
-                    padding: 10px 15px;
-                    position: relative;
-                    .conf-item {
-                        .clear-fix;
-                        padding: 10px 15px;
-                        border: 1px solid #ddd;
-                        border-radius: 3px;
-                        .conf-tt {
-                            width: 80px;
-                        }
-                        .conf-con {
-                            height: 65px;
-                            margin-left: 15px;
-                            .z-drop {
-                                margin-top: 10px;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-    /* ======================== Z-JSON OPERATE ========================== */
-    #operate {
-        padding-bottom: 0;
-        position: relative;
-        .z-fmt-alts {
-            position: absolute;
-            left: 0;
-            right: 0;
-            width: 35%;
-            margin: auto;
-            .alert {
-                position: relative;
-                height: 50px;
-                margin-top: -16px;
-                padding: 0 0 0 20px;
-                text-align: center;
-                line-height: 50px;
-                .alt-tt {
-                    position: absolute;
-                    left: 20px;
-                }
-                .z-greetings {
-                    margin: 0 auto;
-                    overflow: hidden;
-                }
-            }
-        }
-        .z-src-btn {
-            min-width: 325px;
-            margin-bottom: 10px;
-            .clear-fix;
-            .src-op-btn {
-                float: left;
-                margin-right: 6px;
-            }
-        }
-        .z-fmt-btn {
-            margin-bottom: 10px;
-            .z-fmt-btn-wp {
-                .z-more-drop {
-                    margin-left: 6px;
-                    display: inline-block;
-                }
-            }
-        }
+        top: 10px;
     }
     /* ======================== Z-JSON STAGE ========================= */
     #worker {
@@ -167,10 +209,10 @@
             box-sizing: border-box;
             float: left;
             .panel {
-                height: calc(~"(100% - 20px)");
+                height: calc(~"(100% - 25px)");
                 &.z-maximal{
                     position: fixed;
-                    top: 15px;
+                    top: 10px;
                     left: 20px;
                     z-index: 999;
                 }

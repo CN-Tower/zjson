@@ -1,7 +1,6 @@
-import { Component, OnInit, AfterViewInit, ViewEncapsulation, HostListener } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import { TranslateService, TranslationChangeEvent } from '@ngx-translate/core';
 import { AppService } from './app.service';
-import { toggleSlid } from './animations/toggle-slid';
 import { Configs, FmtStatus, FmterEles } from './formatter/formatter.conf';
 import { Formatter } from './formatter/formatter.main';
 import * as moment from 'moment';
@@ -10,17 +9,14 @@ import * as moment from 'moment';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.less'],
-  animations: [toggleSlid],
   encapsulation: ViewEncapsulation.None
 })
 export class AppComponent implements OnInit, AfterViewInit {
   conf: Configs;
   lang: string;
-  warningMsg: string;
   isWindowBig: boolean;
   sourcest: string = '';
   formated: string = '';
-  visitCount: number = NaN;
   alertMsg: string = '';
   saveFmtTime: string;
   fmtSourcest: string;
@@ -29,7 +25,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   maxFmtSize: any = null;
   isSrcMax: boolean = false;
   isFmtMax: boolean = false;
-  isShowAlerts: string = 'hide';
   isModelExpand: boolean = false;
   isFmtedEditAb: boolean = true;
   isShowConfigs: boolean = false;
@@ -51,7 +46,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   i18n: any = {
     confs: {show: '', hide: ''},
     model: {expand: '', combine: ''},
-    type: {json: 'Json', jsobj: 'Js Obj'},
+    type: {json: 'Json', jsObj: 'JsObj'},
     theme: {default: '', nocolor: ''},
     alert: {ost: '', col: '', val: '', end: '', war: '', scc: ''}
   };
@@ -74,7 +69,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     const userId = this.appService.getUserId() || 'ZJSON-NEWID';
     this.getFmtHists();
     this.appService.getVistCount(userId).subscribe((vst: any) => {
-      this.visitCount = vst.nb;
+      win['vistCount'] = vst.nb;
       this.appService.setUserId(vst.id);
     });
   }
@@ -94,13 +89,13 @@ export class AppComponent implements OnInit, AfterViewInit {
   doFormate(fmtSrc: string, isSilence?: boolean) {
     this.isOriginEmpty = !this.formated;
     if (!this.sourcest && !this.fmtSourcest && !isSilence) {
-      this.isShowAlerts = 'show';
-      this.warningMsg = this.translate.instant('_format');
+      this.alertWarning(this.translate.instant('_format'));
     } else {
       this.formatter.init(fmtSrc.trim(), this.conf , (html, json, fmtSt) => {
         this.formated = json;
         this.fmtSt = fmtSt;
         if (html) {
+          fn.timeout('alert-warning', false);
           this.alertType = this.fmtSt.altType;
           this.alertInfo = this.fmtSt.altInfo;
           this.translateAltMsgs();
@@ -108,6 +103,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         } else {
           this.emptyFmt();
         }
+        this.isOriginEmpty = !this.formated;
         this.isModelExpand = this.conf.model === 'expand';
         fn.timeout(() => {
           const $zCanvas = $('.z-canvas');
@@ -127,6 +123,15 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.lang = type;
     this.translate.use(type);
     this.animateGreeting();
+  }
+
+  alertWarning(message: string) {
+    this.alertType = 'warning';
+    this.alertMsg = message;
+    fn.timeout('alert-warning', 2500, () => {
+      this.alertType = 'info';
+      this.animateGreeting();
+    });
   }
 
   /**
@@ -171,14 +176,27 @@ export class AppComponent implements OnInit, AfterViewInit {
    * 最大化、最小化代码窗口
    * =================================
    */
-  setMaximalPanelTop() {
-    $('.z-maximal').css('top', 15 - $(this).scrollTop());
-  }
   maximalPanel(type: 'src'|'fmt') {
-    $(document).scrollTop(0).on('scroll', this.setMaximalPanelTop);
-    $('.z-to-left, .z-show-left').addClass('hide');
+    let panel;
+    switch (type) {
+      case 'src':
+        this.isSrcMax = true;
+        panel = $('#z-source .panel')[0];
+        break;
+      case 'fmt':
+        this.isFmtMax = true;
+        panel = $('#z-jsonwd .panel')[0];
+        break;
+    }
+    fn.fullScreen(panel);
+    fn.interval('checkIsFullScreen', 100, () => {
+      if (fn.isFullScreen(panel)) {
+        fn.interval('checkIsFullScreen', false);
+        fn.timeout(100, () => fn.fullScreenChange(() => this.minimalPanel()));
+      }
+    });
     const $win = $(win);
-    const winH = $win.height() - 30;
+    const winH = $win.height() - 20;
     const winW = $win.width();
     const pW = winW - 40;
     const pH =  winH > 500 ? winH : 500;
@@ -193,14 +211,16 @@ export class AppComponent implements OnInit, AfterViewInit {
         break;
     }
   }
-  minimalPanel(type: 'src'|'fmt') {
-    $(document).off('scroll', this.setMaximalPanelTop);
-     $('.z-to-left, .z-show-left').removeClass('hide');
+
+  minimalPanel(type?: 'src'|'fmt') {
+    fn.exitFullScreen($('#z-source .panel')[0]);
+    fn.exitFullScreen($('#z-jsonwd .panel')[0]);
+    fn.fullScreenChange(false);
     this.isSrcMax = false;
     this.isFmtMax = false;
     this.maxSrcSize = null;
     this.maxFmtSize = null;
-    setTimeout(() => this.onWindowResize(), 0);
+    setTimeout(() => this.onWindowResize());
   }
 
   /**
@@ -222,10 +242,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     if (blob) {
       saveAs(blob, `zjson-${String(fn.timeStamp()).substr(-6)}.json`);
     } else {
-      this.isShowAlerts = 'show';
-      this.warningMsg = this.translate.instant('_download');
+      this.alertWarning(this.translate.instant('_download'));
     }
   }
+
   pushToLeft() {
     const ww = $('#worker').width();
     const ps = 300 / ww * 100;
@@ -233,10 +253,12 @@ export class AppComponent implements OnInit, AfterViewInit {
     $('#z-source').animate({width: ps + '%'}, 500);
     $('#z-jsonwd').animate({width: pj + '%'}, 500);
   }
+
   showInLeft() {
     this.sourcest = this.formated;
     $('.src-text').scrollTop(0);
   }
+
   saveFmted() {
     const svTime = this.getTimeStr();
     if (this.fmtSourcest) {
@@ -250,10 +272,10 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.getFmtHists();
       }
     } else {
-      this.isShowAlerts = 'show';
-      this.warningMsg = this.translate.instant('_save');
+      this.alertWarning(this.translate.instant('_save'));
     }
   }
+
   showOrRmFmtHist(e: any, hist: any) {
     if (e.target.tagName === 'I') {
       this.appService.rmvFmtHists(hist);
@@ -263,35 +285,38 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.doFormate(this.sourcest);
     }
   }
+
   copyFmted() {
     if ($('.z-canvas').html()) {
       $.copyText(this.formated);
     } else {
-      this.isShowAlerts = 'show';
-      this.warningMsg = this.translate.instant('_copy');
+      this.alertWarning(this.translate.instant('_copy'));
     }
   }
+
   clearSourc() {
     if (this.sourcest) {
       this.sourcest = '';
     } else {
-      this.isShowAlerts = 'show';
-      this.warningMsg = this.translate.instant('_clear');
+      this.alertWarning(this.translate.instant('_clear'));
     }
   }
+
   pasteSourc() {
     setTimeout(() => this.doFormate(this.sourcest, true));
   }
+
   clearFmted() {
     if (this.fmtSourcest) {
       this.emptyFmt();
     } else {
-      this.isShowAlerts = 'show';
-      this.warningMsg = this.translate.instant('_clear');
+      this.alertWarning(this.translate.instant('_clear'));
     }
   }
+
   emptyFmt() {
     $('.z-canvas').html('');
+    fn.timeout('alert-warning', false);
     this.alertType = 'info';
     this.formated = '';
     this.fmtSourcest = '';
@@ -299,36 +324,37 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.animateGreeting();
     }
   }
+
   expandAll() {
     if ($('.z-canvas').html()) {
       this.doFormate(this.fmtSourcest);
     } else {
-      this.isShowAlerts = 'show';
-      this.warningMsg = this.translate.instant('_expand');
+      this.alertWarning(this.translate.instant('_expand'));
     }
   }
+
   collapseAll() {
     const $firstOpBtn = $('.operator').eq(0);
     if ($firstOpBtn.hasClass('expanded')) {
       $firstOpBtn.click();
     } else {
-      this.isShowAlerts = 'show';
-      this.warningMsg = this.translate.instant('_collapse');
+      this.alertWarning(this.translate.instant('_collapse'));
     }
   }
+
   toggleConfigs() {
     if (!this.isConfOnSlid) {
       this.isConfOnSlid = true;
       if (this.isShowConfigs) {
-        $('.z-conf-item').slideUp(() => {
+        this.isShowConfigs = false;
+        $('.z-conf-wp').slideUp(() => {
           this.isConfOnSlid = false;
-          this.isShowConfigs = false;
           this.onWindowResize(true);
         });
       } else {
-        $('.z-conf-item').slideDown(() => {
+        this.isShowConfigs = true;
+        $('.z-conf-wp').slideDown(() => {
           this.isConfOnSlid = false;
-          this.isShowConfigs = true;
           this.onWindowResize(true);
         });
       }
@@ -382,30 +408,14 @@ export class AppComponent implements OnInit, AfterViewInit {
    */
   onWindowResize(isAnimate: boolean = false) {
     const $win = $(win);
-    const $conf = $('.z-conf-item');
     const $maxPanel = $('.z-maximal');
     const $work = $('#worker');
     const $panel = $work.find('.panel:not(.z-maximal)');
-    const cH = this.isShowConfigs ? $conf.height() + 10 : 0;
     const winW = $win.width();
     const winH = $win.height();
-    let fixH = 265;
-    if (winW < 1025 && winW > 768) {
-      fixH = 245;
-    } else if (winW <= 768) {
-      fixH = 310;
-    }
-    let wH = winH - cH - fixH;
-    if (wH < 210) {
-      wH = 210;
-    }
-    if (isAnimate) {
-      $work.animate({height: wH}, 200);
-      $panel.animate({height: wH - 10}, 200);
-    } else {
-      $work.height(wH);
-      $panel.height(wH - 10);
-    }
+    const wH = winH - 100;
+    $work.height(wH);
+    $panel.height(wH - 10);
     if (winW >= 1025) {
       if (!this.isWindowBig) {
         this.isWindowBig = true;
