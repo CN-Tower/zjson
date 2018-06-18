@@ -3,6 +3,14 @@
   <!--========================== Z-JSON HEADER ========================-->
   <!--=================================================================-->
   <div *ngIf="isShowConfigs" class="model-shadow" (click)="toggleConfigs()"></div>
+  
+  <div id="alerts" class="alert alert-{{noticeType}} alert-dismissible" role="alert" [@toggleSlid]="noticeCtrl">
+    <button type="button" class="close" (click)="alertNotice(false)">
+      <span aria-hidden="true">&times;</span>
+    </button>
+    <strong>{{'warning' | translate}}</strong>&nbsp;&nbsp;{{noticeMsg}}
+  </div>
+
   <header>
     <h2 class="ct z-json-hd">
       {{'zjson' | translate}}
@@ -18,6 +26,7 @@
         <table class="z-conf-table">
           <thead>
             <tr>
+              <th>{{'VC' | translate}}</th>
               <th><span>{{'lang' | translate}}</span></th>
               <th>{{'type' | translate}}</th>
               <th>{{'indent' | translate}}</th>
@@ -26,6 +35,7 @@
           </thead>
           <tbody>
             <tr>
+              <td>{{visitCount}}</td>
               <td><span>{{languages[lang].long}}</span></td>
               <td>{{i18n.type[conf.type]}}</td>
               <td>{{conf.indent}} {{'space' | translate}}</td>
@@ -152,7 +162,10 @@
         <div class="panel-heading no-select">
           <div class="z-panel-icos">
             <span *ngIf="!isSrcMax" class="z-to-left" (click)="pushToLeft()">
-              <i class="fa fa-step-backward z-op-icon" title="{{'pushToLeft' | translate}}"></i>
+              <i class="fa fa-hand-o-left z-op-icon" title="{{'pushToLeft' | translate}}"></i>
+            </span>
+            <span *ngIf="!isSrcMax" class="z-to-left" (click)="pushToMiddle()">
+              <i class="fa fa-columns z-op-icon" title="{{'pushToMiddle' | translate}}"></i>
             </span>
             <span class="z-ico-hd" (click)="clearSourc()">
               <i class="fa fa-trash z-op-icon" title="{{'clear' | translate}}"></i>
@@ -241,9 +254,11 @@
           <div id="z-container">
             <div id="z-stage" [class.fullWidth]="!isModelExpand">
               <div id="z-notice-text" *ngIf="!formated">
-                {{'zNotice' | translate}}<br>
-                <strong>zjson.net:</strong><a href="http://github.com/CN-Tower/zjson">http://github.com/CN-Tower/zjson</a><br>
-                <strong>funclib.js:</strong><a href="http://github.com/CN-Tower/funclib.js">http://github.com/CN-Tower/funclib.js</a><br>
+                <p>{{'zNotice' | translate}}</p>
+                <i class="fa fa-check-square-o"></i>&nbsp;<strong>zjson.net:</strong>
+                <a target="_blank" href="http://github.com/CN-Tower/zjson">http://github.com/CN-Tower/zjson</a><br>
+                <i class="fa fa-check-square-o"></i>&nbsp;<strong>funclib.js:</strong>
+                <a target="_blank" href="http://github.com/CN-Tower/funclib.js">http://github.com/CN-Tower/funclib.js</a><br>
               </div>
               <div id="z-index" [style.height]="setRowIdxWpHeight()"></div>
               <pre *ngIf="isModelExpand" class="z-canvas theme-{{theme}}"

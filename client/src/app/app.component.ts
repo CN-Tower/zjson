@@ -1,19 +1,21 @@
 import { Component, OnInit, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import { TranslateService, TranslationChangeEvent } from '@ngx-translate/core';
+import { toggleSlid } from './animations/toggle-slid';
 import { AppService } from './app.service';
 import { Configs, FmtStatus, FmterEles } from './formatter/formatter.conf';
 import { Formatter } from './formatter/formatter.main';
-import * as moment from 'moment';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.less'],
+  animations: [toggleSlid],
   encapsulation: ViewEncapsulation.None
 })
 export class AppComponent implements OnInit, AfterViewInit {
   conf: Configs;
   lang: string;
+  visitCount: number = NaN;
   isWindowBig: boolean;
   sourcest: string = '';
   formated: string = '';
@@ -25,6 +27,9 @@ export class AppComponent implements OnInit, AfterViewInit {
   maxFmtSize: any = null;
   isSrcMax: boolean = false;
   isFmtMax: boolean = false;
+  noticeCtrl: string = 'hide';
+  noticeMsg: string = '';
+  noticeType: 'success'|'danger'|null = null;
   isModelExpand: boolean = false;
   isFmtedEditAb: boolean = true;
   isShowConfigs: boolean = false;
@@ -52,7 +57,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   };
   altMsgs: any = {};
   setRowIdxWpHeight: Function = () => $('.z-canvas').height() + 12 + 'px';
-  getTimeStr: Function = () => moment().format('MM-DD HH:mm:ss');
+  getTimeStr: Function = () => fn.fmtDate('MM-dd hh:mm:ss');
   getFmtHists: Function = () => this.fmtHists = this.appService.getFmtHists();
 
   constructor(
@@ -66,12 +71,9 @@ export class AppComponent implements OnInit, AfterViewInit {
     translate.use(this.lang);
     this.greeting = this.appService.getGreeting(this.lang);
     this.conf = new Configs();
-    const userId = this.appService.getUserId() || 'ZJSON-NEWID';
     this.getFmtHists();
-    this.appService.getVistCount(userId).subscribe((vst: any) => {
-      win['vistCount'] = vst.nb;
-      this.appService.setUserId(vst.id);
-    });
+    this.refreshVisitCount();
+
   }
 
   ngOnInit() {
@@ -79,6 +81,19 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.translate.onLangChange.subscribe((event: TranslationChangeEvent) => {
       this.doTranslate();
       this.translateAltMsgs();
+    });
+    fn.interval('visit-count', 10000, () => this.refreshVisitCount());
+  }
+
+  /**
+   * 每隔10s刷新访问量
+   * =================================
+   */
+  refreshVisitCount() {
+    const userId = this.appService.getUserId() || 'ZJSON-NEWID';
+    this.appService.getVistCount(userId).subscribe((vst: any) => {
+      this.visitCount = vst.nb;
+      this.appService.setUserId(vst.id);
     });
   }
 
@@ -89,13 +104,12 @@ export class AppComponent implements OnInit, AfterViewInit {
   doFormate(fmtSrc: string, isSilence?: boolean) {
     this.isOriginEmpty = !this.formated;
     if (!this.sourcest && !this.fmtSourcest && !isSilence) {
-      this.alertWarning(this.translate.instant('_format'));
+      this.alertNotice(this.translate.instant('_format'), 'danger');
     } else {
       this.formatter.init(fmtSrc.trim(), this.conf , (html, json, fmtSt) => {
         this.formated = json;
         this.fmtSt = fmtSt;
         if (html) {
-          fn.timeout('alert-warning', false);
           this.alertType = this.fmtSt.altType;
           this.alertInfo = this.fmtSt.altInfo;
           this.translateAltMsgs();
@@ -125,13 +139,20 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.animateGreeting();
   }
 
-  alertWarning(message: string) {
-    this.alertType = 'warning';
-    this.alertMsg = message;
-    fn.timeout('alert-warning', 2500, () => {
-      this.alertType = 'info';
-      this.animateGreeting();
-    });
+  /**
+   * 提示信息
+   * =================================
+   */
+  alertNotice(message: string|boolean, type: 'danger'|'success' = 'success') {
+    if (message === false) {
+      this.noticeCtrl = 'hide';
+      fn.timeout('alert-success-msg', false);
+    } else if (typeof message === 'string') {
+      this.noticeCtrl = 'show';
+      this.noticeMsg = message;
+      this.noticeType = type;
+      fn.timeout('alert-success-msg', 2500, () => this.noticeCtrl = 'hide');
+    }
   }
 
   /**
@@ -160,7 +181,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     if (!this.fmtSt.isSrcValid) {
       const errIdx = this.fmtSt.errRowIdx;
       $('#z-container')[0].scrollTop = errIdx * 18 - 240;
-      const caret_ = '<span class="z-hint-caret"><i class="fa fa-caret-right"></i><span>'
+      const caret_ = '<span class="z-hint-caret"><i class="fa fa-caret-right"></i><span>';
       const $errRow = $(`.z-row-${errIdx}`).append(caret_);
       const redNext: Function = $next => {
         if ($next.hasClass('z-code')) {
@@ -173,7 +194,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 最大化、最小化代码窗口
+   * 最大化窗口
    * =================================
    */
   maximalPanel(type: 'src'|'fmt') {
@@ -212,6 +233,10 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
   }
 
+  /**
+   * 最小化窗口
+   * =================================
+   */
   minimalPanel(type?: 'src'|'fmt') {
     fn.exitFullScreen($('#z-source .panel')[0]);
     fn.exitFullScreen($('#z-jsonwd .panel')[0]);
@@ -224,7 +249,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 相关操作
+   * 下载操作
    * =================================
    */
   download(type: 'src'|'fmt') {
@@ -242,10 +267,14 @@ export class AppComponent implements OnInit, AfterViewInit {
     if (blob) {
       saveAs(blob, `zjson-${String(fn.timeStamp()).substr(-6)}.json`);
     } else {
-      this.alertWarning(this.translate.instant('_download'));
+      this.alertNotice(this.translate.instant('_download'), 'danger');
     }
   }
 
+  /**
+   * 窗口推到左边
+   * =================================
+   */
   pushToLeft() {
     const ww = $('#worker').width();
     const ps = 300 / ww * 100;
@@ -254,11 +283,33 @@ export class AppComponent implements OnInit, AfterViewInit {
     $('#z-jsonwd').animate({width: pj + '%'}, 500);
   }
 
+  /**
+   * 窗口推到中间
+   * =================================
+   */
+  pushToMiddle() {
+    if ($('#z-source').width() / $('#worker').width() >= 0.495) {
+      $('#z-source').animate({width: '49.5%'}, 500);
+      $('#z-jsonwd').animate({width: '49.5%'}, 500);
+    } else {
+      $('#z-jsonwd').animate({width: '49.5%'}, 500);
+      $('#z-source').animate({width: '49.5%'}, 500);
+    }
+  }
+
+  /**
+   * 右边的内容显示到左边
+   * =================================
+   */
   showInLeft() {
     this.sourcest = this.formated;
     $('.src-text').scrollTop(0);
   }
 
+  /**
+   * 保存到历史记录
+   * =================================
+   */
   saveFmted() {
     const svTime = this.getTimeStr();
     if (this.fmtSourcest) {
@@ -270,53 +321,79 @@ export class AppComponent implements OnInit, AfterViewInit {
         const hist = {src: this.fmtSourcest, name: histName};
         const prefix = this.appService.setFmtHists(hist);
         this.getFmtHists();
+        this.alertNotice(this.translate.instant('saveSuccess'), 'success');
       }
     } else {
-      this.alertWarning(this.translate.instant('_save'));
+      this.alertNotice(this.translate.instant('_save'), 'danger');
     }
   }
 
+  /**
+   * 显示历史记录
+   * =================================
+   */
   showOrRmFmtHist(e: any, hist: any) {
     if (e.target.tagName === 'I') {
       this.appService.rmvFmtHists(hist);
       this.getFmtHists();
+      this.alertNotice(this.translate.instant('removeSavedSuccess'), 'success');
     } else {
       this.sourcest = hist.src;
       this.doFormate(this.sourcest);
     }
   }
 
+  /**
+   * 复制操作
+   * =================================
+   */
   copyFmted() {
-    if ($('.z-canvas').html()) {
-      $.copyText(this.formated);
+    if (this.formated) {
+      fn.copyText(this.formated);
+      this.alertNotice(this.translate.instant('copySuccess'), 'success');
     } else {
-      this.alertWarning(this.translate.instant('_copy'));
+      this.alertNotice(this.translate.instant('_copy'), 'danger');
     }
   }
 
+  /**
+   * 清空源始代码
+   * =================================
+   */
   clearSourc() {
     if (this.sourcest) {
       this.sourcest = '';
     } else {
-      this.alertWarning(this.translate.instant('_clear'));
+      this.alertNotice(this.translate.instant('_clear'), 'danger');
     }
   }
 
+  /**
+   * 清空解析结果
+   * =================================
+   */
   pasteSourc() {
     setTimeout(() => this.doFormate(this.sourcest, true));
   }
 
+  /**
+   * 清空操作
+   * =================================
+   */
   clearFmted() {
     if (this.fmtSourcest) {
       this.emptyFmt();
     } else {
-      this.alertWarning(this.translate.instant('_clear'));
+      this.alertNotice(this.translate.instant('_clear'), 'danger');
     }
   }
 
+  /**
+   * 执行清空
+   * =================================
+   */
   emptyFmt() {
     $('.z-canvas').html('');
-    fn.timeout('alert-warning', false);
     this.alertType = 'info';
     this.formated = '';
     this.fmtSourcest = '';
@@ -325,23 +402,33 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
   }
 
+  /**
+   * 全部展开
+   * =================================
+   */
   expandAll() {
     if ($('.z-canvas').html()) {
       this.doFormate(this.fmtSourcest);
-    } else {
-      this.alertWarning(this.translate.instant('_expand'));
     }
   }
 
+  /**
+   * 全部收起
+   * =================================
+   */
   collapseAll() {
     const $firstOpBtn = $('.operator').eq(0);
     if ($firstOpBtn.hasClass('expanded')) {
       $firstOpBtn.click();
     } else {
-      this.alertWarning(this.translate.instant('_collapse'));
+      this.alertNotice(this.translate.instant('_collapse'), 'danger');
     }
   }
 
+  /**
+   * 配置选项
+   * =================================
+   */
   toggleConfigs() {
     if (!this.isConfOnSlid) {
       this.isConfOnSlid = true;

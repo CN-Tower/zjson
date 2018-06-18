@@ -49,6 +49,25 @@
     .rotate90 {
         transform: rotate(90deg);
     }
+    section {
+        .clear-fix;
+        padding: 10px 20px;
+    }
+    #alerts {
+        position: fixed;
+        top: 25px;
+        background: #fff;
+        border: 1px solid #eee;
+        border-left: 5px solid;
+        height: 50px;
+        z-index: 10;
+        &.alert-success {
+            border-left-color: #3c763d;
+        }
+        &.alert-danger {
+            border-left-color: #a94442;
+        }
+    }
     /* ======================== Z-JSON HEADER ========================= */
     header {
         padding: 0 20px;
@@ -114,7 +133,7 @@
                 cursor: pointer;
                 .alert {    
                     font-size: 14px;
-                    padding: 3px 38px 3px 12px;
+                    padding: 0 38px 0 0;
                     margin-bottom: 0;
                     .z-conf-btn {
                         position: absolute;
@@ -124,20 +143,16 @@
                     }
                     .z-conf-table {
                         width: 100%;
+                        font-size: 12px;
+                        border-collapse: separate;
                         th, td {
+                            height: 24px;
                             padding: 0 10px;
                             text-align: center;
-                            border: 1px solid #ccc;
-                            border-right: none;
-                            &:nth-child(1) {    
-                                border-left: none;
-                            }
+                            border-right: 1px solid #ccc;
                         }
                         th {
-                            border-top: none;
-                        }
-                        td {
-                            border-bottom: none;
+                            border-bottom: 1px solid #ccc;
                         }
                     }
                 }
@@ -195,14 +210,6 @@
                 }
             }
         }
-    }
-    section {
-        .clear-fix;
-        padding: 10px 20px;
-    }
-    #alerts {
-        position: fixed;
-        top: 10px;
     }
     /* ======================== Z-JSON STAGE ========================= */
     #worker {

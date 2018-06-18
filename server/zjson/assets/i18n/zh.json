@@ -3,7 +3,7 @@
     "dotNet": "刀 耐",
     "warning": "提 示：",
     "VC_": "访问统计：",
-    "VC": "访问：",
+    "VC": "访 问",
     "configs": "配 置",
     "lang": "语言( Lang )",
     "model_": "模 式：",
@@ -32,6 +32,7 @@
     "fmted": "结果",
     "placeHolder": "在此处输入或者粘贴需要解析的Json代码!",
     "pushToLeft": "推到左边",
+    "pushToMiddle": "推到中间",
     "showInLeft": "左边显示",
     "download": "下载",
     "maximal": "最大化",
@@ -60,5 +61,8 @@
         "scc": "格式化成功，行数：{{rowIdx}}行！"
     },
     "zNotice": "亲爱的码友们，zjson.net和funclib.js（zjson所依赖的一个函数库）已经开源啦，有兴趣的话就一起来玩吧！",
-    "noHist": "没有保存的历史！"
+    "noHist": "没有保存的历史！",
+    "saveSuccess": "保存成功！",
+    "removeSavedSuccess": "清除成功！",
+    "copySuccess": "复制成功！"
 }

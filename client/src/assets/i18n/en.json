@@ -3,7 +3,7 @@
     "dotNet": ".NET",
     "warning": "Warning!",
     "VC_": "Visit Count: ",
-    "VC": "VC: ",
+    "VC": "Visit",
     "configs": "Configs",
     "lang": "Lang (语 言)",
     "model_": "Model:",
@@ -32,6 +32,7 @@
     "fmted": "Fmted",
     "placeHolder": "Paste your source json code to here!",
     "pushToLeft": "Push To Left",
+    "pushToMiddle": "Push To Middle",
     "showInLeft": "Show In Left",
     "download": "Download",
     "maximal": "Maximal",
@@ -60,5 +61,8 @@
         "scc": "Success formated {{rowIdx}} lines !"
     },
     "zNotice": "Dear code friends, zjson.net and funclib.js (a zjson dependency) are open source now. If you are interested, click the links below!",
-    "noHist": "No saved record !"
+    "noHist": "No saved record !",
+    "saveSuccess": "Save Success !",
+    "removeSavedSuccess": "Delete record Success !",
+    "copySuccess": "Copy Success !"
 }
