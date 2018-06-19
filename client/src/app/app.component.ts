@@ -16,6 +16,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   conf: Configs;
   lang: string;
   visitCount: number = NaN;
+  isPageActive: boolean = true;
   isWindowBig: boolean;
   sourcest: string = '';
   formated: string = '';
@@ -73,7 +74,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.conf = new Configs();
     this.getFmtHists();
     this.refreshVisitCount();
-
   }
 
   ngOnInit() {
@@ -91,10 +91,13 @@ export class AppComponent implements OnInit, AfterViewInit {
    */
   refreshVisitCount() {
     const userId = this.appService.getUserId() || 'ZJSON-NEWID';
-    this.appService.getVistCount(userId).subscribe((vst: any) => {
-      this.visitCount = vst.nb;
-      this.appService.setUserId(vst.id);
-    });
+    if (this.isPageActive) {
+      this.isPageActive = false;
+      this.appService.getVistCount(userId).subscribe((vst: any) => {
+        this.visitCount = vst.nb;
+        this.appService.setUserId(vst.id);
+      });
+    }
   }
 
   /**
@@ -529,6 +532,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.isWindowBig = $win.width() >= 1025;
     this.animateGreeting();
     this.onWindowResize();
+    $(document).on('click keyup', () => this.isPageActive = true);
     $win.resize(() => this.onWindowResize());
     setTimeout(() => this.onWindowResize(), 500);
     $('#z-container').scroll(function() {
