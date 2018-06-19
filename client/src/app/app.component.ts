@@ -60,7 +60,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   setRowIdxWpHeight: Function = () => $('.z-canvas').height() + 12 + 'px';
   getTimeStr: Function = () => fn.fmtDate('MM-dd hh:mm:ss');
   getFmtHists: Function = () => this.fmtHists = this.appService.getFmtHists();
-
+  
   constructor(
     private translate: TranslateService,
     private appService: AppService
@@ -74,6 +74,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.conf = new Configs();
     this.getFmtHists();
     this.refreshVisitCount();
+    this.pollingVisitCount();
   }
 
   ngOnInit() {
@@ -82,22 +83,37 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.doTranslate();
       this.translateAltMsgs();
     });
-    fn.interval('visit-count', 10000, () => this.refreshVisitCount());
+    fn.interval('refresh-visit-count', 300000, () => this.refreshVisitCount());
+    fn.interval('polling-visit-count', 10000, () => this.pollingVisitCount());
   }
 
   /**
-   * 每隔10s刷新访问量
+   * 刷新访问量
    * =================================
    */
   refreshVisitCount() {
-    const userId = this.appService.getUserId() || 'ZJSON-NEWID';
     if (this.isPageActive) {
       this.isPageActive = false;
-      this.appService.getVistCount(userId).subscribe((vst: any) => {
-        this.visitCount = vst.nb;
-        this.appService.setUserId(vst.id);
+      const userId = this.appService.getUserId();
+      this.appService.refreshVisitCount(userId).subscribe((res: any) => {
+        if (res['id']) {
+          this.appService.setUserId(res.id);
+        }
       });
     }
+  }
+
+  /**
+   * 轮询访问量
+   * =================================
+   */
+  pollingVisitCount() {
+    const userId = this.appService.getUserId();
+    this.appService.pollingVisitCount(userId).subscribe((res: any) => {
+      if (res['vc']) {
+        this.visitCount = res.vc;
+      }
+    });
   }
 
   /**
