@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Http } from '@angular/http';
 import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 
 @Injectable()
 export class AppService {
-    constructor(private http: HttpClient) {}
+    constructor(private http: Http) {}
 
     getGreeting(lang: string): string {
         const greetings = {
@@ -51,13 +51,18 @@ export class AppService {
     }
 
     getUserId() {
-        return window.localStorage['userId'];
+        const userId = window.localStorage['userId'];
+        if (userId) {
+            return userId;
+        } else {
+            const rdUserId = `ZJSON-${fn.rdid()}`;
+            this.setUserId(rdUserId);
+            return rdUserId;
+        }
     }
 
     setUserId(id: string) {
-        if (id) {
-            window.localStorage['userId'] = id;
-        }
+        window.localStorage['userId'] = id;
     }
 
     getFmtHists() {
@@ -80,7 +85,11 @@ export class AppService {
         window.localStorage['fmtHists'] = JSON.stringify(fmtHists);
     }
 
-    getVistCount(id: string) {
-        return this.http.get(`/api/visitCount/${id}`);
+    refreshVisitCount(id: string) {
+        return this.http.get(`/api/vc/refreshVc/${id}`).map(res => res.json());
+    }
+
+    pollingVisitCount(id: string) {
+        return this.http.get(`/api/vc/pollingVc/${id}`).map(res => res.json());
     }
 }
