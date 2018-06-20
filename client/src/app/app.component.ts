@@ -96,7 +96,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       const curVersion = this.appService.getLocalVersion();
       const rmtVersion = res['version'];
       this.appService.setLocalVersion(rmtVersion);
-      if (isRefresh && curVersion !== rmtVersion) {
+      if (isRefresh && !this.isPageActive && curVersion !== rmtVersion) {
         location.reload(true);
       }
       win['version'] = rmtVersion;
