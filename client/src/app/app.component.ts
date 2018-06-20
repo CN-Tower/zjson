@@ -73,7 +73,8 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.greeting = this.appService.getGreeting(this.lang);
     this.conf = new Configs();
     this.getFmtHists();
-    this.refreshVisitCount(false);
+    this.checkVersion(false);
+    this.refreshVisitCount();
     this.pollingVisitCount();
   }
 
@@ -83,7 +84,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.doTranslate();
       this.translateAltMsgs();
     });
-    fn.interval('refresh-visit-count', 300000, () => this.refreshVisitCount(true));
+    fn.interval('refresh-visit-count', 300000, () => this.refreshVisitCount());
     fn.interval('polling-visit-count', 15000, () => this.pollingVisitCount());
   }
 
@@ -93,10 +94,10 @@ export class AppComponent implements OnInit, AfterViewInit {
    */
   checkVersion(isRefresh: boolean) {
     this.appService.getRemoteVersion().subscribe(res => {
-      const curVersion = this.appService.getLocalVersion();
+      const locVersion = this.appService.getLocalVersion();
       const rmtVersion = res['version'];
       this.appService.setLocalVersion(rmtVersion);
-      if (isRefresh && !this.isPageActive && curVersion !== rmtVersion) {
+      if (isRefresh && locVersion !== rmtVersion) {
         location.reload(true);
       }
       win['version'] = rmtVersion;
@@ -107,8 +108,7 @@ export class AppComponent implements OnInit, AfterViewInit {
    * 刷新访问量
    * =================================
    */
-  refreshVisitCount(isRefresh: boolean) {
-    this.checkVersion(isRefresh);
+  refreshVisitCount() {
     if (this.isPageActive) {
       this.isPageActive = false;
       const userId = this.appService.getUserId();
@@ -117,6 +117,8 @@ export class AppComponent implements OnInit, AfterViewInit {
           this.appService.setUserId(res.id);
         }
       });
+    } else {
+      this.checkVersion(true);
     }
   }
 
