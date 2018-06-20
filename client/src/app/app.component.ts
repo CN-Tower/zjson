@@ -73,7 +73,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.greeting = this.appService.getGreeting(this.lang);
     this.conf = new Configs();
     this.getFmtHists();
-    this.refreshVisitCount();
+    this.refreshVisitCount(false);
     this.pollingVisitCount();
   }
 
@@ -83,15 +83,32 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.doTranslate();
       this.translateAltMsgs();
     });
-    fn.interval('refresh-visit-count', 300000, () => this.refreshVisitCount());
+    fn.interval('refresh-visit-count', 300000, () => this.refreshVisitCount(true));
     fn.interval('polling-visit-count', 15000, () => this.pollingVisitCount());
+  }
+
+  /**
+   * 检测版本
+   * =================================
+   */
+  checkVersion(isRefresh: boolean) {
+    this.appService.getRemoteVersion().subscribe(res => {
+      const curVersion = this.appService.getLocalVersion();
+      const rmtVersion = res['version'];
+      this.appService.setLocalVersion(rmtVersion);
+      if (isRefresh && curVersion && curVersion !== rmtVersion) {
+        location.reload(true);
+      }
+      win['version'] = rmtVersion;
+    });
   }
 
   /**
    * 刷新访问量
    * =================================
    */
-  refreshVisitCount() {
+  refreshVisitCount(isRefresh: boolean) {
+    this.checkVersion(isRefresh);
     if (this.isPageActive) {
       this.isPageActive = false;
       const userId = this.appService.getUserId();
