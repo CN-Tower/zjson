@@ -85,6 +85,18 @@ export class AppService {
         window.localStorage['fmtHists'] = JSON.stringify(fmtHists);
     }
 
+    getLocalVersion() {
+        return window.localStorage['version'];
+    }
+
+    setLocalVersion(version: string) {
+        window.localStorage['version'] = version;
+    }
+
+    getRemoteVersion() {
+        return this.http.get(`/api/zjson/version`).map(res => res.json());
+    }
+
     refreshVisitCount(id: string) {
         return this.http.get(`/api/vc/refreshVc/${id}`).map(res => res.json());
     }
