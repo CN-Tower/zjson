@@ -1,6 +1,11 @@
 var fn = require('funclib');
+const vsPath = './version.txt';
 const vcPath = './visit-count.txt';
 let userList = [];
+
+function getVersion() {
+    return fn.rd(vsPath);
+}
 
 function addUser() {
     const userId = 'ZJSON-' + fn.rdid();
@@ -19,15 +24,16 @@ function getUser(userId) {
 }
 
 function getVisitCount() {
-    return parseInt(fn.rd(vcPath, 'utf8'));
+    return parseInt(fn.rd(vcPath));
 }
 
 function addVisitCount() {
-    let vc = parseInt(fn.rd(vcPath, 'utf8'));
+    let vc = parseInt(fn.rd(vcPath));
     fn.wt(vcPath, ++ vc);
 }
 
 module.exports = {
+    getVersion: getVersion,
     addUser: addUser,
     getUser: getUser,
     getVisitCount: getVisitCount,
