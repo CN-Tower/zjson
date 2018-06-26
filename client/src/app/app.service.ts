@@ -97,11 +97,45 @@ export class AppService {
         return this.http.get(`/api/zjson/version`).map(res => res.json());
     }
 
+    setRefreshTime() {
+        if (this.checkIsExpire()) {
+            window.localStorage['refreshTime'] = fn.timeStamp();
+        }
+    }
+
+    checkIsExpire() {
+        const lastRefreshTime = window.localStorage['refreshTime'];
+        if (lastRefreshTime && fn.timeStamp() - lastRefreshTime < 299000) {
+            return false;
+        }
+        return true;
+    }
+
+    setIsUpGrade(isUpGrade: string) {
+        window.localStorage['isUpGrade'] = isUpGrade;
+    }
+
+    checkIsUpGrade() {
+        const isUpGrade = window.localStorage['isUpGrade'];
+        if (isUpGrade === 'yes') {
+            return true;
+        }
+        return false;
+    }
+
     refreshVisitCount(id: string) {
-        return this.http.get(`/api/vc/refreshVc/${id}`).map(res => res.json());
+        let isExpire;
+        if (this.checkIsUpGrade()) {
+            isExpire = 'no';
+            this.setIsUpGrade('no');
+        } else {
+            isExpire = this.checkIsExpire() ? 'yes' : 'no';
+            this.setRefreshTime();
+        }
+        return this.http.get(`/api/refreshVc/${id}?isExpire=${isExpire}`).map(res => res.json());
     }
 
     pollingVisitCount(id: string) {
-        return this.http.get(`/api/vc/pollingVc/${id}`).map(res => res.json());
+        return this.http.get(`/api/pollingVc/${id}`).map(res => res.json());
     }
 }
