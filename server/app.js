@@ -15,6 +15,15 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+// connect to mongodb
+var mongoose = require('mongoose');
+mongoose.connect('mongodb://10.40.154.118/zjson');
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'unable to connect to mongodb'));
+db.once('open', function() {
+    console.log("connect to mongodb success...");
+});
+
 // uncomment after placing your favicon in /zjson
 //app.use(favicon(path.join(__dirname, 'zjson', 'favicon.ico')));
 app.use(logger('dev'));
