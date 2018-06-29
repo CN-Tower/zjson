@@ -1,22 +1,11 @@
-var fn = require('funclib');
-const vsPath = './version.txt';
-const vcPath = './visit-count.txt';
-let userList = [];
+const fn = require('funclib');
+const VcModel = require('../dao/models/visitCount.model');
 
 module.exports = {
-    getVersion: getVersion,
     pollingVc: pollingVc,
     refreshVc: refreshVc,
     getOnline: getOnline,
     getUser: getUser
-}
-
-/**
- * 获取版本号
- * ------------------------------------------------------------
- */
-function getVersion() {
-    return fn.rd(vsPath);
 }
 
 /**
@@ -40,28 +29,36 @@ function getUser(userId) {
  * 轮询访问量
  * ------------------------------------------------------------
  */
-function pollingVc(userId) {
+function pollingVc(userId, callback) {
     const user = getUser(userId);
     if (user) {
         _setUserExpireTime(userId);
+    } else if (/^ZJSON-[0-9A-Z]{12}$/.test(userId)) {
+        userList.push({
+            'userId': userId,
+            'vtTime': fn.timeStamp(),
+            'isActive': true,
+            'isKeepAc': true
+        });
+        _setUserExpireTime(userId);
     }
-    return parseInt(fn.rd(vcPath));
+    VcModel.getVisitCount(vc => callback(vc));
 }
 
 /**
  * 刷新访问量
  * ------------------------------------------------------------
  */
-function refreshVc(userId, isExpire, callBack) {
+function refreshVc(userId, isExpire, callback) {
     const user = getUser(userId);
     if (user) {
         if (isExpire === 'yes' && user.isKeepAc) {
-            _addVisitCount();
+            VcModel.addOneVisit();
         }
-        callBack(null);
+        callback(null);
     } else {
-        _addVisitCount();
-        callBack(_addUser().userId);
+        VcModel.addOneVisit();
+        callback(_addUser().userId);
     }
 }
 /* ============================================================ */
@@ -92,9 +89,4 @@ function _addUser(userId) {
     });
     userList.push(newUser);
     return newUser;
-}
-
-function _addVisitCount() {
-    let vc = parseInt(fn.rd(vcPath));
-    fn.wt(vcPath, ++ vc);
 }
