@@ -135,7 +135,7 @@ export class AppService {
         return this.http.get(`/api/refreshVc/${id}?isExpire=${isExpire}`).map(res => res.json());
     }
 
-    pollingVisitCount(id: string) {
-        return this.http.get(`/api/pollingVc/${id}`).map(res => res.json());
+    pollingVisitCount(id: string, isOnInit: boolean) {
+        return this.http.get(`/api/pollingVc/${id}?isOnInit=${isOnInit?'yes':'no'}`).map(res => res.json());
     }
 }
