@@ -16,6 +16,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   conf: Configs;
   lang: string;
   visitCount: number = NaN;
+  isOnInit: boolean = true;
   isPageActive: boolean = true;
   isWindowBig: boolean;
   sourcest: string = '';
@@ -129,11 +130,12 @@ export class AppComponent implements OnInit, AfterViewInit {
    */
   pollingVisitCount() {
     const userId = this.appService.getUserId();
-    this.appService.pollingVisitCount(userId).subscribe((res: any) => {
+    this.appService.pollingVisitCount(userId, this.isOnInit).subscribe((res: any) => {
       if (res['vc']) {
         this.visitCount = res.vc;
       }
     });
+    this.isOnInit = false;
   }
 
   /**
