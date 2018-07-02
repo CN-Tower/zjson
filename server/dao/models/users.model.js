@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const UserSchema = require('../schemas/users.schema');
-const UsersModel = mongoose.model('zjson-version', UserSchema);
+const UsersModel = mongoose.model('zjson-users', UserSchema);
 const util = require('../../tools/util');
 
 UsersModel.getUsers = function(callback) {
@@ -8,27 +8,23 @@ UsersModel.getUsers = function(callback) {
 }
 
 UsersModel.getUserById = function(userId, callback) {
-    this.findOne({userId: userId}, {}, callback);
+    this.findOne({userId: userId}, callback);
 }
 
 UsersModel.getOnline = function(callback) {
     this.count().exec(callback);
 }
 
-UsersModel.putUser = function(userInfo, callback) {
-    const user = new UsersModel(userInfo);
-    this.create(userInfo, function(err, doc) {
-        util.logErr(err);
-    });
+UsersModel.createUser = function(userInfo, callback) {
+    this.create(new UsersModel(userInfo), callback);
 }
 
-UsersModel.delUser = function(callback) {
-    this.remove({"name": "zjson-version"}, {$set: {version: version}}, callback);
+UsersModel.removeUser = function(userId, callback) {
+    this.remove({"userId": userId}, callback);
 }
 
-UsersModel.updateUser = function(userId, update, callback) {
-    const userInfo = this.
-    this.findOneAndUpdate({"name": "zjson-version"}, {$set: {version: version}}, callback);
+UsersModel.updateUser = function(update, callback) {
+    this.findOneAndUpdate({"userId": update.userId}, {$set: update}, callback);
 }
 
 module.exports = UsersModel;
