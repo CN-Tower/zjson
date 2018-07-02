@@ -18,7 +18,7 @@ router.get('/zjson/online', function(req, res, next) {
 router.get('/zjson/users', function(req, res, next) {
   UsersModel.getUsers((err, collections) => {
     util.logErr(err, 'Get All users Error');
-    res.status(200).send({'users': collections});
+    res.status(200).send({'online': collections.length, 'users': collections});
   });
 });
 
