@@ -12,12 +12,12 @@ module.exports = {
  * 轮询访问量
  * ------------------------------------------------------------
  */
-function pollingVc(userId, callback) {
+function pollingVc(userId, isOnInit, callback) {
     UsersModel.getUserById(userId, (err, doc) => {
         util.logErr(err);
         if (doc) {
             _setUserExpireTime(userId);
-        } else if (/^ZJSON-[0-9A-Z]{12}$/.test(userId)) {
+        } else if (isOnInit==='no' && /^ZJSON-[0-9A-Z]{12}$/.test(userId)) {
             UsersModel.createUser({
                 'userId': userId,
                 'vtTime': fn.timeStamp(),
