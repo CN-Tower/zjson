@@ -26,7 +26,7 @@ function pollingVc(userId, callback) {
             });
             _setUserExpireTime(userId);
         }
-        VcModel.getVisitCount((err, vc) => callback(vc));
+        VcModel.getVisitCount((err, doc) => callback(doc && doc.count || 0));
     });
 }
 
@@ -38,7 +38,7 @@ function refreshVc(userId, isExpire, callback) {
     UsersModel.getUserById(userId, (err, doc) => {
         util.logErr(err);
         if (doc) {
-            if (isExpire === 'yes' && user.isKeepAc) {
+            if (isExpire === 'yes' && doc.isKeepAc) {
                 VcModel.addOneVisit((err, doc) => util.logErr(err));
             }
             callback(null);
