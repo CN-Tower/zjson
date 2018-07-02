@@ -64,13 +64,10 @@ function _addUser(userId, callback) {
         'isActive': true,
         'isKeepAc': false
     };
-    _setUserExpireTime(userId);
-    fn.timeout(310000, () => {
-        newUser.isKeepAc = true;
-        UsersModel.updateUser(newUser);
-    });
     UsersModel.createUser(newUser, (err, doc) => {
         util.logErr(err);
         callback();
     });
+    _setUserExpireTime(userId);
+    fn.timeout(310000, () => UsersModel.updateUser(userId));
 }
