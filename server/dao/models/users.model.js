@@ -23,8 +23,8 @@ UsersModel.removeUser = function(userId, callback) {
     this.remove({"userId": userId}, callback);
 }
 
-UsersModel.updateUser = function(update, callback) {
-    this.findOneAndUpdate({"userId": update.userId}, {$set: update}, callback);
+UsersModel.updateUser = function(userId, callback) {
+    this.findOneAndUpdate({"userId": userId}, {$set: {'isKeepAc': true}}, callback);
 }
 
 module.exports = UsersModel;
