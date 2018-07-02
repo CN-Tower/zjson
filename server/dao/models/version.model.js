@@ -3,7 +3,7 @@ const VersionSchema = require('../schemas/version.schema');
 const VersionModel = mongoose.model('zjson-version', VersionSchema);
 
 VersionModel.getVersion = function(callback) {
-    this.findOne({ "name": "zjson-version"}, {}, callback);
+    this.findOne({"name": "zjson-version"}, callback);
 }
 
 VersionModel.setVersion = function(version, callback) {
