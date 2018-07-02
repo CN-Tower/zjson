@@ -56,7 +56,7 @@ router.get('/refreshVc/:userId', function(req, res, next) {
 });
 
 router.get('/pollingVc/:userId', function(req, res, next) {
-  vcWork.pollingVc(req.params['userId'], vc => {
+  vcWork.pollingVc(req.params['userId'], req.query['isOnInit'], vc => {
     res.status(200).send({'vc': vc});
   });
 });
