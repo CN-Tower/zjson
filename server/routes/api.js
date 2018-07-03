@@ -28,7 +28,7 @@ router.get('/zjson/users', function(req, res, next) {
 router.get('/zjson/user/:userId', function(req, res, next) {
   UsersModel.getUserById(req.params['userId'], (err, doc) => {
     util.logErr(err, 'Get User Info Error');
-    res.status(200).send();
+    res.status(200).send(doc);
   });
 });
 
