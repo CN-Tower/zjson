@@ -69,5 +69,7 @@ function _addUser(userId, callback) {
         callback();
     });
     _setUserExpireTime(userId);
-    fn.timeout(310000, () => UsersModel.updateUser(userId));
+    fn.timeout(310000, () => {
+        UsersModel.updateUser(userId, (err, doc) => util.logErr(err));
+    });
 }
