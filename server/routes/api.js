@@ -8,22 +8,28 @@ const fn = require('funclib');
 const util = require('../tools/util');
 
 router.get('/', function(req, res, next) {
-  res.status(200).send('Api work!')
+  res.status(200).send('Api work!');
 });
 
 router.get('/zjson/online', function(req, res, next) {
-  UsersModel.getOnline((err, num) => res.status(200).send({'online': num}));
+  UsersModel.getOnline((err, num) => {
+    util.logErr(err, 'Get Online Error');
+    res.status(200).send({'online': num});
+  });
 });
 
 router.get('/zjson/users', function(req, res, next) {
-  UsersModel.getUsers((err, collections) => {
-    util.logErr(err, 'Get All users Error');
-    res.status(200).send({'online': collections.length, 'users': collections});
+  UsersModel.getUsers((err, docs) => {
+    util.logErr(err, 'Get All Users Error');
+    res.status(200).send({'online': docs.length, 'users': docs});
   });
 });
 
 router.get('/zjson/user/:userId', function(req, res, next) {
-  res.status(200).send(vcWork.getUser(req.params['userId']) || {})
+  UsersModel.getUserById(req.params['userId'], (err, doc) => {
+    util.logErr(err, 'Get User Info Error');
+    res.status(200).send();
+  });
 });
 
 router.get('/zjson/version', function(req, res, next) {
@@ -34,23 +40,21 @@ router.get('/zjson/version', function(req, res, next) {
 });
 
 router.post('/zjson/version', function(req, res, next) {
-  const version = req.body.version
-  VersionModel.setVersion(version, (err, doc) => {
+  VersionModel.setVersion(req.body.version, (err, doc) => {
     util.logErr(err, 'Set Version Error');
-    res.status(200).send({'status': 'ok', 'version': version});
+    res.status(200).send({'status': 'ok', 'version': doc.version});
   });
 });
 
 router.post('/zjson/setVc', function(req, res, next) {
-  const count = req.body.vc
-  VcModel.setVisitCount(count, (err, doc) => {
+  VcModel.setVisitCount(req.body.vc, (err, doc) => {
     util.logErr(err, 'Set VC Error');
-    res.status(200).send({'status': 'ok', 'vc': count});
+    res.status(200).send({'status': 'ok', 'vc': doc.count});
   });
 });
 
 router.get('/refreshVc/:userId', function(req, res, next) {
-  vcWork.refreshVc(req.params['userId'], req.query['isExpire'], (userId) => {
+  vcWork.refreshVc(req.params['userId'], req.query['isExpire'], userId => {
     res.status(200).send({'id': userId});
   });
 });
