@@ -317,11 +317,8 @@ export class AppComponent implements OnInit, AfterViewInit {
    * =================================
    */
   pushToLeft() {
-    const ww = $('#worker').width();
-    const ps = 300 / ww * 100;
-    const pj = 99 - ps;
-    $('#z-source').animate({width: ps + '%'}, 500);
-    $('#z-jsonwd').animate({width: pj + '%'}, 500);
+    $('#z-source').animate({width: '35%'}, 500);
+    $('#z-jsonwd').animate({width: '64%'}, 500);
   }
 
   /**
@@ -539,25 +536,32 @@ export class AppComponent implements OnInit, AfterViewInit {
     const $maxPanel = $('.z-maximal');
     const $work = $('#worker');
     const $panel = $work.find('.panel:not(.z-maximal)');
+    const $zSrce = $('#z-source');
+    const $zJson = $('#z-jsonwd');
     const winW = $win.width();
     const winH = $win.height();
     const wH = winH - 100;
     $work.height(wH);
     $panel.height(wH - 10);
-    if (winW >= 1025) {
+    if (winW >= 1040) {
       if (!this.isWindowBig) {
         this.isWindowBig = true;
         this.animateGreeting();
+        $zSrce.css('width', '35%');
+        $zJson.css('width', '64%');
       }
     } else {
       if (this.isWindowBig) {
         this.isWindowBig = false;
         this.animateGreeting();
+        $zSrce.css('width', '49.5%');
+        $zJson.css('width', '49.5%');
       }
     }
     if ($maxPanel.length > 0) {
       $maxPanel.width(winW - 40).height(winH - 30);
     }
+    $('.z-fmt-alts').width((winW - 40) * 0.35);
   }
 
   /**
@@ -589,11 +593,11 @@ export class AppComponent implements OnInit, AfterViewInit {
         ox = nx;
         const sw = $zSrce.width() + dx;
         const jw = $zJson.width() - dx;
-        if (sw > 300 || jw > 300) {
-          if (dx < 0 && sw > 300) {
+        if (sw / ww > 0.35 || jw / ww > 0.35) {
+          if (dx < 0 && sw / ww > 0.35) {
             $zSrce.width(sw);
             $zJson.width(jw);
-          } else if (dx > 0 && jw > 300) {
+          } else if (dx > 0 && jw / ww > 0.35) {
             $zJson.width(jw);
             $zSrce.width(sw);
           }
@@ -604,11 +608,14 @@ export class AppComponent implements OnInit, AfterViewInit {
         }
       }
     }
+
     $('#z-resize').mousedown(function(e) {
-      ox = e.clientX;
-      $(document).on('mousemove', resizeCodeZone).mouseup(function() {
-        $(this).off('mousemove', resizeCodeZone);
-      });
+      if ($win.width() > 1040) {
+        ox = e.clientX;
+        $(document).on('mousemove', resizeCodeZone).mouseup(function() {
+          $(this).off('mousemove', resizeCodeZone);
+        });
+      }
     });
   }
 
