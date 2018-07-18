@@ -17,7 +17,7 @@ app.set('view engine', 'jade');
 
 // connect to mongodb
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://10.40.154.118/zjson');
+mongoose.connect('mongodb://127.0.0.1/zjson');
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'unable to connect to mongodb'));
 db.once('open', function() {
