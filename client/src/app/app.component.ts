@@ -547,6 +547,8 @@ export class AppComponent implements OnInit, AfterViewInit {
       if (!this.isWindowBig) {
         this.isWindowBig = true;
         this.animateGreeting();
+        $zSrce.css('width', '35%');
+        $zJson.css('width', '64%');
       }
     } else {
       if (this.isWindowBig) {
