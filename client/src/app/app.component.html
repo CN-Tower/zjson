@@ -1,4 +1,4 @@
-<div id="z-json">
+<div id="z-json" class="theme-{{theme}}">
   <!--=================================================================-->
   <!--========================== Z-JSON HEADER ========================-->
   <!--=================================================================-->
@@ -26,20 +26,18 @@
         <table class="z-conf-table">
           <thead>
             <tr>
-              <th>{{'VC' | translate}}</th>
               <th><span>{{'lang' | translate}}</span></th>
-              <th>{{'type' | translate}}</th>
-              <th>{{'indent' | translate}}</th>
               <th>{{'theme' | translate}}</th>
+              <th>{{'indent' | translate}}</th>
+              <th>{{'type' | translate}}</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>{{visitCount}}</td>
               <td><span>{{languages[lang].long}}</span></td>
-              <td>{{i18n.type[conf.type]}}</td>
+              <td class="capitalize">{{theme}}</td>
               <td>{{conf.indent}} {{'space' | translate}}</td>
-              <td>{{i18n.theme[theme]}}</td>
+              <td>{{i18n.type[conf.type]}}</td>
             </tr>
           </tbody>
         </table>
@@ -49,7 +47,7 @@
             <!-- ============= MODEL CONFIG ============= -->
             <div class="conf-item-wp col-lg-12">
               <div class="conf-item">
-                <h4 class="conf-tt fl">{{'lang' | translate}}</h4>
+                <h4 class="conf-tt fl">{{'lang' | translate}}<br>{{'lang_' | translate}}</h4>
                 <div class="conf-con fl">
                   <div class="dropdown z-drop z-language-drop">
                     <button class="btn btn-default dropdown-toggle"
@@ -67,27 +65,28 @@
             </div>
             <!-- MODEL END -->
   
-            <!-- ============== TYPE CONFIG ============== -->
+            <!-- ============= THEME CONFIG ============= -->
             <div class="conf-item-wp col-lg-12">
               <div class="conf-item">
-                <h4 class="conf-tt fl">{{'type' | translate}}</h4>
+                <h4 class="conf-tt fl">{{'theme' | translate}}</h4>
                 <div class="conf-con fl">
-                  <div class="dropdown z-drop z-type-drop">
-                    <button class="btn btn-default dropdown-toggle"
-                            (click)="toggleOptions('type')" type="button">
-                      {{i18n.type[conf.type]}}&nbsp;
+                  <div class="dropdown z-drop z-theme-drop">
+                    <button class="btn btn-default dropdown-toggle capitalize"
+                            (click)="toggleOptions('theme')" type="button">
+                      {{theme}}
                       <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu z-type-opts" (click)="doFormate(sourcest, true)">
-                      <li><a href="javascript:;" (click)="conf.type='json'">{{i18n.type.json}}</a></li>
-                      <li><a href="javascript:;" (click)="conf.type='jsObj'">{{i18n.type.jsObj}}</a></li>
+                    <ul class="dropdown-menu z-theme-opts" (click)="doFormate(sourcest, true)">
+                      <li *ngFor="let them of themes">
+                        <a href="javascript:;" (click)="onChangeTheme(them)" class="capitalize">{{them}}</a>
+                      </li>
                     </ul>
                   </div>
                 </div>
               </div>
             </div>
-            <!-- TYPE END -->
-  
+            <!-- THEME END -->
+
             <!-- ============= INDENT CONFIG ============= -->
             <div class="conf-item-wp col-lg-12">
               <div class="conf-item">
@@ -110,28 +109,27 @@
               </div>
             </div>
             <!-- INDENT END -->
-  
-            <!-- ============= THEME CONFIG ============= -->
+
+            <!-- ============== TYPE CONFIG ============== -->
             <div class="conf-item-wp col-lg-12">
               <div class="conf-item">
-                <h4 class="conf-tt fl">{{'theme' | translate}}</h4>
+                <h4 class="conf-tt fl">{{'type' | translate}}</h4>
                 <div class="conf-con fl">
-                  <div class="dropdown z-drop z-theme-drop">
+                  <div class="dropdown z-drop z-type-drop">
                     <button class="btn btn-default dropdown-toggle"
-                            (click)="toggleOptions('theme')" type="button">
-                      {{i18n.theme[theme]}}
+                            (click)="toggleOptions('type')" type="button">
+                      {{i18n.type[conf.type]}}&nbsp;
                       <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu z-theme-opts" (click)="doFormate(sourcest, true)">
-                      <li *ngFor="let them of themes">
-                        <a href="javascript:;" (click)="theme=them">{{i18n.theme[them]}}</a>
-                      </li>
+                    <ul class="dropdown-menu z-type-opts" (click)="doFormate(sourcest, true)">
+                      <li><a href="javascript:;" (click)="conf.type='json'">{{i18n.type.json}}</a></li>
+                      <li><a href="javascript:;" (click)="conf.type='jsObj'">{{i18n.type.jsObj}}</a></li>
                     </ul>
                   </div>
                 </div>
               </div>
             </div>
-            <!-- THEME END -->
+            <!-- TYPE END -->
           </div>
       </div>
     </div>
@@ -202,8 +200,10 @@
           <h3 class="panel-title z-ptt-short hide">{{'source' | translate}}</h3>
         </div>
         <div class="panel-body">
-          <textarea class="form-control src-text" rows="20" (paste)="pasteSourc()"
-                    placeholder="{{'placeHolder' | translate}}" [(ngModel)]="sourcest"></textarea>
+          <textarea class="form-control src-text" rows="20"
+                    placeholder="{{'placeHolder' | translate}}"
+                    (keydown)="onTextareaKeyDown($event)"
+                    [(ngModel)]="sourcest" (ngModelChange)="doFormate(sourcest, true)"></textarea>
         </div>
       </div>
     </div>
@@ -261,9 +261,9 @@
                 <a target="_blank" href="http://github.com/CN-Tower/funclib.js">http://github.com/CN-Tower/funclib.js</a><br>
               </div>
               <div id="z-index" [style.height]="setRowIdxWpHeight()"></div>
-              <pre *ngIf="isModelExpand" class="z-canvas theme-{{theme}}"
+              <pre *ngIf="isModelExpand" class="z-canvas"
                     [attr.contenteditable]="isFmtedEditAb"></pre>
-              <div *ngIf="!isModelExpand" class="z-canvas theme-{{theme}} z-colp"
+              <div *ngIf="!isModelExpand" class="z-canvas z-colp"
                     [attr.contenteditable]="isFmtedEditAb"></div>
             </div>
           </div>

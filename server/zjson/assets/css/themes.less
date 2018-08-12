@@ -1,48 +1,776 @@
-.theme-default {
-    .z-code-container {
-        margin-top: 0;
-        margin-bottom: 0;
-        text-align: left;
+@img-num-333: url('../img/num-333.png');
+@img-num-eee: url('../img/num-eee.png');
+@img-dot-333: url('../img/dot-333.png');
+@img-dot-eee: url('../img/dot-eee.png');
+@img-plus-333: url('../img/plus-333.png');
+@img-plus-eee: url('../img/plus-eee.png');
+@img-minus-333: url('../img/minus-333.png');
+@img-minus-eee: url('../img/minus-eee.png');
+
+@light-bg-color: #f2f2f2;
+@light-bd-color: #bbbbbb;
+@light-tt-color: #dddddd;
+@light-cd-color: #f5f5f5;
+@light-obj-brace: #AA00AA;
+@light-arr-brace: #00AA00;
+@light-comma: #000000;
+@light-prop: #CC0000;
+@light-stri: #007777;
+@light-numb: #0033FF;
+@light-bool: #CC0000;
+@light-null: #CC0000;
+
+@dark-bg-color: #252526;
+@dark-bd-color: #5f5f5f;
+@dark-tt-color: #333333;
+@dark-cd-color: #1e1e1e;
+@dark-obj-brace: #d4d4d4;
+@dark-arr-brace: #d4d4d4;
+@dark-comma: #d4d4d4;
+@dark-prop: #9cdcfe;
+@dark-stri: #ce9178;
+@dark-numb: #569cd6;
+@dark-bool: #d33682;
+@dark-null: #CC0000;
+
+@solar-bg-color: #eee8d5;
+@solar-bd-color: #bbbbbb;
+@solar-tt-color: #ddd6c1;
+@solar-cd-color: #fdf6e3;
+@solar-obj-brace: #333333;
+@solar-arr-brace: #333333;
+@solar-comma: #333333;
+@solar-prop: #859900;
+@solar-stri: #2aa198;
+@solar-numb: #0033FF;
+@solar-bool: #d33682;
+@solar-null: #CC0000;
+
+@abyss-bg-color: #060621;
+@abyss-bd-color: #5f5f5f;
+@abyss-tt-color: #051336;
+@abyss-cd-color: #000c18;
+@abyss-obj-brace: #92bbbb;
+@abyss-arr-brace: #92bbbb;
+@abyss-comma: #92bbbb;
+@abyss-prop: #9966b8;
+@abyss-stri: #13aa44;
+@abyss-numb: #f280d0;
+@abyss-bool: #d33682;
+@abyss-null: #CC0000;
+
+@kimbie-bg-color: #362712;
+@kimbie-bd-color: #5f5f5f;
+@kimbie-tt-color: #221a0f;
+@kimbie-cd-color: #221a0f;
+@kimbie-obj-brace: #b1af86;
+@kimbie-arr-brace: #b1af86;
+@kimbie-comma: #b1af86;
+@kimbie-prop: #889b4a;
+@kimbie-stri: #889b4a;
+@kimbie-numb: #f78e1f;
+@kimbie-bool: #d33682;
+@kimbie-null: #CC0000;
+
+@monokai-bg-color: #272727;
+@monokai-bd-color: #5f5f5f;
+@monokai-tt-color: #353535;
+@monokai-cd-color: #1e1e1e;
+@monokai-obj-brace: #a5c8c6;
+@monokai-arr-brace: #a5c8c6;
+@monokai-comma: #a5c8c6;
+@monokai-prop: #c7444a;
+@monokai-stri: #9aa83a;
+@monokai-numb: #6089b4;
+@monokai-bool: #408080;
+@monokai-null: #CC0000;
+
+.theme-light {
+    background: @light-bg-color;
+    header {
+        .z-fmt-alts .alert-info {
+            background-color: @light-tt-color;
+            color: inherit;
+            border: none;
+        }
+        .z-conf-table {
+            th, td {
+                border-right: 1px solid @light-bd-color;
+            }
+            th {
+                border-bottom: 1px solid @light-bd-color;
+            }
+        }
+        .z-conf-wp {
+            .row {
+                background: @light-tt-color;
+                border-radius: 4px;
+                .conf-item {
+                    background: @light-tt-color;
+                    border: 1px solid @light-bd-color;
+                    .dropdown-toggle {
+                        background: @light-bg-color;
+                        color: inherit;
+                    }
+                }
+            }
+        }
     }
+    #worker {
+        .panel {
+            border: 1px solid @light-tt-color;
+            background-color: @light-bg-color;
+            .panel-heading {
+                background-color: @light-tt-color;
+                color: inherit;
+                border: none;
+            }
+        }
+        div#z-source textarea.src-text {
+            border: 1px solid @light-tt-color;
+            background-color: @light-cd-color;
+            &:focus {
+                box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 2px rgba(102,175,233,.6);
+            }
+        }
+        #z-container{
+            background-color: @light-cd-color;
+            border: 1px solid @light-tt-color;
+            #z-stage {
+                #z-index {
+                    background-color: @light-tt-color;
+                }
+                .z-row-index .z-idxes {
+                    background-image: @img-num-333;
+                }
+                .operator {
+                    &.collapsed {
+                        background-image: @img-plus-333;
+                    }
+                    &.expanded {
+                        background-image: @img-minus-333;
+                    }
+                }
+                .z-canvas .z-brace .z-ellipsis {
+                    background-image: @img-dot-333;
+                }
+            }
+        }
+    }
+    ::-webkit-scrollbar-thumb, ::-webkit-scrollbar-thumb:horizontal {
+        border-radius: 4px;
+        background: @light-tt-color;
+    }  
     .z-obj-brace {
-        color: #00AA00;
+        color: @light-obj-brace;
         font-weight: bold;
     }
     .z-arr-brace {
-        color: #AA00AA;
+        color: @light-arr-brace;
         font-weight: bold;
     }
     .z-comma-sign {
-        color: #000000;
+        color: @light-comma;
         font-weight: bold;
     }
     .z-backslash {
-        color: #CC0000;
+        color: @light-null;
         font-weight: bold;
     }
     .z-prop-val {
-        color: #CC0000;
+        color: @light-prop;
         font-weight: bold;
     }
     .z-stri-val {
-        color: #007777;
+        color: @light-stri;
     }
     .z-func-val {
-        color: #007777;
+        color: @light-stri;
     }
     .z-numb-val {
-        color: #0033FF;
+        color: @light-numb;
     }
     .z-bool-val {
-        color: #CC0000;
+        color: @light-bool;
         font-weight: bold;
     }
     .z-null-val {
-        color: #CC0000;
+        color: @light-null;
         font-weight: bold;
     }
 }
 
-.theme-nocolor {
-    color: #555;
+.theme-dark {
+    background: @dark-bg-color;
+    header {
+        .z-fmt-alts .alert-info {
+            background-color: @dark-tt-color;
+            color: inherit;
+            border: none;
+        }
+        .z-conf-table {
+            th, td {
+                border-right: 1px solid @dark-bd-color;
+            }
+            th {
+                border-bottom: 1px solid @dark-bd-color;
+            }
+        }
+        .z-conf-wp {
+            .row {
+                background: @dark-tt-color;
+                border-radius: 4px;
+                .conf-item {
+                    background: @dark-tt-color;
+                    border: 1px solid @dark-bd-color;
+                    .dropdown-toggle {
+                        background: @dark-bg-color;
+                        color: inherit;
+                    }
+                }
+            }
+        }
+    }
+    #worker {
+        .panel {
+            border: 1px solid @dark-tt-color;
+            background-color: @dark-bg-color;
+            .panel-heading {
+                background-color: @dark-tt-color;
+                color: inherit;
+                border: none;
+            }
+        }
+        div#z-source textarea.src-text {
+            border: 1px solid @dark-tt-color;
+            background-color: @dark-cd-color;
+            &:focus {
+                box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 2px rgba(102,175,233,.6);
+            }
+        }
+        #z-container{
+            background-color: @dark-cd-color;
+            border: 1px solid @dark-tt-color;
+            #z-stage {
+                #z-index {
+                    background-color: @dark-tt-color;
+                }
+                .z-row-index .z-idxes {
+                    background-image: @img-num-eee;
+                }
+                .operator {
+                    &.collapsed {
+                        background-image: @img-plus-eee;
+                    }
+                    &.expanded {
+                        background-image: @img-minus-eee;
+                    }
+                }
+                .z-canvas .z-brace .z-ellipsis {
+                    background-image: @img-dot-eee;
+                }
+            }
+        }
+    }
+    ::-webkit-scrollbar-thumb, ::-webkit-scrollbar-thumb:horizontal {
+        border-radius: 4px;
+        background: @dark-tt-color;
+    }
+    .z-obj-brace {
+        color: @dark-obj-brace;
+        font-weight: bold;
+    }
+    .z-arr-brace {
+        color: @dark-arr-brace;
+        font-weight: bold;
+    }
+    .z-comma-sign {
+        color: @dark-comma;
+        font-weight: bold;
+    }
+    .z-backslash {
+        color: @dark-null;
+        font-weight: bold;
+    }
+    .z-prop-val {
+        color: @dark-prop;
+        font-weight: bold;
+    }
+    .z-stri-val {
+        color: @dark-stri;
+    }
+    .z-func-val {
+        color: @dark-stri;
+    }
+    .z-numb-val {
+        color: @dark-numb;
+    }
+    .z-bool-val {
+        color: @dark-bool;
+        font-weight: bold;
+    }
+    .z-null-val {
+        color: @dark-null;
+        font-weight: bold;
+    }
+}
+
+.theme-solar {
+    background: @solar-bg-color;
+    header {
+        .z-fmt-alts .alert-info {
+            background-color: @solar-tt-color;
+            color: inherit;
+            border: none;
+        }
+        .z-conf-table {
+            th, td {
+                border-right: 1px solid @solar-bd-color;
+            }
+            th {
+                border-bottom: 1px solid @solar-bd-color;
+            }
+        }
+        .z-conf-wp {
+            .row {
+                background: @solar-tt-color;
+                border-radius: 4px;
+                .conf-item {
+                    background: @solar-tt-color;
+                    border: 1px solid @solar-bd-color;
+                    .dropdown-toggle {
+                        background: @solar-bg-color;
+                        color: inherit;
+                    }
+                }
+            }
+        }
+    }
+    #worker {
+        .panel {
+            border: 1px solid @solar-tt-color;
+            background-color: @solar-bg-color;
+            .panel-heading {
+                background-color: @solar-tt-color;
+                color: inherit;
+                border: none;
+            }
+        }
+        div#z-source textarea.src-text {
+            border: 1px solid @solar-tt-color;
+            background-color: @solar-cd-color;
+            &:focus {
+                box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 2px rgba(102,175,233,.6);
+            }
+        }
+        #z-container{
+            background-color: @solar-cd-color;
+            border: 1px solid @solar-tt-color;
+            #z-stage {
+                #z-index {
+                    background-color: @solar-tt-color;
+                }
+                .z-row-index .z-idxes {
+                    background-image: @img-num-333;
+                }
+                .operator {
+                    &.collapsed {
+                        background-image: @img-plus-333;
+                    }
+                    &.expanded {
+                        background-image: @img-minus-333;
+                    }
+                }
+                .z-canvas .z-brace .z-ellipsis {
+                    background-image: @img-dot-333;
+                }
+            }
+        }
+    }
+    ::-webkit-scrollbar-thumb, ::-webkit-scrollbar-thumb:horizontal {
+        border-radius: 4px;
+        background: @solar-tt-color;
+    }  
+    .z-obj-brace {
+        color: @solar-obj-brace;
+        font-weight: bold;
+    }
+    .z-arr-brace {
+        color: @solar-arr-brace;
+        font-weight: bold;
+    }
+    .z-comma-sign {
+        color: @solar-comma;
+        font-weight: bold;
+    }
+    .z-backslash {
+        color: @solar-null;
+        font-weight: bold;
+    }
+    .z-prop-val {
+        color: @solar-prop;
+        font-weight: bold;
+    }
+    .z-stri-val {
+        color: @solar-stri;
+    }
+    .z-func-val {
+        color: @solar-stri;
+    }
+    .z-numb-val {
+        color: @solar-numb;
+    }
+    .z-bool-val {
+        color: @solar-bool;
+        font-weight: bold;
+    }
+    .z-null-val {
+        color: @solar-null;
+        font-weight: bold;
+    }
+}
+
+.theme-abyss {
+    background: @abyss-bg-color;
+    header {
+        .z-fmt-alts .alert-info {
+            background-color: @abyss-tt-color;
+            color: inherit;
+            border: none;
+        }
+        .z-conf-table {
+            th, td {
+                border-right: 1px solid @abyss-bd-color;
+            }
+            th {
+                border-bottom: 1px solid @abyss-bd-color;
+            }
+        }
+        .z-conf-wp {
+            .row {
+                background: @abyss-tt-color;
+                border-radius: 4px;
+                .conf-item {
+                    background: @abyss-tt-color;
+                    border: 1px solid @abyss-bd-color;
+                    .dropdown-toggle {
+                        background: @abyss-bg-color;
+                        color: inherit;
+                    }
+                }
+            }
+        }
+    }
+    #worker {
+        .panel {
+            border: 1px solid @abyss-tt-color;
+            background-color: @abyss-bg-color;
+            .panel-heading {
+                background-color: @abyss-tt-color;
+                color: inherit;
+                border: none;
+            }
+        }
+        div#z-source textarea.src-text {
+            border: 1px solid @abyss-tt-color;
+            background-color: @abyss-cd-color;
+            &:focus {
+                box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 2px rgba(102,175,233,.6);
+            }
+        }
+        #z-container{
+            background-color: @abyss-cd-color;
+            border: 1px solid @abyss-tt-color;
+            #z-stage {
+                #z-index {
+                    background-color: @abyss-tt-color;
+                }
+                .z-row-index .z-idxes {
+                    background-image: @img-num-eee;
+                }
+                .operator {
+                    &.collapsed {
+                        background-image: @img-plus-eee;
+                    }
+                    &.expanded {
+                        background-image: @img-minus-eee;
+                    }
+                }
+                .z-canvas .z-brace .z-ellipsis {
+                    background-image: @img-dot-eee;
+                }
+            }
+        }
+    }
+    ::-webkit-scrollbar-thumb, ::-webkit-scrollbar-thumb:horizontal {
+        border-radius: 4px;
+        background: @abyss-tt-color;
+    }  
+    .z-obj-brace {
+        color: @abyss-obj-brace;
+        font-weight: bold;
+    }
+    .z-arr-brace {
+        color: @abyss-arr-brace;
+        font-weight: bold;
+    }
+    .z-comma-sign {
+        color: @abyss-comma;
+        font-weight: bold;
+    }
+    .z-backslash {
+        color: @abyss-null;
+        font-weight: bold;
+    }
+    .z-prop-val {
+        color: @abyss-prop;
+        font-weight: bold;
+    }
+    .z-stri-val {
+        color: @abyss-stri;
+    }
+    .z-func-val {
+        color: @abyss-stri;
+    }
+    .z-numb-val {
+        color: @abyss-numb;
+    }
+    .z-bool-val {
+        color: @abyss-bool;
+        font-weight: bold;
+    }
+    .z-null-val {
+        color: @abyss-null;
+        font-weight: bold;
+    }
+}
+
+.theme-kimbie {
+    background: @kimbie-bg-color;
+    header {
+        .z-fmt-alts .alert-info {
+            background-color: @kimbie-tt-color;
+            color: inherit;
+            border: none;
+        }
+        .z-conf-table {
+            th, td {
+                border-right: 1px solid @kimbie-bd-color;
+            }
+            th {
+                border-bottom: 1px solid @kimbie-bd-color;
+            }
+        }
+        .z-conf-wp {
+            .row {
+                background: @kimbie-tt-color;
+                border-radius: 4px;
+                .conf-item {
+                    background: @kimbie-tt-color;
+                    border: 1px solid @kimbie-bd-color;
+                    .dropdown-toggle {
+                        background: @kimbie-bg-color;
+                        color: inherit;
+                    }
+                }
+            }
+        }
+    }
+    #worker {
+        .panel {
+            border: 1px solid @kimbie-tt-color;
+            background-color: @kimbie-bg-color;
+            .panel-heading {
+                background-color: @kimbie-tt-color;
+                color: inherit;
+                border: none;
+            }
+        }
+        div#z-source textarea.src-text {
+            border: 1px solid @kimbie-tt-color;
+            background-color: @kimbie-cd-color;
+            &:focus {
+                box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 2px rgba(102,175,233,.6);
+            }
+        }
+        #z-container{
+            background-color: @kimbie-cd-color;
+            border: 1px solid @kimbie-tt-color;
+            #z-stage {
+                #z-index {
+                    background-color: @kimbie-tt-color;
+                }
+                .z-row-index .z-idxes {
+                    background-image: @img-num-eee;
+                }
+                .operator {
+                    &.collapsed {
+                        background-image: @img-plus-eee;
+                    }
+                    &.expanded {
+                        background-image: @img-minus-eee;
+                    }
+                }
+                .z-canvas .z-brace .z-ellipsis {
+                    background-image: @img-dot-eee;
+                }
+            }
+        }
+    }
+    ::-webkit-scrollbar-thumb, ::-webkit-scrollbar-thumb:horizontal {
+        border-radius: 4px;
+        background: @kimbie-tt-color;
+    }  
+    .z-obj-brace {
+        color: @kimbie-obj-brace;
+        font-weight: bold;
+    }
+    .z-arr-brace {
+        color: @kimbie-arr-brace;
+        font-weight: bold;
+    }
+    .z-comma-sign {
+        color: @kimbie-comma;
+        font-weight: bold;
+    }
+    .z-backslash {
+        color: @kimbie-null;
+        font-weight: bold;
+    }
+    .z-prop-val {
+        color: @kimbie-prop;
+        font-weight: bold;
+    }
+    .z-stri-val {
+        color: @kimbie-stri;
+    }
+    .z-func-val {
+        color: @kimbie-stri;
+    }
+    .z-numb-val {
+        color: @kimbie-numb;
+    }
+    .z-bool-val {
+        color: @kimbie-bool;
+        font-weight: bold;
+    }
+    .z-null-val {
+        color: @kimbie-null;
+        font-weight: bold;
+    }
+}
+
+.theme-monokai {
+    background: @monokai-bg-color;
+    header {
+        .z-fmt-alts .alert-info {
+            background-color: @monokai-tt-color;
+            color: inherit;
+            border: none;
+        }
+        .z-conf-table {
+            th, td {
+                border-right: 1px solid @monokai-bd-color;
+            }
+            th {
+                border-bottom: 1px solid @monokai-bd-color;
+            }
+        }
+        .z-conf-wp {
+            .row {
+                background: @monokai-tt-color;
+                border-radius: 4px;
+                .conf-item {
+                    background: @monokai-tt-color;
+                    border: 1px solid @monokai-bd-color;
+                    .dropdown-toggle {
+                        background: @monokai-bg-color;
+                        color: inherit;
+                    }
+                }
+            }
+        }
+    }
+    #worker {
+        .panel {
+            border: 1px solid @monokai-tt-color;
+            background-color: @monokai-bg-color;
+            .panel-heading {
+                background-color: @monokai-tt-color;
+                color: inherit;
+                border: none;
+            }
+        }
+        div#z-source textarea.src-text {
+            border: 1px solid @monokai-tt-color;
+            background-color: @monokai-cd-color;
+            &:focus {
+                box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 2px rgba(102,175,233,.6);
+            }
+        }
+        #z-container{
+            background-color: @monokai-cd-color;
+            border: 1px solid @monokai-tt-color;
+            #z-stage {
+                #z-index {
+                    background-color: @monokai-tt-color;
+                }
+                .z-row-index .z-idxes {
+                    background-image: @img-num-eee;
+                }
+                .operator {
+                    &.collapsed {
+                        background-image: @img-plus-eee;
+                    }
+                    &.expanded {
+                        background-image: @img-minus-eee;
+                    }
+                }
+                .z-canvas .z-brace .z-ellipsis {
+                    background-image: @img-dot-eee;
+                }
+            }
+        }
+    }
+    ::-webkit-scrollbar-thumb, ::-webkit-scrollbar-thumb:horizontal {
+        border-radius: 4px;
+        background: @monokai-tt-color;
+    }  
+    .z-obj-brace {
+        color: @monokai-obj-brace;
+        font-weight: bold;
+    }
+    .z-arr-brace {
+        color: @monokai-arr-brace;
+        font-weight: bold;
+    }
+    .z-comma-sign {
+        color: @monokai-comma;
+        font-weight: bold;
+    }
+    .z-backslash {
+        color: @monokai-null;
+        font-weight: bold;
+    }
+    .z-prop-val {
+        color: @monokai-prop;
+        font-weight: bold;
+    }
+    .z-stri-val {
+        color: @monokai-stri;
+    }
+    .z-func-val {
+        color: @monokai-stri;
+    }
+    .z-numb-val {
+        color: @monokai-numb;
+    }
+    .z-bool-val {
+        color: @monokai-bool;
+        font-weight: bold;
+    }
+    .z-null-val {
+        color: @monokai-null;
+        font-weight: bold;
+    }
 }

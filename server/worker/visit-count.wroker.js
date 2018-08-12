@@ -20,7 +20,7 @@ function pollingVc(userId, isOnInit, callback) {
         } else if (isOnInit==='no' && /^ZJSON-[0-9A-Z]{12}$/.test(userId)) {
             UsersModel.createUser({
                 'userId': userId,
-                'vtTime': fn.timeStamp(),
+                'vtTime': fn.time(),
                 'isActive': true,
                 'isKeepAc': true
             });
@@ -66,7 +66,7 @@ function _setUserExpireTime(userId) {
 }
 
 function _addUser(userId, callback) {
-    const vtTime = fn.timeStamp();
+    const vtTime = fn.time();
     const newUser = {
         'userId': userId,
         'vtTime': vtTime,

@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const UserSchema = require('../schemas/users.schema');
 const UsersModel = mongoose.model('zjson-users', UserSchema);
-const util = require('../../tools/util');
 
 UsersModel.getUsers = function(callback) {
     this.find().exec(callback);

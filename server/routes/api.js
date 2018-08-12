@@ -4,7 +4,6 @@ const vcWork = require('../worker/visit-count.wroker');
 const VersionModel = require('../dao/models/version.model');
 const VcModel = require('../dao/models/visitCount.model');
 const UsersModel = require('../dao/models/users.model');
-const fn = require('funclib');
 const util = require('../tools/util');
 
 router.get('/', function(req, res, next) {

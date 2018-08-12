@@ -50,6 +50,14 @@ export class AppService {
         return tpCls[fn.random(tpCls.length)];
     }
 
+    getAppTheme() {
+        return window.localStorage['theme'] || 'dark';
+    }
+
+    setAppTheme(theme: string) {
+        window.localStorage['theme'] = theme;
+    }
+
     getUserId() {
         const userId = window.localStorage['userId'];
         if (userId) {
@@ -99,13 +107,13 @@ export class AppService {
 
     setRefreshTime() {
         if (this.checkIsExpire()) {
-            window.localStorage['refreshTime'] = fn.timeStamp();
+            window.localStorage['refreshTime'] = fn.time();
         }
     }
 
     checkIsExpire() {
         const lastRefreshTime = window.localStorage['refreshTime'];
-        if (lastRefreshTime && fn.timeStamp() - lastRefreshTime < 299000) {
+        if (lastRefreshTime && fn.time() - lastRefreshTime < 299000) {
             return false;
         }
         return true;
@@ -136,6 +144,6 @@ export class AppService {
     }
 
     pollingVisitCount(id: string, isOnInit: boolean) {
-        return this.http.get(`/api/pollingVc/${id}?isOnInit=${isOnInit?'yes':'no'}`).map(res => res.json());
+        return this.http.get(`/api/pollingVc/${id}?isOnInit=${isOnInit ? 'yes' : 'no'}`).map(res => res.json());
     }
 }

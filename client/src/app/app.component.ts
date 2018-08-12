@@ -15,7 +15,6 @@ import { Formatter } from './formatter/formatter.main';
 export class AppComponent implements OnInit, AfterViewInit {
   conf: Configs;
   lang: string;
-  visitCount: number = NaN;
   isOnInit: boolean = true;
   isPageActive: boolean = true;
   isWindowBig: boolean;
@@ -38,8 +37,12 @@ export class AppComponent implements OnInit, AfterViewInit {
   isConfOnSlid: boolean = false;
   isOriginEmpty: boolean = true;
   toggleConfTiele: string;
-  themes: any[] = ['default', 'nocolor'];
-  theme: string = 'default';
+  themes: any[] = ['dark', 'abyss', 'kimbie', 'monokai', 'light', 'solar'];
+  fontColors: any = {
+    light: '#333', dark: '#eee', solar: '#333',
+    abyss: '#eee', kimbie: '#eee', monokai: '#eee'
+  };
+  theme: string;
   eles: FmterEles = new FmterEles();
   fmtSt: FmtStatus = new FmtStatus();
   formatter: Formatter = new Formatter();
@@ -54,14 +57,13 @@ export class AppComponent implements OnInit, AfterViewInit {
     confs: {show: '', hide: ''},
     model: {expand: '', combine: ''},
     type: {json: 'Json', jsObj: 'JsObj'},
-    theme: {default: '', nocolor: ''},
     alert: {ost: '', col: '', val: '', end: '', war: '', scc: ''}
   };
   altMsgs: any = {};
   setRowIdxWpHeight: Function = () => $('.z-canvas').height() + 12 + 'px';
   getTimeStr: Function = () => fn.fmtDate('MM-dd hh:mm:ss');
   getFmtHists: Function = () => this.fmtHists = this.appService.getFmtHists();
-  
+
   constructor(
     private translate: TranslateService,
     private appService: AppService
@@ -132,7 +134,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     const userId = this.appService.getUserId();
     this.appService.pollingVisitCount(userId, this.isOnInit).subscribe((res: any) => {
       if (res['vc']) {
-        this.visitCount = res.vc;
+        win['visitCount'] = res.vc;
       }
     });
     this.isOnInit = false;
@@ -178,6 +180,17 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.lang = type;
     this.translate.use(type);
     this.animateGreeting();
+  }
+
+  /**
+   * 禁止原代码框的Tab事件
+   * =================================
+   */
+  onTextareaKeyDown(e: any) {
+    e = e || win.event;
+    if (e.key === 'Tab' || e.keyCode === 9) {
+      return false;
+    }
   }
 
   /**
@@ -231,6 +244,18 @@ export class AppComponent implements OnInit, AfterViewInit {
         }
       };
       redNext($errRow.next());
+    }
+  }
+
+  /**
+   * 更换主题
+   * =================================
+   */
+  onChangeTheme(them: string) {
+    if (this.theme !== them) {
+      this.theme = them;
+      $('body').css('color', this.fontColors[them]);
+      this.appService.setAppTheme(them);
     }
   }
 
@@ -302,11 +327,11 @@ export class AppComponent implements OnInit, AfterViewInit {
         } break;
       case 'fmt':
         if (this.formated) {
-          blob = new Blob([this.formated], {type: ''})
+          blob = new Blob([this.formated], {type: ''});
         } break;
     }
     if (blob) {
-      saveAs(blob, `zjson-${String(fn.timeStamp()).substr(-6)}.json`);
+      saveAs(blob, `zjson-${String(fn.time()).substr(-6)}.json`);
     } else {
       this.alertNotice(this.translate.instant('_download'), 'danger');
     }
@@ -353,7 +378,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     if (this.fmtSourcest) {
       if (this.saveFmtTime !== svTime) {
         this.saveFmtTime = svTime;
-        const fmtPre = this.fmtSourcest.replace(/[\s\n]/mg, '')
+        const fmtPre = this.fmtSourcest.replace(/[\s\n]/mg, '');
         const appdix = fmtPre.length > 15 ? fmtPre.substr(0, 15) + ' ...' : fmtPre;
         const histName = this.saveFmtTime + ` ( ${appdix} )`;
         const hist = {src: this.fmtSourcest, name: histName};
@@ -404,14 +429,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     } else {
       this.alertNotice(this.translate.instant('_clear'), 'danger');
     }
-  }
-
-  /**
-   * 清空解析结果
-   * =================================
-   */
-  pasteSourc() {
-    setTimeout(() => this.doFormate(this.sourcest, true));
   }
 
   /**
@@ -494,7 +511,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   toggleOptions(tp: string) {
     const $opts = $(`.z-${tp}-opts`);
     if ($opts.hasClass('show')) {
-      $opts.removeClass('show')
+      $opts.removeClass('show');
     } else {
       $opts.addClass('show');
       fn.timeout(() => $(document).one('click', () => $opts.removeClass('show')));
@@ -543,7 +560,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     const wH = winH - 100;
     $work.height(wH);
     $panel.height(wH - 10);
-    if (winW >= 1040) {
+    if (winW >= 1025) {
       if (!this.isWindowBig) {
         this.isWindowBig = true;
         this.animateGreeting();
@@ -569,11 +586,17 @@ export class AppComponent implements OnInit, AfterViewInit {
    * ===================================
    */
   ngAfterViewInit() {
-    const that = this;
     const $win = $(win);
+    const $zSrce = $('#z-source');
+    const $zJson = $('#z-jsonwd');
     this.isWindowBig = $win.width() >= 1025;
+    if (!this.isWindowBig) {
+      $zSrce.css('width', '49.5%');
+      $zJson.css('width', '49.5%');
+    }
     this.animateGreeting();
     this.onWindowResize();
+    fn.defer(() => this.onChangeTheme(this.appService.getAppTheme()));
     $(document).on('click keyup', () => this.isPageActive = true);
     $win.resize(() => this.onWindowResize());
     setTimeout(() => this.onWindowResize(), 500);
@@ -582,8 +605,6 @@ export class AppComponent implements OnInit, AfterViewInit {
       $('.z-row-index').css('left', (this.scrollLeft - 2) + 'px');
     });
     let dx, nx, ox;
-    const $zSrce = $('#z-source');
-    const $zJson = $('#z-jsonwd');
     const resizeCodeZone: Function = e => {
       $('.src-text').blur();
       const ww = $('#worker').width();
@@ -607,10 +628,10 @@ export class AppComponent implements OnInit, AfterViewInit {
           $zSrce.css('width', sp + '%');
         }
       }
-    }
+    };
 
     $('#z-resize').mousedown(function(e) {
-      if ($win.width() > 1040) {
+      if ($win.width() > 1025) {
         ox = e.clientX;
         $(document).on('mousemove', resizeCodeZone).mouseup(function() {
           $(this).off('mousemove', resizeCodeZone);
@@ -628,8 +649,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.i18n.confs.hide = this.translate.instant('hideConfs');
     this.i18n.model.expand = this.translate.instant('expand');
     this.i18n.model.combine = this.translate.instant('combine');
-    this.i18n.theme.default = this.translate.instant('default');
-    this.i18n.theme.nocolor = this.translate.instant('noColor');
   }
 
   /**

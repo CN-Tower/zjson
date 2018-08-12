@@ -70,7 +70,7 @@ export class Formatter extends FmterEles {
         let ps = {
             obj: null, conf: conf, html: '', json: '',
             isToJson: conf.type === 'json'
-        }
+        };
         ps.obj = ps.isToJson ? JSON.parse(JSON.stringify(src)) : src;
         ps.obj instanceof Array
             ? this.arrayHandler(ps, rt => ps = rt)
@@ -302,7 +302,7 @@ export class Formatter extends FmterEles {
             this.dt.json += '{}';
             this.setExpect('}');
             this.dt.src = this.help.getSrcRest(this.dt.src, 2);
-            this.doFormate2()
+            this.doFormate2();
         } else {
             this.level ++;
             const curIndent = this.help.getCurIndent(this.baseIndent, this.level);
@@ -385,11 +385,11 @@ export class Formatter extends FmterEles {
             this.dt.json += '()';
             this.setExpect(')');
             this.dt.src = this.help.getSrcRest(this.dt.src, 2);
-            this.doFormate2()
+            this.doFormate2();
         } else {
             this.level ++;
             const curIndent = this.help.getCurIndent(this.baseIndent, this.level);
-            this.dt.html += this.isExpand ? this.brcPre('(', 'arr', true) :this.brcPre('(', 'arr') ;
+            this.dt.html += this.isExpand ? this.brcPre('(', 'arr', true) : this.brcPre('(', 'arr') ;
             this.dt.json += '(';
             this.dt.html += this.isExpand ? this.brkline() + curIndent : '';
             this.dt.json += this.isExpand ? '\n' + curIndent : '';
@@ -592,7 +592,7 @@ export class Formatter extends FmterEles {
         const altTypes = {
             ost: 'danger', col: 'danger', val: 'danger',
             end: 'danger', war: 'warning', scc: 'success'
-        }
+        };
         if (['ost', 'col', 'val', 'end'].includes(type)) {
             this.st.isSrcValid = false;
             this.st.errRowIdx = this.rowIdx;
