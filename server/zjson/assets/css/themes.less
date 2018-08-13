@@ -33,18 +33,18 @@
 @dark-bool: #d33682;
 @dark-null: #CC0000;
 
-@solar-bg-color: #eee8d5;
-@solar-bd-color: #bbbbbb;
-@solar-tt-color: #ddd6c1;
-@solar-cd-color: #fdf6e3;
-@solar-obj-brace: #333333;
-@solar-arr-brace: #333333;
-@solar-comma: #333333;
-@solar-prop: #859900;
-@solar-stri: #2aa198;
-@solar-numb: #0033FF;
-@solar-bool: #d33682;
-@solar-null: #CC0000;
+@solarized-bg-color: #eee8d5;
+@solarized-bd-color: #bbbbbb;
+@solarized-tt-color: #ddd6c1;
+@solarized-cd-color: #fdf6e3;
+@solarized-obj-brace: #333333;
+@solarized-arr-brace: #333333;
+@solarized-comma: #333333;
+@solarized-prop: #859900;
+@solarized-stri: #2aa198;
+@solarized-numb: #0033FF;
+@solarized-bool: #d33682;
+@solarized-null: #CC0000; 
 
 @abyss-bg-color: #060621;
 @abyss-bd-color: #5f5f5f;
@@ -61,29 +61,56 @@
 
 @kimbie-bg-color: #362712;
 @kimbie-bd-color: #5f5f5f;
-@kimbie-tt-color: #221a0f;
+@kimbie-tt-color: #513718;
 @kimbie-cd-color: #221a0f;
 @kimbie-obj-brace: #b1af86;
 @kimbie-arr-brace: #b1af86;
 @kimbie-comma: #b1af86;
-@kimbie-prop: #889b4a;
-@kimbie-stri: #889b4a;
+@kimbie-prop: #d03953;
+@kimbie-stri: #c7af86;
 @kimbie-numb: #f78e1f;
 @kimbie-bool: #d33682;
 @kimbie-null: #CC0000;
 
-@monokai-bg-color: #272727;
-@monokai-bd-color: #5f5f5f;
-@monokai-tt-color: #353535;
-@monokai-cd-color: #1e1e1e;
-@monokai-obj-brace: #a5c8c6;
-@monokai-arr-brace: #a5c8c6;
-@monokai-comma: #a5c8c6;
-@monokai-prop: #c7444a;
-@monokai-stri: #9aa83a;
-@monokai-numb: #6089b4;
-@monokai-bool: #408080;
-@monokai-null: #CC0000;
+@moonlight-bg-color: #002b36;
+@moonlight-bd-color: #5f5f5f;
+@moonlight-tt-color: #003847;
+@moonlight-cd-color: #00212b;
+@moonlight-obj-brace: #a5c8c6;
+@moonlight-arr-brace: #a5c8c6;
+@moonlight-comma: #a5c8c6;
+@moonlight-prop: #639900;
+@moonlight-stri: #17a198;
+@moonlight-numb: #158bd2;
+@moonlight-bool: #b57d23;
+@moonlight-null: #CC0000;
+
+@red-bg-color: #390000;
+@red-bd-color: #5f5f5f;
+@red-tt-color: #580000;
+@red-cd-color: #330000;
+@red-obj-brace: #a5c8c6;
+@red-arr-brace: #a5c8c6;
+@red-comma: #a5c8c6;
+@red-prop: #96dd2a;
+@red-stri: #b88d8d;
+@red-numb: #6089b4;
+@red-bool: #408080;
+@red-null: #e51c27;
+
+@blue-bg-color: #001c40;
+@blue-bd-color: #5f5f5f;
+@blue-tt-color: #002451;
+@blue-cd-color: #001733;
+@blue-obj-brace: #a5c8c6;
+@blue-arr-brace: #a5c8c6;
+@blue-comma: #a5c8c6;
+@blue-prop: #ffe18d;
+@blue-stri: #9aa83a;
+@blue-numb: #6089b4;
+@blue-bool: #408080;
+@blue-null: #CC0000;
+
 
 .theme-light {
     background: @light-bg-color;
@@ -315,31 +342,31 @@
     }
 }
 
-.theme-solar {
-    background: @solar-bg-color;
+.theme-solarized {
+    background: @solarized-bg-color;
     header {
         .z-fmt-alts .alert-info {
-            background-color: @solar-tt-color;
+            background-color: @solarized-tt-color;
             color: inherit;
             border: none;
         }
         .z-conf-table {
             th, td {
-                border-right: 1px solid @solar-bd-color;
+                border-right: 1px solid @solarized-bd-color;
             }
             th {
-                border-bottom: 1px solid @solar-bd-color;
+                border-bottom: 1px solid @solarized-bd-color;
             }
         }
         .z-conf-wp {
             .row {
-                background: @solar-tt-color;
+                background: @solarized-tt-color;
                 border-radius: 4px;
                 .conf-item {
-                    background: @solar-tt-color;
-                    border: 1px solid @solar-bd-color;
+                    background: @solarized-tt-color;
+                    border: 1px solid @solarized-bd-color;
                     .dropdown-toggle {
-                        background: @solar-bg-color;
+                        background: @solarized-bg-color;
                         color: inherit;
                     }
                 }
@@ -348,27 +375,27 @@
     }
     #worker {
         .panel {
-            border: 1px solid @solar-tt-color;
-            background-color: @solar-bg-color;
+            border: 1px solid @solarized-tt-color;
+            background-color: @solarized-bg-color;
             .panel-heading {
-                background-color: @solar-tt-color;
+                background-color: @solarized-tt-color;
                 color: inherit;
                 border: none;
             }
         }
         div#z-source textarea.src-text {
-            border: 1px solid @solar-tt-color;
-            background-color: @solar-cd-color;
+            border: 1px solid @solarized-tt-color;
+            background-color: @solarized-cd-color;
             &:focus {
                 box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 2px rgba(102,175,233,.6);
             }
         }
         #z-container{
-            background-color: @solar-cd-color;
-            border: 1px solid @solar-tt-color;
+            background-color: @solarized-cd-color;
+            border: 1px solid @solarized-tt-color;
             #z-stage {
                 #z-index {
-                    background-color: @solar-tt-color;
+                    background-color: @solarized-tt-color;
                 }
                 .z-row-index .z-idxes {
                     background-image: @img-num-333;
@@ -389,43 +416,43 @@
     }
     ::-webkit-scrollbar-thumb, ::-webkit-scrollbar-thumb:horizontal {
         border-radius: 4px;
-        background: @solar-tt-color;
+        background: @solarized-tt-color;
     }  
     .z-obj-brace {
-        color: @solar-obj-brace;
+        color: @solarized-obj-brace;
         font-weight: bold;
     }
     .z-arr-brace {
-        color: @solar-arr-brace;
+        color: @solarized-arr-brace;
         font-weight: bold;
     }
     .z-comma-sign {
-        color: @solar-comma;
+        color: @solarized-comma;
         font-weight: bold;
     }
     .z-backslash {
-        color: @solar-null;
+        color: @solarized-null;
         font-weight: bold;
     }
     .z-prop-val {
-        color: @solar-prop;
+        color: @solarized-prop;
         font-weight: bold;
     }
     .z-stri-val {
-        color: @solar-stri;
+        color: @solarized-stri;
     }
     .z-func-val {
-        color: @solar-stri;
+        color: @solarized-stri;
     }
     .z-numb-val {
-        color: @solar-numb;
+        color: @solarized-numb;
     }
     .z-bool-val {
-        color: @solar-bool;
+        color: @solarized-bool;
         font-weight: bold;
     }
     .z-null-val {
-        color: @solar-null;
+        color: @solarized-null;
         font-weight: bold;
     }
 }
@@ -660,31 +687,31 @@
     }
 }
 
-.theme-monokai {
-    background: @monokai-bg-color;
+.theme-moonlight {
+    background: @moonlight-bg-color;
     header {
         .z-fmt-alts .alert-info {
-            background-color: @monokai-tt-color;
+            background-color: @moonlight-tt-color;
             color: inherit;
             border: none;
         }
         .z-conf-table {
             th, td {
-                border-right: 1px solid @monokai-bd-color;
+                border-right: 1px solid @moonlight-bd-color;
             }
             th {
-                border-bottom: 1px solid @monokai-bd-color;
+                border-bottom: 1px solid @moonlight-bd-color;
             }
         }
         .z-conf-wp {
             .row {
-                background: @monokai-tt-color;
+                background: @moonlight-tt-color;
                 border-radius: 4px;
                 .conf-item {
-                    background: @monokai-tt-color;
-                    border: 1px solid @monokai-bd-color;
+                    background: @moonlight-tt-color;
+                    border: 1px solid @moonlight-bd-color;
                     .dropdown-toggle {
-                        background: @monokai-bg-color;
+                        background: @moonlight-bg-color;
                         color: inherit;
                     }
                 }
@@ -693,27 +720,27 @@
     }
     #worker {
         .panel {
-            border: 1px solid @monokai-tt-color;
-            background-color: @monokai-bg-color;
+            border: 1px solid @moonlight-tt-color;
+            background-color: @moonlight-bg-color;
             .panel-heading {
-                background-color: @monokai-tt-color;
+                background-color: @moonlight-tt-color;
                 color: inherit;
                 border: none;
             }
         }
         div#z-source textarea.src-text {
-            border: 1px solid @monokai-tt-color;
-            background-color: @monokai-cd-color;
+            border: 1px solid @moonlight-tt-color;
+            background-color: @moonlight-cd-color;
             &:focus {
                 box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 2px rgba(102,175,233,.6);
             }
         }
         #z-container{
-            background-color: @monokai-cd-color;
-            border: 1px solid @monokai-tt-color;
+            background-color: @moonlight-cd-color;
+            border: 1px solid @moonlight-tt-color;
             #z-stage {
                 #z-index {
-                    background-color: @monokai-tt-color;
+                    background-color: @moonlight-tt-color;
                 }
                 .z-row-index .z-idxes {
                     background-image: @img-num-eee;
@@ -734,43 +761,273 @@
     }
     ::-webkit-scrollbar-thumb, ::-webkit-scrollbar-thumb:horizontal {
         border-radius: 4px;
-        background: @monokai-tt-color;
+        background: @moonlight-tt-color;
     }  
     .z-obj-brace {
-        color: @monokai-obj-brace;
+        color: @moonlight-obj-brace;
         font-weight: bold;
     }
     .z-arr-brace {
-        color: @monokai-arr-brace;
+        color: @moonlight-arr-brace;
         font-weight: bold;
     }
     .z-comma-sign {
-        color: @monokai-comma;
+        color: @moonlight-comma;
         font-weight: bold;
     }
     .z-backslash {
-        color: @monokai-null;
+        color: @moonlight-null;
         font-weight: bold;
     }
     .z-prop-val {
-        color: @monokai-prop;
+        color: @moonlight-prop;
         font-weight: bold;
     }
     .z-stri-val {
-        color: @monokai-stri;
+        color: @moonlight-stri;
     }
     .z-func-val {
-        color: @monokai-stri;
+        color: @moonlight-stri;
     }
     .z-numb-val {
-        color: @monokai-numb;
+        color: @moonlight-numb;
     }
     .z-bool-val {
-        color: @monokai-bool;
+        color: @moonlight-bool;
         font-weight: bold;
     }
     .z-null-val {
-        color: @monokai-null;
+        color: @moonlight-null;
         font-weight: bold;
     }
+}
+
+.theme-red {
+  background: @red-bg-color;
+  header {
+      .z-fmt-alts .alert-info {
+          background-color: @red-tt-color;
+          color: inherit;
+          border: none;
+      }
+      .z-conf-table {
+          th, td {
+              border-right: 1px solid @red-bd-color;
+          }
+          th {
+              border-bottom: 1px solid @red-bd-color;
+          }
+      }
+      .z-conf-wp {
+          .row {
+              background: @red-tt-color;
+              border-radius: 4px;
+              .conf-item {
+                  background: @red-tt-color;
+                  border: 1px solid @red-bd-color;
+                  .dropdown-toggle {
+                      background: @red-bg-color;
+                      color: inherit;
+                  }
+              }
+          }
+      }
+  }
+  #worker {
+      .panel {
+          border: 1px solid @red-tt-color;
+          background-color: @red-bg-color;
+          .panel-heading {
+              background-color: @red-tt-color;
+              color: inherit;
+              border: none;
+          }
+      }
+      div#z-source textarea.src-text {
+          border: 1px solid @red-tt-color;
+          background-color: @red-cd-color;
+          &:focus {
+              box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 2px rgba(102,175,233,.6);
+          }
+      }
+      #z-container{
+          background-color: @red-cd-color;
+          border: 1px solid @red-tt-color;
+          #z-stage {
+              #z-index {
+                  background-color: @red-tt-color;
+              }
+              .z-row-index .z-idxes {
+                  background-image: @img-num-eee;
+              }
+              .operator {
+                  &.collapsed {
+                      background-image: @img-plus-eee;
+                  }
+                  &.expanded {
+                      background-image: @img-minus-eee;
+                  }
+              }
+              .z-canvas .z-brace .z-ellipsis {
+                  background-image: @img-dot-eee;
+              }
+          }
+      }
+  }
+  ::-webkit-scrollbar-thumb, ::-webkit-scrollbar-thumb:horizontal {
+      border-radius: 4px;
+      background: @red-tt-color;
+  }  
+  .z-obj-brace {
+      color: @red-obj-brace;
+      font-weight: bold;
+  }
+  .z-arr-brace {
+      color: @red-arr-brace;
+      font-weight: bold;
+  }
+  .z-comma-sign {
+      color: @red-comma;
+      font-weight: bold;
+  }
+  .z-backslash {
+      color: @red-null;
+      font-weight: bold;
+  }
+  .z-prop-val {
+      color: @red-prop;
+      font-weight: bold;
+  }
+  .z-stri-val {
+      color: @red-stri;
+  }
+  .z-func-val {
+      color: @red-stri;
+  }
+  .z-numb-val {
+      color: @red-numb;
+  }
+  .z-bool-val {
+      color: @red-bool;
+      font-weight: bold;
+  }
+  .z-null-val {
+      color: @red-null;
+      font-weight: bold;
+  }
+}
+
+.theme-blue {
+  background: @blue-bg-color;
+  header {
+      .z-fmt-alts .alert-info {
+          background-color: @blue-tt-color;
+          color: inherit;
+          border: none;
+      }
+      .z-conf-table {
+          th, td {
+              border-right: 1px solid @blue-bd-color;
+          }
+          th {
+              border-bottom: 1px solid @blue-bd-color;
+          }
+      }
+      .z-conf-wp {
+          .row {
+              background: @blue-tt-color;
+              border-radius: 4px;
+              .conf-item {
+                  background: @blue-tt-color;
+                  border: 1px solid @blue-bd-color;
+                  .dropdown-toggle {
+                      background: @blue-bg-color;
+                      color: inherit;
+                  }
+              }
+          }
+      }
+  }
+  #worker {
+      .panel {
+          border: 1px solid @blue-tt-color;
+          background-color: @blue-bg-color;
+          .panel-heading {
+              background-color: @blue-tt-color;
+              color: inherit;
+              border: none;
+          }
+      }
+      div#z-source textarea.src-text {
+          border: 1px solid @blue-tt-color;
+          background-color: @blue-cd-color;
+          &:focus {
+              box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 2px rgba(102,175,233,.6);
+          }
+      }
+      #z-container{
+          background-color: @blue-cd-color;
+          border: 1px solid @blue-tt-color;
+          #z-stage {
+              #z-index {
+                  background-color: @blue-tt-color;
+              }
+              .z-row-index .z-idxes {
+                  background-image: @img-num-eee;
+              }
+              .operator {
+                  &.collapsed {
+                      background-image: @img-plus-eee;
+                  }
+                  &.expanded {
+                      background-image: @img-minus-eee;
+                  }
+              }
+              .z-canvas .z-brace .z-ellipsis {
+                  background-image: @img-dot-eee;
+              }
+          }
+      }
+  }
+  ::-webkit-scrollbar-thumb, ::-webkit-scrollbar-thumb:horizontal {
+      border-radius: 4px;
+      background: @blue-tt-color;
+  }  
+  .z-obj-brace {
+      color: @blue-obj-brace;
+      font-weight: bold;
+  }
+  .z-arr-brace {
+      color: @blue-arr-brace;
+      font-weight: bold;
+  }
+  .z-comma-sign {
+      color: @blue-comma;
+      font-weight: bold;
+  }
+  .z-backslash {
+      color: @blue-null;
+      font-weight: bold;
+  }
+  .z-prop-val {
+      color: @blue-prop;
+      font-weight: bold;
+  }
+  .z-stri-val {
+      color: @blue-stri;
+  }
+  .z-func-val {
+      color: @blue-stri;
+  }
+  .z-numb-val {
+      color: @blue-numb;
+  }
+  .z-bool-val {
+      color: @blue-bool;
+      font-weight: bold;
+  }
+  .z-null-val {
+      color: @blue-null;
+      font-weight: bold;
+  }
 }
