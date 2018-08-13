@@ -37,10 +37,12 @@ export class AppComponent implements OnInit, AfterViewInit {
   isConfOnSlid: boolean = false;
   isOriginEmpty: boolean = true;
   toggleConfTiele: string;
-  themes: any[] = ['dark', 'abyss', 'kimbie', 'monokai', 'light', 'solar'];
+  themes: any[] = [
+    'dark', 'abyss', 'blue', 'red', 'kimbie', 'moonlight', 'solarized', 'light'
+  ];
   fontColors: any = {
-    light: '#333', dark: '#eee', solar: '#333',
-    abyss: '#eee', kimbie: '#eee', monokai: '#eee'
+    light: '#333', dark: '#eee', solarized: '#333', abyss: '#eee',
+    red: '#eee', blue: '#eee', kimbie: '#eee', moonlight: '#eee'
   };
   theme: string;
   eles: FmterEles = new FmterEles();
