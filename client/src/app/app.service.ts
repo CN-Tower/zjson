@@ -82,7 +82,7 @@ export class AppService {
         const fmtHists = this.getFmtHists();
         fmtHists.unshift(hist);
         if (fmtHists.length > 8) {
-            fmtHists.shift();
+            fmtHists.pop();
         }
         window.localStorage['fmtHists'] = JSON.stringify(fmtHists);
     }
