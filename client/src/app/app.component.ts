@@ -40,10 +40,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   themes: any[] = [
     'dark', 'abyss', 'blue', 'red', 'kimbie', 'moonlight', 'solarized', 'light'
   ];
-  fontColors: any = {
-    light: '#333', dark: '#eee', solarized: '#333', abyss: '#eee',
-    red: '#eee', blue: '#eee', kimbie: '#eee', moonlight: '#eee'
-  };
   theme: string;
   eles: FmterEles = new FmterEles();
   fmtSt: FmtStatus = new FmtStatus();
@@ -256,8 +252,12 @@ export class AppComponent implements OnInit, AfterViewInit {
   onChangeTheme(them: string) {
     if (this.theme !== them) {
       this.theme = them;
-      $('body').css('color', this.fontColors[them]);
-      $('#z-source textarea.src-text').css('color', this.fontColors[them]);
+      let fontColor = '#999999';
+      if (fn.contains(['light', 'solarized'], them)) {
+        fontColor = '#333333';
+      }
+      $('body').css('color', fontColor);
+      $('#z-source textarea.src-text').css('color', fontColor);
       this.appService.setAppTheme(them);
     }
   }
