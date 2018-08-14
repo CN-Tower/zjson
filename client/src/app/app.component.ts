@@ -257,6 +257,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     if (this.theme !== them) {
       this.theme = them;
       $('body').css('color', this.fontColors[them]);
+      $('#z-source textarea.src-text').css('color', this.fontColors[them]);
       this.appService.setAppTheme(them);
     }
   }
