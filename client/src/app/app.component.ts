@@ -267,15 +267,12 @@ export class AppComponent implements OnInit, AfterViewInit {
    */
   maximalPanel(type: 'src'|'fmt') {
     let panel;
-    switch (type) {
-      case 'src':
+    if (type === 'src') {
         this.isSrcMax = true;
         panel = $('#z-source .panel')[0];
-        break;
-      case 'fmt':
+    } else if (type === 'fmt') {
         this.isFmtMax = true;
         panel = $('#z-jsonwd .panel')[0];
-        break;
     }
     fn.fullScreen(panel);
     fn.interval('checkIsFullScreen', 100, () => {
@@ -289,15 +286,12 @@ export class AppComponent implements OnInit, AfterViewInit {
     const winW = $win.width();
     const pW = winW - 40;
     const pH =  winH > 500 ? winH : 500;
-    switch (type) {
-      case 'src':
+    if (type === 'src') {
         this.maxSrcSize = {height: pH + 'px', width: pW + 'px'};
         this.isSrcMax = true;
-        break;
-      case 'fmt':
+    } else if (type === 'fmt') {
         this.maxFmtSize = {height: pH + 'px', width: pW + 'px'};
         this.isFmtMax = true;
-        break;
     }
   }
 
@@ -322,15 +316,14 @@ export class AppComponent implements OnInit, AfterViewInit {
    */
   download(type: 'src'|'fmt') {
     let blob;
-    switch (type) {
-      case 'src':
+    if (type === 'src') {
         if (this.sourcest) {
           blob = new Blob([this.sourcest], {type: ''});
-        } break;
-      case 'fmt':
+        }
+    } else if (type === 'fmt') {
         if (this.formated) {
           blob = new Blob([this.formated], {type: ''});
-        } break;
+        }
     }
     if (blob) {
       saveAs(blob, `zjson-${String(fn.time()).substr(-6)}.json`);
