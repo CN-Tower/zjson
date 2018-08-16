@@ -5,48 +5,84 @@ import 'rxjs/add/operator/map';
 
 @Injectable()
 export class AppService {
+  greetings: any = {
+    en: [
+      'Hello World, How are you ?',
+      'Have a nice day !',
+      'Nice to meet you again !',
+      'You\'ll have good luck !',
+      'God bless you !',
+      'Wish you receive your expected answer soon !',
+      'May happiness be with you forever !',
+      'May joy and health be with you always !',
+      'Take your passion and make it come true !',
+      'Wish all the best wishes for you !'
+    ],
+    zh: [
+      '很高兴再次见到你, 吃了没？',
+      '如果用的顺心的话请帮忙推广下哦！',
+      '修身齐家治天下，洗脸刷牙写代码！',
+      '语言定义世界，代码改变生活！',
+      '每天进步一小点，有朝一日成大牛！',
+      '程序员有三种美德:懒惰,急躁和傲慢...',
+      '程序要像女人的裙子，越短才越好~',
+      '学习不用功，注定当码农！'
+    ]
+  };
+  animateClass: any = {
+    'in': [
+      'bounceIn', 'bounceInLeft', 'bounceInUp', 'fadeIn', 'fadeInLeft',
+      'fadeInUp', 'flipInX', 'rotateIn', 'slideInLeft', 'slideInUp', 'rollIn'
+    ],
+    'out': [
+      'bounceOut', 'bounceOutRight', 'bounceOutDown', 'fadeOut', 'fadeOutRight',
+      'fadeOutDown', 'flipOutX', 'rotateOut', 'slideOutRight', 'slideOutDown', 'rollOut'
+    ]
+  };
+  defaultHist: {src: string, name: string}[] = [
+    {name: 'Py Unicode Collections', src: `{
+      u"Python": u"Unicode Demo",
+      u"name": u"ZJSON",
+      u"version": 3.2,
+      u"content": {
+        u"string": u"String",
+        u"number": 123,
+        u"boolean": True,
+        u"none": None,
+        u"dict": {
+          u"list": [u"List_element_001", u"List_element_001"],
+          u"tuple": (u"Tuple_element_001", u"Tuple_element_002")
+        }
+      }
+    }`},
+    {name: '转杰森 | ZJSON', src: `{
+      "zjson": "转杰森|ZJSON",
+      "desc": "Online json formatter",
+      "description": "一个在线json格式化工具",
+      "version": "v3.2",
+      "url": "http://zjson.net",
+      "project": "http://github.com/CN-Tower/zjson",
+      "language": ["中文（简体）", "English"],
+      "keywords": ["转杰森", "zjson", "json格式化", "json formatter"],
+      "content": {
+        "array": ["element 001", "element 002"],
+        "boolean": true,
+        "null": null,
+        "number": 123,
+        "string": "Hello World",
+        "object": {"property": "value", "key": "val"}
+      }
+    }`}
+  ]
+
   constructor(private http: Http) { }
 
   getGreeting(lang: string): string {
-    const greetings = {
-      en: [
-        'Hello World, How are you ?',
-        'Have a nice day !',
-        'Nice to meet you again !',
-        'You\'ll have good luck !',
-        'God bless you !',
-        'Wish you receive your expected answer soon !',
-        'May happiness be with you forever !',
-        'May joy and health be with you always !',
-        'Take your passion and make it come true !',
-        'Wish all the best wishes for you !'
-      ],
-      zh: [
-        '很高兴再次见到你, 吃了没？',
-        '如果用的顺心的话请帮忙推广下哦！',
-        '修身齐家治天下，洗脸刷牙写代码！',
-        '语言定义世界，代码改变生活！',
-        '每天进步一小点，有朝一日成大牛！',
-        '程序员有三种美德:懒惰,急躁和傲慢...',
-        '程序要像女人的裙子，越短才越好~',
-        '学习不用功，注定当码农！'
-      ]
-    };
-    return greetings[lang][fn.random(greetings[lang].length)];
+    return this.greetings[lang][fn.random(this.greetings[lang].length)];
   }
 
   getAnimateClass(type: 'in' | 'out') {
-    const classes = {
-      'in': [
-        'bounceIn', 'bounceInLeft', 'bounceInUp', 'fadeIn', 'fadeInLeft',
-        'fadeInUp', 'flipInX', 'rotateIn', 'slideInLeft', 'slideInUp', 'rollIn'
-      ],
-      'out': [
-        'bounceOut', 'bounceOutRight', 'bounceOutDown', 'fadeOut', 'fadeOutRight',
-        'fadeOutDown', 'flipOutX', 'rotateOut', 'slideOutRight', 'slideOutDown', 'rollOut'
-      ]
-    };
-    const tpCls = classes[type];
+    const tpCls = this.animateClass[type];
     return tpCls[fn.random(tpCls.length)];
   }
 
@@ -71,6 +107,12 @@ export class AppService {
 
   setUserId(id: string) {
     window.localStorage['userId'] = id;
+  }
+
+  initFmtHists() {
+    if (!this.getFmtHists().length) {
+      this.defaultHist.forEach(hist => this.setFmtHists(hist));
+    }
   }
 
   getFmtHists() {
