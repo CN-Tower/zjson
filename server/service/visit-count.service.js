@@ -69,7 +69,7 @@ function _setUserExpireTime(userId) {
 function _addLoseUser(userId) {
   UsersModel.createUser({
     'userId': userId,
-    'vtTime': fn.timeStamp(),
+    'vtTime': fn.time(),
     'isActive': true,
     'isKeepAc': true
   });
@@ -77,7 +77,7 @@ function _addLoseUser(userId) {
 }
 
 function _addUser(userId, callback) {
-  const vtTime = fn.timeStamp();
+  const vtTime = fn.time();
   const newUser = {
     'userId': userId,
     'vtTime': vtTime,
