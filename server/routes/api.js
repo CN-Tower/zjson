@@ -39,9 +39,10 @@ router.get('/zjson/version', function(req, res, next) {
 });
 
 router.post('/zjson/version', function(req, res, next) {
-  VersionModel.setVersion(req.body.version, (err, doc) => {
+  const version = req.body.version;
+  VersionModel.setVersion(version, err => {
     util.logErr(err, 'Set Version Error');
-    res.status(200).send({'status': 'ok', 'version': doc.version});
+    res.status(200).send({'status': 'ok', 'version': version});
   });
 });
 
