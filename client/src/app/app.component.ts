@@ -422,7 +422,6 @@ export class AppComponent implements OnInit, AfterViewInit {
   clearSourc() {
     if (this.sourcest) {
       this.sourcest = '';
-      this.emptyFmt();
     } else {
       this.alertNotice(this.translate.instant('_clear'), 'danger');
     }
