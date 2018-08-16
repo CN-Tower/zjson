@@ -73,6 +73,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     translate.use(this.lang);
     this.greeting = this.appService.getGreeting(this.lang);
     this.conf = new Configs();
+    this.appService.initFmtHists();
     this.getFmtHists();
     this.checkVersion(false);
     this.refreshVisitCount();
@@ -378,7 +379,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         const appdix = fmtPre.length > 15 ? fmtPre.substr(0, 15) + ' ...' : fmtPre;
         const histName = this.saveFmtTime + ` ( ${appdix} )`;
         const hist = {src: this.fmtSourcest, name: histName};
-        const prefix = this.appService.setFmtHists(hist);
+        this.appService.setFmtHists(hist);
         this.getFmtHists();
         this.alertNotice(this.translate.instant('saveSuccess'), 'success');
       }
