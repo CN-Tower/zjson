@@ -6,8 +6,12 @@ UsersModel.getUsers = function(callback) {
     this.find().exec(callback);
 }
 
-UsersModel.getUserById = function(userId, callback) {
-    this.findOne({userId: userId}, callback);
+UsersModel.getOneUserById = function(userId, callback) {
+  this.findOne({userId: userId}, callback);
+}
+
+UsersModel.getUsersById = function(userId, callback) {
+    this.find({userId: userId}, callback);
 }
 
 UsersModel.getOnline = function(callback) {
