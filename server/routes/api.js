@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const vcWork = require('../worker/visit-count.wroker');
+const vcService = require('../service/visit-count.service');
 const VersionModel = require('../dao/models/version.model');
 const VcModel = require('../dao/models/visitCount.model');
 const UsersModel = require('../dao/models/users.model');
@@ -25,7 +25,7 @@ router.get('/zjson/users', function(req, res, next) {
 });
 
 router.get('/zjson/user/:userId', function(req, res, next) {
-  UsersModel.getUserById(req.params['userId'], (err, doc) => {
+  UsersModel.getOneUserById(req.params['userId'], (err, doc) => {
     util.logErr(err, 'Get User Info Error');
     res.status(200).send(doc);
   });
@@ -53,13 +53,13 @@ router.post('/zjson/setVc', function(req, res, next) {
 });
 
 router.get('/refreshVc/:userId', function(req, res, next) {
-  vcWork.refreshVc(req.params['userId'], req.query['isExpire'], userId => {
+  vcService.refreshVc(req.params['userId'], req.query['isExpire'], userId => {
     res.status(200).send({'id': userId});
   });
 });
 
 router.get('/pollingVc/:userId', function(req, res, next) {
-  vcWork.pollingVc(req.params['userId'], req.query['isOnInit'], vc => {
+  vcService.pollingVc(req.params['userId'], req.query['isOnInit'], vc => {
     res.status(200).send({'vc': vc});
   });
 });
