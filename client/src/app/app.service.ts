@@ -110,8 +110,18 @@ export class AppService {
   }
 
   initFmtHists() {
-    if (!this.getFmtHists().length) {
+    const hists = this.getFmtHists();
+    if (!hists.length) {
       this.defaultHist.forEach(hist => this.setFmtHists(hist));
+    } else {
+      const names = this.defaultHist.map(hist => hist.name);
+      hists.forEach(hist => {
+        const idx = names.indexOf(hist.name);
+        if (idx !== -1) {
+          hist.src = this.defaultHist[idx].src;
+        }
+      });
+      window.localStorage['fmtHists'] = JSON.stringify(hists);
     }
   }
 
