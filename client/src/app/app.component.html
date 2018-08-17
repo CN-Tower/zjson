@@ -168,8 +168,8 @@
             <span class="z-ico-hd" (click)="clearSourc()">
               <i class="fa fa-trash z-op-icon" title="{{'clear' | translate}}"></i>
             </span>
-            <span class="z-ico-hd" (click)="download('src')">
-              <i class="fa fa-download z-op-icon" title="{{'download' | translate}}"></i>
+            <span class="z-ico-hd" (click)="upload()">
+              <i class="fa fa-upload z-op-icon" title="{{'upload' | translate}}"></i>
             </span> 
             <span *ngIf="!isSrcMax" class="z-ico-hd dropdown" (click)="toggleOptions('history')">
               <i class="fa fa-history z-op-icon dropdown-toggle" title="{{'saved' | translate}}"></i>
@@ -231,7 +231,7 @@
             <span class="z-ico-hd" (click)="clearFmted()">
               <i class="fa fa-trash z-op-icon" title="{{'clear' | translate}}"></i>
             </span>
-            <span class="z-ico-hd" (click)="download('fmt')">
+            <span class="z-ico-hd" (click)="download()">
               <i class="fa fa-download z-op-icon" title="{{'download' | translate}}"></i>
             </span>
             <span *ngIf="!isFmtMax" class="z-ico-hd" (click)="saveFmted()">
@@ -272,4 +272,5 @@
     </div>
     <!-- FMTED END -->
   </section>
+  <input type="file" class="upload hide">
 </div>
