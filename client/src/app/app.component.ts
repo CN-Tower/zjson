@@ -148,7 +148,9 @@ export class AppComponent implements OnInit, AfterViewInit {
     if (!this.sourcest && !this.fmtSourcest && !isSilence) {
       this.alertNotice(this.translate.instant('_format'), 'danger');
     } else {
-      this.formatter.init(fmtSrc.trim(), this.conf , (html, json, fmtSt) => {
+      fmtSrc = fmtSrc.trim().replace(/\&/mg, '&amp;')
+        .replace(/\</mg, '&lt;').replace(/\>/mg, '&gt;');
+      this.formatter.init(fmtSrc, this.conf , (html, json, fmtSt) => {
         this.formated = json;
         this.fmtSt = fmtSt;
         if (html) {
@@ -162,8 +164,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.isOriginEmpty = !this.formated;
         this.isModelExpand = this.conf.model === 'expand';
         fn.timeout(() => {
-          const $zCanvas = $('.z-canvas');
-          $zCanvas.html(html);
+          $('.z-canvas').html(html);
           this.trigglerEvents();
           this.fmtSourcest = fmtSrc;
         });
@@ -313,21 +314,20 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   /**
+   * 上传操作
+   * =================================
+   */
+  upload() {
+    $('input.upload').click();
+  }
+
+  /**
    * 下载操作
    * =================================
    */
-  download(type: 'src'|'fmt') {
-    let blob;
-    if (type === 'src') {
-        if (this.sourcest) {
-          blob = new Blob([this.sourcest], {type: ''});
-        }
-    } else if (type === 'fmt') {
-        if (this.formated) {
-          blob = new Blob([this.formated], {type: ''});
-        }
-    }
-    if (blob) {
+  download() {
+    if (this.formated) {
+      const blob = new Blob([$('.z-canvas').text()], {type: ''});
       saveAs(blob, `zjson-${String(fn.time()).substr(-6)}.json`);
     } else {
       this.alertNotice(this.translate.instant('_download'), 'danger');
@@ -362,8 +362,9 @@ export class AppComponent implements OnInit, AfterViewInit {
    * =================================
    */
   showInLeft() {
-    this.sourcest = this.formated;
+    this.sourcest = $('.z-canvas').text();
     $('.src-text').scrollTop(0);
+    this.doFormate(this.sourcest);
   }
 
   /**
@@ -372,13 +373,15 @@ export class AppComponent implements OnInit, AfterViewInit {
    */
   saveFmted() {
     const svTime = this.getTimeStr();
-    if (this.fmtSourcest) {
+    if (this.formated) {
+      const fmted = $('.z-canvas').text();
+      this.sourcest = fmted;
       if (this.saveFmtTime !== svTime) {
         this.saveFmtTime = svTime;
-        const fmtPre = this.fmtSourcest.replace(/[\s\n]/mg, '');
+        const fmtPre = fmted.replace(/[\s\n]/mg, '');
         const appdix = fmtPre.length > 15 ? fmtPre.substr(0, 15) + ' ...' : fmtPre;
         const histName = this.saveFmtTime + ` ( ${appdix} )`;
-        const hist = {src: this.fmtSourcest, name: histName};
+        const hist = {src: fmted, name: histName};
         this.appService.setFmtHists(hist);
         this.getFmtHists();
         this.alertNotice(this.translate.instant('saveSuccess'), 'success');
@@ -409,7 +412,7 @@ export class AppComponent implements OnInit, AfterViewInit {
    */
   copyFmted() {
     if (this.formated) {
-      fn.copyText(this.formated);
+      fn.copyText($('.z-canvas').text());
       this.alertNotice(this.translate.instant('copySuccess'), 'success');
     } else {
       this.alertNotice(this.translate.instant('_copy'), 'danger');
@@ -460,7 +463,7 @@ export class AppComponent implements OnInit, AfterViewInit {
    */
   expandAll() {
     if ($('.z-canvas').html()) {
-      this.doFormate(this.fmtSourcest);
+      this.doFormate($('.z-canvas').text());
     }
   }
 
@@ -583,6 +586,7 @@ export class AppComponent implements OnInit, AfterViewInit {
    * ===================================
    */
   ngAfterViewInit() {
+    this.initEvents();
     const $win = $(win);
     const $zSrce = $('#z-source');
     const $zJson = $('#z-jsonwd');
@@ -602,7 +606,7 @@ export class AppComponent implements OnInit, AfterViewInit {
       $('.z-row-index').css('left', (this.scrollLeft - 2) + 'px');
     });
     let dx, nx, ox;
-    const resizeCodeZone: Function = e => {
+    const resizeCodeZone = e => {
       $('.src-text').blur();
       const ww = $('#worker').width();
       nx = e.clientX;
@@ -626,12 +630,34 @@ export class AppComponent implements OnInit, AfterViewInit {
         }
       }
     };
-
     $('#z-resize').mousedown(function(e) {
       if ($win.width() > 1025) {
         ox = e.clientX;
         $(document).on('mousemove', resizeCodeZone).mouseup(function() {
           $(this).off('mousemove', resizeCodeZone);
+        });
+      }
+    });
+  }
+
+  /**
+   * 设置上传事件
+   * ===================================
+   */
+  initEvents() {
+    const that = this;
+    $('input.upload').change(function(e) {
+      var file = this.files[0];
+      var reader = new FileReader();
+      if (file.size > 80000) {
+        that.alertNotice(that.translate.instant('_largeFile'), 'danger');
+      } else {
+        file.type === 'text/plain'
+          ? reader.readAsText(file, "gb2312")
+          : reader.readAsText(file, "utf8");
+        reader.addEventListener('load', function () {
+          that.sourcest = reader.result;
+          that.doFormate(that.sourcest);
         });
       }
     });
