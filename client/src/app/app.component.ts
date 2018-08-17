@@ -647,17 +647,22 @@ export class AppComponent implements OnInit, AfterViewInit {
   initEvents() {
     const that = this;
     $('input.upload').change(function(e) {
-      var file = this.files[0];
-      var reader = new FileReader();
+      const file = this.files[0];
+      const reader = new FileReader();
       if (file.size > 80000) {
         that.alertNotice(that.translate.instant('_largeFile'), 'danger');
+        $(this).replaceWith('<input type="file" class="upload hide">');
+        that.initEvents();
       } else {
+        const _that = this;
         file.type === 'text/plain'
-          ? reader.readAsText(file, "gb2312")
-          : reader.readAsText(file, "utf8");
+          ? reader.readAsText(file, 'gb2312')
+          : reader.readAsText(file, 'utf8');
         reader.addEventListener('load', function () {
           that.sourcest = reader.result;
           that.doFormate(that.sourcest);
+          $(_that).replaceWith('<input type="file" class="upload hide">');
+          that.initEvents();
         });
       }
     });
