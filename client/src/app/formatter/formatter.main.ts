@@ -1,5 +1,4 @@
 import { Configs, FmtData, FmtStatus, FmtChecker, FmterEles } from './formatter.conf';
-import { FmtHelp } from './formatter.help';
 
 export class Formatter extends FmterEles {
   constructor() {
