@@ -4,7 +4,8 @@
 /client/dist
 /client/tmp
 /client/out-tsc
-
+/client/package-lock.json
+/server/package-lock.json
 # dependencies
 /client/node_modules
 /server/node_modules
