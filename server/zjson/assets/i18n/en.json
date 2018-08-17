@@ -34,8 +34,9 @@
     "placeHolder": "Paste your source json code to here!",
     "pushToLeft": "Push To Left",
     "pushToMiddle": "Push To Middle",
-    "showInLeft": "Show In Left",
+    "showInLeft": "Copy to Left",
     "download": "Download",
+    "upload": "Upload",
     "maximal": "Maximal",
     "minimal": "Minimal",
     "showConfs": "Show Configs",
@@ -53,6 +54,7 @@
     "_clear": "Nothing to clear !",
     "_expand": "Nothing to expand !",
     "_collapse": "Nothing to collapse !",
+    "_largeFile": "The file is too large !",
     "alert": {
         "ost": "Expect a string in line: {{rowIdx}} !",
         "col": "Expect a colon in line: {{rowIdx}} !",
