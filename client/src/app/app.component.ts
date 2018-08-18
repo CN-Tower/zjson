@@ -75,9 +75,11 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.conf = new Configs();
     this.appService.initFmtHists();
     this.getFmtHists();
+    /**electron ignore -*/
     this.checkVersion(false);
     this.refreshVisitCount();
     this.pollingVisitCount();
+    /**electron ignore |*/
   }
 
   ngOnInit() {
@@ -86,8 +88,10 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.doTranslate();
       this.translateAltMsgs();
     });
+    /**electron ignore -*/
     fn.interval('refresh-visit-count', 300000, () => this.refreshVisitCount());
     fn.interval('polling-visit-count', 15000, () => this.pollingVisitCount());
+    /**electron ignore |*/
   }
 
   /**
@@ -586,7 +590,9 @@ export class AppComponent implements OnInit, AfterViewInit {
    * ===================================
    */
   ngAfterViewInit() {
-    this.initEvents();
+    this.initUploadEvent();
+    this.initOpenDragEvent();
+    win['isRendered'] = true;
     const $win = $(win);
     const $zSrce = $('#z-source');
     const $zJson = $('#z-jsonwd');
@@ -644,28 +650,51 @@ export class AppComponent implements OnInit, AfterViewInit {
    * 设置上传事件
    * ===================================
    */
-  initEvents() {
+  initUploadEvent() {
     const that = this;
     $('input.upload').change(function(e) {
       const file = this.files[0];
-      const reader = new FileReader();
-      if (file.size > 80000) {
-        that.alertNotice(that.translate.instant('_largeFile'), 'danger');
-        $(this).replaceWith('<input type="file" class="upload hide">');
-        that.initEvents();
-      } else {
-        const _that = this;
-        file.type === 'text/plain'
-          ? reader.readAsText(file, 'gb2312')
-          : reader.readAsText(file, 'utf8');
-        reader.addEventListener('load', function () {
-          that.sourcest = reader.result;
-          that.doFormate(that.sourcest);
-          $(_that).replaceWith('<input type="file" class="upload hide">');
-          that.initEvents();
-        });
-      }
+      that.readSrcFile(file);
     });
+  }
+
+  /**
+   * 拖放文件事件
+   * ===================================
+   */
+  initOpenDragEvent() {
+    $('html, body')
+    .on('dragenter dragover dragleave', event => event.preventDefault())
+    .on('drop', event => {
+      event.preventDefault();
+      const file = event.originalEvent.dataTransfer.files[0];
+      this.readSrcFile(file);
+    });
+  }
+
+  /**
+   * 读取文件
+   * ===================================
+   */
+  readSrcFile(file: any) {
+    const $textarea = $('input.upload');
+    const reader = new FileReader();
+    if (file.size > 80000) {
+      this.alertNotice(this.translate.instant('_largeFile'), 'danger');
+      $textarea.replaceWith('<input type="file" class="upload hide">');
+      this.initUploadEvent();
+    } else {
+      const that = this;
+      file.type === 'text/plain'
+        ? reader.readAsText(file, 'gb2312')
+        : reader.readAsText(file, 'utf8');
+      reader.addEventListener('load', function () {
+        that.sourcest = reader.result;
+        that.doFormate(that.sourcest);
+        $textarea.replaceWith('<input type="file" class="upload hide">');
+        that.initUploadEvent();
+      });
+    }
   }
 
   /**

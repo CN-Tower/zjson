@@ -6,6 +6,8 @@
 /client/out-tsc
 /client/package-lock.json
 /server/package-lock.json
+/client/build/package/
+
 # dependencies
 /client/node_modules
 /server/node_modules

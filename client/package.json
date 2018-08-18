@@ -3,13 +3,18 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --proxy-config proxy.conf.json -o",
-    "build": "ng build --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "update": "npm run build && node ./tools/update-zjson.js",
-    "package": "npm run electron && electron-packager ./dist zjson --platform=win32 --out ./build/package --verson=1.0.1 --overwrite --icon=./assets/imgs/favicon.ico"
+    "start": "npm run unignore && ng serve --proxy-config proxy.conf.json -o",
+    "build": "node build/pre-build.js && ng build --prod",
+    "build:electron": "node build/pre-build.js electron && ng build --prod",
+    "update": "npm run build && node build/update-zjson.js",
+    "electron:dist": "electron dist",
+    "electron": "npm run build:electron && node build/electron.conf.js && electron dist",
+    "electron:package": "electron-packager ./dist zjson --platform=win32 --out build/package --verson=3.2.1 --overwrite",
+    "package": "npm run electron && npm run electron:package && npm run unignore",
+    "unignore": "node build/pre-build.js"
   },
   "private": true,
   "dependencies": {
@@ -42,6 +47,8 @@
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",
     "codelyzer": "~4.2.1",
+    "electron": "^2.0.7",
+    "electron-packager": "^12.1.0",
     "glob": "^7.1.2",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",

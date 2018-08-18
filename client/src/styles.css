@@ -5,6 +5,7 @@
 }
 html, body {
     min-height: 100%;
+    font-family: "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 }
 .ct {
     text-align: center;
