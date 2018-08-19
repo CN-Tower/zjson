@@ -459,6 +459,11 @@ export class AppComponent implements OnInit, AfterViewInit {
     if (!this.isOriginEmpty) {
       this.animateGreeting();
     }
+    fn.defer(() => {
+      if (fn.has(win, 'onLinksLoad')) {
+        win.onLinksLoad();
+      }
+    });
   }
 
   /**

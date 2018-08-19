@@ -4,12 +4,16 @@
 
 const electron = require('electron');
 const shell = electron.shell;
-const $links = $('.links');
 
-$links.each(function() {
-  const $this = $(this);
-  const href = $this.attr('href');
-  $this.attr('href', 'javascript:;').click(() => {
-    shell.openExternal(href);
+window.onLinksLoad = function onLinksLoad() {
+  const $links = $('.links');
+  $links.each(function() {
+    const $this = $(this);
+    const href = $this.attr('href');
+    $this.attr('href', 'javascript:;').click(() => {
+      shell.openExternal(href);
+    });
   });
-});
+};
+
+window.onLinksLoad();
