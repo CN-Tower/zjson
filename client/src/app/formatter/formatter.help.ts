@@ -1,10 +1,39 @@
 import { Configs } from './formatter.conf';
 
 export class FmtHelp {
-  quoteVal: Function = (val: string, quo: string) => quo + val + quo;
-  getSrcRest: Function = (src: string, num: number = 1) => src.length > num ? src.substr(num) : '';
+  constructor() {}
 
-  constructor() { }
+  /**
+   * 描述: 给String打引号
+   */
+  quoteVal = (val: string, quo: string) => quo + val + quo;
+
+  /**
+   * 描述: 获取剩余字符串
+   * @param src 
+   * @param num 
+   */
+  getSrcRest(src: string, num: number = 1): string {
+    return src.length > num ? src.substr(num) : '';
+  }
+
+  /**
+   * 描述: 获取后半引号索引
+   * @param quo 
+   * @param rest 
+   */
+  getNextQuoIdx(quo: string, rest: string): number {
+    for (let i = 0; i < rest.length; i ++) {
+      if (rest[i] === quo) {
+        if (i === 0 || rest[i - 1] !== '\\' || (
+          rest[i - 1] === '\\' && rest[i - 2] === '\\' && rest[i - 3] !== '\\'
+        )) {
+          return i;
+        }
+      }
+    }
+    return -1;
+  }
 
   /**
    * 描述: 设置基础缩进值
