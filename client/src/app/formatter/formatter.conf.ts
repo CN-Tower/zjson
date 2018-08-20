@@ -78,7 +78,7 @@ export class FmterEles {
   public colon_: string = '<span class="z-code z-colon-sign">: </span>';
   public comma: string = '<span class="z-code z-comma-sign">,</span>';
   public backslash: string = '<span class="z-code z-backslash">\\</span>';
-  public propFmt: Function = val => `<span class="z-code z-prop-val">${val}</span>`;
+  public propFmt: Function = val => `<span class="z-code z-prop-val">${val.replace(/\n/mg, '')}</span>`;
   public striFmt: Function = val => `<span class="z-code z-stri-val">${val}</span>`;
   public funcFmt: Function = val => `<span class="z-code z-func-val">${val}</span>`;
   public numbFmt: Function = val => `<span class="z-code z-numb-val">${val}</span>`;
