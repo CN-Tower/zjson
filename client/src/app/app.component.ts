@@ -659,7 +659,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     const that = this;
     $('input.upload').change(function(e) {
       const file = this.files[0];
-      that.readSrcFile(file);
+      that.readSrcFile(file, true);
     });
   }
 
@@ -673,7 +673,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     .on('drop', event => {
       event.preventDefault();
       const file = event.originalEvent.dataTransfer.files[0];
-      this.readSrcFile(file);
+      this.readSrcFile(file, false);
     });
   }
 
@@ -681,13 +681,14 @@ export class AppComponent implements OnInit, AfterViewInit {
    * 读取文件
    * ===================================
    */
-  readSrcFile(file: any) {
-    const $textarea = $('input.upload');
+  readSrcFile(file: any, isInitFileIpt: boolean) {
     const reader = new FileReader();
     if (file.size > 80000) {
       this.alertNotice(this.translate.instant('_largeFile'), 'danger');
-      $textarea.replaceWith('<input type="file" class="upload hide">');
-      this.initUploadEvent();
+      if (isInitFileIpt) {
+        $('input.upload').replaceWith('<input type="file" class="upload hide">');
+        this.initUploadEvent();
+      }
     } else {
       const that = this;
       file.type === 'text/plain'
@@ -696,8 +697,10 @@ export class AppComponent implements OnInit, AfterViewInit {
       reader.addEventListener('load', function () {
         that.sourcest = reader.result;
         that.doFormate(that.sourcest);
-        $textarea.replaceWith('<input type="file" class="upload hide">');
-        that.initUploadEvent();
+        if (isInitFileIpt) {
+          $('input.upload').replaceWith('<input type="file" class="upload hide">');
+          that.initUploadEvent();
+        }
       });
     }
   }
