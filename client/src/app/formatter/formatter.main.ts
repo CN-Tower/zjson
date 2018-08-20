@@ -210,22 +210,21 @@ export class Formatter extends FmterEles {
         case '(': this.tupPreHandler(); break;
         case ')': this.tupEndHandler(); break;
       }
-      const unicMts = this.dt.src.match(/^u'/);
-      const unicMtd = this.dt.src.match(/^u"/);
-      if (unicMts || unicMtd) {
-        return this.unicHandler(unicMts);
+      const unicMt = this.dt.src.match(/^u(\s)?'|^u(\s)?"/);
+      if (unicMt) {
+        return this.unicHandler(unicMt[0]);
       }
       const numbMt = this.dt.src.match(/^(-?[0-9]+\.?[0-9]*|0[xX][0-9a-fA-F]+)/);
       if (numbMt) {
-        return this.numbHandler(numbMt);
+        return this.numbHandler(numbMt[0]);
       }
       const boolMt = this.dt.src.match(/^(true|false|True|False)/);
       if (boolMt) {
-        return this.boolHandler(boolMt);
+        return this.boolHandler(boolMt[0]);
       }
       const nullMt = this.dt.src.match(/^(null|undefined|None|NaN)/);
       if (nullMt) {
-        return this.nullHandler(nullMt);
+        return this.nullHandler(nullMt[0]);
       }
       this.otheHandler();
     }
@@ -239,8 +238,8 @@ export class Formatter extends FmterEles {
     if (this.dt.src[0] === '\'') {
       this.ck.isSrcJson = false;
     }
-    const rest = this.help.getSrcRest(this.dt.src);
-    const restIdx = rest.indexOf(this.dt.src[0]);
+    let rest = this.help.getSrcRest(this.dt.src);
+    const restIdx = this.help.getNextQuoIdx(this.dt.src[0], rest);
     this.chkExpect(this.dt.src[0]);
     if (restIdx > -1) {
       if (this.ck.exceptVal === 'ost') {
@@ -417,20 +416,23 @@ export class Formatter extends FmterEles {
    * Unicode
    * ============================
    */
-  private unicHandler(unicMts) {
+  private unicHandler(unicMt: string) {
     this.ck.srcAcType = this.ck.srcAcType || 'pyMap';
-    const rest = this.help.getSrcRest(this.dt.src, 2);
-    const restIdx = unicMts ? rest.indexOf('\'') : rest.indexOf('"');
+    const rest = this.help.getSrcRest(this.dt.src, unicMt.length);
+    const restIdx = unicMt.indexOf('\'') > -1
+      ? this.help.getNextQuoIdx('\'', rest)
+      : this.help.getNextQuoIdx('"', rest);
     this.chkExpect('u');
     if (restIdx > -1) {
+      const cutIdx = restIdx + unicMt.length + 1;
       if (this.ck.exceptVal === 'ost') {
-        this.dt.html += this.propFmt(this.dt.src.substr(0, restIdx + 3));
+        this.dt.html += this.propFmt(this.dt.src.substr(0, cutIdx));
       } else {
-        this.dt.html += this.striFmt(this.dt.src.substr(0, restIdx + 3));
+        this.dt.html += this.striFmt(this.dt.src.substr(0, cutIdx));
       }
-      this.dt.json += this.dt.src.substr(0, restIdx + 3);
+      this.dt.json += this.dt.src.substr(0, cutIdx);
       this.setExpect('u');
-      this.dt.src = this.help.getSrcRest(this.dt.src, restIdx + 3);
+      this.dt.src = this.help.getSrcRest(this.dt.src, cutIdx);
       this.doFormate2();
     } else {
       this.dt.html += this.striFmt(this.dt.src);
@@ -445,12 +447,12 @@ export class Formatter extends FmterEles {
    * 数字
    * ============================
    */
-  private numbHandler(numbMt) {
-    this.dt.html += this.numbFmt(numbMt[0]);
-    this.dt.json += numbMt[0];
+  private numbHandler(numbMt: string) {
+    this.dt.html += this.numbFmt(numbMt);
+    this.dt.json += numbMt;
     this.chkExpect('n');
     this.setExpect('n');
-    this.dt.src = this.help.getSrcRest(this.dt.src, numbMt[0].length);
+    this.dt.src = this.help.getSrcRest(this.dt.src, numbMt.length);
     this.doFormate2();
   }
 
@@ -458,13 +460,13 @@ export class Formatter extends FmterEles {
    * 布尔
    * ============================
    */
-  private boolHandler(boolMt) {
-    this.ck.srcAcType = this.ck.srcAcType || (['True', 'False'].includes(boolMt[0]) ? 'pyMap' : 'jsObj');
-    this.dt.html += this.boolFmt(boolMt[0]);
-    this.dt.json += boolMt[0];
+  private boolHandler(boolMt: string) {
+    this.ck.srcAcType = this.ck.srcAcType || (['True', 'False'].includes(boolMt) ? 'pyMap' : 'jsObj');
+    this.dt.html += this.boolFmt(boolMt);
+    this.dt.json += boolMt;
     this.chkExpect('b');
     this.setExpect('b');
-    this.dt.src = this.help.getSrcRest(this.dt.src, boolMt[0].length);
+    this.dt.src = this.help.getSrcRest(this.dt.src, boolMt.length);
     this.doFormate2();
   }
 
@@ -472,13 +474,13 @@ export class Formatter extends FmterEles {
    * 空
    * ============================
    */
-  private nullHandler(nullMt) {
-    this.ck.srcAcType = this.ck.srcAcType || (['None'].includes(nullMt[0]) ? 'pyMap' : 'jsObj');
-    this.dt.html += this.nullFmt(nullMt[0]);
-    this.dt.json += nullMt[0];
+  private nullHandler(nullMt: string) {
+    this.ck.srcAcType = this.ck.srcAcType || (['None'].includes(nullMt) ? 'pyMap' : 'jsObj');
+    this.dt.html += this.nullFmt(nullMt);
+    this.dt.json += nullMt;
     this.chkExpect('N');
     this.setExpect('N');
-    this.dt.src = this.help.getSrcRest(this.dt.src, nullMt[0].length);
+    this.dt.src = this.help.getSrcRest(this.dt.src, nullMt.length);
     this.doFormate2();
   }
 
