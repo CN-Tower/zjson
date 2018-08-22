@@ -173,19 +173,19 @@
                 <div class="z-info-modal modal-body">
                   <table>
                     <tr>
-                      <td>Version:</td>
+                      <td>{{'version' | translate}}:</td>
                       <td>{{version}}</td>
                     </tr>
                     <tr>
-                      <td>Author:</td>
+                      <td>{{'author' | translate}}:</td>
                       <td>@CN-Tower</td>
                     </tr>
                     <tr>
-                      <td>Email:</td>
+                      <td>{{'email' | translate}}:</td>
                       <td>cntower@yahoo.com</td>
                     </tr>
                     <tr>
-                      <td>Update Time:</td>
+                      <td>{{'updateTime' | translate}}:</td>
                       <td>{{updateTime}}</td>
                     </tr>
                   </table>
@@ -280,10 +280,20 @@
         <div class="panel-body">
           <div id="share-link">
             <div class="search">
-              <input id="search-ipt" class="opacity0 fl" type="text">
-              <i class="fa fa-search"></i>
+              <input id="search-ipt" class="opacity0 fl" type="text" (paste)="getSharedJson()">
+              <i class="fa fa-search" title="{{'search' | translate}}" (click)="getSharedJson()"></i>
             </div>
-            <div class="link fr" (click)="shareFormated()"><i class="fa fa-link"></i></div>
+            <div *ngIf="formated">
+              <div class="fmted-op link">
+                <i class="fa fa-link fr" title="{{'shareLink' | translate}}" (click)="shareFormated()"></i>
+              </div>
+              <div class="fmted-op last-postion">
+                <i class="fa fa-chevron-up fr" title="{{'lastStep' | translate}}" (click)="lastPosition()"></i>
+              </div>
+              <div class="fmted-op next-postion">
+                <i class="fa fa-chevron-down fr" title="{{'nextStep' | translate}}" (click)="nextPosition()"></i>
+              </div>
+            </div>
           </div>
           <div id="z-container">
             <div id="z-stage" [class.fullWidth]="!isModelExpand">
@@ -315,4 +325,15 @@
     <!-- FMTED END -->
   </section>
   <input type="file" class="upload hide">
+</div>
+
+<div *ngIf="isShowLoading" class="z-loading">
+  <div class="loadingBg"></div>
+  <div class="loadingText top45">
+    <div class="loadingGif">
+      <div class="loader ball-clip-rotate-multiple">
+        <div></div><div></div>
+      </div>
+    </div>
+  </div>
 </div>
