@@ -308,27 +308,32 @@
           top: 68px;
           right: 34px;
           z-index: 100;
-          div {
+          .fmted-ops {
             opacity: 0.5;
             cursor: pointer;
             &:hover {
               opacity: 1;
             }
+          }
+          div {
             &.search {
+              .fmted-ops;
               &:hover input {
                 width: 160px;
                 transition: width .5s;
               }
               input {
                 width: 0px;
-                height: 20px;
+                height: 24px;
                 font-size: 14px;
                 transition: width .5s;
-                margin: 8px 4px 0 0;
+                margin: 6px 4px 0 0;
               }
             }
-            &.link {
-              margin-top: 8px;
+            .fmted-op {
+              .clear-fix;
+              .fmted-ops;
+              margin-top: 10px;
             }
             .opacity0 {
               opacity: 0;
