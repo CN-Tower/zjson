@@ -1,9 +1,13 @@
-import { Component, OnInit, AfterViewInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewEncapsulation, TemplateRef } from '@angular/core';
 import { TranslateService, TranslationChangeEvent } from '@ngx-translate/core';
+import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
+import { BsModalService } from 'ngx-bootstrap/modal';
 import { toggleSlid } from './animations/toggle-slid';
-import { AppService } from './app.service';
-import { Configs, FmtStatus, FmterEles } from './formatter/formatter.conf';
-import { Formatter } from './formatter/formatter.main';
+import { AppService, APP_INFO } from './app.service';
+import { Configs } from './formatter/formatter.conf';
+import { Zjson } from './app.component.class';
+
+let originX: number;
 
 @Component({
   selector: 'app-root',
@@ -12,71 +16,32 @@ import { Formatter } from './formatter/formatter.main';
   animations: [toggleSlid],
   encapsulation: ViewEncapsulation.None
 })
-export class AppComponent implements OnInit, AfterViewInit {
-  conf: Configs;
-  lang: string;
-  isOnInit: boolean = true;
-  isPageActive: boolean = true;
-  isWindowBig: boolean;
-  sourcest: string = '';
-  formated: string = '';
-  alertMsg: string = '';
-  saveFmtTime: string;
-  fmtSourcest: string;
-  fmtHists: any[] = [];
-  maxSrcSize: any = null;
-  maxFmtSize: any = null;
-  isSrcMax: boolean = false;
-  isFmtMax: boolean = false;
-  noticeCtrl: string = 'hide';
-  noticeMsg: string = '';
-  noticeType: 'success'|'danger'|null = null;
-  isModelExpand: boolean = false;
-  isFmtedEditAb: boolean = true;
-  isShowConfigs: boolean = false;
-  isConfOnSlid: boolean = false;
-  isOriginEmpty: boolean = true;
-  toggleConfTiele: string;
-  themes: any[] = [
-    'dark', 'abyss', 'blue', 'red', 'kimbie', 'moonlight', 'solarized', 'light'
-  ];
-  theme: string;
-  eles: FmterEles = new FmterEles();
-  fmtSt: FmtStatus = new FmtStatus();
-  formatter: Formatter = new Formatter();
-  alertInfo: any = {type: '', idx: NaN, brc: ''};
-  alertType: 'info'|'success'|'warning'|'danger' = 'info';
-  greeting: string;
-  languages: any = {
-    en: {long: 'English', short: 'EN'},
-    zh: {long: '中文（简体）', short: '中文'}
-  };
-  i18n: any = {
-    confs: {show: '', hide: ''},
-    model: {expand: '', combine: ''},
-    type: {json: 'Json', jsObj: 'JsObj'},
-    alert: {ost: '', col: '', val: '', end: '', war: '', scc: ''}
-  };
-  altMsgs: any = {};
-  setRowIdxWpHeight: Function = () => $('.z-canvas').height() + 12 + 'px';
-  getTimeStr: Function = () => fn.fmtDate('MM-dd hh:mm:ss');
-  getFmtHists: Function = () => this.fmtHists = this.appService.getFmtHists();
+
+export class AppComponent extends Zjson implements OnInit, AfterViewInit {
+  modalRef: BsModalRef;
+  modalElRef = () => $(document).find('.modal-dialog').addClass('modal-sm');
+  getFmtHists = () => this.fmtHists = this.appService.getFmtHists();
+  getFmtStr = () => $('.z-canvas').text();
 
   constructor(
     private translate: TranslateService,
-    private appService: AppService
+    private appService: AppService,
+    private modalService: BsModalService
   ) {
+    super();
     const broswerLang = translate.getBrowserLang();
     translate.addLangs(['zh', 'en']);
     translate.setDefaultLang('zh');
     this.lang = broswerLang.match(/en|zh/) ? broswerLang : 'zh';
     translate.use(this.lang);
+    this.version = APP_INFO.version;
+    this.updateTime = APP_INFO.updateTime;
     this.greeting = this.appService.getGreeting(this.lang);
     this.conf = new Configs();
     this.appService.initFmtHists();
     this.getFmtHists();
     /**electron ignore -*/
-    this.checkVersion(false);
+    this.checkAppVersion(false);
     this.refreshVisitCount();
     this.pollingVisitCount();
     /**electron ignore |*/
@@ -94,11 +59,26 @@ export class AppComponent implements OnInit, AfterViewInit {
     /**electron ignore |*/
   }
 
+  ngAfterViewInit() {
+    win['isRendered'] = true;
+    this.animateGreeting();
+    this.fixCodeZoneWidth();
+    this.rowIndexStayLeft();
+    this.setSearchIptStyle();
+    this.initUploadEvent();
+    this.initOpenDragEvent();
+    this.initResizeZconEvent();
+    this.onWindowResize();
+    $(win).resize(() => this.onWindowResize());
+    $(document).on('click keyup', () => this.isPageActive = true);
+    fn.timeout(500, () => this.onWindowResize());
+    fn.defer(() => this.onChangeTheme(this.appService.getAppTheme()));
+  }
+
   /**
-   * 检测版本
-   * =================================
-   */
-  checkVersion(isRefresh: boolean) {
+   * 检测App版本
+   * =================================*/
+  checkAppVersion(isRefresh: boolean) {
     this.appService.getRemoteVersion().subscribe(res => {
       const locVersion = this.appService.getLocalVersion();
       const rmtVersion = res['version'];
@@ -113,40 +93,47 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   /**
    * 刷新访问量
-   * =================================
-   */
+   * =================================*/
   refreshVisitCount() {
     if (this.isPageActive) {
-      this.isPageActive = false;
+      this.isPageActive = false; 
       const userId = this.appService.getUserId();
       this.appService.refreshVisitCount(userId).subscribe((res: any) => {
-        if (res['id']) {
-          this.appService.setUserId(res.id);
-        }
+        if (res['id']) this.appService.setUserId(res.id);
       });
     } else {
-      this.checkVersion(true);
+      this.checkAppVersion(true);
     }
   }
 
   /**
    * 轮询访问量
-   * =================================
-   */
+   * =================================*/
   pollingVisitCount() {
     const userId = this.appService.getUserId();
     this.appService.pollingVisitCount(userId, this.isOnInit).subscribe((res: any) => {
-      if (res['vc']) {
-        win['visitCount'] = res.vc;
-      }
+      if (res['vc']) win['visitCount'] = res.vc;
     });
     this.isOnInit = false;
   }
 
+    /**
+   * 生成解析结果分享链接
+   * ===================================*/
+  shareFormated() {
+    /**electron ignore -*/
+    fn.throttle(() => {
+      this.appService.fmtedShareLinks(this.getFmtStr()).subscribe(res => {
+        fn.copyText(res.shareLink);
+        this.alertNotice(this.translate.instant('_shareSuccess'));
+      });
+    }, 3000);
+    /**electron ignore |*/
+  }
+
   /**
-   * 执行格式化
-   * =================================
-   */
+   * 执行json格式化
+   * =================================*/
   doFormate(fmtSrc: string, isSilence?: boolean) {
     this.isOriginEmpty = !this.formated;
     if (!this.sourcest && !this.fmtSourcest && !isSilence) {
@@ -167,9 +154,10 @@ export class AppComponent implements OnInit, AfterViewInit {
         }
         this.isOriginEmpty = !this.formated;
         this.isModelExpand = this.conf.model === 'expand';
-        fn.timeout(() => {
+        fn.defer(() => {
           $('.z-canvas').html(html);
-          this.trigglerEvents();
+          this.trigglerZfmtEvents();
+          this.redFmtedErrorRow();
           this.fmtSourcest = fmtSrc;
         });
       });
@@ -177,9 +165,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 设置言语
-   * =================================
-   */
+   * 设置App的显示语言
+   * =================================*/
   selectLanguage(type: 'zh'|'en') {
     this.lang = type;
     this.translate.use(type);
@@ -187,20 +174,16 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 禁止原代码框的Tab事件
-   * =================================
-   */
+   * 阻止原代码窗的Tab事件
+   * =================================*/
   onTextareaKeyDown(e: any) {
     e = e || win.event;
-    if (e.key === 'Tab' || e.keyCode === 9) {
-      return false;
-    }
+    if (e.key === 'Tab' || e.keyCode === 9) return false;
   }
 
   /**
-   * 提示信息
-   * =================================
-   */
+   * 弹出操作通知
+   * =================================*/
   alertNotice(message: string|boolean, type: 'danger'|'success' = 'success') {
     if (message === false) {
       this.noticeCtrl = 'hide';
@@ -215,9 +198,8 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   /**
    * 格式化后的代码折叠和展开事件
-   * =================================
-   */
-  trigglerEvents() {
+   * =================================*/
+  trigglerZfmtEvents() {
     const $oprs = $('.operator').click(function() {
       const $this = $(this);
       if ($this.hasClass('expanded')) {
@@ -236,6 +218,12 @@ export class AppComponent implements OnInit, AfterViewInit {
     [$oprs, $elps, $('.z-row-index')].forEach($ele => {
       $ele.hover(() => this.isFmtedEditAb = false, () => this.isFmtedEditAb = true);
     });
+  }
+
+  /**
+   * 给错误行设置红底
+   * =================================*/
+  redFmtedErrorRow() {
     if (!this.fmtSt.isSrcValid) {
       const errIdx = this.fmtSt.errRowIdx;
       $('#z-container')[0].scrollTop = errIdx * 18 - 240;
@@ -252,16 +240,13 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 更换主题
-   * =================================
-   */
+   * 更换App主题
+   * =================================*/
   onChangeTheme(them: string) {
     if (this.theme !== them) {
       this.theme = them;
       let fontColor = '#999999';
-      if (fn.contains(['light', 'solarized'], them)) {
-        fontColor = '#333333';
-      }
+      if (fn.contains(['light', 'solarized'], them)) fontColor = '#333333';
       $('body').css('color', fontColor);
       $('#z-source textarea.src-text').css('color', fontColor);
       this.appService.setAppTheme(them);
@@ -270,8 +255,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   /**
    * 最大化窗口
-   * =================================
-   */
+   * =================================*/
   maximalPanel(type: 'src'|'fmt') {
     let panel;
     if (type === 'src') {
@@ -304,8 +288,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   /**
    * 最小化窗口
-   * =================================
-   */
+   * =================================*/
   minimalPanel(type?: 'src'|'fmt') {
     fn.exitFullScreen($('#z-source .panel')[0]);
     fn.exitFullScreen($('#z-jsonwd .panel')[0]);
@@ -314,24 +297,22 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.isFmtMax = false;
     this.maxSrcSize = null;
     this.maxFmtSize = null;
-    setTimeout(() => this.onWindowResize());
+    fn.defer(() => this.onWindowResize());
   }
 
   /**
    * 上传操作
-   * =================================
-   */
+   * =================================*/
   upload() {
     $('input.upload').click();
   }
 
   /**
    * 下载操作
-   * =================================
-   */
+   * =================================*/
   download() {
     if (this.formated) {
-      const blob = new Blob([$('.z-canvas').text()], {type: ''});
+      const blob = new Blob([this.getFmtStr()], {type: ''});
       saveAs(blob, `zjson-${String(fn.time()).substr(-6)}.json`);
     } else {
       this.alertNotice(this.translate.instant('_download'), 'danger');
@@ -340,17 +321,16 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   /**
    * 窗口推到左边
-   * =================================
-   */
+   * =================================*/
   pushToLeft() {
     $('#z-source').animate({width: '35%'}, 500);
     $('#z-jsonwd').animate({width: '64%'}, 500);
+    this.isOnLeft = true;
   }
 
   /**
    * 窗口推到中间
-   * =================================
-   */
+   * =================================*/
   pushToMiddle() {
     if ($('#z-source').width() / $('#worker').width() >= 0.495) {
       $('#z-source').animate({width: '49.5%'}, 500);
@@ -359,26 +339,25 @@ export class AppComponent implements OnInit, AfterViewInit {
       $('#z-jsonwd').animate({width: '49.5%'}, 500);
       $('#z-source').animate({width: '49.5%'}, 500);
     }
+    this.isOnLeft = false;
   }
 
   /**
    * 右边的内容显示到左边
-   * =================================
-   */
+   * =================================*/
   showInLeft() {
-    this.sourcest = $('.z-canvas').text();
+    this.sourcest = this.getFmtStr();
     $('.src-text').scrollTop(0);
     this.doFormate(this.sourcest);
   }
 
   /**
    * 保存到历史记录
-   * =================================
-   */
+   * =================================*/
   saveFmted() {
     const svTime = this.getTimeStr();
     if (this.formated) {
-      const fmted = $('.z-canvas').text();
+      const fmted = this.getFmtStr();
       this.sourcest = fmted;
       if (this.saveFmtTime !== svTime) {
         this.saveFmtTime = svTime;
@@ -397,8 +376,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   /**
    * 显示历史记录
-   * =================================
-   */
+   * =================================*/
   showOrRmFmtHist(e: any, hist: any) {
     if (e.target.tagName === 'I') {
       this.appService.rmvFmtHists(hist);
@@ -412,11 +390,10 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   /**
    * 复制操作
-   * =================================
-   */
+   * =================================*/
   copyFmted() {
     if (this.formated) {
-      fn.copyText($('.z-canvas').text());
+      fn.copyText(this.getFmtStr());
       this.alertNotice(this.translate.instant('copySuccess'), 'success');
     } else {
       this.alertNotice(this.translate.instant('_copy'), 'danger');
@@ -425,8 +402,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   /**
    * 清空源始代码
-   * =================================
-   */
+   * =================================*/
   clearSourc() {
     if (this.sourcest) {
       this.sourcest = '';
@@ -437,8 +413,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   /**
    * 清空操作
-   * =================================
-   */
+   * =================================*/
   clearFmted() {
     if (this.fmtSourcest) {
       this.emptyFmt();
@@ -449,37 +424,28 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   /**
    * 执行清空
-   * =================================
-   */
+   * =================================*/
   emptyFmt() {
     $('.z-canvas').html('');
     this.alertType = 'info';
     this.formated = '';
     this.fmtSourcest = '';
-    if (!this.isOriginEmpty) {
-      this.animateGreeting();
-    }
+    if (!this.isOriginEmpty) this.animateGreeting();
     fn.defer(() => {
-      if (fn.has(win, 'onLinksLoad')) {
-        win.onLinksLoad();
-      }
+      if (fn.has(win, 'onLinksLoad')) win.onLinksLoad();
     });
   }
 
   /**
    * 全部展开
-   * =================================
-   */
+   * =================================*/
   expandAll() {
-    if ($('.z-canvas').html()) {
-      this.doFormate($('.z-canvas').text());
-    }
+    if ($('.z-canvas').html()) this.doFormate(this.getFmtStr());
   }
 
   /**
    * 全部收起
-   * =================================
-   */
+   * =================================*/
   collapseAll() {
     const $firstOpBtn = $('.operator').eq(0);
     if ($firstOpBtn.hasClass('expanded')) {
@@ -491,8 +457,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   /**
    * 配置选项
-   * =================================
-   */
+   * =================================*/
   toggleConfigs() {
     if (!this.isConfOnSlid) {
       this.isConfOnSlid = true;
@@ -513,27 +478,16 @@ export class AppComponent implements OnInit, AfterViewInit {
     }
   }
 
-  /**
-   * 下拉菜单
-   * =================================
-   */
-  toggleOptions(tp: string) {
-    const $opts = $(`.z-${tp}-opts`);
-    if ($opts.hasClass('show')) {
-      $opts.removeClass('show');
-    } else {
-      $opts.addClass('show');
-      fn.timeout(() => $(document).one('click', () => $opts.removeClass('show')));
-    }
+  openInfoModal(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template);
   }
 
   /**
    * 问候语动画
-   * ===================================
-   */
+   * ===================================*/
   animateGreeting() {
     if (this.alertType === 'info' && this.isWindowBig) {
-      fn.timeout(() => {
+      fn.defer(() => {
         const $greeting = $('#z-greeting');
         const greetingIn = () => {
           this.greeting = this.appService.getGreeting(this.lang);
@@ -555,8 +509,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   /**
    * 改变window大小
-   * ===================================
-   */
+   * ===================================*/
   onWindowResize(isAnimate: boolean = false) {
     const $win = $(win);
     const $maxPanel = $('.z-maximal');
@@ -575,6 +528,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.animateGreeting();
         $zSrce.css('width', '35%');
         $zJson.css('width', '64%');
+        this.isOnLeft = true;
       }
     } else {
       if (this.isWindowBig) {
@@ -582,6 +536,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         this.animateGreeting();
         $zSrce.css('width', '49.5%');
         $zJson.css('width', '49.5%');
+        this.isOnLeft = false;
       }
     }
     if ($maxPanel.length > 0) {
@@ -591,70 +546,96 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * 代码行号索引水平不滚动及左右拖动代码窗
-   * ===================================
-   */
-  ngAfterViewInit() {
-    this.initUploadEvent();
-    this.initOpenDragEvent();
-    win['isRendered'] = true;
-    const $win = $(win);
+   * 初始化代码窗宽度
+   * ===================================*/
+  fixCodeZoneWidth() {
     const $zSrce = $('#z-source');
     const $zJson = $('#z-jsonwd');
-    this.isWindowBig = $win.width() >= 1025;
+    this.isWindowBig = $(win).width() >= 1025;
     if (!this.isWindowBig) {
       $zSrce.css('width', '49.5%');
       $zJson.css('width', '49.5%');
+      this.isOnLeft = false;
     }
-    this.animateGreeting();
-    this.onWindowResize();
-    fn.defer(() => this.onChangeTheme(this.appService.getAppTheme()));
-    $(document).on('click keyup', () => this.isPageActive = true);
-    $win.resize(() => this.onWindowResize());
-    setTimeout(() => this.onWindowResize(), 500);
+  }
+
+  /**
+   * 行号栏始终居左显示
+   * ===================================*/
+  rowIndexStayLeft() {
     $('#z-container').scroll(function() {
       $('#z-index').css('left', this.scrollLeft + 'px');
       $('.z-row-index').css('left', (this.scrollLeft - 2) + 'px');
     });
-    let dx, nx, ox;
-    const resizeCodeZone = e => {
-      $('.src-text').blur();
-      const ww = $('#worker').width();
-      nx = e.clientX;
-      if (nx !== ox) {
-        dx = nx - ox;
-        ox = nx;
-        const sw = $zSrce.width() + dx;
-        const jw = $zJson.width() - dx;
-        if (sw / ww > 0.35 || jw / ww > 0.35) {
-          if (dx < 0 && sw / ww > 0.35) {
-            $zSrce.width(sw);
-            $zJson.width(jw);
-          } else if (dx > 0 && jw / ww > 0.35) {
-            $zJson.width(jw);
-            $zSrce.width(sw);
-          }
-          const sp = ($zSrce.width() / ww) * 100;
-          const jp = 99 - sp;
-          $zJson.css('width', jp + '%');
-          $zSrce.css('width', sp + '%');
-        }
-      }
-    };
+  }
+
+  /**
+   * 改变window大小
+   * ===================================*/
+  initResizeZconEvent() {
+    const $win = $(win);
+    const mouseMoveHandler = e => this.resizeCodeZone(e);
     $('#z-resize').mousedown(function(e) {
       if ($win.width() > 1025) {
-        ox = e.clientX;
-        $(document).on('mousemove', resizeCodeZone).mouseup(function() {
-          $(this).off('mousemove', resizeCodeZone);
+        originX = e.clientX;
+        $(document)
+        .on('mousemove', mouseMoveHandler)
+        .one('mouseup', function() {
+          $(this).off('mousemove', mouseMoveHandler);
         });
       }
     });
   }
 
   /**
+   * 代码窗的拖拉事件
+   * =================================*/
+  resizeCodeZone(e: any) {
+    $('.src-text').blur();
+    const $zSrce = $('#z-source');
+    const $zJson = $('#z-jsonwd');
+    const ww = $('#worker').width();
+    let deltaX, curX = e.clientX;
+    if (curX !== originX) {
+      deltaX = curX - originX;
+      originX = curX;
+      const sw = $zSrce.width() + deltaX;
+      const jw = $zJson.width() - deltaX;
+      if (sw / ww > 0.35 || jw / ww > 0.35) {
+        if (deltaX < 0 && sw / ww > 0.35) {
+          $zSrce.width(sw);
+          $zJson.width(jw);
+        } else if (deltaX > 0 && jw / ww > 0.35) {
+          $zJson.width(jw);
+          $zSrce.width(sw);
+        }
+        const sp = ($zSrce.width() / ww) * 100;
+        const jp = 99 - sp;
+        $zJson.css('width', jp + '%');
+        $zSrce.css('width', sp + '%');
+        this.isOnLeft = Math.abs(sp - 35) < 0.1;
+      }
+    }
+  };
+
+  /**
+   * 当搜索框宽度为0时则隐藏
+   * ===================================*/
+  setSearchIptStyle() {
+    const searchIpt = document.querySelector('#search-ipt');
+    const $ipt = $(searchIpt);
+    $('.search').mouseover(() => $ipt.removeClass('opacity0').focus());
+    const hideIpt = function() {
+      if ($ipt.width() === 0) $ipt.addClass('opacity0');
+    };
+    ['transitionend', 'webkitTransitionEnd', 'mozTransitionEnd'].forEach(e => {
+      searchIpt.addEventListener(e, hideIpt);
+    });
+  }
+
+  /**
    * 设置上传事件
-   * ===================================
-   */
+   * ===================================*/
   initUploadEvent() {
     const that = this;
     $('input.upload').change(function(e) {
@@ -665,22 +646,20 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   /**
    * 拖放文件事件
-   * ===================================
-   */
+   * ===================================*/
   initOpenDragEvent() {
     $('html, body')
     .on('dragenter dragover dragleave', event => event.preventDefault())
     .on('drop', event => {
       event.preventDefault();
       const file = event.originalEvent.dataTransfer.files[0];
-      this.readSrcFile(file, false);
+      if (file && fn.has(file, 'size')) this.readSrcFile(file, false);
     });
   }
 
   /**
    * 读取文件
-   * ===================================
-   */
+   * ===================================*/
   readSrcFile(file: any, isInitFileIpt: boolean) {
     const reader = new FileReader();
     if (file.size > 80000) {
@@ -707,8 +686,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   /**
    * i18n国际化
-   * =================================
-   */
+   * =================================*/
   doTranslate() {
     this.i18n.confs.show = this.translate.instant('showConfs');
     this.i18n.confs.hide = this.translate.instant('hideConfs');
@@ -718,8 +696,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   /**
    * 国际化提示信息
-   * =================================
-   */
+   * =================================*/
   translateAltMsgs() {
     switch (this.alertInfo.type) {
       case 'ost':
