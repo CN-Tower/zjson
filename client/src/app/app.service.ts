@@ -204,11 +204,15 @@ export class AppService {
     return this.http.get(`/api/pollingVc/${id}?isOnInit=${isOnInit ? 'yes' : 'no'}`).map(res => res.json());
   }
 
-  fmtedShareLinks(fmtedStr: string) {
+  shareFormated(fmtedStr: string) {
     const req = {
       userId: this.getUserId(),
       fmtedStr: fmtedStr
     }
-    return this.http.post(`/api/shareLink`, req).map(res => res.json());
+    return this.http.post(`/api/sharedJson`, req).map(res => res.json());
+  }
+
+  getSharedJson(sharedId: string) {
+    return this.http.get(`/api/sharedJson/${sharedId}`).map(res => res.json());
   }
 }
