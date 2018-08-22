@@ -3,6 +3,11 @@ import { Http } from '@angular/http';
 // import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 
+export const APP_INFO = {
+  version: 'v3.2.1',
+  updateTime: '2018-08-21'
+}
+
 @Injectable()
 export class AppService {
   greetings: any = {
@@ -43,7 +48,6 @@ export class AppService {
     {name: 'Py Unicode Collections', src: `{
       u"Python": u"Unicode Demo",
       u"name": u"ZJSON",
-      u"version": 3.2,
       u"content": {
         u"string": u"String",
         u"number": 123,
@@ -56,10 +60,11 @@ export class AppService {
       }
     }`},
     {name: '转杰森 | ZJSON', src: `{
-      "zjson": "转杰森|ZJSON",
+      "zjson": "转杰森 | ZJSON",
       "desc": "Online json formatter",
       "description": "一个在线json格式化工具",
-      "version": "v3.2",
+      "version": "${APP_INFO.version}",
+      "updateTime": "${APP_INFO.updateTime}",
       "url": "http://zjson.net",
       "project": "http://github.com/CN-Tower/zjson",
       "language": ["中文（简体）", "English"],
@@ -197,5 +202,13 @@ export class AppService {
 
   pollingVisitCount(id: string, isOnInit: boolean) {
     return this.http.get(`/api/pollingVc/${id}?isOnInit=${isOnInit ? 'yes' : 'no'}`).map(res => res.json());
+  }
+
+  fmtedShareLinks(fmtedStr: string) {
+    const req = {
+      userId: this.getUserId(),
+      fmtedStr: fmtedStr
+    }
+    return this.http.post(`/api/shareLink`, req).map(res => res.json());
   }
 }
