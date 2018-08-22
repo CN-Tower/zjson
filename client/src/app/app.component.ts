@@ -54,6 +54,7 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
       this.translateAltMsgs();
     });
     /**electron ignore -*/
+    this.getSharedJson(false);
     fn.interval('refresh-visit-count', 300000, () => this.refreshVisitCount());
     fn.interval('polling-visit-count', 15000, () => this.pollingVisitCount());
     /**electron ignore |*/
@@ -61,15 +62,18 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     win['isRendered'] = true;
+    const $win = $(win)
+    this.isWindowBig = $win.width() >= 1025;
     this.animateGreeting();
+    this.initAppStyles();
     this.fixCodeZoneWidth();
     this.rowIndexStayLeft();
-    this.setSearchIptStyle();
+    this.initSearchIptEvent();
     this.initUploadEvent();
     this.initOpenDragEvent();
     this.initResizeZconEvent();
     this.onWindowResize();
-    $(win).resize(() => this.onWindowResize());
+    $win.resize(() => this.onWindowResize());
     $(document).on('click keyup', () => this.isPageActive = true);
     fn.timeout(500, () => this.onWindowResize());
     fn.defer(() => this.onChangeTheme(this.appService.getAppTheme()));
@@ -117,20 +121,6 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
     this.isOnInit = false;
   }
 
-    /**
-   * 生成解析结果分享链接
-   * ===================================*/
-  shareFormated() {
-    /**electron ignore -*/
-    fn.throttle(() => {
-      this.appService.fmtedShareLinks(this.getFmtStr()).subscribe(res => {
-        fn.copyText(res.shareLink);
-        this.alertNotice(this.translate.instant('_shareSuccess'));
-      });
-    }, 3000);
-    /**electron ignore |*/
-  }
-
   /**
    * 执行json格式化
    * =================================*/
@@ -156,6 +146,8 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
         this.isModelExpand = this.conf.model === 'expand';
         fn.defer(() => {
           $('.z-canvas').html(html);
+          this.addScrollTop(0);
+          this.initStIdx();
           this.trigglerZfmtEvents();
           this.redFmtedErrorRow();
           this.fmtSourcest = fmtSrc;
@@ -226,7 +218,9 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
   redFmtedErrorRow() {
     if (!this.fmtSt.isSrcValid) {
       const errIdx = this.fmtSt.errRowIdx;
-      $('#z-container')[0].scrollTop = errIdx * 18 - 240;
+      const scrollTop = errIdx * 18 - 240;
+      this.scrollTo(scrollTop);
+      this.addScrollTop(scrollTop)
       const caret_ = '<span class="z-hint-caret"><i class="fa fa-caret-right"></i><span>';
       const $errRow = $(`.z-row-${errIdx}`).append(caret_);
       const redNext: Function = $next => {
@@ -545,13 +539,20 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
     $('.z-fmt-alts').width((winW - 40) * 0.35);
   }
 
+  initAppStyles() {
+    const that = this;
+    $('#z-container').click(function() {
+      that.addScrollTop($(this).scrollTop());
+      that.initStIdx();
+    });
+  }
+
   /**
    * 初始化代码窗宽度
    * ===================================*/
   fixCodeZoneWidth() {
     const $zSrce = $('#z-source');
     const $zJson = $('#z-jsonwd');
-    this.isWindowBig = $(win).width() >= 1025;
     if (!this.isWindowBig) {
       $zSrce.css('width', '49.5%');
       $zJson.css('width', '49.5%');
@@ -621,12 +622,14 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
   /**
    * 当搜索框宽度为0时则隐藏
    * ===================================*/
-  setSearchIptStyle() {
+  initSearchIptEvent() {
     const searchIpt = document.querySelector('#search-ipt');
-    const $ipt = $(searchIpt);
+    const $ipt = $(searchIpt).keydown(e => {  
+      if (e.keyCode === 13) this.getSharedJson();
+    });
     $('.search').mouseover(() => $ipt.removeClass('opacity0').focus());
-    const hideIpt = function() {
-      if ($ipt.width() === 0) $ipt.addClass('opacity0');
+    const hideIpt = () => {
+      if ($ipt.width() === 0) $ipt.addClass('opacity0').val('');
     };
     ['transitionend', 'webkitTransitionEnd', 'mozTransitionEnd'].forEach(e => {
       searchIpt.addEventListener(e, hideIpt);
@@ -685,6 +688,105 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
   }
 
   /**
+   * 生成解析结果分享链接
+   * ===================================*/
+  shareFormated() {
+    const fmtedJson = this.getFmtStr();
+    if (fmtedJson) {
+      this.showLoading();
+      /**electron ignore -*/
+      this.appService.shareFormated(fmtedJson).subscribe(res => {
+        fn.copyText(res.sharedLink);
+        this.isShowLoading = false;
+        this.alertNotice(this.translate.instant('_shareSuccess'));
+      }, () => {
+        this.isShowLoading = false;
+        this.alertNotice(this.translate.instant('_shareJsonError'), 'danger');
+      });
+      /**electron ignore |*/
+    } else {
+      this.alertNotice(this.translate.instant('_shareFmted'), 'danger');
+    }
+  }
+
+  /**
+   * 获得共享Json字符串
+   * ===================================*/
+  getSharedJson(isFromIpt: boolean = true) {
+    fn.defer(() => {
+      const queryStr = isFromIpt ? $('#search-ipt').val() || '-' : location.href;
+      const sharedId = fn.get(fn.parseQueryString(queryStr), 'sharedId') || '';
+      /**electron ignore -*/
+      if (sharedId) {
+        this.showLoading();
+        this.appService.getSharedJson(sharedId).subscribe(res => {
+          this.sourcest = res.jsonStr;
+          this.doFormate(this.sourcest);
+          this.isShowLoading = false;
+        }, () => {
+          this.isShowLoading = false;
+          this.alertNotice(this.translate.instant('_getJsonError'), 'danger');
+        });
+      }
+      /**electron ignore |*/
+      if (!sharedId && isFromIpt) {
+        this.alertNotice(this.translate.instant('_bdSharedLink'), 'danger');
+      }
+    });
+  }
+
+  showLoading() {
+    this.isShowLoading = true;
+    fn.timeout(2500, () => this.isShowLoading = false);
+  }
+
+  /**
+   * 上一步和下一步位置
+   * ===================================*/
+  lastPosition() {
+    this.stIdx --;
+    if (this.stIdx < 0) this.stIdx = 0;
+    this.scrollTo(this.stArr[this.stIdx]);
+    this.nextPztCursor();
+  }
+
+  nextPosition() {
+    this.stIdx ++;
+    if (this.stIdx > this.stArr.length - 1) this.stIdx = this.stArr.length - 1;
+    this.scrollTo(this.stArr[this.stIdx]);
+    this.nextPztCursor();
+  }
+
+  scrollTo(top: number) {
+    $('#z-container').scrollTop(top);
+  }
+
+  initStIdx() {
+    this.stIdx = this.stArr.length > 0 ? this.stArr.length - 1 : 0;
+    this.nextPztCursor();
+  }
+
+  nextPztCursor() {
+    if (this.stIdx === this.stArr.length - 1) {
+      $('.next-postion').addClass('no-cursor');
+    } else {
+      $('.next-postion').removeClass('no-cursor');
+    }
+  }
+
+  /**
+   * 点击代码时增加位置信息
+   * ===================================*/
+  addScrollTop(top: number) {
+    if (top !== this.stArr[this.stArr.length - 1]) {
+      this.stArr.push(top);
+      if (this.stArr.length > 32) {
+        this.stArr.shift();
+      }
+    }
+  }
+
+  /**
    * i18n国际化
    * =================================*/
   doTranslate() {
@@ -694,9 +796,6 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
     this.i18n.model.combine = this.translate.instant('combine');
   }
 
-  /**
-   * 国际化提示信息
-   * =================================*/
   translateAltMsgs() {
     switch (this.alertInfo.type) {
       case 'ost':
@@ -731,5 +830,5 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
         break;
     }
     this.alertMsg  = this.i18n.alert[this.alertInfo.type];
-  }
+  } 
 }
