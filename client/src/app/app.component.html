@@ -49,13 +49,12 @@
               <div class="conf-item">
                 <h4 class="conf-tt fl">{{'lang' | translate}}<br>{{'lang_' | translate}}</h4>
                 <div class="conf-con fl">
-                  <div class="dropdown z-drop z-language-drop">
-                    <button class="btn btn-default dropdown-toggle"
-                            (click)="toggleOptions('language')" type="button">
+                  <div class="z-drop z-language-drop dropdown" dropdown>
+                    <button dropdownToggle class="btn btn-default dropdown-toggle" type="button">
                       <span class="z-lang-bg">{{languages[lang].long}} </span><span class="z-lang-sm hide">{{languages[lang].short}} </span>
                       <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu z-language-opts">
+                    <ul *dropdownMenu class="dropdown-menu">
                       <li><a href="javascript:;" (click)="selectLanguage('en')">English</a></li>
                       <li><a href="javascript:;" (click)="selectLanguage('zh')">中文(简体)</a></li>
                     </ul>
@@ -70,13 +69,12 @@
               <div class="conf-item">
                 <h4 class="conf-tt fl">{{'theme' | translate}}</h4>
                 <div class="conf-con fl">
-                  <div class="dropdown z-drop z-theme-drop">
-                    <button class="btn btn-default dropdown-toggle capitalize"
-                            (click)="toggleOptions('theme')" type="button">
+                  <div class="z-drop z-theme-drop dropdown" dropdown>
+                    <button dropdownToggle class="btn btn-default dropdown-toggle capitalize" type="button">
                       {{theme}}
                       <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu z-theme-opts" (click)="doFormate(sourcest, true)">
+                    <ul *dropdownMenu class="dropdown-menu" (click)="doFormate(sourcest, true)">
                       <li *ngFor="let them of themes">
                         <a href="javascript:;" (click)="onChangeTheme(them)" class="capitalize">{{them}}</a>
                       </li>
@@ -92,14 +90,13 @@
               <div class="conf-item">
                 <h4 class="conf-tt fl">{{'indent' | translate}}</h4>
                 <div class="conf-con fl">
-                  <div class="dropdown z-drop z-indent-drop">
-                    <button class="btn btn-default dropdown-toggle"
-                            [disabled]="conf.model!='expand'"
-                            (click)="toggleOptions('indent')" type="button">
+                  <div class="z-drop z-indent-drop dropdown" dropdown>
+                    <button dropdownToggle [disabled]="conf.model!='expand'"
+                            class="btn btn-default dropdown-toggle" type="button">
                       {{conf.indent}} {{'space' | translate}}&nbsp;
                       <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu z-indent-opts" (click)="doFormate(sourcest, true)">
+                    <ul *dropdownMenu class="dropdown-menu" (click)="doFormate(sourcest, true)">
                       <li *ngFor="let i of [1,2,3,4,5,6,7,8];">
                         <a href="javascript:;" (click)="conf.indent = i">{{i}} {{'space' | translate}}</a>
                       </li>
@@ -115,13 +112,12 @@
               <div class="conf-item">
                 <h4 class="conf-tt fl">{{'type' | translate}}</h4>
                 <div class="conf-con fl">
-                  <div class="dropdown z-drop z-type-drop">
-                    <button class="btn btn-default dropdown-toggle"
-                            (click)="toggleOptions('type')" type="button">
+                  <div class="z-drop z-type-drop dropdown" dropdown>
+                    <button dropdownToggle class="btn btn-default dropdown-toggle" type="button">
                       {{i18n.type[conf.type]}}&nbsp;
                       <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu z-type-opts" (click)="doFormate(sourcest, true)">
+                    <ul *dropdownMenu class="dropdown-menu" (click)="doFormate(sourcest, true)">
                       <li><a href="javascript:;" (click)="conf.type='json'">{{i18n.type.json}}</a></li>
                       <li><a href="javascript:;" (click)="conf.type='jsObj'">{{i18n.type.jsObj}}</a></li>
                     </ul>
@@ -159,11 +155,42 @@
       <div class="panel panel-default" [ngClass]="{'z-maximal': isSrcMax}" [ngStyle]="maxSrcSize">
         <div class="panel-heading no-select">
           <div class="z-panel-icos">
-            <span *ngIf="!isSrcMax" class="z-to-left" (click)="pushToLeft()">
+            <span *ngIf="!isSrcMax && !isOnLeft" class="z-sm-hide" (click)="pushToLeft()">
               <i class="fa fa-hand-o-left z-op-icon" title="{{'pushToLeft' | translate}}"></i>
             </span>
-            <span *ngIf="!isSrcMax" class="z-to-left" (click)="pushToMiddle()">
+            <span *ngIf="!isSrcMax && isOnLeft" class="z-sm-hide" (click)="pushToMiddle()">
               <i class="fa fa-columns z-op-icon" title="{{'pushToMiddle' | translate}}"></i>
+            </span>
+            <span class="z-sm-hide" (click)="openInfoModal(template)">
+              <i class="fa fa-info-circle z-op-icon" title="{{'versionInfo' | translate}}"></i>
+              <ng-template #template>
+                <div class="modal-header" [domRef]="modalElRef">
+                  <h4 class="modal-title pull-left">转杰森 | ZJSON</h4>
+                  <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="z-info-modal modal-body">
+                  <table>
+                    <tr>
+                      <td>Version:</td>
+                      <td>{{version}}</td>
+                    </tr>
+                    <tr>
+                      <td>Author:</td>
+                      <td>@CN-Tower</td>
+                    </tr>
+                    <tr>
+                      <td>Email:</td>
+                      <td>cntower@yahoo.com</td>
+                    </tr>
+                    <tr>
+                      <td>Update Time:</td>
+                      <td>{{updateTime}}</td>
+                    </tr>
+                  </table>
+                </div>
+              </ng-template>
             </span>
             <span class="z-ico-hd" (click)="clearSourc()">
               <i class="fa fa-trash z-op-icon" title="{{'clear' | translate}}"></i>
@@ -171,9 +198,9 @@
             <span class="z-ico-hd" (click)="upload()">
               <i class="fa fa-upload z-op-icon" title="{{'upload' | translate}}"></i>
             </span> 
-            <span *ngIf="!isSrcMax" class="z-ico-hd dropdown" (click)="toggleOptions('history')">
-              <i class="fa fa-th-list z-op-icon dropdown-toggle" title="{{'saved' | translate}}"></i>
-              <ul class="dropdown-menu z-history-opts">
+            <span *ngIf="!isSrcMax" class="z-ico-hd dropdown" dropdown>
+              <i dropdownToggle class="fa fa-th-list z-op-icon dropdown-toggle" title="{{'saved' | translate}}"></i>
+              <ul *dropdownMenu id="hist-ops" class="dropdown-menu">
                 <li *ngIf="fmtHists.length==0">
                   <a href="javascript:;">
                     <i class="fa fa-exclamation-circle"></i>&nbsp;&nbsp;{{'noHist' | translate}}
@@ -209,7 +236,7 @@
     </div>
     <!-- SOURCE END -->
 
-    <div id="z-resize">
+    <div id="z-resize" ondragstart="return false">
       <span class="z-drager"></span>
       <span class="z-drager"></span>
     </div>
@@ -251,19 +278,26 @@
           <h3 class="panel-title z-ptt-short hide">{{'fmted' | translate}}</h3>
         </div>
         <div class="panel-body">
+          <div id="share-link">
+            <div class="search">
+              <input id="search-ipt" class="opacity0 fl" type="text">
+              <i class="fa fa-search"></i>
+            </div>
+            <div class="link fr" (click)="shareFormated()"><i class="fa fa-link"></i></div>
+          </div>
           <div id="z-container">
             <div id="z-stage" [class.fullWidth]="!isModelExpand">
-              <div id="z-notice-text" class="no-select" *ngIf="!formated">
+              <div *ngIf="!formated" id="z-notice-text" class="no-select">
                 <p>{{'zNotice' | translate}}</p>
-                <i class="fa fa-check-square-o"></i>&nbsp;<strong>zjson.net:</strong>&nbsp;&nbsp;
+                <i class="fa fa-star"></i>&nbsp;<strong>zjson.net:</strong>&nbsp;&nbsp;
                 <a class="links" target="_blank" href="http://github.com/CN-Tower/zjson">
                   http://github.com/CN-Tower/zjson
                 </a><br>
-                <i class="fa fa-check-square-o"></i>&nbsp;<strong>funclib.js:</strong>&nbsp;&nbsp;
+                <i class="fa fa-star"></i>&nbsp;<strong>funclib.js:</strong>&nbsp;&nbsp;
                 <a class="links" target="_blank" href="http://github.com/CN-Tower/funclib.js">
                   http://github.com/CN-Tower/funclib.js
                 </a><br>
-                <i class="fa fa-check-square-o"></i>&nbsp;<strong>download:</strong>&nbsp;&nbsp;
+                <i class="fa fa-star"></i>&nbsp;<strong>download:</strong>&nbsp;&nbsp;
                 <a class="links" target="_blank" href="https://github.com/CN-Tower/zjson/releases/download/zjson-v3.2.1/zjson-win32-x64.exe">
                   zjson-win32-x64.exe (v3.2.1)
                 </a><br>
