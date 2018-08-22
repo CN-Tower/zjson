@@ -830,5 +830,5 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
         break;
     }
     this.alertMsg  = this.i18n.alert[this.alertInfo.type];
-  } 
+  }
 }

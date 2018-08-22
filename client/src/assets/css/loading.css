@@ -23,11 +23,9 @@
   top: 35%;
   margin: auto;
 }
-
 .loadingText.top45 {
   top: 45%;
 }
-
 .loadingText h2 {
   display: inline-block;
   font-size: 28px;
