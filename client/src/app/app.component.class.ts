@@ -9,6 +9,7 @@ export class Zjson {
   isOnLeft: boolean = true;
   isOnInit: boolean = true;
   isPageActive: boolean = true;
+  isShowLoading: boolean = false;
   isWindowBig: boolean;
   sourcest: string = '';
   formated: string = '';
@@ -31,6 +32,8 @@ export class Zjson {
   toggleConfTiele: string;
   theme: string;
   altMsgs: any = {};
+  stArr: number[] = [];
+  stIdx: number = 0;
   eles: FmterEles = new FmterEles();
   fmtSt: FmtStatus = new FmtStatus();
   formatter: Formatter = new Formatter();
