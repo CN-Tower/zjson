@@ -1,3 +1,12 @@
+.z-info-modal table tr {
+  td:nth-child(1) {
+    text-align: right;
+  }
+  td:nth-child(2) {
+    padding-left: 6px;
+  }
+}
+
 #z-json {
   padding-top: 25px;
   ::-webkit-scrollbar {
@@ -35,7 +44,7 @@
     #configs .panel {
       margin-bottom: 0;
     }
-    .z-to-left, .z-fmt-alts, #z-notice-text {
+    .z-sm-hide, .z-fmt-alts, #z-notice-text {
       display: none !important;
     }
   }
@@ -118,7 +127,7 @@
         z-index: 10;
         box-sizing: border-box;
         -webkit-animation: clipAni 16s infinite linear;
-        -o-animation: clipAni 16s infinite linear;
+        -moz-animation: clipAni 16s infinite linear;
         animation: clipAni 16s infinite linear;
         position: absolute;
         top: 50%;
@@ -131,7 +140,7 @@
         -o-animation-delay: -8s;
         animation-delay: -8s;
       }
-      @keyframes  clipAni{
+      @keyframes clipAni{
         0%, 100%{
           clip:rect(49px,200px,51px,0px);
         }
@@ -292,6 +301,40 @@
       /* ------------------- Z-JSON STAGE ------------------- */
       &#z-jsonwd {
         width: 64%;
+        position: relative;
+        #share-link {
+          font-size: 24px;
+          position: absolute;
+          top: 68px;
+          right: 34px;
+          z-index: 100;
+          div {
+            opacity: 0.5;
+            cursor: pointer;
+            &:hover {
+              opacity: 1;
+            }
+            &.search {
+              &:hover input {
+                width: 160px;
+                transition: width .5s;
+              }
+              input {
+                width: 0px;
+                height: 20px;
+                font-size: 14px;
+                transition: width .5s;
+                margin: 8px 4px 0 0;
+              }
+            }
+            &.link {
+              margin-top: 8px;
+            }
+            .opacity0 {
+              opacity: 0;
+            }
+          }
+        }
         #z-container {
           width: 100%;
           height: 100%;
