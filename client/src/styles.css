@@ -1,42 +1,45 @@
 @media (min-width: 768px) {
-    html, body {
-        overflow: hidden;
-    }
+  html, body {
+    overflow: hidden;
+  }
 }
 html, body {
-    min-height: 100%;
-    font-family: "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+  min-height: 100%;
+  font-family: "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 }
 .ct {
-    text-align: center;
+  text-align: center;
 }
 .fl {
-    float: left;
+  float: left;
 }
 .fr {
-    float: right;
+  float: right;
 }
 .show {
-    display: block;
+  display: block;
 }
 .hide {
-    display: none;
+  display: none;
 }
 .cursor-pointer {
-    cursor: pointer;
+  cursor: pointer;
 }
 .bg-red {
-    background: rgb(250, 54, 54) !important;
+  background: rgb(250, 54, 54) !important;
 }
 .cl-red {
-    color: rgb(250, 54, 54) !important;
+  color: rgb(250, 54, 54) !important;
 }
 .no-select {
-    user-select: none;
-    -webkit-touch-callout: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 .capitalize {
-    text-transform: capitalize;
+  text-transform: capitalize;
+}
+.no-cursor {
+  cursor: not-allowed !important;
 }
