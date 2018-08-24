@@ -285,6 +285,7 @@ export class Formatter extends FmterEles {
     this.chkExpect(this.dt.src[0]);
     this.setExpect(this.dt.src[0]);
     this.dt.src = this.help.getSrcRest(this.dt.src);
+    if (this.dt.src.replace(/\n|\s/mg, '') === '') this.expection('val');
     this.doFormate2();
   }
 
