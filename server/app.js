@@ -5,24 +5,30 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var btService = require('./service/base-thread.service');
 
 var index = require('./routes/index');
 var api = require('./routes/api');
+
+btService.start();
+
+// connect to mongodb
+var mongoose = require('mongoose');
+// mongoose.connect('mongodb://127.0.0.1/zjson');
+mongoose.connect('mongodb://10.40.154.118:26001/zjson');
+
+var db = mongoose.connection;
+
+db.on('error', console.error.bind(console, 'unable to connect to mongodb'));
+db.once('open', function() {
+  console.log("connect to mongodb success...");
+});
 
 var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
-
-// connect to mongodb
-var mongoose = require('mongoose');
-mongoose.connect('mongodb://127.0.0.1/zjson');
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'unable to connect to mongodb'));
-db.once('open', function() {
-    console.log("connect to mongodb success...");
-});
 
 // uncomment after placing your favicon in /zjson
 //app.use(favicon(path.join(__dirname, 'zjson', 'favicon.ico')));
