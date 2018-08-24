@@ -1,0 +1,11 @@
+version: '2'
+services:
+  mongodb:
+    image: mongo
+    ports:
+        - 27017:27017
+    volumes:
+        - "/home/mongo/configdb:/data/configdb"
+        - "/home/mongo/db:/data/db"
+    command: mongod --auth
+    tty: true
