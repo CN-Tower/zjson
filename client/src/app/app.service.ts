@@ -6,7 +6,7 @@ import 'rxjs/add/operator/map';
 export const APP_INFO = {
   version: 'v3.2.1',
   updateTime: '2018-08-21'
-}
+};
 
 @Injectable()
 export class AppService {
@@ -78,7 +78,7 @@ export class AppService {
         "object": {"property": "value", "key": "val"}
       }
     }`}
-  ]
+  ];
 
   constructor(private http: Http) { }
 
@@ -89,6 +89,14 @@ export class AppService {
   getAnimateClass(type: 'in' | 'out') {
     const tpCls = this.animateClass[type];
     return tpCls[fn.random(tpCls.length)];
+  }
+
+  getAppLang() {
+    return window.localStorage['language'];
+  }
+
+  setAppLang(lang: 'zh'|'en') {
+    window.localStorage['language'] = lang;
   }
 
   getAppTheme() {
@@ -204,11 +212,11 @@ export class AppService {
     return this.http.get(`/api/pollingVc/${id}?isOnInit=${isOnInit ? 'yes' : 'no'}`).map(res => res.json());
   }
 
-  shareFormated(fmtedStr: string) {
+  shareFormated(sharedJson: string) {
     const req = {
       userId: this.getUserId(),
-      fmtedStr: fmtedStr
-    }
+      sharedJson: sharedJson
+    };
     return this.http.post(`/api/sharedJson`, req).map(res => res.json());
   }
 
