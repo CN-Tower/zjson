@@ -29,10 +29,10 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
     private modalService: BsModalService
   ) {
     super();
-    const broswerLang = translate.getBrowserLang();
+    const lang = this.appService.getAppLang() || translate.getBrowserLang();
     translate.addLangs(['zh', 'en']);
     translate.setDefaultLang('zh');
-    this.lang = broswerLang.match(/en|zh/) ? broswerLang : 'zh';
+    this.lang = lang.match(/en|zh/) ? lang : 'zh';
     translate.use(this.lang);
     this.version = APP_INFO.version;
     this.updateTime = APP_INFO.updateTime;
@@ -62,7 +62,7 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     win['isRendered'] = true;
-    const $win = $(win)
+    const $win = $(win);
     this.isWindowBig = $win.width() >= 1025;
     this.animateGreeting();
     this.initAppStyles();
@@ -100,7 +100,7 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
    * =================================*/
   refreshVisitCount() {
     if (this.isPageActive) {
-      this.isPageActive = false; 
+      this.isPageActive = false;
       const userId = this.appService.getUserId();
       this.appService.refreshVisitCount(userId).subscribe((res: any) => {
         if (res['id']) this.appService.setUserId(res.id);
@@ -116,7 +116,7 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
   pollingVisitCount() {
     const userId = this.appService.getUserId();
     this.appService.pollingVisitCount(userId, this.isOnInit).subscribe((res: any) => {
-      if (res['vc']) win['visitCount'] = res.vc;
+      if (res['vc']) win['vc'] = res.vc;
     });
     this.isOnInit = false;
   }
@@ -159,9 +159,10 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
   /**
    * 设置App的显示语言
    * =================================*/
-  selectLanguage(type: 'zh'|'en') {
-    this.lang = type;
-    this.translate.use(type);
+  selectLanguage(lang: 'zh'|'en') {
+    this.lang = lang;
+    this.translate.use(lang);
+    this.appService.setAppLang(lang);
     this.animateGreeting();
   }
 
@@ -220,7 +221,7 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
       const errIdx = this.fmtSt.errRowIdx;
       const scrollTop = errIdx * 18 - 240;
       this.scrollTo(scrollTop);
-      this.addScrollTop(scrollTop)
+      this.addScrollTop(scrollTop);
       const caret_ = '<span class="z-hint-caret"><i class="fa fa-caret-right"></i><span>';
       const $errRow = $(`.z-row-${errIdx}`).append(caret_);
       const redNext: Function = $next => {
@@ -545,6 +546,9 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
       that.addScrollTop($(this).scrollTop());
       that.initStIdx();
     });
+    $('body').append($('<button id="myBtn"></button>').click(function() {
+      document.execCommand('Copy');
+    }));
   }
 
   /**
@@ -596,7 +600,8 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
     const $zSrce = $('#z-source');
     const $zJson = $('#z-jsonwd');
     const ww = $('#worker').width();
-    let deltaX, curX = e.clientX;
+    const curX = e.clientX;
+    let deltaX;
     if (curX !== originX) {
       deltaX = curX - originX;
       originX = curX;
@@ -617,14 +622,14 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
         this.isOnLeft = Math.abs(sp - 35) < 0.1;
       }
     }
-  };
+  }
 
   /**
    * 当搜索框宽度为0时则隐藏
    * ===================================*/
   initSearchIptEvent() {
     const searchIpt = document.querySelector('#search-ipt');
-    const $ipt = $(searchIpt).keydown(e => {  
+    const $ipt = $(searchIpt).keydown(e => {
       if (e.keyCode === 13) this.getSharedJson();
     });
     $('.search').mouseover(() => $ipt.removeClass('opacity0').focus());
@@ -651,12 +656,12 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
    * 拖放文件事件
    * ===================================*/
   initOpenDragEvent() {
-    $('html, body')
+    $(document)
     .on('dragenter dragover dragleave', event => event.preventDefault())
     .on('drop', event => {
       event.preventDefault();
       const file = event.originalEvent.dataTransfer.files[0];
-      if (file && fn.has(file, 'size')) this.readSrcFile(file, false);
+      if (file && file.size) this.readSrcFile(file, false);
     });
   }
 
@@ -664,7 +669,6 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
    * 读取文件
    * ===================================*/
   readSrcFile(file: any, isInitFileIpt: boolean) {
-    const reader = new FileReader();
     if (file.size > 80000) {
       this.alertNotice(this.translate.instant('_largeFile'), 'danger');
       if (isInitFileIpt) {
@@ -672,16 +676,20 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
         this.initUploadEvent();
       }
     } else {
-      const that = this;
-      file.type === 'text/plain'
-        ? reader.readAsText(file, 'gb2312')
-        : reader.readAsText(file, 'utf8');
-      reader.addEventListener('load', function () {
-        that.sourcest = reader.result;
-        that.doFormate(that.sourcest);
+      const reader = new FileReader();
+      if (file.type.match(/image/)) {
+        reader.readAsDataURL(file);
+      } else if (file.type === 'text/plain') {
+        reader.readAsText(file, 'gb2312');
+      } else {
+        reader.readAsText(file, 'utf8');
+      }
+      reader.addEventListener('load', () => {
+        this.sourcest = reader.result;
+        this.doFormate(this.sourcest);
         if (isInitFileIpt) {
           $('input.upload').replaceWith('<input type="file" class="upload hide">');
-          that.initUploadEvent();
+          this.initUploadEvent();
         }
       });
     }
@@ -691,22 +699,25 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
    * 生成解析结果分享链接
    * ===================================*/
   shareFormated() {
-    const fmtedJson = this.getFmtStr();
-    if (fmtedJson) {
-      this.showLoading();
-      /**electron ignore -*/
-      this.appService.shareFormated(fmtedJson).subscribe(res => {
-        fn.copyText(res.sharedLink);
-        this.isShowLoading = false;
-        this.alertNotice(this.translate.instant('_shareSuccess'));
-      }, () => {
-        this.isShowLoading = false;
-        this.alertNotice(this.translate.instant('_shareJsonError'), 'danger');
-      });
-      /**electron ignore |*/
-    } else {
-      this.alertNotice(this.translate.instant('_shareFmted'), 'danger');
+    this.showLoading();
+    const sharedJson = this.getFmtStr();
+    if (!sharedJson) {
+      return this.alertNotice(this.translate.instant('_shareFmted'), 'danger');
     }
+    if (sharedJson.length > 8000000) {
+      return this.alertNotice(this.translate.instant('_largeError'), 'danger');
+    }
+    this.sharedLink = '';
+    fn.copyText(`${this.appUrl}?sharedId=${this.appService.getUserId()}`);
+    /**electron ignore -*/
+    this.appService.shareFormated(sharedJson).subscribe(() => {
+      this.isShowLoading = false;
+      this.alertNotice(this.translate.instant('_shareSuccess'));
+    }, () => {
+      this.isShowLoading = false;
+      this.alertNotice(this.translate.instant('_shareJsonError'), 'danger');
+    });
+    /**electron ignore |*/
   }
 
   /**
@@ -720,7 +731,7 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
       if (sharedId) {
         this.showLoading();
         this.appService.getSharedJson(sharedId).subscribe(res => {
-          this.sourcest = res.jsonStr;
+          this.sourcest = res.sharedJson;
           this.doFormate(this.sourcest);
           this.isShowLoading = false;
         }, () => {
