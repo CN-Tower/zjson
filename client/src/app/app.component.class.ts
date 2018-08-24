@@ -6,6 +6,7 @@ export class Zjson {
   lang: string;
   version: string;
   updateTime: string;
+  sharedLink: string;
   isOnLeft: boolean = true;
   isOnInit: boolean = true;
   isPageActive: boolean = true;
@@ -34,6 +35,7 @@ export class Zjson {
   altMsgs: any = {};
   stArr: number[] = [];
   stIdx: number = 0;
+  appUrl: string = 'http://10.63.244.252:8888';
   eles: FmterEles = new FmterEles();
   fmtSt: FmtStatus = new FmtStatus();
   formatter: Formatter = new Formatter();
