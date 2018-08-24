@@ -3,9 +3,9 @@ import { TranslateService, TranslationChangeEvent } from '@ngx-translate/core';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { toggleSlid } from './animations/toggle-slid';
-import { AppService, APP_INFO } from './app.service';
+import { AppService } from './app.service';
 import { Configs } from './formatter/formatter.conf';
-import { Zjson } from './app.component.class';
+import { Zjson, APP_INFO } from './app.component.class';
 
 let originX: number;
 

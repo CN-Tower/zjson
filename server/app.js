@@ -14,8 +14,8 @@ btService.start();
 
 // connect to mongodb
 var mongoose = require('mongoose');
-// mongoose.connect('mongodb://127.0.0.1/zjson');
-mongoose.connect('mongodb://10.40.154.118:26001/zjson');
+mongoose.connect('mongodb://127.0.0.1/zjson');
+// mongoose.connect('mongodb://10.40.154.118/zjson');
 
 var db = mongoose.connection;
 

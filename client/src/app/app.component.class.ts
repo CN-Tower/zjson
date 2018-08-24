@@ -1,7 +1,14 @@
 import { Configs, FmtStatus, FmterEles } from './formatter/formatter.conf';
 import { Formatter } from './formatter/formatter.main';
 
+export const APP_INFO = {
+  version: 'v3.2.2',
+  updateTime: '2018-08-24',
+  appUrl: 'http://10.63.244.252:8888'
+};
+
 export class Zjson {
+  appUrl: string = APP_INFO.appUrl;
   conf: Configs;
   lang: string;
   version: string;
@@ -35,7 +42,6 @@ export class Zjson {
   altMsgs: any = {};
   stArr: number[] = [];
   stIdx: number = 0;
-  appUrl: string = 'http://10.63.244.252:8888';
   eles: FmterEles = new FmterEles();
   fmtSt: FmtStatus = new FmtStatus();
   formatter: Formatter = new Formatter();
