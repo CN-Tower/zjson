@@ -4,8 +4,6 @@ import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { APP_INFO } from './app.component.class';
 
-
-
 @Injectable()
 export class AppService {
   greetings: any = {
