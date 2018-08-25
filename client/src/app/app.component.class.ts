@@ -2,9 +2,9 @@ import { Configs, FmtStatus, FmterEles } from './formatter/formatter.conf';
 import { Formatter } from './formatter/formatter.main';
 
 export const APP_INFO = {
-  version: 'v3.2.2',
+  version: 'v3.3.1',
   updateTime: '2018-08-24',
-  appUrl: 'http://10.63.244.252:8888'
+  appUrl: 'http://zjson.net'
 };
 
 export class Zjson {
