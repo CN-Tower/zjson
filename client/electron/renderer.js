@@ -1,5 +1,6 @@
 const { shell, ipcRenderer } = require('electron');
 const http = require('http');
+const package = require('./package.json');
 
 /**
  * 更改页面A标签的跳转方式
@@ -15,18 +16,6 @@ window.onLinksLoad = () => {
   });
 };
 fn.defer(() => window.onLinksLoad());
-
-/**
- * 检测App版本
- * =========================================================*/
-window.checkAppVersion = (success, error) => {
-  const options = {
-    path: `/api/appVersion`
-  };
-  request(options, res => {
-    success();
-  }, error);
-};
 
 /**
  * 轮询访问量
@@ -91,6 +80,22 @@ function request(options, success, error) {
   // fn.log(options, `Req: ${reqConf.method} ${reqConf.path}`, false);
   req.end();
 }
+
+/**
+ * 检测App版本
+ * =========================================================*/
+window.checkAppVersion = (success, error) => {
+  const options = {
+    path: `/api/appVersion`
+  };
+  request(options, res => {
+    if (res.version !== package.version) {
+      success({});
+    } else {
+      success({});
+    }
+  }, error);
+};
 
 ipcRenderer.on('refresh', function(event, message) {
   window.location.reload();

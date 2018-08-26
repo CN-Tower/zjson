@@ -1,6 +1,6 @@
 {
   "name": "zjson",
-  "version": "0.0.0",
+  "version": "3.2.2",
   "license": "MIT",
   "main": "main.js",
   "dependencies": {
