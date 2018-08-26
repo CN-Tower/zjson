@@ -8,8 +8,8 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { AppService } from './app.service';
-import { DomRefDirective } from  './domRef.directives';
-import { BsDropdownModule, ModalModule } from 'ngx-bootstrap';
+import { DomRefDirective } from './domRef.directives';
+import { BsDropdownModule, ModalModule, ProgressbarModule } from 'ngx-bootstrap';
 
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -30,7 +30,8 @@ export function createTranslateLoader(http: HttpClient) {
       }
     }),
     BsDropdownModule.forRoot(),
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
+    ProgressbarModule.forRoot()
   ],
   declarations: [
     AppComponent,

@@ -2,7 +2,12 @@ import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 // import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
-import { APP_INFO } from './app.component.class';
+
+export const APP_INFO = {
+  version: 'v3.2.4',
+  updateTime: '2018-08-26',
+  appUrl: 'http://zjson.net'
+};
 
 @Injectable()
 export class AppService {

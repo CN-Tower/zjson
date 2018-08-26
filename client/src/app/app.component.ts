@@ -3,9 +3,10 @@ import { TranslateService, TranslationChangeEvent } from '@ngx-translate/core';
 import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { toggleSlid } from './animations/toggle-slid';
-import { AppService } from './app.service';
+import { AppService, APP_INFO } from './app.service';
 import { Configs } from './formatter/formatter.conf';
-import { Zjson, APP_INFO } from './app.component.class';
+import { Zjson } from './app.component.class';
+import { Duration } from '../../node_modules/ngx-bootstrap/chronos/duration/constructor';
 
 let originX: number;
 
@@ -39,12 +40,6 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
     this.greeting = this.appService.getGreeting(this.lang);
     this.conf = new Configs();
     this.appService.initFmtHists();
-    this.getFmtHists();
-    /**electron ignore -*/
-    this.checkAppVersion(false);
-    this.refreshVisitCount();
-    this.pollingVisitCount();
-    /**electron ignore |*/
   }
 
   ngOnInit() {
@@ -53,11 +48,28 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
       this.doTranslate();
       this.translateAltMsgs();
     });
-    /**electron ignore -*/
+    /**electron ignore sta*/
+    this.checkAppVersion(false);
+    this.refreshVisitCount();
     this.getSharedJson(false);
     fn.interval('refresh-visit-count', 300000, () => this.refreshVisitCount());
+    /**electron ignore end*/
+    /**electron enable sta_*//*
+    this.showLoading();
+    fn.interval(500, () => {
+      this.updateRate ++;
+    });
+    win.checkAppVersion(() => {
+      this.isShowUpdating = true;
+      this.isShowLoading = false;
+      fn.interval(500, () => {
+        this.updateRate ++;
+      });
+    }, () => this.isShowLoading = false);
+    *//**electron enable end_*/
+    this.getFmtHists();
+    this.pollingVisitCount();
     fn.interval('polling-visit-count', 15000, () => this.pollingVisitCount());
-    /**electron ignore |*/
   }
 
   ngAfterViewInit() {
@@ -77,48 +89,6 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
     $(document).on('click keyup', () => this.isPageActive = true);
     fn.timeout(500, () => this.onWindowResize());
     fn.defer(() => this.onChangeTheme(this.appService.getAppTheme()));
-  }
-
-  /**
-   * 检测App版本
-   * =================================*/
-  checkAppVersion(isRefresh: boolean) {
-    this.appService.getRemoteVersion().subscribe(res => {
-      const locVersion = this.appService.getLocalVersion();
-      const rmtVersion = res['version'];
-      this.appService.setLocalVersion(rmtVersion);
-      if (isRefresh && locVersion !== rmtVersion) {
-        this.appService.setIsUpGrade('yes');
-        location.reload(true);
-      }
-      win['version'] = rmtVersion;
-    });
-  }
-
-  /**
-   * 刷新访问量
-   * =================================*/
-  refreshVisitCount() {
-    if (this.isPageActive) {
-      this.isPageActive = false;
-      const userId = this.appService.getUserId();
-      this.appService.refreshVisitCount(userId).subscribe((res: any) => {
-        if (res['id']) this.appService.setUserId(res.id);
-      });
-    } else {
-      this.checkAppVersion(true);
-    }
-  }
-
-  /**
-   * 轮询访问量
-   * =================================*/
-  pollingVisitCount() {
-    const userId = this.appService.getUserId();
-    this.appService.pollingVisitCount(userId, this.isOnInit).subscribe((res: any) => {
-      if (res['vc']) win['vc'] = res.vc;
-    });
-    this.isOnInit = false;
   }
 
   /**
@@ -426,9 +396,9 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
     this.formated = '';
     this.fmtSourcest = '';
     if (!this.isOriginEmpty) this.animateGreeting();
-    fn.defer(() => {
-      if (fn.has(win, 'onLinksLoad')) win.onLinksLoad();
-    });
+    /**electron enable sta_*//*
+    fn.defer(() => win.onLinksLoad());
+    *//**electron enable end_*/
   }
 
   /**
@@ -696,62 +666,6 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
   }
 
   /**
-   * 生成解析结果分享链接
-   * ===================================*/
-  shareFormated() {
-    this.showLoading();
-    const sharedJson = this.getFmtStr();
-    if (!sharedJson) {
-      return this.alertNotice(this.translate.instant('_shareFmted'), 'danger');
-    }
-    if (sharedJson.length > 8000000) {
-      return this.alertNotice(this.translate.instant('_largeError'), 'danger');
-    }
-    this.sharedLink = '';
-    fn.copyText(`${this.appUrl}?sharedId=${this.appService.getUserId()}`);
-    /**electron ignore -*/
-    this.appService.shareFormated(sharedJson).subscribe(() => {
-      this.isShowLoading = false;
-      this.alertNotice(this.translate.instant('_shareSuccess'));
-    }, () => {
-      this.isShowLoading = false;
-      this.alertNotice(this.translate.instant('_shareJsonError'), 'danger');
-    });
-    /**electron ignore |*/
-  }
-
-  /**
-   * 获得共享Json字符串
-   * ===================================*/
-  getSharedJson(isFromIpt: boolean = true) {
-    fn.defer(() => {
-      const queryStr = isFromIpt ? $('#search-ipt').val() || '-' : location.href;
-      const sharedId = fn.get(fn.parseQueryString(queryStr), 'sharedId') || '';
-      /**electron ignore -*/
-      if (sharedId) {
-        this.showLoading();
-        this.appService.getSharedJson(sharedId).subscribe(res => {
-          this.sourcest = res.sharedJson;
-          this.doFormate(this.sourcest);
-          this.isShowLoading = false;
-        }, () => {
-          this.isShowLoading = false;
-          this.alertNotice(this.translate.instant('_getJsonError'), 'danger');
-        });
-      }
-      /**electron ignore |*/
-      if (!sharedId && isFromIpt) {
-        this.alertNotice(this.translate.instant('_bdSharedLink'), 'danger');
-      }
-    });
-  }
-
-  showLoading() {
-    this.isShowLoading = true;
-    fn.timeout(2500, () => this.isShowLoading = false);
-  }
-
-  /**
    * 上一步和下一步位置
    * ===================================*/
   lastPosition() {
@@ -841,5 +755,118 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
         break;
     }
     this.alertMsg  = this.i18n.alert[this.alertInfo.type];
+  }
+
+  /**
+   * 检测App版本
+   * =================================*/
+  checkAppVersion(isRefresh: boolean) {
+    this.appService.getRemoteVersion().subscribe(res => {
+      const locVersion = this.appService.getLocalVersion();
+      const rmtVersion = res['version'];
+      this.appService.setLocalVersion(rmtVersion);
+      if (isRefresh && locVersion !== rmtVersion) {
+        this.appService.setIsUpGrade('yes');
+        location.reload(true);
+      }
+      win['version'] = rmtVersion;
+    });
+  }
+
+  /**
+   * 刷新访问量
+   * =================================*/
+  refreshVisitCount() {
+    if (this.isPageActive) {
+      this.isPageActive = false;
+      const userId = this.appService.getUserId();
+      this.appService.refreshVisitCount(userId).subscribe((res: any) => {
+        if (res['id']) this.appService.setUserId(res.id);
+      });
+    } else {
+      this.checkAppVersion(true);
+    }
+  }
+
+  /**
+   * 轮询访问量
+   * =================================*/
+  pollingVisitCount() {
+    const userId = this.appService.getUserId();
+    /**electron ignore sta*/
+    this.appService.pollingVisitCount(userId, this.isOnInit).subscribe((res: any) => {
+      if (res['vc']) win['vc'] = res.vc;
+    });
+    /**electron ignore end*/
+    /**electron enable sta_*//*
+    win.pollingVisitCount(userId, this.isOnInit);
+    *//**electron enable end_*/
+    this.isOnInit = false;
+  }
+
+  /**
+   * 生成解析结果分享链接
+   * ===================================*/
+  shareFormated() {
+    const sharedJson = this.getFmtStr();
+    if (!sharedJson) {
+      return this.alertNotice(this.translate.instant('_shareFmted'), 'danger');
+    }
+    if (sharedJson.length > 8000000) {
+      return this.alertNotice(this.translate.instant('_largeError'), 'danger');
+    }
+    this.sharedLink = '';
+    fn.copyText(`${this.appUrl}?sharedId=${this.appService.getUserId()}`);
+    this.showLoading();
+    const suc = () => {
+      this.isShowLoading = false;
+      this.alertNotice(this.translate.instant('_shareSuccess'));
+    };
+    const err = () => {
+      this.isShowLoading = false;
+      this.alertNotice(this.translate.instant('_shareJsonError'), 'danger');
+    };
+    /**electron ignore sta*/
+    this.appService.shareFormated(sharedJson).subscribe(suc, err);
+    /**electron ignore end*/
+    /**electron enable sta_*//*
+    win.shareFormated(sharedJson, this.appService.getUserId(), suc, err);
+    *//**electron enable end_*/
+  }
+
+  /**
+   * 获得共享Json字符串
+   * ===================================*/
+  getSharedJson(isFromIpt: boolean = true) {
+    fn.defer(() => {
+      const queryStr = isFromIpt ? $('#search-ipt').val() || '-' : location.href;
+      const sharedId = fn.get(fn.parseQueryString(queryStr), 'sharedId') || '';
+      if (sharedId) {
+        this.showLoading();
+        const suc = res => {
+          this.sourcest = res.sharedJson;
+          this.doFormate(this.sourcest);
+          this.isShowLoading = false;
+        };
+        const err = () => {
+          this.isShowLoading = false;
+          this.alertNotice(this.translate.instant('_getJsonError'), 'danger');
+        };
+        /**electron ignore sta*/
+        this.appService.getSharedJson(sharedId).subscribe(suc, err);
+        /**electron ignore end*/
+        /**electron enable sta_*//*
+        win.getSharedJson(sharedId, suc, err);
+        *//**electron enable end_*/
+      }
+      if (!sharedId && isFromIpt) {
+        this.alertNotice(this.translate.instant('_bdSharedLink'), 'danger');
+      }
+    });
+  }
+
+  showLoading() {
+    this.isShowLoading = true;
+    fn.timeout(2500, () => this.isShowLoading = false);
   }
 }

@@ -311,14 +311,18 @@
                 <a class="links" target="_blank" href="http://github.com/CN-Tower/funclib.js">
                   http://github.com/CN-Tower/funclib.js
                 </a><br>
-                <!-- <i class="fa fa-star"></i>&nbsp;<strong>{{'download_' | translate}}:</strong>&nbsp;&nbsp;
-                <a class="links" target="_blank" href="https://github.com/CN-Tower/zjson/releases/download/zjson-v3.2.1/zjson-win32-x64.exe">
-                  zjson-win32-x64.exe (v3.2.1)
-                </a><br> -->
-                <!-- <i class="fa fa-star"></i>&nbsp;<strong>{{'zjson' | translate}}:</strong>&nbsp;&nbsp;
+                <!--electron ignore sta-->
+                <i class="fa fa-star"></i>&nbsp;<strong>{{'download_' | translate}}:</strong>&nbsp;&nbsp;
+                <a class="links" target="_blank" href="https://github.com/CN-Tower/zjson/releases/download/zjson-{{version}}/zjson-win32-x64.exe">
+                  zjson-win32-x64.exe ({{version}})
+                </a><br>
+                <!--electron ignore end-->
+                <!--electron enable sta_--><!--
+                <i class="fa fa-star"></i>&nbsp;<strong>{{'website' | translate}}:</strong>&nbsp;&nbsp;
                 <a class="links" target="_blank" href="http://www.zjson.net">
                   http://www.zjson.net
-                </a><br> -->
+                </a><br>
+                --><!--electron enable end_-->
               </div>
               <div id="z-index" [style.height]="setRowIdxWpHeight()"></div>
               <pre *ngIf="isModelExpand" class="z-canvas"
@@ -333,6 +337,26 @@
     <!-- FMTED END -->
   </section>
   <input type="file" class="upload hide">
+</div>
+
+<div *ngIf="isShowUpdating">
+  <bs-modal-backdrop class="modal-backdrop fade in"></bs-modal-backdrop>
+  <div class="modal fade in show">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title pull-left">版本更新</h4>
+          <button class="close pull-right" type="button">
+            <span class="ng-tns-c0-0">×</span>
+          </button>
+        </div>
+        <div class="z-info-modal modal-body">
+          <p>Update: </p>
+          <progressbar max="200" [value]="updateRate" type="success" [striped]="true" [animate]="true"></progressbar>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div *ngIf="isShowLoading" class="z-loading">

@@ -1,11 +1,6 @@
 import { Configs, FmtStatus, FmterEles } from './formatter/formatter.conf';
 import { Formatter } from './formatter/formatter.main';
-
-export const APP_INFO = {
-  version: 'v3.3.1',
-  updateTime: '2018-08-24',
-  appUrl: 'http://zjson.net'
-};
+import { APP_INFO } from './app.service';
 
 export class Zjson {
   appUrl: string = APP_INFO.appUrl;
@@ -18,6 +13,8 @@ export class Zjson {
   isOnInit: boolean = true;
   isPageActive: boolean = true;
   isShowLoading: boolean = false;
+  isShowUpdating: boolean = false;
+  updateRate: number = 0;
   isWindowBig: boolean;
   sourcest: string = '';
   formated: string = '';

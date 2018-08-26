@@ -1,6 +1,20 @@
 {
-  "name": "angular2-electron",
+  "name": "zjson",
   "version": "0.0.0",
   "license": "MIT",
-  "main": "main.js"
+  "main": "main.js",
+  "dependencies": {
+    "funclib": "^2.2.6",
+    "request": "^2.88.0",
+    "unzip": "^0.1.11"
+  },
+  "build": {
+    "appId": "com.zjson.app",
+    "win": {
+      "target": [
+        "zip"
+      ],
+      "icon": "icon.png"
+    }
+  }
 }

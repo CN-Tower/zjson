@@ -12,7 +12,7 @@
     "update": "npm run build && node build/update-zjson.js",
     "electron:dist": "electron dist",
     "electron": "npm run build:electron && node build/electron.conf.js && electron dist",
-    "electron:package": "electron-packager ./dist zjson --platform=win32 --out build/package --verson=3.2.1 --overwrite",
+    "electron:package": "electron-packager ./dist zjson --platform=win32 --icon=icon.png --out=build/package --overwrite",
     "package": "npm run electron && npm run electron:package && npm run unignore",
     "unignore": "node build/pre-build.js"
   },
@@ -35,8 +35,10 @@
     "funclib": "^2.2.6",
     "jquery": "^3.3.1",
     "ngx-bootstrap": "^3.0.1",
+    "request": "^2.88.0",
     "rxjs": "^6.0.0",
     "rxjs-compat": "^6.1.0",
+    "unzip": "^0.1.11",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {
