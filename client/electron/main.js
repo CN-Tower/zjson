@@ -31,7 +31,7 @@ function update() {
     console.log("文件[" + fileName + "]下载完毕");
   });
   fn.rm(path.join(root, 'zjson.js'));
-  mainWindow.send('refresh', true);
+  mainWindow.webContents.send('refresh', true);
 }
 
 function unPack() {

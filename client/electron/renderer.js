@@ -90,9 +90,10 @@ window.checkAppVersion = (success, error) => {
   };
   request(options, res => {
     if (res.version !== package.version) {
-      success({});
+      success(true, () => );
+      ipcRenderer.send('update', true);
     } else {
-      success({});
+      success(false);
     }
   }, error);
 };
