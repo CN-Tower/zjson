@@ -1,12 +1,10 @@
-import { Component, OnInit, AfterViewInit, ViewEncapsulation, TemplateRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewEncapsulation, TemplateRef, ViewChild } from '@angular/core';
 import { TranslateService, TranslationChangeEvent } from '@ngx-translate/core';
-import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { toggleSlid } from './animations/toggle-slid';
 import { AppService, APP_INFO } from './app.service';
 import { Configs } from './formatter/formatter.conf';
 import { Zjson } from './app.component.class';
-import { Duration } from '../../node_modules/ngx-bootstrap/chronos/duration/constructor';
 
 let originX: number;
 
@@ -19,7 +17,8 @@ let originX: number;
 })
 
 export class AppComponent extends Zjson implements OnInit, AfterViewInit {
-  modalRef: BsModalRef;
+  @ViewChild('confirmTemplate') confirmTemplate: TemplateRef<any>;
+
   modalElRef = () => $(document).find('.modal-dialog').addClass('modal-sm');
   getFmtHists = () => this.fmtHists = this.appService.getFmtHists();
   getFmtStr = () => $('.z-canvas').text();
@@ -43,39 +42,20 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    this.getFmtHists();
+    this.checkAndUpdateApp();
     this.doTranslate();
     this.translate.onLangChange.subscribe((event: TranslationChangeEvent) => {
       this.doTranslate();
       this.translateAltMsgs();
     });
-    /**electron ignore sta*/
-    this.checkAppVersion(false);
-    this.refreshVisitCount();
-    this.getSharedJson(false);
-    fn.interval('refresh-visit-count', 300000, () => this.refreshVisitCount());
-    /**electron ignore end*/
-    /**electron enable sta_*//*
-    this.showLoading();
-    fn.interval(500, () => {
-      this.updateRate ++;
-    });
-    win.checkAppVersion(() => {
-      this.isShowUpdating = true;
-      this.isShowLoading = false;
-      fn.interval(500, () => {
-        this.updateRate ++;
-      });
-    }, () => this.isShowLoading = false);
-    *//**electron enable end_*/
-    this.getFmtHists();
-    this.pollingVisitCount();
-    fn.interval('polling-visit-count', 15000, () => this.pollingVisitCount());
   }
 
   ngAfterViewInit() {
     win['isRendered'] = true;
     const $win = $(win);
     this.isWindowBig = $win.width() >= 1025;
+    $win.resize(() => this.onWindowResize());
     this.animateGreeting();
     this.initAppStyles();
     this.fixCodeZoneWidth();
@@ -85,10 +65,9 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
     this.initOpenDragEvent();
     this.initResizeZconEvent();
     this.onWindowResize();
-    $win.resize(() => this.onWindowResize());
-    $(document).on('click keyup', () => this.isPageActive = true);
     fn.timeout(500, () => this.onWindowResize());
     fn.defer(() => this.onChangeTheme(this.appService.getAppTheme()));
+    $(document).on('click keyup', () => this.isPageActive = true);
   }
 
   /**
@@ -758,7 +737,60 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
   }
 
   /**
+   * 检测、轮询、刷新APP
+   * =================================*/
+  checkAndUpdateApp() {
+    /**electron ignore sta*/
+    this.checkAppVersion(false);
+    this.refreshVisitCount();
+    this.getSharedJson(false);
+    this.getUpdateUrl();
+    fn.interval('refresh-visit-count', 300000, () => this.refreshVisitCount());
+    /**electron ignore end*/
+    /**electron enable sta_*//*
+    fn.defer(() => win.checkAppVersion(res => {
+      if (res.version !== res.localVersion) {
+        const noUpVersion = this.appService.getIgnoreVersion();
+        if (!noUpVersion || res.version !== noUpVersion) {
+          this.updateUrl = res.updateUrl;
+          this.remoteVersion = res.version;
+          this.modalRef = this.modalService.show(this.confirmTemplate, {class: 'modal-sm'});
+        }
+      }
+    }));
+    *//**electron enable end_*/
+    this.pollingVisitCount();
+    fn.interval('polling-visit-count', 15000, () => this.pollingVisitCount());
+  }
+
+  /**
    * 检测App版本
+   * =================================*/
+  doUpdate() {
+    win.openUrl(this.updateUrl);
+    this.modalRef.hide();
+  }
+
+  /**
+   * 检测App版本
+   * =================================*/
+  cancelUpdate() {
+    if (this.isNoShowUdate) this.appService.setIgnoreVersion(this.remoteVersion);
+    this.modalRef.hide();
+  }
+
+  /**
+   * 获取App下载地址
+   * =================================*/
+  getUpdateUrl() {
+    this.appService.getUpdateUrl().subscribe(res => {
+      this.remoteVersion = res.version;
+      this.updateUrl = res.updateUrl;
+    });
+  }
+
+  /**
+   * 检测Zjson版本
    * =================================*/
   checkAppVersion(isRefresh: boolean) {
     this.appService.getRemoteVersion().subscribe(res => {
