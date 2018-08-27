@@ -1,7 +1,18 @@
-const { shell, ipcRenderer } = require('electron');
+const { shell } = require('electron');
 const http = require('http');
 const package = require('./package.json');
 
+/**
+ * 设置请求地址
+ * =========================================================*/
+const urlList = {
+  0: 'www.zjson.net',
+  1: '127.0.0.1:3000',
+  2: '10.63.244.252:8888'
+};
+const requestUrl = urlList[ 2 ];
+
+window.openUrl = url => shell.openExternal(url);
 /**
  * 更改页面A标签的跳转方式
  * =========================================================*/
@@ -58,9 +69,10 @@ window.getSharedJson = (sharedId, success, error) => {
 function request(options, success, error) {
   const data = fn.get(options, 'data');
   const method = fn.get(options, 'method') || 'GET';
+  const reqUrl = requestUrl.split(':');
   const reqConf = {
-    hostname: fn.get(options, 'host') || 'www.zjson.net',
-    port: fn.get(options, 'port') || 80,
+    hostname: fn.get(options, 'host') || reqUrl[0],
+    port: fn.get(options, 'port') || parseInt(reqUrl[1]),
     path: fn.get(options, 'path'),
     method: method,
     headers: fn.get(options, 'header') || { 'Content-Type': 'application/json; charset=utf-8' }
@@ -86,18 +98,14 @@ function request(options, success, error) {
  * =========================================================*/
 window.checkAppVersion = (success, error) => {
   const options = {
-    path: `/api/appVersion`
+    path: `/api/zjson/appVersion`
   };
   request(options, res => {
-    if (res.version !== package.version) {
-      success(true, () => );
-      ipcRenderer.send('update', true);
-    } else {
-      success(false);
-    }
-  }, error);
+    res.localVersion = package.version;
+    success(res);
+  });
 };
 
-ipcRenderer.on('refresh', function(event, message) {
-  window.location.reload();
-});
+// ipcRenderer.on('refresh', function(event, message) {
+//   window.location.reload();
+// });
