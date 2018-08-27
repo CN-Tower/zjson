@@ -1,20 +1,6 @@
 {
   "name": "zjson",
-  "version": "3.2.2",
+  "version": "3.2.1",
   "license": "MIT",
-  "main": "main.js",
-  "dependencies": {
-    "funclib": "^2.2.6",
-    "request": "^2.88.0",
-    "unzip": "^0.1.11"
-  },
-  "build": {
-    "appId": "com.zjson.app",
-    "win": {
-      "target": [
-        "zip"
-      ],
-      "icon": "icon.png"
-    }
-  }
+  "main": "main.js"
 }
