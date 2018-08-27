@@ -4,7 +4,7 @@ import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 
 export const APP_INFO = {
-  version: 'v3.2.4',
+  version: 'v3.2.2',
   updateTime: '2018-08-26',
   appUrl: 'http://zjson.net'
 };
@@ -98,6 +98,14 @@ export class AppService {
 
   setAppLang(lang: 'zh'|'en') {
     window.localStorage['language'] = lang;
+  }
+
+  getIgnoreVersion() {
+    return window.localStorage['ignoreVersion'];
+  }
+
+  setIgnoreVersion(version: string) {
+    window.localStorage['ignoreVersion'] = version;
   }
 
   getAppTheme() {
@@ -223,5 +231,9 @@ export class AppService {
 
   getSharedJson(sharedId: string) {
     return this.http.get(`/api/sharedJson/${sharedId}`).map(res => res.json());
+  }
+
+  getUpdateUrl() {
+    return this.http.get('/api/zjson/appVersion').map(res => res.json());
   }
 }
