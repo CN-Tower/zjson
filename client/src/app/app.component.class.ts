@@ -1,4 +1,5 @@
 import { Configs, FmtStatus, FmterEles } from './formatter/formatter.conf';
+import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 import { Formatter } from './formatter/formatter.main';
 import { APP_INFO } from './app.service';
 
@@ -7,14 +8,15 @@ export class Zjson {
   conf: Configs;
   lang: string;
   version: string;
+  remoteVersion: string;
   updateTime: string;
   sharedLink: string;
   isOnLeft: boolean = true;
   isOnInit: boolean = true;
   isPageActive: boolean = true;
   isShowLoading: boolean = false;
-  isShowUpdating: boolean = false;
-  updateRate: number = 0;
+  isNoShowUdate: boolean = false;
+  updateUrl: string = '';
   isWindowBig: boolean;
   sourcest: string = '';
   formated: string = '';
@@ -39,6 +41,7 @@ export class Zjson {
   altMsgs: any = {};
   stArr: number[] = [];
   stIdx: number = 0;
+  modalRef: BsModalRef;
   eles: FmterEles = new FmterEles();
   fmtSt: FmtStatus = new FmtStatus();
   formatter: Formatter = new Formatter();
