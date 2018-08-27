@@ -340,14 +340,18 @@
 <!-- ============= UPDATE MODAL ============= -->
 <ng-template #confirmTemplate>
   <div class="modal-body text-center z-info-modal">
-    <h4>发现新版本，是否下载并升级?</h4>
+    <h4>{{'isUpdate' | translate}}</h4>
     <div class="checkbox">
       <label>
-        <input type="checkbox" [(ngModel)]="isNoShowUdate"> 不再提示
+        <input type="checkbox" [(ngModel)]="isNoShowUdate"> {{'noMoreShow' | translate}}
       </label>
     </div>
-    <button type="button" class="btn btn-default" (click)="doUpdate()" >立即下载</button>
-    <button type="button" class="btn btn-primary divider-left" (click)="cancelUpdate()" >暂不升级</button>
+    <button type="button" class="btn btn-default" (click)="doUpdate()">
+      {{'downloadNow' | translate}}
+    </button>
+    <button type="button" class="btn btn-primary divider-left" (click)="cancelUpdate()">
+      {{'updateLater' | translate}}
+    </button>
   </div>
 </ng-template><!-- MODAL END -->
 
