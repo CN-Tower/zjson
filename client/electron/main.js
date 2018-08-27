@@ -1,12 +1,12 @@
 const {app, BrowserWindow, ipcMain} = require('electron')
-const request = require("request");
-const fn = require('funclib');
-const fs = require('fs');
-const path  = require('path');
-const root = __dirname;
-const tmpPath = path.resolve(__dirname, '../tmp');
+// const request = require("request");
+// const fn = require('funclib');
+// const fs = require('fs');
+// const path  = require('path');
+// const root = __dirname;
+// const tmpPath = path.join(path.dirname(__dirname), 'tmp');
+// let updateUrl, fileName;
 
-let updateUrl, fileName;
 let mainWindow;
 
 app.on('ready', createWindow);
@@ -23,17 +23,13 @@ function createWindow () {
   mainWindow.on('closed', () => mainWindow = null);
 }
 
-function update() {
-  fn.rm(tmpPath);
-  fn.mk(tmpPath);
-  const stream = fs.createWriteStream(path.join(tmpPath, 'zjson.zip'));
-  request(updateUrl).pipe(stream).on("close", function (err) {
-    console.log("文件[" + fileName + "]下载完毕");
-  });
-  fn.rm(path.join(root, 'zjson.js'));
-  mainWindow.webContents.send('refresh', true);
-}
-
-function unPack() {
-
-}
+// function update() {
+//   fn.rm(tmpPath);
+//   fn.mk(tmpPath);
+//   const stream = fs.createWriteStream(path.join(tmpPath, 'zjson.zip'));
+//   request(updateUrl).pipe(stream).on("close", function (err) {
+//     if (err) mainWindow.webContents.send('refresh', true);
+//   });
+//   fn.rm(path.join(root, 'zjson.js'));
+//   mainWindow.webContents.send('refresh', true);
+// }
