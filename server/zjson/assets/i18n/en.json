@@ -60,7 +60,7 @@
     "isUpdate": "Find a new version, Do you want upgrade?",
     "noMoreShow": "Don't show this again",
     "downloadNow": "Download Now",
-    "updateLate": "Not Upgrade",
+    "updateLater": "Upgrade Later",
     "search": "Search by shared link",
     "shareLink": "Generate shared link",
     "lastStep": "Prev step position",

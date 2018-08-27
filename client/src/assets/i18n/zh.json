@@ -60,7 +60,7 @@
     "isUpdate": "发现新版本，是否下载并升级？",
     "noMoreShow": "不再提示",
     "downloadNow": "立即下载",
-    "updateLate": "暂不升级",
+    "updateLater": "暂不升级",
     "search": "分享链接查找",
     "shareLink": "生成分享链接",
     "lastStep": "上一步位置",
