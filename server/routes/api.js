@@ -41,11 +41,35 @@ router.get('/zjson/version', function(req, res, next) {
 });
 
 router.post('/zjson/version', function(req, res, next) {
-  const version = req.body.version;
-  VersionModel.setVersion(version, err => {
-    if (err) return util.logErr(err, 'Set Version Error', res);
-    res.status(200).send({'status': 'ok', 'version': version});
+  const version = fn.get(req.body, 'version');
+  if (fn.typeVal(version, 'str')) {
+    VersionModel.setVersion(version, err => {
+      if (err) return util.logErr(err, 'Set Version Error', res);
+      res.status(200).send({'status': 'ok', 'version': version});
+    });
+  } else {
+    res.status(400).send({'errorMsg': 'Request Body is invalid!'});
+  }
+});
+
+router.get('/zjson/appVersion', function(req, res, next) {
+  VersionModel.getAppVersion((err, doc) => {
+    if (err) return util.logErr(err, 'Get App Version Error', res);
+    res.status(200).send(doc);
   });
+});
+
+router.post('/zjson/appVersion', function(req, res, next) {
+  const data = req.body;
+  if (['version', 'updateUrl'].every(key => fn.get(data, key, 'str'))) {
+    VersionModel.setAppVersion(data, err => {
+      if (err) return util.logErr(err, 'Set App Version Error', res);
+      const info = {'version': data.version, 'updateUrl': data.updateUrl};
+      res.status(200).send(info);
+    });
+  } else {
+    res.status(400).send({'errorMsg': 'Request Body is invalid!'});
+  }
 });
 
 router.get('/refreshVc/:userId', function(req, res, next) {
@@ -79,7 +103,7 @@ router.post('/sharedJson', function(req, res, next) {
   data.updateTime = fn.time();
   const logErr = err => util.logErr(err, 'Get Shared Json Error', res);
   SharedJsonModel.getSjsByUserId(data.userId, (err, docs) => {
-    if (err) logErr(err);
+    if (err) return logErr(err);
     if (docs && docs.length === 1) {
       SharedJsonModel.updateSjById(data.userId, data, (err, doc) => {
         if (err) return logErr(err);
@@ -87,7 +111,7 @@ router.post('/sharedJson', function(req, res, next) {
       });
     } else {
       SharedJsonModel.removeSjById(data.userId, (err, doc) => {
-        if (err) logErr(err);
+        if (err) return logErr(err);
         SharedJsonModel.createSj(data, (err, doc) => {
           if (err) return logErr(err);
           res.status(200).send({'status': 'ok'});
