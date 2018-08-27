@@ -831,7 +831,7 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
     });
     /**electron ignore end*/
     /**electron enable sta_*//*
-    win.pollingVisitCount(userId, this.isOnInit);
+    fn.defer(() => win.pollingVisitCount(userId, this.isOnInit));
     *//**electron enable end_*/
     this.isOnInit = false;
   }

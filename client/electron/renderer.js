@@ -10,7 +10,7 @@ const urlList = {
   1: '127.0.0.1:3000',
   2: '10.63.244.252:8888'
 };
-const requestUrl = urlList[ 2 ];
+const requestUrl = urlList[ 0 ];
 
 window.openUrl = url => shell.openExternal(url);
 /**
@@ -89,7 +89,7 @@ function request(options, success, error) {
     if (fn.typeOf(error, 'fun')) error(err);
   });
   if (method === 'POST' && data) req.write(JSON.stringify(data));
-  // fn.log(options, `Req: ${reqConf.method} ${reqConf.path}`, false);
+  // fn.log(reqConf, `Req: ${reqConf.method} ${reqConf.path}`, false);
   req.end();
 }
 
