@@ -55,7 +55,8 @@ router.post('/zjson/version', function(req, res, next) {
 router.get('/zjson/appVersion', function(req, res, next) {
   VersionModel.getAppVersion((err, doc) => {
     if (err) return util.logErr(err, 'Get App Version Error', res);
-    res.status(200).send(doc);
+    const info = {version: doc.version, updateUrl: doc.updateUrl};
+    res.status(200).send(info);
   });
 });
 
