@@ -19,9 +19,8 @@ let originX: number;
 export class AppComponent extends Zjson implements OnInit, AfterViewInit {
   @ViewChild('confirmTemplate') confirmTemplate: TemplateRef<any>;
 
-  modalElRef = () => $(document).find('.modal-dialog').addClass('modal-sm');
-  getFmtHists = () => this.fmtHists = this.appService.getFmtHists();
   getFmtStr = () => $('.z-canvas').text();
+  getFmtHists = () => this.fmtHists = this.appService.getFmtHists();
 
   constructor(
     private translate: TranslateService,
@@ -375,9 +374,9 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
     this.formated = '';
     this.fmtSourcest = '';
     if (!this.isOriginEmpty) this.animateGreeting();
-    /**electron enable sta_*//*
+    /**electron enable sta*/
     fn.defer(() => win.onLinksLoad());
-    *//**electron enable end_*/
+    /**electron enable end*/
   }
 
   /**
@@ -420,10 +419,6 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
       }
       this.onWindowResize(true);
     }
-  }
-
-  openInfoModal(template: TemplateRef<any>) {
-    this.modalRef = this.modalService.show(template);
   }
 
   /**
@@ -737,28 +732,35 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
   }
 
   /**
+   * 打开模态框
+   * =================================*/
+  openModal(template: TemplateRef<any>) {
+    this.modalRef = this.modalService.show(template, {class: 'modal-sm'});
+  }
+
+  /**
    * 检测、轮询、刷新APP
    * =================================*/
   checkAndUpdateApp() {
-    /**electron ignore sta*/
+    /**electron ignore sta_*//*
     this.checkAppVersion(false);
     this.refreshVisitCount();
     this.getSharedJson(false);
     this.getUpdateUrl();
     fn.interval('refresh-visit-count', 300000, () => this.refreshVisitCount());
-    /**electron ignore end*/
-    /**electron enable sta_*//*
+    *//**electron ignore end_*/
+    /**electron enable sta*/
     fn.defer(() => win.checkAppVersion(res => {
       if (res.version !== res.localVersion) {
         const noUpVersion = this.appService.getIgnoreVersion();
         if (!noUpVersion || res.version !== noUpVersion) {
           this.updateUrl = res.updateUrl;
           this.remoteVersion = res.version;
-          this.modalRef = this.modalService.show(this.confirmTemplate, {class: 'modal-sm'});
+          $('#updateBtn').click();
         }
       }
     }));
-    *//**electron enable end_*/
+    /**electron enable end*/
     this.pollingVisitCount();
     fn.interval('polling-visit-count', 15000, () => this.pollingVisitCount());
   }
@@ -825,14 +827,14 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
    * =================================*/
   pollingVisitCount() {
     const userId = this.appService.getUserId();
-    /**electron ignore sta*/
+    /**electron ignore sta_*//*
     this.appService.pollingVisitCount(userId, this.isOnInit).subscribe((res: any) => {
       if (res['vc']) win['vc'] = res.vc;
     });
-    /**electron ignore end*/
-    /**electron enable sta_*//*
+    *//**electron ignore end_*/
+    /**electron enable sta*/
     fn.defer(() => win.pollingVisitCount(userId, this.isOnInit));
-    *//**electron enable end_*/
+    /**electron enable end*/
     this.isOnInit = false;
   }
 
@@ -858,12 +860,12 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
       this.isShowLoading = false;
       this.alertNotice(this.translate.instant('_shareJsonError'), 'danger');
     };
-    /**electron ignore sta*/
+    /**electron ignore sta_*//*
     this.appService.shareFormated(sharedJson).subscribe(suc, err);
-    /**electron ignore end*/
-    /**electron enable sta_*//*
+    *//**electron ignore end_*/
+    /**electron enable sta*/
     win.shareFormated(sharedJson, this.appService.getUserId(), suc, err);
-    *//**electron enable end_*/
+    /**electron enable end*/
   }
 
   /**
@@ -884,12 +886,12 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
           this.isShowLoading = false;
           this.alertNotice(this.translate.instant('_getJsonError'), 'danger');
         };
-        /**electron ignore sta*/
+        /**electron ignore sta_*//*
         this.appService.getSharedJson(sharedId).subscribe(suc, err);
-        /**electron ignore end*/
-        /**electron enable sta_*//*
+        *//**electron ignore end_*/
+        /**electron enable sta*/
         win.getSharedJson(sharedId, suc, err);
-        *//**electron enable end_*/
+        /**electron enable end*/
       }
       if (!sharedId && isFromIpt) {
         this.alertNotice(this.translate.instant('_bdSharedLink'), 'danger');

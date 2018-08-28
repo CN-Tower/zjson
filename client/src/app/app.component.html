@@ -159,10 +159,10 @@
             <span *ngIf="!isSrcMax && isOnLeft" class="z-sm-hide" (click)="pushToMiddle()">
               <i class="fa fa-columns z-op-icon" title="{{'pushToMiddle' | translate}}"></i>
             </span>
-            <span class="z-sm-hide" (click)="openInfoModal(template)">
+            <span class="z-sm-hide" (click)="openModal(template)">
               <i class="fa fa-info-circle z-op-icon" title="{{'versionInfo' | translate}}"></i>
               <ng-template #template>
-                <div class="modal-header" [domRef]="modalElRef">
+                <div class="modal-header">
                   <h4 class="modal-title pull-left">转杰森 | ZJSON</h4>
                   <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
                     <span aria-hidden="true">&times;</span>
@@ -309,18 +309,18 @@
                 <a class="links" target="_blank" href="http://github.com/CN-Tower/funclib.js">
                   http://github.com/CN-Tower/funclib.js
                 </a><br>
-                <!--electron ignore sta-->
+                <!--electron ignore sta_--><!--
                 <i class="fa fa-star"></i>&nbsp;<strong>{{'download_' | translate}}:</strong>&nbsp;&nbsp;
                 <a class="links" target="_blank" href="{{updateUrl}}">
                   zjson-win32-x64.exe (v{{remoteVersion}})
                 </a><br>
-                <!--electron ignore end-->
-                <!--electron enable sta_--><!--
+                --><!--electron ignore end_-->
+                <!--electron enable sta-->
                 <i class="fa fa-star"></i>&nbsp;<strong>{{'website' | translate}}:</strong>&nbsp;&nbsp;
                 <a class="links" target="_blank" href="http://www.zjson.net">
                   http://www.zjson.net
                 </a><br>
-                --><!--electron enable end_-->
+                <!--electron enable end-->
               </div>
               <div id="z-index" [style.height]="setRowIdxWpHeight()"></div>
               <pre *ngIf="isModelExpand" class="z-canvas"
@@ -338,6 +338,7 @@
 </div>
 
 <!-- ============= UPDATE MODAL ============= -->
+<button id="updateBtn" class="hide" (click)="openModal(confirmTemplate)"></button>
 <ng-template #confirmTemplate>
   <div class="modal-body text-center z-info-modal">
     <h4>{{'isUpdate' | translate}}</h4>

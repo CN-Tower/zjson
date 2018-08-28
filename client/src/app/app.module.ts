@@ -8,7 +8,6 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { AppService } from './app.service';
-import { DomRefDirective } from './domRef.directives';
 import { BsDropdownModule, ModalModule } from 'ngx-bootstrap';
 
 export function createTranslateLoader(http: HttpClient) {
@@ -33,8 +32,7 @@ export function createTranslateLoader(http: HttpClient) {
     ModalModule.forRoot()
   ],
   declarations: [
-    AppComponent,
-    DomRefDirective
+    AppComponent
   ],
   providers: [
     AppService
