@@ -221,7 +221,7 @@
             <span *ngIf="isSrcMax" (click)="minimalPanel('src')">
               <i class="fa fa-window-restore z-op-icon" title="{{'minimal' | translate}}"></i>
             </span>
-            <span *ngIf="!isSrcMax" (click)="doFormate(sourcest)">
+            <span id="format-btn" *ngIf="!isSrcMax" (click)="doFormate(sourcest)">
               <i class="fa fa-retweet z-op-icon-bg" title="{{'format' | translate}}"></i>
             </span>
           </div>
@@ -309,18 +309,18 @@
                 <a class="links" target="_blank" href="http://github.com/CN-Tower/funclib.js">
                   http://github.com/CN-Tower/funclib.js
                 </a><br>
-                <!--electron ignore sta_--><!--
+                <!--electron ignore sta-->
                 <i class="fa fa-star"></i>&nbsp;<strong>{{'download_' | translate}}:</strong>&nbsp;&nbsp;
                 <a class="links" target="_blank" href="{{updateUrl}}">
                   zjson-win32-x64.exe (v{{remoteVersion}})
                 </a><br>
-                --><!--electron ignore end_-->
-                <!--electron enable sta-->
+                <!--electron ignore end-->
+                <!--electron enable sta_--><!--
                 <i class="fa fa-star"></i>&nbsp;<strong>{{'website' | translate}}:</strong>&nbsp;&nbsp;
                 <a class="links" target="_blank" href="http://www.zjson.net">
                   http://www.zjson.net
                 </a><br>
-                <!--electron enable end-->
+                --><!--electron enable end_-->
               </div>
               <div id="z-index" [style.height]="setRowIdxWpHeight()"></div>
               <pre *ngIf="isModelExpand" class="z-canvas"

@@ -11,7 +11,7 @@ const urlList = {
   1: '127.0.0.1:3000',
   2: '10.63.244.252:8888'
 };
-const requestUrl = urlList[ 2 ];
+const requestUrl = urlList[ 0 ];
 
 /**
  * 更改页面A标签的跳转方式

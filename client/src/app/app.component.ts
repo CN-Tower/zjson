@@ -374,9 +374,9 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
     this.formated = '';
     this.fmtSourcest = '';
     if (!this.isOriginEmpty) this.animateGreeting();
-    /**electron enable sta*/
+    /**electron enable sta_*//*
     fn.defer(() => win.onLinksLoad());
-    /**electron enable end*/
+    *//**electron enable end_*/
   }
 
   /**
@@ -742,14 +742,14 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
    * 检测、轮询、刷新APP
    * =================================*/
   checkAndUpdateApp() {
-    /**electron ignore sta_*//*
+    /**electron ignore sta*/
     this.checkAppVersion(false);
     this.refreshVisitCount();
     this.getSharedJson(false);
     this.getUpdateUrl();
     fn.interval('refresh-visit-count', 300000, () => this.refreshVisitCount());
-    *//**electron ignore end_*/
-    /**electron enable sta*/
+    /**electron ignore end*/
+    /**electron enable sta_*//*
     fn.defer(() => win.checkAppVersion(res => {
       if (res.version !== res.localVersion) {
         const noUpVersion = this.appService.getIgnoreVersion();
@@ -760,7 +760,7 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
         }
       }
     }));
-    /**electron enable end*/
+    *//**electron enable end_*/
     this.pollingVisitCount();
     fn.interval('polling-visit-count', 15000, () => this.pollingVisitCount());
   }
@@ -827,14 +827,14 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
    * =================================*/
   pollingVisitCount() {
     const userId = this.appService.getUserId();
-    /**electron ignore sta_*//*
+    /**electron ignore sta*/
     this.appService.pollingVisitCount(userId, this.isOnInit).subscribe((res: any) => {
       if (res['vc']) win['vc'] = res.vc;
     });
-    *//**electron ignore end_*/
-    /**electron enable sta*/
+    /**electron ignore end*/
+    /**electron enable sta_*//*
     fn.defer(() => win.pollingVisitCount(userId, this.isOnInit));
-    /**electron enable end*/
+    *//**electron enable end_*/
     this.isOnInit = false;
   }
 
@@ -852,20 +852,20 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
     this.sharedLink = '';
     fn.copyText(`${this.appUrl}?sharedId=${this.appService.getUserId()}`);
     this.showLoading();
-    const suc = () => {
+    const success = () => {
       this.isShowLoading = false;
       this.alertNotice(this.translate.instant('_shareSuccess'));
     };
-    const err = () => {
+    const error = () => {
       this.isShowLoading = false;
       this.alertNotice(this.translate.instant('_shareJsonError'), 'danger');
     };
-    /**electron ignore sta_*//*
-    this.appService.shareFormated(sharedJson).subscribe(suc, err);
-    *//**electron ignore end_*/
-    /**electron enable sta*/
-    win.shareFormated(sharedJson, this.appService.getUserId(), suc, err);
-    /**electron enable end*/
+    /**electron ignore sta*/
+    this.appService.shareFormated(sharedJson).subscribe(success, error);
+    /**electron ignore end*/
+    /**electron enable sta_*//*
+    win.shareFormated(sharedJson, this.appService.getUserId(), success, error);
+    *//**electron enable end_*/
   }
 
   /**
@@ -877,21 +877,24 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
       const sharedId = fn.get(fn.parseQueryString(queryStr), 'sharedId') || '';
       if (sharedId) {
         this.showLoading();
-        const suc = res => {
-          this.sourcest = res.sharedJson;
-          this.doFormate(this.sourcest);
-          this.isShowLoading = false;
-        };
-        const err = () => {
+        const error = () => {
           this.isShowLoading = false;
           this.alertNotice(this.translate.instant('_getJsonError'), 'danger');
         };
-        /**electron ignore sta_*//*
-        this.appService.getSharedJson(sharedId).subscribe(suc, err);
-        *//**electron ignore end_*/
-        /**electron enable sta*/
-        win.getSharedJson(sharedId, suc, err);
-        /**electron enable end*/
+        /**electron ignore sta*/
+        this.appService.getSharedJson(sharedId).subscribe(res => {
+          this.isShowLoading = false;
+          this.sourcest = res.sharedJson;
+          this.doFormate(this.sourcest);
+        }, error);
+        /**electron ignore end*/
+        /**electron enable sta_*//*
+        win.getSharedJson(sharedId, res => {
+          this.isShowLoading = false;
+          this.sourcest = res.sharedJson;
+          $('#format-btn').click();
+        }, error);
+        *//**electron enable end_*/
       }
       if (!sharedId && isFromIpt) {
         this.alertNotice(this.translate.instant('_bdSharedLink'), 'danger');
