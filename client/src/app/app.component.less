@@ -1,13 +1,3 @@
-.modal-title {
-  color: #333333;
-}
-.z-info-modal {
-  color: #333333;
-  .divider-left {
-    margin-left: 4px;
-  }
-}
-
 #z-json {
   padding-top: 25px;
   ::-webkit-scrollbar {
@@ -466,5 +456,22 @@
         }
       }
     }
+  }
+}
+.modal-title {
+  color: #333333;
+}
+.z-info-modal {
+  color: #333333;
+  table tr td{
+    &:nth-child(1) {
+      text-align: right;
+    }
+    &:nth-child(2) {
+      padding-left: 4px;
+    }
+  }
+  .divider-left {
+    margin-left: 4px;
   }
 }
