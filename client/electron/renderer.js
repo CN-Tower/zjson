@@ -2,6 +2,7 @@ const { shell } = require('electron');
 const http = require('http');
 const package = require('./package.json');
 
+window.openUrl = url => shell.openExternal(url);
 /**
  * 设置请求地址
  * =========================================================*/
@@ -10,9 +11,8 @@ const urlList = {
   1: '127.0.0.1:3000',
   2: '10.63.244.252:8888'
 };
-const requestUrl = urlList[ 0 ];
+const requestUrl = urlList[ 2 ];
 
-window.openUrl = url => shell.openExternal(url);
 /**
  * 更改页面A标签的跳转方式
  * =========================================================*/
