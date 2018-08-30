@@ -159,9 +159,9 @@
             <span *ngIf="!isSrcMax && isOnLeft" class="z-sm-hide" (click)="pushToMiddle()">
               <i class="fa fa-columns z-op-icon" title="{{'pushToMiddle' | translate}}"></i>
             </span>
-            <span class="z-sm-hide" (click)="openModal(template)">
+            <span class="z-sm-hide" (click)="openModal(infoTpl)">
               <i class="fa fa-info-circle z-op-icon" title="{{'versionInfo' | translate}}"></i>
-              <ng-template #template>
+              <ng-template #infoTpl>
                 <div class="modal-header">
                   <h4 class="modal-title pull-left">转杰森 | ZJSON</h4>
                   <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
@@ -338,8 +338,8 @@
 </div>
 
 <!-- ============= UPDATE MODAL ============= -->
-<button id="updateBtn" class="hide" (click)="openModal(confirmTemplate)"></button>
-<ng-template #confirmTemplate>
+<button id="updateBtn" class="hide" (click)="openModal(updateTpl)"></button>
+<ng-template #updateTpl>
   <div class="modal-body text-center z-info-modal">
     <h4>{{'isUpdate' | translate}}</h4>
     <div class="checkbox">

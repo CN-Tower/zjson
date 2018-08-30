@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewEncapsulation, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewEncapsulation, TemplateRef } from '@angular/core';
 import { TranslateService, TranslationChangeEvent } from '@ngx-translate/core';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { toggleSlid } from './animations/toggle-slid';
@@ -6,7 +6,7 @@ import { AppService, APP_INFO } from './app.service';
 import { Configs } from './formatter/formatter.conf';
 import { Zjson } from './app.component.class';
 
-let originX: number;
+let workerW: number, sourceW: number, originX: number;
 
 @Component({
   selector: 'app-root',
@@ -17,7 +17,6 @@ let originX: number;
 })
 
 export class AppComponent extends Zjson implements OnInit, AfterViewInit {
-  @ViewChild('confirmTemplate') confirmTemplate: TemplateRef<any>;
 
   getFmtStr = () => $('.z-canvas').text();
   getFmtHists = () => this.fmtHists = this.appService.getFmtHists();
@@ -527,8 +526,9 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
     $('#z-resize').mousedown(function(e) {
       if ($win.width() > 1025) {
         originX = e.clientX;
-        $(document)
-        .on('mousemove', mouseMoveHandler)
+        workerW = $('#worker').width();
+        sourceW = $('#z-source').width();
+        $(document).on('mousemove', mouseMoveHandler)
         .one('mouseup', function() {
           $(this).off('mousemove', mouseMoveHandler);
         });
@@ -543,29 +543,15 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
     $('.src-text').blur();
     const $zSrce = $('#z-source');
     const $zJson = $('#z-jsonwd');
-    const ww = $('#worker').width();
-    const curX = e.clientX;
-    let deltaX;
-    if (curX !== originX) {
-      deltaX = curX - originX;
-      originX = curX;
-      const sw = $zSrce.width() + deltaX;
-      const jw = $zJson.width() - deltaX;
-      if (sw / ww > 0.35 || jw / ww > 0.35) {
-        if (deltaX < 0 && sw / ww > 0.35) {
-          $zSrce.width(sw);
-          $zJson.width(jw);
-        } else if (deltaX > 0 && jw / ww > 0.35) {
-          $zJson.width(jw);
-          $zSrce.width(sw);
-        }
-        const sp = ($zSrce.width() / ww) * 100;
-        const jp = 99 - sp;
-        $zJson.css('width', jp + '%');
-        $zSrce.css('width', sp + '%');
-        this.isOnLeft = Math.abs(sp - 35) < 0.1;
-      }
-    }
+    const deltaX = e.clientX - originX;
+    let srcW = sourceW + deltaX;
+    if (srcW / workerW < 0.35) srcW = workerW * 0.35;
+    if (srcW / workerW > 0.64) srcW = workerW * 0.64;
+    const srcP = (srcW / workerW) * 100;
+    $zSrce.css('width', srcP + '%');
+    $zJson.css('width', 99 - srcP + '%');
+    this.isOnLeft = Math.abs(srcP - 35) < 0.1;
+    return false;
   }
 
   /**
