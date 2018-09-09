@@ -1,19 +1,7 @@
 <div id="z-json" class="theme-{{theme}}">
-
-  <div *ngIf="isShowConfigs" class="model-shadow" (click)="toggleConfigs()"></div>
-  
-  <div id="alerts" class="alert alert-{{noticeType}} alert-dismissible" role="alert" [@toggleSlid]="noticeCtrl">
-    <button type="button" class="close" (click)="alertNotice(false)">
-      <span aria-hidden="true">&times;</span>
-    </button>
-    <strong>{{'warning' | translate}}</strong>&nbsp;&nbsp;{{noticeMsg}}
-  </div>
-
+  <zjs-hint></zjs-hint>
   <header>
-    <h2 class="ct z-json-hd">
-      {{'zjson' | translate}}
-      <h5 class="z-sub-hd">{{'dotNet' | translate}}</h5>
-    </h2>
+    <zjs-header></zjs-header>
     <!-- ============= STATUS ALERTS ============= -->
     <div class="z-fmt-alts">
       <div class="alert alert-info alert-dismissible" (click)="toggleConfigs()">
@@ -159,46 +147,13 @@
             <span *ngIf="!isSrcMax && isOnLeft" class="z-sm-hide" (click)="pushToMiddle()">
               <i class="fa fa-columns z-op-icon" title="{{'pushToMiddle' | translate}}"></i>
             </span>
-            <span class="z-sm-hide" (click)="openModal(infoTpl)">
-              <i class="fa fa-info-circle z-op-icon" title="{{'versionInfo' | translate}}"></i>
-              <ng-template #infoTpl>
-                <div class="modal-header">
-                  <h4 class="modal-title pull-left">转杰森 | ZJSON</h4>
-                  <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="z-info-modal modal-body">
-                  <table>
-                    <tr>
-                      <td>{{'version' | translate}}:</td>
-                      <td>{{version}}</td>
-                    </tr>
-                    <tr>
-                      <td>{{'author' | translate}}:</td>
-                      <td>@CN-Tower</td>
-                    </tr>
-                    <tr>
-                      <td>{{'email' | translate}}:</td>
-                      <td>cntower@yahoo.com</td>
-                    </tr>
-                    <tr>
-                      <td>{{'qqGroup' | translate}}:</td>
-                      <td>174136590</td>
-                    </tr>
-                    <tr>
-                      <td>{{'updateTime' | translate}}:</td>
-                      <td>{{updateTime}}</td>
-                    </tr>
-                  </table>
-                </div>
-              </ng-template>
-            </span>
+            <zjs-info></zjs-info>
             <span class="z-ico-hd" (click)="clearSourc()">
               <i class="fa fa-trash z-op-icon" title="{{'clear' | translate}}"></i>
             </span>
             <span class="z-ico-hd" (click)="upload()">
               <i class="fa fa-upload z-op-icon" title="{{'upload' | translate}}"></i>
+              <input type="file" class="upload hide">
             </span> 
             <span *ngIf="!isSrcMax" class="z-ico-hd dropdown" dropdown>
               <i dropdownToggle class="fa fa-th-list z-op-icon dropdown-toggle" title="{{'saved' | translate}}"></i>
@@ -238,10 +193,7 @@
     </div>
     <!-- SOURCE END -->
 
-    <div id="z-resize" ondragstart="return false">
-      <span class="z-drager"></span>
-      <span class="z-drager"></span>
-    </div>
+    <div id="z-resize" ondragstart="return false"></div>
 
     <!-- ============= FMTED WINDOWS ============= -->
     <div id="z-jsonwd">
@@ -334,36 +286,8 @@
     </div>
     <!-- FMTED END -->
   </section>
-  <input type="file" class="upload hide">
+  <div *ngIf="isShowConfigs" class="model-shadow" (click)="toggleConfigs()"></div>
 </div>
 
-<!-- ============= UPDATE MODAL ============= -->
-<button id="updateBtn" class="hide" (click)="openModal(updateTpl)"></button>
-<ng-template #updateTpl>
-  <div class="modal-body text-center z-info-modal">
-    <h4>{{'isUpdate' | translate}}</h4>
-    <div class="checkbox">
-      <label>
-        <input type="checkbox" [(ngModel)]="isNoShowUdate"> {{'noMoreShow' | translate}}
-      </label>
-    </div>
-    <button type="button" class="btn btn-default" (click)="doUpdate()">
-      {{'downloadNow' | translate}}
-    </button>
-    <button type="button" class="btn btn-primary divider-left" (click)="cancelUpdate()">
-      {{'updateLater' | translate}}
-    </button>
-  </div>
-</ng-template><!-- MODAL END -->
-
-<!-- ============ LOADING SHADOW ============ -->
-<div *ngIf="isShowLoading" class="z-loading">
-  <div class="loadingBg"></div>
-  <div class="loadingText top45">
-    <div class="loadingGif">
-      <div class="loader ball-clip-rotate-multiple">
-        <div></div><div></div>
-      </div>
-    </div>
-  </div>
-</div><!-- LOADING END -->
+<zjs-loading *ngIf="isShowLoading"></zjs-loading>
+<zjs-update *ngIf="isShowLoading"></zjs-update>

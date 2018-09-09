@@ -2,13 +2,13 @@
     "extends": "../tslint.json",
     "rules": {
         "directive-selector": [
-            true,
+            false,
             "attribute",
             "app",
             "camelCase"
         ],
         "component-selector": [
-            true,
+          false,
             "element",
             "app",
             "kebab-case"

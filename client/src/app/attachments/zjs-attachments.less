@@ -1,0 +1,64 @@
+#zjs-hint {
+  position: fixed;
+  top: 20px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-left: 5px solid;
+  height: 50px;
+  z-index: 10;
+  &.alert-success {
+    border-left-color: #3c763d;
+  }
+  &.alert-danger {
+    border-left-color: #a94442;
+  }
+}
+
+#zjs-header {
+  width: 200px;
+  height: 40px;
+  margin: 0 auto 14px;
+  line-height: 38px;
+  font-weight: bold;
+  h5.z-sub-hd {
+    display: inline;
+  }
+  &:before, &:after{
+    content: " ";
+    display: block;
+    position: absolute;
+    width: 200px;
+    height: 50px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    z-index: 10;
+    box-sizing: border-box;
+    -webkit-animation: clipAni 16s infinite linear;
+    -moz-animation: clipAni 16s infinite linear;
+    animation: clipAni 16s infinite linear;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  &:before{
+    -webkit-animation-delay: -8s;
+    -moz-animation-delay: -8s;
+    -o-animation-delay: -8s;
+    animation-delay: -8s;
+  }
+  @keyframes clipAni {
+    0%, 100% {
+      clip: rect(49px,200px,51px,0px);
+    }
+    25% {
+      clip: rect(0px,1px,51px,0px);
+    }
+    50% {
+      clip: rect(0px,200px,1px,0px);
+    }
+    75% {
+      clip: rect(0px,200px,51px,199px);
+    }
+  }
+}

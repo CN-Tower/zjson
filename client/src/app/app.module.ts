@@ -8,11 +8,12 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { AppService } from './app.service';
+import { SharedMQService } from './shared/index';
 import { BsDropdownModule, ModalModule } from 'ngx-bootstrap';
-
-export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-}
+import {
+  ZjsHintComponent, ZjsHeaderComponent, ZjsNoticeComponent,
+  ZjsInfoComponent, ZjsLoadingComponent, ZjsUpdateComponent
+} from './attachments';
 
 @NgModule({
   imports: [
@@ -24,7 +25,7 @@ export function createTranslateLoader(http: HttpClient) {
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
-        useFactory: (createTranslateLoader),
+        useFactory: (http: HttpClient) => new TranslateHttpLoader(http, './assets/i18n/', '.json'),
         deps: [HttpClient]
       }
     }),
@@ -32,10 +33,17 @@ export function createTranslateLoader(http: HttpClient) {
     ModalModule.forRoot()
   ],
   declarations: [
-    AppComponent
+    AppComponent,
+    ZjsHintComponent,
+    ZjsHeaderComponent,
+    ZjsNoticeComponent,
+    ZjsInfoComponent,
+    ZjsLoadingComponent,
+    ZjsUpdateComponent
   ],
   providers: [
-    AppService
+    AppService,
+    SharedMQService
   ],
   bootstrap: [AppComponent]
 })

@@ -1,21 +1,18 @@
 import { Configs, FmtStatus, FmterEles } from './formatter/formatter.conf';
-import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
-import { Formatter } from './formatter/formatter.main';
+import { Formatter } from './formatter/formatter.core';
 import { APP_INFO } from './app.service';
 
-export class Zjson {
+export class ZjsApp {
   appUrl: string = APP_INFO.appUrl;
   conf: Configs;
   lang: string;
   version: string;
   remoteVersion: string;
-  updateTime: string;
   sharedLink: string;
   isOnLeft: boolean = true;
   isOnInit: boolean = true;
   isPageActive: boolean = true;
   isShowLoading: boolean = false;
-  isNoShowUdate: boolean = false;
   updateUrl: string = '';
   isWindowBig: boolean;
   sourcest: string = '';
@@ -28,9 +25,6 @@ export class Zjson {
   maxFmtSize: any = null;
   isSrcMax: boolean = false;
   isFmtMax: boolean = false;
-  noticeCtrl: string = 'hide';
-  noticeMsg: string = '';
-  noticeType: 'success'|'danger'|null = null;
   isModelExpand: boolean = false;
   isFmtedEditAb: boolean = true;
   isShowConfigs: boolean = false;
@@ -41,7 +35,6 @@ export class Zjson {
   altMsgs: any = {};
   stArr: number[] = [];
   stIdx: number = 0;
-  modalRef: BsModalRef;
   eles: FmterEles = new FmterEles();
   fmtSt: FmtStatus = new FmtStatus();
   formatter: Formatter = new Formatter();
@@ -49,8 +42,7 @@ export class Zjson {
   alertType: 'info'|'success'|'warning'|'danger' = 'info';
   greeting: string;
   themes: any[] = [
-    'dark', 'abyss', 'blue', 'red', 'kimbie',
-    'moonlight', 'solarized', 'light'
+    'light', 'solarized', 'dark', 'red', 'kimbie', 'moonlight', 'blue', 'abyss'
   ];
   languages: any = {
     en: {long: 'English', short: 'EN'},

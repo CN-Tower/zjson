@@ -1,22 +1,20 @@
 import { Component, OnInit, AfterViewInit, ViewEncapsulation, TemplateRef } from '@angular/core';
 import { TranslateService, TranslationChangeEvent } from '@ngx-translate/core';
-import { BsModalService } from 'ngx-bootstrap/modal';
-import { toggleSlid } from './animations/toggle-slid';
-import { AppService, APP_INFO } from './app.service';
+import { AppService } from './app.service';
+import { SharedMQService } from './shared/index';
+import { ZjsApp } from './app.component.class';
 import { Configs } from './formatter/formatter.conf';
-import { Zjson } from './app.component.class';
 
 let workerW: number, sourceW: number, originX: number;
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.less'],
-  animations: [toggleSlid],
+  styleUrls: ['./app.component.less', './shared/theme.less'],
   encapsulation: ViewEncapsulation.None
 })
 
-export class AppComponent extends Zjson implements OnInit, AfterViewInit {
+export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
 
   getFmtStr = () => $('.z-canvas').text();
   getFmtHists = () => this.fmtHists = this.appService.getFmtHists();
@@ -24,7 +22,7 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
   constructor(
     private translate: TranslateService,
     private appService: AppService,
-    private modalService: BsModalService
+    private mqService: SharedMQService
   ) {
     super();
     const lang = this.appService.getAppLang() || translate.getBrowserLang();
@@ -32,8 +30,6 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
     translate.setDefaultLang('zh');
     this.lang = lang.match(/en|zh/) ? lang : 'zh';
     translate.use(this.lang);
-    this.version = APP_INFO.version;
-    this.updateTime = APP_INFO.updateTime;
     this.greeting = this.appService.getGreeting(this.lang);
     this.conf = new Configs();
     this.appService.initFmtHists();
@@ -124,16 +120,8 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
   /**
    * 弹出操作通知
    * =================================*/
-  alertNotice(message: string|boolean, type: 'danger'|'success' = 'success') {
-    if (message === false) {
-      this.noticeCtrl = 'hide';
-      fn.timeout('alert-success-msg', false);
-    } else if (typeof message === 'string') {
-      this.noticeCtrl = 'show';
-      this.noticeMsg = message;
-      this.noticeType = type;
-      fn.timeout('alert-success-msg', 2500, () => this.noticeCtrl = 'hide');
-    }
+  alertNotice(message: string, type: 'danger'|'success' = 'success') {
+    this.mqService.showHint({hintMsg: message, hintType: type});
   }
 
   /**
@@ -718,13 +706,6 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
   }
 
   /**
-   * 打开模态框
-   * =================================*/
-  openModal(template: TemplateRef<any>) {
-    this.modalRef = this.modalService.show(template, {class: 'modal-sm'});
-  }
-
-  /**
    * 检测、轮询、刷新APP
    * =================================*/
   checkAndUpdateApp() {
@@ -749,22 +730,6 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
     *//**electron enable end_*/
     this.pollingVisitCount();
     fn.interval('polling-visit-count', 15000, () => this.pollingVisitCount());
-  }
-
-  /**
-   * 检测App版本
-   * =================================*/
-  doUpdate() {
-    win.openUrl(this.updateUrl);
-    this.modalRef.hide();
-  }
-
-  /**
-   * 检测App版本
-   * =================================*/
-  cancelUpdate() {
-    if (this.isNoShowUdate) this.appService.setIgnoreVersion(this.remoteVersion);
-    this.modalRef.hide();
   }
 
   /**
@@ -890,6 +855,6 @@ export class AppComponent extends Zjson implements OnInit, AfterViewInit {
 
   showLoading() {
     this.isShowLoading = true;
-    fn.timeout(2500, () => this.isShowLoading = false);
+    fn.timeout(3000, () => this.isShowLoading = false);
   }
 }

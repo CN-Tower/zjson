@@ -1,0 +1,54 @@
+.clear-fix {
+  &:after {
+    content:"";
+    display:block;
+    clear:both;
+  }
+}
+
+.init-theme (@bg-color, @tt-color, @bd-color) {
+  background: @bg-color;
+  header {
+    .z-fmt-alts .alert-info {
+      background-color: @tt-color;
+      color: inherit;
+      border: none;
+    }
+    .z-conf-table {
+      th, td {
+        border-right: 1px solid @bd-color;
+      }
+      th {
+        border-bottom: 1px solid @bd-color;
+      }
+    }
+    .z-conf-wp {
+      .row {
+        background: @tt-color;
+        border-radius: 4px;
+        .conf-item {
+          background: @tt-color;
+          border: 1px solid @bd-color;
+          .dropdown-toggle {
+            background: @bg-color;
+            color: inherit;
+          }
+        }
+      }
+    }
+  }
+  #worker {
+    .panel {
+      border: 1px solid @tt-color;
+      background-color: @bg-color;
+      .panel-heading {
+        background-color: @tt-color;
+        color: inherit;
+        border: none;
+      }
+    }
+    #z-container {
+      border: 1px solid @tt-color;
+    }
+  }
+}

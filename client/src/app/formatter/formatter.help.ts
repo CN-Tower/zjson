@@ -10,8 +10,8 @@ export class FmtHelp {
 
   /**
    * 描述: 获取剩余字符串
-   * @param src 
-   * @param num 
+   * @param src
+   * @param num
    */
   getSrcRest(src: string, num: number = 1): string {
     return src.length > num ? src.substr(num) : '';
@@ -19,8 +19,8 @@ export class FmtHelp {
 
   /**
    * 描述: 获取后半引号索引
-   * @param quo 
-   * @param rest 
+   * @param quo
+   * @param rest
    */
   getNextQuoIdx(quo: string, rest: string): number {
     for (let i = 0; i < rest.length; i ++) {

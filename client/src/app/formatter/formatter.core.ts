@@ -238,7 +238,7 @@ export class Formatter extends FmterEles {
     if (this.dt.src[0] === '\'') {
       this.ck.isSrcJson = false;
     }
-    let rest = this.help.getSrcRest(this.dt.src);
+    const rest = this.help.getSrcRest(this.dt.src);
     const restIdx = this.help.getNextQuoIdx(this.dt.src[0], rest);
     this.chkExpect(this.dt.src[0]);
     if (restIdx > -1) {
