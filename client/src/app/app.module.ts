@@ -11,8 +11,12 @@ import { AppService } from './app.service';
 import { SharedMQService } from './shared/index';
 import { BsDropdownModule, ModalModule } from 'ngx-bootstrap';
 import {
-  ZjsHintComponent, ZjsHeaderComponent, ZjsNoticeComponent,
-  ZjsInfoComponent, ZjsLoadingComponent, ZjsUpdateComponent
+  AppConfigComponent, ConfigLangComponent, ConfigThemeComponent,
+  ConfigIndentComponent, ConfigTypeComponent
+} from './app-config/index';
+import {
+  ZjsHintComponent, ZjsTitleComponent, ZjsNoticeComponent, ZjsInfoComponent,
+  ZjsHistComponent, ZjsLoadingComponent, ZjsUpdateComponent
 } from './attachments';
 
 @NgModule({
@@ -34,10 +38,16 @@ import {
   ],
   declarations: [
     AppComponent,
+    AppConfigComponent,
+    ConfigLangComponent,
+    ConfigThemeComponent,
+    ConfigIndentComponent,
+    ConfigTypeComponent,
     ZjsHintComponent,
-    ZjsHeaderComponent,
+    ZjsTitleComponent,
     ZjsNoticeComponent,
     ZjsInfoComponent,
+    ZjsHistComponent,
     ZjsLoadingComponent,
     ZjsUpdateComponent
   ],

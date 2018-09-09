@@ -1,46 +1,50 @@
 @import './shared/shared-styles.less';
 
+@media (max-width: 768px) {
+  .z-lang-bg, .z-ico-hd, .z-drager, .z-ptt-long, .z-vc-long {
+    display: none !important;
+  }
+  .conf-info-item, .z-ptt-short.hide {
+    display: block !important;
+  }
+  .z-lang-sm, .z-vc-short {
+    display: inline !important;
+  }
+  .z-src-btn.fl, .z-fmt-btn.fr {
+    float: none;
+  }
+  .z-fmt-btn-wp {
+    min-width: 320px;
+  }
+}
+@media (max-width: 1025px) {
+  #configs .panel {
+    margin-bottom: 0;
+  }
+  .z-sm-hide, .z-fmt-alts, #z-notice-text {
+    display: none !important;
+  }
+}
+.modal-title {
+  color: #333333;
+}
+.z-info-modal {
+  color: #333333;
+  table tr td{
+    &:nth-child(1) {
+      text-align: right;
+    }
+    &:nth-child(2) {
+      padding-left: 4px;
+    }
+  }
+  .divider-left {
+    margin-left: 4px;
+  }
+}
+
 #z-json {
   padding-top: 25px;
-  ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  } 
-  ::-webkit-scrollbar-button {
-    display: none;
-  }  
-  ::-webkit-scrollbar-track, ::-webkit-scrollbar-track-piece {
-    background: -webkit-gradient(linear,left);
-  }
-  ::-webkit-scrollbar-track-piece {
-    background: transparent;
-  }
-  /* ======================== Z-JSON COMMON ========================= */
-  @media (max-width: 768px) {
-    .z-lang-bg, .z-ico-hd, .z-drager, .z-ptt-long, .z-vc-long {
-      display: none !important;
-    }
-    .conf-info-item, .z-ptt-short.hide {
-      display: block !important;
-    }
-    .z-lang-sm, .z-vc-short {
-      display: inline !important;
-    }
-    .z-src-btn.fl, .z-fmt-btn.fr {
-      float: none;
-    }
-    .z-fmt-btn-wp {
-      min-width: 320px;
-    }
-  }
-  @media (max-width: 1025px) {
-    #configs .panel {
-      margin-bottom: 0;
-    }
-    .z-sm-hide, .z-fmt-alts, #z-notice-text {
-      display: none !important;
-    }
-  }
   .z-op-icon {
     cursor: pointer;
     &:hover {
@@ -62,106 +66,25 @@
     height: 100%;
     z-index: 998;
   }
-  .rotate90 {
-    transform: rotate(90deg);
-  }
-  section {
-    .clear-fix;
-    padding: 10px 20px;
-  }
   .z-code-container {
     margin-top: 0;
     margin-bottom: 0;
     text-align: left;
   }
-  /* ======================== Z-JSON HEADER ========================= */
   header {
     padding: 0 20px;
     position: relative;
-    .z-fmt-alts {
-      position: fixed;
-      top: 20px;
-      &:nth-of-type(1) {
-        z-index: 999;
-        cursor: pointer;
-        .alert {    
-          font-size: 14px;
-          padding: 0 38px 0 0;
-          margin-bottom: 0;
-          .z-conf-btn {
-            position: absolute;
-            right: 15px;
-            top: 15px;
-            transition: transform .5s;
-          }
-          .z-conf-table {
-            width: 100%;
-            font-size: 12px;
-            border-collapse: separate;
-            th, td {
-              height: 24px;
-              padding: 0 10px;
-              text-align: center;
-            }
-          }
-        }
-        .z-conf-wp {
-          margin-top: 2px;
-          display: none;
-          border-radius: 4px;
-          box-shadow: 0 6px 12px rgba(0,0,0,.175);
-          z-index: 998;
-          .z-conf-item {
-            .conf-item-wp {
-              margin-bottom: 0;
-              padding: 10px 15px;
-              position: relative;
-              .conf-item {
-                .clear-fix;
-                padding: 10px 15px;
-                border-radius: 3px;
-                .conf-tt {
-                  width: 100px;
-                  text-align: right;
-                  margin-right: 25px;
-                }
-                .conf-con {
-                  height: 65px;
-                  margin-left: 15px;
-                  .z-drop {
-                    margin-top: 10px;
-                    .dropdown-toggle {
-                      width: 122px;
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-      &:nth-of-type(2) {
-        right: 20px;
-        .alert {
-          position: relative;
-          height: 50px;
-          padding: 0 0 0 20px;
-          text-align: center;
-          line-height: 50px;
-          .alt-tt {
-            position: absolute;
-            left: 20px;
-          }
-          .z-greetings {
-            margin: 0 auto;
-            overflow: hidden;
-          }
-        }
-      }
+    .z-conf-wp {
+      margin-top: 2px;
+      display: none;
+      border-radius: 4px;
+      box-shadow: 0 6px 12px rgba(0,0,0,.175);
+      z-index: 998;
     }
   }
-  /* ======================== Z-JSON STAGE ========================= */
   #worker {
+    .clear-fix;
+    padding: 10px 20px;
     & > div {
       box-sizing: border-box;
       float: left;
@@ -191,6 +114,11 @@
         }
         .panel-body {
           height: calc(~"(100% - 38px)");
+          .zjs-editor {
+            height: 100%;
+            border: 1px solid #333;
+            border-radius: 4px;
+          }
         }
       }
       &#z-source {
@@ -388,20 +316,4 @@
     }
   }
 }
-.modal-title {
-  color: #333333;
-}
-.z-info-modal {
-  color: #333333;
-  table tr td{
-    &:nth-child(1) {
-      text-align: right;
-    }
-    &:nth-child(2) {
-      padding-left: 4px;
-    }
-  }
-  .divider-left {
-    margin-left: 4px;
-  }
-}
+

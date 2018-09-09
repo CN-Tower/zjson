@@ -27,8 +27,6 @@ export class ZjsApp {
   isFmtMax: boolean = false;
   isModelExpand: boolean = false;
   isFmtedEditAb: boolean = true;
-  isShowConfigs: boolean = false;
-  isConfOnSlid: boolean = false;
   isOriginEmpty: boolean = true;
   toggleConfTiele: string;
   theme: string;
@@ -41,17 +39,9 @@ export class ZjsApp {
   alertInfo: any = {type: '', idx: NaN, brc: ''};
   alertType: 'info'|'success'|'warning'|'danger' = 'info';
   greeting: string;
-  themes: any[] = [
-    'light', 'solarized', 'dark', 'red', 'kimbie', 'moonlight', 'blue', 'abyss'
-  ];
-  languages: any = {
-    en: {long: 'English', short: 'EN'},
-    zh: {long: '中文（简体）', short: '中文'}
-  };
   i18n: any = {
     confs: {show: '', hide: ''},
     model: {expand: '', combine: ''},
-    type:  {json: 'Json', jsObj: 'JsObj'},
     alert: {ost: '', col: '', val: '', end: '', war: '', scc: ''}
   };
   getTimeStr = () => fn.fmtDate('MM-dd hh:mm:ss');

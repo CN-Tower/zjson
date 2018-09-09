@@ -1,14 +1,14 @@
 import { Component} from '@angular/core';
 
 @Component({
-  selector: 'zjs-header',
+  selector: 'zjs-title',
   template: `
-    <h2 id="zjs-header" class="ct">
+    <h2 id="zjs-title" class="ct">
       {{'zjson' | translate}}
       <h5 class="z-sub-hd">{{'dotNet' | translate}}</h5>
     </h2>`,
   styleUrls: ['./zjs-attachments.less']
 })
-export class ZjsHeaderComponent {
+export class ZjsTitleComponent {
   constructor() { }
 }

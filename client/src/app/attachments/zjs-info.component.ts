@@ -1,6 +1,6 @@
-import { Component, Input, TemplateRef} from '@angular/core';
+import { Component, TemplateRef} from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
-import { AppService, APP_INFO } from '../app.service';
+import { APP_INFO } from '../app.service';
 
 @Component({
   selector: 'zjs-info',

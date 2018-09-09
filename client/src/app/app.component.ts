@@ -67,7 +67,13 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
   /**
    * 执行json格式化
    * =================================*/
-  doFormate(fmtSrc: string, isSilence?: boolean) {
+  doFormate(fmtSrc?: string, isSilence?: boolean) {
+    if (fmtSrc === undefined) {
+      fmtSrc = this.sourcest;
+    } else if (typeof fmtSrc === 'boolean') {
+      isSilence = fmtSrc;
+      fmtSrc = this.sourcest;
+    }
     this.isOriginEmpty = !this.formated;
     if (!this.sourcest && !this.fmtSourcest && !isSilence) {
       this.alertNotice(this.translate.instant('_format'), 'danger');
@@ -386,29 +392,6 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
   }
 
   /**
-   * 配置选项
-   * =================================*/
-  toggleConfigs() {
-    if (!this.isConfOnSlid) {
-      this.isConfOnSlid = true;
-      if (this.isShowConfigs) {
-        this.isShowConfigs = false;
-        $('.z-conf-wp').slideUp(() => {
-          this.isConfOnSlid = false;
-          this.onWindowResize(true);
-        });
-      } else {
-        this.isShowConfigs = true;
-        $('.z-conf-wp').slideDown(() => {
-          this.isConfOnSlid = false;
-          this.onWindowResize(true);
-        });
-      }
-      this.onWindowResize(true);
-    }
-  }
-
-  /**
    * 问候语动画
    * ===================================*/
   animateGreeting() {
@@ -436,7 +419,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
   /**
    * 改变window大小
    * ===================================*/
-  onWindowResize(isAnimate: boolean = false) {
+  onWindowResize() {
     const $win = $(win);
     const $maxPanel = $('.z-maximal');
     const $work = $('#worker');

@@ -1,138 +1,22 @@
 <div id="z-json" class="theme-{{theme}}">
+
   <zjs-hint></zjs-hint>
-  <header>
-    <zjs-header></zjs-header>
-    <!-- ============= STATUS ALERTS ============= -->
-    <div class="z-fmt-alts">
-      <div class="alert alert-info alert-dismissible" (click)="toggleConfigs()">
-        <span class="z-conf-btn fr" [class.rotate90]="isShowConfigs"
-              [attr.title]="isShowConfigs ? i18n.confs.hide : i18n.confs.show">
-          <i class="fa fa-bars z-op-icon"></i>
-        </span>
-        <table class="z-conf-table">
-          <thead>
-            <tr>
-              <th><span>{{'lang' | translate}}</span></th>
-              <th>{{'theme' | translate}}</th>
-              <th>{{'indent' | translate}}</th>
-              <th>{{'type' | translate}}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><span>{{languages[lang].long}}</span></td>
-              <td class="capitalize">{{theme}}</td>
-              <td>{{conf.indent}} {{'space' | translate}}</td>
-              <td>{{i18n.type[conf.type]}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="z-conf-wp container-fluid">
+
+  <header class="app-header">
+    <app-config [conf]="conf" [lang]="lang" [theme]="theme">
+      <div id="config-items" class="z-conf-wp container-fluid">
         <div class="z-conf-item row">
-            <!-- ============= MODEL CONFIG ============= -->
-            <div class="conf-item-wp col-lg-12">
-              <div class="conf-item">
-                <h4 class="conf-tt fl">{{'lang' | translate}}<br>{{'lang_' | translate}}</h4>
-                <div class="conf-con fl">
-                  <div class="z-drop z-language-drop dropdown" dropdown>
-                    <button dropdownToggle class="btn btn-default dropdown-toggle" type="button">
-                      <span class="z-lang-bg">{{languages[lang].long}} </span><span class="z-lang-sm hide">{{languages[lang].short}} </span>
-                      <span class="caret"></span>
-                    </button>
-                    <ul *dropdownMenu class="dropdown-menu">
-                      <li><a href="javascript:;" (click)="selectLanguage('en')">English</a></li>
-                      <li><a href="javascript:;" (click)="selectLanguage('zh')">中文(简体)</a></li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- MODEL END -->
-  
-            <!-- ============= THEME CONFIG ============= -->
-            <div class="conf-item-wp col-lg-12">
-              <div class="conf-item">
-                <h4 class="conf-tt fl">{{'theme' | translate}}</h4>
-                <div class="conf-con fl">
-                  <div class="z-drop z-theme-drop dropdown" dropdown>
-                    <button dropdownToggle class="btn btn-default dropdown-toggle capitalize" type="button">
-                      {{theme}}
-                      <span class="caret"></span>
-                    </button>
-                    <ul *dropdownMenu class="dropdown-menu" (click)="doFormate(sourcest, true)">
-                      <li *ngFor="let them of themes">
-                        <a href="javascript:;" (click)="onChangeTheme(them)" class="capitalize">{{them}}</a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- THEME END -->
+          <config-lang class="col-lg-12" [conf]="conf" [lang]="lang" (selectLanguage)="selectLanguage($event)"></config-lang>
+          <config-theme class="col-lg-12" [conf]="conf" [theme]="theme" (changeTheme)="onChangeTheme($event)"></config-theme>
+          <config-indent class="col-lg-12" [conf]="conf" (doFormate)="doFormate($event)"></config-indent>
+          <config-type class="col-lg-12" [conf]="conf" (doFormate)="doFormate($event)"></config-type>
+        </div>
+      </div>
+    </app-config>
 
-            <!-- ============= INDENT CONFIG ============= -->
-            <div class="conf-item-wp col-lg-12">
-              <div class="conf-item">
-                <h4 class="conf-tt fl">{{'indent' | translate}}</h4>
-                <div class="conf-con fl">
-                  <div class="z-drop z-indent-drop dropdown" dropdown>
-                    <button dropdownToggle [disabled]="conf.model!='expand'"
-                            class="btn btn-default dropdown-toggle" type="button">
-                      {{conf.indent}} {{'space' | translate}}&nbsp;
-                      <span class="caret"></span>
-                    </button>
-                    <ul *dropdownMenu class="dropdown-menu" (click)="doFormate(sourcest, true)">
-                      <li *ngFor="let i of [1,2,3,4,5,6,7,8];">
-                        <a href="javascript:;" (click)="conf.indent = i">{{i}} {{'space' | translate}}</a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- INDENT END -->
+    <zjs-title></zjs-title>
 
-            <!-- ============== TYPE CONFIG ============== -->
-            <div class="conf-item-wp col-lg-12">
-              <div class="conf-item">
-                <h4 class="conf-tt fl">{{'type' | translate}}</h4>
-                <div class="conf-con fl">
-                  <div class="z-drop z-type-drop dropdown" dropdown>
-                    <button dropdownToggle class="btn btn-default dropdown-toggle" type="button">
-                      {{i18n.type[conf.type]}}&nbsp;
-                      <span class="caret"></span>
-                    </button>
-                    <ul *dropdownMenu class="dropdown-menu" (click)="doFormate(sourcest, true)">
-                      <li><a href="javascript:;" (click)="conf.type='json'">{{i18n.type.json}}</a></li>
-                      <li><a href="javascript:;" (click)="conf.type='jsObj'">{{i18n.type.jsObj}}</a></li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- TYPE END -->
-          </div>
-      </div>
-    </div>
-    <!-- ALERTS END -->
-    <!-- ============= STATUS ALERTS ============= -->
-    <div class="z-fmt-alts" [ngSwitch]="alertType">
-      <div class="alert alert-success alert-dismissible" *ngSwitchCase="'success'">
-        <strong class="fl alt-tt">{{'success' | translate}}</strong> {{alertMsg}}
-      </div>
-      <div class="alert alert-warning alert-dismissible" *ngSwitchCase="'warning'">
-        <strong class="fl alt-tt">{{'warning' | translate}}</strong> {{alertMsg}}
-      </div>
-      <div class="alert alert-danger alert-dismissible" *ngSwitchCase="'danger'">
-        <strong class="fl alt-tt">{{'error' | translate}}</strong> {{alertMsg}}
-      </div>
-      <div class="alert alert-info alert-dismissible" *ngSwitchDefault>
-        <strong class="fl alt-tt">{{'welecome'| translate}}</strong>
-        <div class="z-greetings"><div id="z-greeting">{{greeting}}</div></div>
-      </div>
-    </div>
-    <!-- ALERTS END -->
+    <zjs-notice [alertType]="alertType" [alertMsg]="alertMsg" [greeting]="greeting"></zjs-notice>
   </header> 
 
   <section id="worker">
@@ -142,10 +26,10 @@
         <div class="panel-heading no-select">
           <div class="z-panel-icos">
             <span *ngIf="!isSrcMax && !isOnLeft" class="z-sm-hide" (click)="pushToLeft()">
-              <i class="fa fa-hand-o-left z-op-icon" title="{{'pushToLeft' | translate}}"></i>
+              <i class="fa fa-step-backward z-op-icon" title="{{'pushToLeft' | translate}}"></i>
             </span>
             <span *ngIf="!isSrcMax && isOnLeft" class="z-sm-hide" (click)="pushToMiddle()">
-              <i class="fa fa-columns z-op-icon" title="{{'pushToMiddle' | translate}}"></i>
+              <i class="fa fa-pause z-op-icon" title="{{'pushToMiddle' | translate}}"></i>
             </span>
             <zjs-info></zjs-info>
             <span class="z-ico-hd" (click)="clearSourc()">
@@ -155,20 +39,12 @@
               <i class="fa fa-upload z-op-icon" title="{{'upload' | translate}}"></i>
               <input type="file" class="upload hide">
             </span> 
-            <span *ngIf="!isSrcMax" class="z-ico-hd dropdown" dropdown>
-              <i dropdownToggle class="fa fa-th-list z-op-icon dropdown-toggle" title="{{'saved' | translate}}"></i>
-              <ul *dropdownMenu id="hist-ops" class="dropdown-menu">
-                <li *ngIf="fmtHists.length==0">
-                  <a href="javascript:;">
-                    <i class="fa fa-exclamation-circle"></i>&nbsp;&nbsp;{{'noHist' | translate}}
-                  </a>
-                </li>
-                <li *ngFor="let hist of fmtHists">
-                  <a href="javascript:;" (click)="showOrRmFmtHist($event, hist)">
-                    <i class="fa fa-trash z-op-icon"></i>&nbsp;&nbsp;{{hist.name}}
-                  </a>
-                </li>
-              </ul>
+            <zjs-hist *ngIf="!isSrcMax" [fmtHists]="fmtHists" (showOrRmFmtHist)="showOrRmFmtHist($event)"></zjs-hist>
+            <span class="z-ico-hd" (click)="clearSourc()">
+              <i class="fa fa-magic z-op-icon" title="{{'clear' | translate}}"></i>
+            </span>
+            <span id="format-btn" *ngIf="!isSrcMax" (click)="doFormate(sourcest)">
+              <i class="fa fa-retweet z-op-icon-bg" title="{{'format' | translate}}"></i>
             </span>
             <span *ngIf="!isSrcMax" (click)="maximalPanel('src')">
               <i class="fa fa-window-maximize z-op-icon" title="{{'maximal' | translate}}"></i>
@@ -176,18 +52,18 @@
             <span *ngIf="isSrcMax" (click)="minimalPanel('src')">
               <i class="fa fa-window-restore z-op-icon" title="{{'minimal' | translate}}"></i>
             </span>
-            <span id="format-btn" *ngIf="!isSrcMax" (click)="doFormate(sourcest)">
-              <i class="fa fa-retweet z-op-icon-bg" title="{{'format' | translate}}"></i>
-            </span>
           </div>
           <h3 class="panel-title z-ptt-long">{{'source_' | translate}}</h3>
           <h3 class="panel-title z-ptt-short hide">{{'source' | translate}}</h3>
         </div>
         <div class="panel-body">
-          <textarea class="form-control src-text" rows="20"
+          <div id="source-container" class="zjs-editor">
+
+          </div>
+          <!-- <textarea class="form-control src-text" rows="20"
                     placeholder="{{'placeHolder' | translate}}"
                     (keydown)="onTextareaKeyDown($event)"
-                    [(ngModel)]="sourcest" (ngModelChange)="doFormate(sourcest, true)"></textarea>
+                    [(ngModel)]="sourcest" (ngModelChange)="doFormate(sourcest, true)"></textarea> -->
         </div>
       </div>
     </div>
@@ -218,14 +94,17 @@
             <span *ngIf="!isFmtMax" class="z-ico-hd" (click)="saveFmted()">
               <i class="fa fa-save z-op-icon" title="{{'save' | translate}}"></i>
             </span>
+            <span class="z-ico-hd" (click)="clearSourc()">
+              <i class="fa fa-columns z-op-icon" title="{{'clear' | translate}}"></i>
+            </span>
+            <span *ngIf="!isFmtMax" class="z-ico-hd" (click)="copyFmted()">
+              <i class="fa fa-clone z-op-icon" title="{{'copy' | translate}}"></i>
+            </span>
             <span *ngIf="!isFmtMax" (click)="maximalPanel('fmt')">
               <i class="fa fa-window-maximize z-op-icon" title="{{'maximal' | translate}}"></i>
             </span>
             <span *ngIf="isFmtMax" (click)="minimalPanel('fmt')">
               <i class="fa fa-window-restore z-op-icon" title="{{'minimal' | translate}}"></i>
-            </span>
-            <span *ngIf="!isFmtMax" class="z-ico-hd" (click)="copyFmted()">
-              <i class="fa fa-copy z-op-icon" title="{{'copy' | translate}}"></i>
             </span>
           </div>
           <h3 class="panel-title z-ptt-long">{{'fmted_' | translate}}</h3>
@@ -249,7 +128,10 @@
               </div>
             </div>
           </div>
-          <div id="z-container">
+          <div id="format-container" class="zjs-editor">
+
+          </div>
+          <!-- <div id="z-container">
             <div id="z-stage" [class.fullWidth]="!isModelExpand">
               <div *ngIf="!formated" id="z-notice-text" class="no-select">
                 <p>{{'zNotice' | translate}}</p>
@@ -260,12 +142,12 @@
                 <i class="fa fa-star"></i>&nbsp;<strong>{{'funclib' | translate}}:</strong>&nbsp;&nbsp;
                 <a class="links" target="_blank" href="http://github.com/CN-Tower/funclib.js">
                   http://github.com/CN-Tower/funclib.js
-                </a><br>
+                </a><br> -->
                 <!--electron ignore sta-->
-                <i class="fa fa-star"></i>&nbsp;<strong>{{'download_' | translate}}:</strong>&nbsp;&nbsp;
+                <!-- <i class="fa fa-star"></i>&nbsp;<strong>{{'download_' | translate}}:</strong>&nbsp;&nbsp;
                 <a class="links" target="_blank" href="{{updateUrl}}">
                   zjson-win32-x64.exe (v{{remoteVersion}})
-                </a><br>
+                </a><br> -->
                 <!--electron ignore end-->
                 <!--electron enable sta_--><!--
                 <i class="fa fa-star"></i>&nbsp;<strong>{{'website' | translate}}:</strong>&nbsp;&nbsp;
@@ -273,20 +155,19 @@
                   http://www.zjson.net
                 </a><br>
                 --><!--electron enable end_-->
-              </div>
+              <!-- </div>
               <div id="z-index" [style.height]="setRowIdxWpHeight()"></div>
               <pre *ngIf="isModelExpand" class="z-canvas"
                     [attr.contenteditable]="isFmtedEditAb"></pre>
               <div *ngIf="!isModelExpand" class="z-canvas z-colp"
                     [attr.contenteditable]="isFmtedEditAb"></div>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
     <!-- FMTED END -->
   </section>
-  <div *ngIf="isShowConfigs" class="model-shadow" (click)="toggleConfigs()"></div>
 </div>
 
 <zjs-loading *ngIf="isShowLoading"></zjs-loading>
