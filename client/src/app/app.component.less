@@ -114,10 +114,17 @@
         }
         .panel-body {
           height: calc(~"(100% - 38px)");
-          .zjs-editor {
+          .zjs-editor-wp {
             height: 100%;
             border: 1px solid #333;
             border-radius: 4px;
+            overflow: hidden;
+            .zjs-editor {
+              height: 100%;
+              .editor-container {
+                height: 100%;
+              }
+            }
           }
         }
       }
