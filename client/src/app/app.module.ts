@@ -10,6 +10,7 @@ import { AppComponent } from './app.component';
 import { AppService } from './app.service';
 import { SharedMQService } from './shared/index';
 import { BsDropdownModule, ModalModule } from 'ngx-bootstrap';
+import { MonacoEditorModule } from 'ngx-monaco-editor';
 import {
   AppConfigComponent, ConfigLangComponent, ConfigThemeComponent,
   ConfigIndentComponent, ConfigTypeComponent
@@ -34,7 +35,8 @@ import {
       }
     }),
     BsDropdownModule.forRoot(),
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
+    MonacoEditorModule.forRoot()
   ],
   declarations: [
     AppComponent,
