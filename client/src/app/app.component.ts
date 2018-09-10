@@ -15,7 +15,17 @@ let workerW: number, sourceW: number, originX: number;
 })
 
 export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
-
+  srcEditorOptions: any = {
+    theme: 'vs-dark',
+    language: 'javascript',
+    minimap: {
+      isEnabled: false
+    }
+  };
+  fmtEditorOptions: any = {
+    theme: 'vs-dark',
+    language: 'javascript'
+  };
   getFmtStr = () => $('.z-canvas').text();
   getFmtHists = () => this.fmtHists = this.appService.getFmtHists();
 
