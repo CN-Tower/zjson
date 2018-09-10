@@ -57,8 +57,8 @@
           <h3 class="panel-title z-ptt-short hide">{{'source' | translate}}</h3>
         </div>
         <div class="panel-body">
-          <div id="source-container" class="zjs-editor">
-
+          <div id="source-container" class="zjs-editor-wp">
+            <ngx-monaco-editor class="zjs-editor" [options]="srcEditorOptions" [(ngModel)]="sourcest"></ngx-monaco-editor>
           </div>
           <!-- <textarea class="form-control src-text" rows="20"
                     placeholder="{{'placeHolder' | translate}}"
@@ -128,8 +128,8 @@
               </div>
             </div>
           </div>
-          <div id="format-container" class="zjs-editor">
-
+          <div id="format-container" class="zjs-editor-wp">
+            <ngx-monaco-editor class="zjs-editor" [options]="fmtEditorOptions" [(ngModel)]="formated"></ngx-monaco-editor>
           </div>
           <!-- <div id="z-container">
             <div id="z-stage" [class.fullWidth]="!isModelExpand">
