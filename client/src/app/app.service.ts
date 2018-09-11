@@ -112,6 +112,14 @@ export class AppService {
     return window.localStorage['theme'] || 'dark';
   }
 
+  getEditorTheme(theme: string) {
+    return fn.match(theme, {
+      'dark': () => theme = 'vs-dark',
+      'light': () => theme = 'vs',
+      '@default': () => theme = 'vs-dark'
+    });
+  }
+
   setAppTheme(theme: string) {
     window.localStorage['theme'] = theme;
   }
