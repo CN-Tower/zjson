@@ -88,17 +88,17 @@ export class FmterEles {
   public rowIndex: Function = idx => {
     let rowIdxes = '<span class="z-idxes-wp fr">';
     String(idx).split('').forEach(i => {
-      rowIdxes += `<span class="z-idxes z-idx-${i}"></span>`
+      rowIdxes += `<span class="z-idxes z-idx-${i}"></span>`;
     });
     return `<span class="z-row-index no-select z-row-${idx}">${rowIdxes}</span></span>`;
-  };
+  }
   public brcPre: Function = (sig, cls, isNotEmpty = false) => {
     const id = isNotEmpty ? fn.rdid() : '';
     const eleId = id ? `id="${id}"` : '';
     const expanded = id ? 'expandable expanded' : '';
     const operator = id ? `<span class="operator expanded" data-id="${id}"></span>` : '';
     return `${operator}<span ${eleId} class="z-code z-brace z-${cls}-brace ${expanded}">${sig}<span class="z-obj-val">`;
-  };
+  }
   public brcEnd: Function = sig => `</span><span class="z-ellipsis"></span>${sig}</span>`;
   constructor() { }
 }
