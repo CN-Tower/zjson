@@ -13,7 +13,7 @@ import { Component, Input, Output, EventEmitter} from '@angular/core';
               {{conf.indent}} {{'space' | translate}}&nbsp;
               <span class="caret"></span>
             </button>
-            <ul *dropdownMenu class="dropdown-menu" (click)="doFormate.emit(true)">
+            <ul *dropdownMenu class="dropdown-menu" (click)="updateTabsize.emit()">
               <li *ngFor="let i of [1,2,3,4,5,6,7,8];">
                 <a href="javascript:;" (click)="conf.indent = i">{{i}} {{'space' | translate}}</a>
               </li>
@@ -26,7 +26,7 @@ import { Component, Input, Output, EventEmitter} from '@angular/core';
 })
 export class ConfigIndentComponent {
   @Input() conf: any = {model: '', indent: 2};
-  @Output() doFormate: EventEmitter<any> = new EventEmitter();
+  @Output() updateTabsize: EventEmitter<any> = new EventEmitter();
 
   constructor() { }
 }
