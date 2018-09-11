@@ -8,9 +8,9 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { AppService } from './app.service';
-import { SharedMQService } from './shared/index';
+import { SharedBroadcastService } from './shared/index';
 import { BsDropdownModule, ModalModule } from 'ngx-bootstrap';
-import { MonacoEditorModule } from 'ngx-monaco-editor';
+import { MonacoEditorComponent } from './monaco-editor/index';
 import {
   AppConfigComponent, ConfigLangComponent, ConfigThemeComponent,
   ConfigIndentComponent, ConfigTypeComponent
@@ -35,8 +35,7 @@ import {
       }
     }),
     BsDropdownModule.forRoot(),
-    ModalModule.forRoot(),
-    MonacoEditorModule.forRoot()
+    ModalModule.forRoot()
   ],
   declarations: [
     AppComponent,
@@ -45,6 +44,7 @@ import {
     ConfigThemeComponent,
     ConfigIndentComponent,
     ConfigTypeComponent,
+    MonacoEditorComponent,
     ZjsHintComponent,
     ZjsTitleComponent,
     ZjsNoticeComponent,
@@ -55,7 +55,7 @@ import {
   ],
   providers: [
     AppService,
-    SharedMQService
+    SharedBroadcastService
   ],
   bootstrap: [AppComponent]
 })
