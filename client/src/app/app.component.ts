@@ -1,11 +1,11 @@
 import { Component, OnInit, AfterViewInit, ViewEncapsulation, TemplateRef } from '@angular/core';
 import { TranslateService, TranslationChangeEvent } from '@ngx-translate/core';
 import { AppService } from './app.service';
-import { SharedMQService } from './shared/index';
+import { SharedBroadcastService, EditorModal } from './shared/index';
 import { ZjsApp } from './app.component.class';
 import { Configs } from './formatter/formatter.conf';
 
-let workerW: number, sourceW: number, originX: number;
+let editorW: number, sourceW: number, originX: number;
 
 @Component({
   selector: 'app-root',
@@ -15,26 +15,13 @@ let workerW: number, sourceW: number, originX: number;
 })
 
 export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
-  srcEditorOptions: any = {
-    theme: 'vs-dark',
-    language: 'text/plain',
-    minimap: {
-      isEnabled: false
-    }
-  };
-  fmtEditorOptions: any = {
-    theme: 'vs-dark',
-    language: 'json'
-  };
-  getFmtStr = () => $('.z-canvas').text();
-  getFmtHists = () => this.fmtHists = this.appService.getFmtHists();
 
   constructor(
+    public appService: AppService,
     private translate: TranslateService,
-    private appService: AppService,
-    private mqService: SharedMQService
+    private broadcast: SharedBroadcastService
   ) {
-    super();
+    super(appService);
     const lang = this.appService.getAppLang() || translate.getBrowserLang();
     translate.addLangs(['zh', 'en']);
     translate.setDefaultLang('zh');
@@ -63,7 +50,6 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     this.animateGreeting();
     this.initAppStyles();
     this.fixCodeZoneWidth();
-    this.rowIndexStayLeft();
     this.initSearchIptEvent();
     this.initUploadEvent();
     this.initOpenDragEvent();
@@ -77,7 +63,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
   /**
    * 执行json格式化
    * =================================*/
-  doFormate(fmtSrc?: string, isSilence?: boolean) {
+  doFormate(fmtSrc?: any, isSilence?: boolean) {
     if (fmtSrc === undefined) {
       fmtSrc = this.sourcest;
     } else if (typeof fmtSrc === 'boolean') {
@@ -104,11 +90,9 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
         this.isOriginEmpty = !this.formated;
         this.isModelExpand = this.conf.model === 'expand';
         fn.defer(() => {
-          $('.z-canvas').html(html);
           this.addScrollTop(0);
           this.initStIdx();
-          this.trigglerZfmtEvents();
-          this.redFmtedErrorRow();
+          this.revealErrorRow();
           this.fmtSourcest = fmtSrc;
         });
       });
@@ -126,62 +110,36 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
   }
 
   /**
-   * 阻止原代码窗的Tab事件
-   * =================================*/
-  onTextareaKeyDown(e: any) {
-    e = e || win.event;
-    if (e.key === 'Tab' || e.keyCode === 9) return false;
-  }
-
-  /**
    * 弹出操作通知
    * =================================*/
   alertNotice(message: string, type: 'danger'|'success' = 'success') {
-    this.mqService.showHint({hintMsg: message, hintType: type});
-  }
-
-  /**
-   * 格式化后的代码折叠和展开事件
-   * =================================*/
-  trigglerZfmtEvents() {
-    const $oprs = $('.operator').click(function() {
-      const $this = $(this);
-      if ($this.hasClass('expanded')) {
-        $this.removeClass('expanded').addClass('collapsed');
-        $(`#${$this.data('id')}`).removeClass('expanded').addClass('collapsed');
-      } else {
-        $this.removeClass('collapsed').addClass('expanded');
-        $(`#${$this.data('id')}`).removeClass('collapsed').addClass('expanded');
-      }
-    });
-    const $elps = $('.z-ellipsis').click(function() {
-      $(this)
-      .parent().removeClass('collapsed').addClass('expanded')
-      .prev().removeClass('collapsed').addClass('expanded');
-    });
-    [$oprs, $elps, $('.z-row-index')].forEach($ele => {
-      $ele.hover(() => this.isFmtedEditAb = false, () => this.isFmtedEditAb = true);
-    });
+    this.broadcast.showHint({hintMsg: message, hintType: type});
   }
 
   /**
    * 给错误行设置红底
    * =================================*/
-  redFmtedErrorRow() {
-    if (!this.fmtSt.isSrcValid) {
-      const errIdx = this.fmtSt.errRowIdx;
-      const scrollTop = errIdx * 18 - 240;
-      this.scrollTo(scrollTop);
-      this.addScrollTop(scrollTop);
-      const caret_ = '<span class="z-hint-caret"><i class="fa fa-caret-right"></i><span>';
-      const $errRow = $(`.z-row-${errIdx}`).append(caret_);
-      const redNext: Function = $next => {
-        if ($next.hasClass('z-code')) {
-          $next.addClass('bg-red');
-          redNext($next.next());
-        }
-      };
-      redNext($errRow.next());
+  revealErrorRow() {
+    if (this.fmtEditor) {
+      if (!this.fmtSt.isSrcValid) {
+        const errRowIdx = this.fmtSt.errRowIdx;
+        this.fmtEditor.revealPositionInCenter({ lineNumber: errRowIdx, column: 1 });
+        fn.defer(() => this.errRowDecorations = this.fmtEditor.deltaDecorations([], [
+          {
+            range: new win.monaco.Range(errRowIdx, 1, errRowIdx, 1),
+            options: {
+              isWholeLine: true,
+              className: 'myContentClass',
+              glyphMarginClassName: 'myGlyphMarginClass'
+            }
+          }
+        ]));
+        // const scrollTop = errIdx * 18 - 240;
+        // this.scrollTo(scrollTop);
+        // this.addScrollTop(scrollTop);
+      } else {
+        this.fmtEditor.deltaDecorations(this.errRowDecorations, []);
+      }
     }
   }
 
@@ -191,12 +149,9 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
   onChangeTheme(them: string) {
     if (this.theme !== them) {
       this.theme = them;
-      let fontColor = '#999999';
-      if (fn.contains(['light', 'solarized'], them)) fontColor = '#333333';
-      $('body').css('color', fontColor);
-      $('#z-source textarea.src-text').css('color', fontColor);
       this.appService.setAppTheme(them);
     }
+    this.updateTheme(them);
   }
 
   /**
@@ -206,10 +161,10 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     let panel;
     if (type === 'src') {
         this.isSrcMax = true;
-        panel = $('#z-source .panel')[0];
+        panel = $('#zjs-source .panel')[0];
     } else if (type === 'fmt') {
         this.isFmtMax = true;
-        panel = $('#z-jsonwd .panel')[0];
+        panel = $('#zjs-format .panel')[0];
     }
     fn.fullScreen(panel);
     fn.interval('checkIsFullScreen', 100, () => {
@@ -236,8 +191,8 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
    * 最小化窗口
    * =================================*/
   minimalPanel(type?: 'src'|'fmt') {
-    fn.exitFullScreen($('#z-source .panel')[0]);
-    fn.exitFullScreen($('#z-jsonwd .panel')[0]);
+    fn.exitFullScreen($('#zjs-source .panel')[0]);
+    fn.exitFullScreen($('#zjs-format .panel')[0]);
     fn.fullScreenChange(false);
     this.isSrcMax = false;
     this.isFmtMax = false;
@@ -258,7 +213,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
    * =================================*/
   download() {
     if (this.formated) {
-      const blob = new Blob([this.getFmtStr()], {type: ''});
+      const blob = new Blob([this.formated], {type: ''});
       saveAs(blob, `zjson-${String(fn.time()).substr(-6)}.json`);
     } else {
       this.alertNotice(this.translate.instant('_download'), 'danger');
@@ -269,8 +224,9 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
    * 窗口推到左边
    * =================================*/
   pushToLeft() {
-    $('#z-source').animate({width: '35%'}, 500);
-    $('#z-jsonwd').animate({width: '64%'}, 500);
+    this.asyncEditorWidth();
+    this.animateEditorWidth('source', '35%');
+    this.animateEditorWidth('format', '64%');
     this.isOnLeft = true;
   }
 
@@ -278,23 +234,39 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
    * 窗口推到中间
    * =================================*/
   pushToMiddle() {
-    if ($('#z-source').width() / $('#worker').width() >= 0.495) {
-      $('#z-source').animate({width: '49.5%'}, 500);
-      $('#z-jsonwd').animate({width: '49.5%'}, 500);
+    this.asyncEditorWidth();
+    if ($('#zjs-source').width() / $('#zjs-editors').width() >= 0.495) {
+      this.animateEditorWidth('source', '49.5%');
+      this.animateEditorWidth('format', '49.5%');
     } else {
-      $('#z-jsonwd').animate({width: '49.5%'}, 500);
-      $('#z-source').animate({width: '49.5%'}, 500);
+      this.animateEditorWidth('format', '49.5%');
+      this.animateEditorWidth('source', '49.5%');
     }
     this.isOnLeft = false;
+  }
+
+  asyncEditorWidth() {
+    fn.interval('asyncSrcEdtW', 0, () => this.updateSourceEditor());
+    fn.interval('asyncFmtEdtW', 0, () => this.updateFormatEditor());
+  }
+
+  animateEditorWidth(editor: EditorModal, percent: string) {
+    fn.match(editor, {
+      'source': () => $('#zjs-source').animate({width: percent}, 500, () => {
+        fn.interval('asyncSrcEdtW', false);
+      }),
+      'format': () => $('#zjs-format').animate({width: percent}, 500, () => {
+        fn.interval('asyncFmtEdtW', false);
+      })
+    });
   }
 
   /**
    * 右边的内容显示到左边
    * =================================*/
   showInLeft() {
-    this.sourcest = this.getFmtStr();
+    this.sourcest = this.formated;
     $('.src-text').scrollTop(0);
-    this.doFormate(this.sourcest);
   }
 
   /**
@@ -303,14 +275,13 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
   saveFmted() {
     const svTime = this.getTimeStr();
     if (this.formated) {
-      const fmted = this.getFmtStr();
-      this.sourcest = fmted;
+      this.sourcest = this.formated;
       if (this.saveFmtTime !== svTime) {
         this.saveFmtTime = svTime;
-        const fmtPre = fmted.replace(/[\s\n]/mg, '');
+        const fmtPre = this.formated.replace(/[\s\n]/mg, '');
         const appdix = fmtPre.length > 15 ? fmtPre.substr(0, 15) + ' ...' : fmtPre;
         const histName = this.saveFmtTime + ` ( ${appdix} )`;
-        const hist = {src: fmted, name: histName};
+        const hist = {src: this.formated, name: histName};
         this.appService.setFmtHists(hist);
         this.getFmtHists();
         this.alertNotice(this.translate.instant('saveSuccess'), 'success');
@@ -323,13 +294,13 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
   /**
    * 显示历史记录
    * =================================*/
-  showOrRmFmtHist(e: any, hist: any) {
-    if (e.target.tagName === 'I') {
-      this.appService.rmvFmtHists(hist);
+  showOrRmFmtHist($e: any) {
+    if ($e.e.target.tagName === 'I') {
+      this.appService.rmvFmtHists($e.hist);
       this.getFmtHists();
       this.alertNotice(this.translate.instant('removeSavedSuccess'), 'success');
     } else {
-      this.sourcest = hist.src;
+      this.sourcest = $e.hist.src;
       this.doFormate(this.sourcest);
     }
   }
@@ -339,7 +310,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
    * =================================*/
   copyFmted() {
     if (this.formated) {
-      fn.copyText(this.getFmtStr());
+      fn.copyText(this.formated);
       this.alertNotice(this.translate.instant('copySuccess'), 'success');
     } else {
       this.alertNotice(this.translate.instant('_copy'), 'danger');
@@ -372,7 +343,6 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
    * 执行清空
    * =================================*/
   emptyFmt() {
-    $('.z-canvas').html('');
     this.alertType = 'info';
     this.formated = '';
     this.fmtSourcest = '';
@@ -386,19 +356,8 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
    * 全部展开
    * =================================*/
   expandAll() {
-    if ($('.z-canvas').html()) this.doFormate(this.getFmtStr());
-  }
-
-  /**
-   * 全部收起
-   * =================================*/
-  collapseAll() {
-    const $firstOpBtn = $('.operator').eq(0);
-    if ($firstOpBtn.hasClass('expanded')) {
-      $firstOpBtn.click();
-    } else {
-      this.alertNotice(this.translate.instant('_collapse'), 'danger');
-    }
+    this.doFormate(this.formated);
+    this.updateFormatEditor();
   }
 
   /**
@@ -432,10 +391,10 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
   onWindowResize() {
     const $win = $(win);
     const $maxPanel = $('.z-maximal');
-    const $work = $('#worker');
+    const $work = $('#zjs-editors');
     const $panel = $work.find('.panel:not(.z-maximal)');
-    const $zSrce = $('#z-source');
-    const $zJson = $('#z-jsonwd');
+    const $zSrce = $('#zjs-source');
+    const $zJson = $('#zjs-format');
     const winW = $win.width();
     const winH = $win.height();
     const wH = winH - 100;
@@ -462,6 +421,8 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
       $maxPanel.width(winW - 40).height(winH - 30);
     }
     $('.z-fmt-alts').width((winW - 40) * 0.35);
+    this.updateSourceEditor();
+    this.updateFormatEditor();
   }
 
   initAppStyles() {
@@ -470,17 +431,16 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
       that.addScrollTop($(this).scrollTop());
       that.initStIdx();
     });
-    $('body').append($('<button id="myBtn"></button>').click(function() {
-      document.execCommand('Copy');
-    }));
+    const $chars = $(`<span id="zjs-chars" hidden>${fn.array(50, 'x').join('')}</span>`);
+    $('body').append($chars);
   }
 
   /**
    * 初始化代码窗宽度
    * ===================================*/
   fixCodeZoneWidth() {
-    const $zSrce = $('#z-source');
-    const $zJson = $('#z-jsonwd');
+    const $zSrce = $('#zjs-source');
+    const $zJson = $('#zjs-format');
     if (!this.isWindowBig) {
       $zSrce.css('width', '49.5%');
       $zJson.css('width', '49.5%');
@@ -489,26 +449,16 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
   }
 
   /**
-   * 行号栏始终居左显示
-   * ===================================*/
-  rowIndexStayLeft() {
-    $('#z-container').scroll(function() {
-      $('#z-index').css('left', this.scrollLeft + 'px');
-      $('.z-row-index').css('left', (this.scrollLeft - 2) + 'px');
-    });
-  }
-
-  /**
    * 改变window大小
    * ===================================*/
   initResizeZconEvent() {
     const $win = $(win);
     const mouseMoveHandler = e => this.resizeCodeZone(e);
-    $('#z-resize').mousedown(function(e) {
+    $('#zjs-drager').mousedown(function(e) {
       if ($win.width() > 1025) {
         originX = e.clientX;
-        workerW = $('#worker').width();
-        sourceW = $('#z-source').width();
+        editorW = $('#zjs-editors').width();
+        sourceW = $('#zjs-source').width();
         $(document).on('mousemove', mouseMoveHandler)
         .one('mouseup', function() {
           $(this).off('mousemove', mouseMoveHandler);
@@ -521,17 +471,18 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
    * 代码窗的拖拉事件
    * =================================*/
   resizeCodeZone(e: any) {
-    $('.src-text').blur();
-    const $zSrce = $('#z-source');
-    const $zJson = $('#z-jsonwd');
+    const $zSrce = $('#zjs-source');
+    const $zJson = $('#zjs-format');
     const deltaX = e.clientX - originX;
     let srcW = sourceW + deltaX;
-    if (srcW / workerW < 0.35) srcW = workerW * 0.35;
-    if (srcW / workerW > 0.64) srcW = workerW * 0.64;
-    const srcP = (srcW / workerW) * 100;
+    if (srcW / editorW < 0.35) srcW = editorW * 0.35;
+    if (srcW / editorW > 0.64) srcW = editorW * 0.64;
+    const srcP = (srcW / editorW) * 100;
     $zSrce.css('width', srcP + '%');
     $zJson.css('width', 99 - srcP + '%');
     this.isOnLeft = Math.abs(srcP - 35) < 0.1;
+    this.updateSourceEditor();
+    this.updateFormatEditor();
     return false;
   }
 
@@ -545,7 +496,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     });
     $('.search').mouseover(() => $ipt.removeClass('opacity0').focus());
     const hideIpt = () => {
-      if ($ipt.width() === 0) $ipt.addClass('opacity0').val('');
+      if ($ipt.width() < 5) $ipt.addClass('opacity0').val('');
     };
     ['transitionend', 'webkitTransitionEnd', 'mozTransitionEnd'].forEach(e => {
       searchIpt.addEventListener(e, hideIpt);
@@ -576,6 +527,76 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     });
   }
 
+  afterEditorInit(editor: any, editorName: EditorModal) {
+    fn.match(editorName, {
+      'source': () => {
+        this.srcEditor = editor;
+        this.updateSourceEditor();
+        this.updateFormatEditor();
+      },
+      'format': () => {
+        this.fmtEditor = editor;
+        this.updateSourceEditor();
+        this.updateFormatEditor();
+      }
+    });
+    this.updateTabsize();
+  }
+
+  updateTheme(theme: string = this.theme) {
+    fn.defer(() => {
+      theme = this.appService.getEditorTheme(theme);
+      if (this.srcEditor && this.fmtEditor) {
+        win.monaco.editor.setTheme(theme);
+      }
+    });
+  }
+
+  updateTabsize() {
+    this.doFormate(true);
+    if (this.srcEditor && this.fmtEditor) {
+      [this.srcEditor, this.fmtEditor].forEach(editor => {
+        const model = editor.getModel();
+        model.updateOptions({tabSize: this.conf.indent});
+      });
+    }
+  }
+
+  updateSourceEditor() {
+    fn.defer(() => {
+      if (this.srcEditor) {
+        this.srcEditor.layout();
+        const srcWidth = $('#source-container').width() - 78;
+        const charWidth = $('#zjs-chars').width() / 50;
+        this.srcEditor.updateOptions({
+          wordWrap: 'wordWrapColumn',
+          wordWrapColumn: Math.floor(srcWidth / charWidth)
+        });
+      }
+    });
+  }
+
+  updateFormatEditor() {
+    fn.defer(() => {
+      if (this.fmtEditor) {
+        this.fmtEditor.layout();
+        if (this.conf.model === 'expand') {
+          this.fmtEditor.updateOptions({
+            wordWrap: 'off'
+          });
+        } else {
+          const minimapW = $('#format-container .minimap').width();
+          const fmtWidth = $('#format-container').width() - 78 - minimapW;
+          const charWidth = $('#zjs-chars').width() / 50;
+          this.fmtEditor.updateOptions({
+            wordWrap: 'wordWrapColumn',
+            wordWrapColumn: Math.floor(fmtWidth / charWidth)
+          });
+        }
+      }
+    });
+  }
+
   /**
    * 读取文件
    * ===================================*/
@@ -596,7 +617,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
         reader.readAsText(file, 'utf8');
       }
       reader.addEventListener('load', () => {
-        this.sourcest = reader.result;
+        this.sourcest = reader.result.toString();
         this.doFormate(this.sourcest);
         if (isInitFileIpt) {
           $('input.upload').replaceWith('<input type="file" class="upload hide">');
@@ -786,11 +807,10 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
    * 生成解析结果分享链接
    * ===================================*/
   shareFormated() {
-    const sharedJson = this.getFmtStr();
-    if (!sharedJson) {
+    if (!this.formated) {
       return this.alertNotice(this.translate.instant('_shareFmted'), 'danger');
     }
-    if (sharedJson.length > 8000000) {
+    if (this.formated.length > 8000000) {
       return this.alertNotice(this.translate.instant('_largeError'), 'danger');
     }
     this.sharedLink = '';
@@ -805,10 +825,10 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
       this.alertNotice(this.translate.instant('_shareJsonError'), 'danger');
     };
     /**electron ignore sta*/
-    this.appService.shareFormated(sharedJson).subscribe(success, error);
+    this.appService.shareFormated(this.formated).subscribe(success, error);
     /**electron ignore end*/
     /**electron enable sta_*//*
-    win.shareFormated(sharedJson, this.appService.getUserId(), success, error);
+    win.shareFormated(this.formated, this.appService.getUserId(), success, error);
     *//**electron enable end_*/
   }
 
@@ -818,7 +838,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
   getSharedJson(isFromIpt: boolean = true) {
     fn.defer(() => {
       const queryStr = isFromIpt ? $('#search-ipt').val() || '-' : location.href;
-      const sharedId = fn.get(fn.parseQueryString(queryStr), 'sharedId') || '';
+      const sharedId = fn.get(fn.parseQueryStr(queryStr), 'sharedId') || '';
       if (sharedId) {
         this.showLoading();
         const error = () => {
