@@ -25,25 +25,22 @@
     display: none !important;
   }
 }
-.modal-title {
-  color: #333333;
+#zjs-chars {
+  font-family: Consolas, "Courier New", monospace;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 19px;
+  letter-spacing: 0px;
 }
-.z-info-modal {
-  color: #333333;
-  table tr td{
-    &:nth-child(1) {
-      text-align: right;
-    }
-    &:nth-child(2) {
-      padding-left: 4px;
-    }
-  }
-  .divider-left {
-    margin-left: 4px;
-  }
+.myContentClass {
+  background: red;
+  opacity: .2;
+}
+.myGlyphMarginClass {
+	background: red;
 }
 
-#z-json {
+#zjson {
   padding-top: 25px;
   .z-op-icon {
     cursor: pointer;
@@ -78,16 +75,16 @@
       margin-top: 2px;
       display: none;
       border-radius: 4px;
-      box-shadow: 0 6px 12px rgba(0,0,0,.175);
       z-index: 998;
+      box-shadow: 0 6px 12px rgba(0,0,0,.175);
     }
   }
-  #worker {
-    .clear-fix;
+  #zjs-editors {
     padding: 10px 20px;
-    & > div {
-      box-sizing: border-box;
+    .clear-fix;
+    .zjs-editor-item {
       float: left;
+      box-sizing: border-box;
       .panel {
         height: calc(~"(100% - 25px)");
         &.z-maximal{
@@ -116,26 +113,15 @@
           height: calc(~"(100% - 38px)");
           .zjs-editor-wp {
             height: 100%;
-            border: 1px solid #333;
             border-radius: 4px;
             overflow: hidden;
-            .zjs-editor {
-              height: 100%;
-              .editor-container {
-                height: 100%;
-              }
-            }
           }
         }
       }
-      &#z-source {
+      &#zjs-source {
         width: 35%;
-        textarea.src-text {
-          height: 100%;
-          resize: none;
-        }
       }
-      &#z-resize {
+      &#zjs-drager {
         width: 1%;
         height: 100%;
         cursor: col-resize;
@@ -150,12 +136,10 @@
           margin: auto;
           width: 30%;
           height: 30px;
-          border-left: 1px solid #333;
-          border-right: 1px solid #333;
         }
       }
-      /* ------------------- Z-JSON STAGE ------------------- */
-      &#z-jsonwd {
+      /* ------------------- ZJS-FORMAT ------------------- */
+      &#zjs-format {
         width: 64%;
         position: relative;
         #share-link {
