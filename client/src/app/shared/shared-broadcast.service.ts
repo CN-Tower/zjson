@@ -2,9 +2,11 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { HintInfo } from './shared-interface';
 
 @Injectable()
-export class SharedMQService {
+export class SharedBroadcastService {
   hintEmiter: EventEmitter<any> = new EventEmitter;
+  editorEmiter: EventEmitter<any> = new EventEmitter;
   hintStream: any = this.hintEmiter.asObservable();
+  editorStream: any = this.editorEmiter.asObservable();
 
   constructor() { }
 
