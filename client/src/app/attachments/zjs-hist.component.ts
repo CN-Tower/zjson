@@ -12,7 +12,7 @@ import { Component, Input, Output, EventEmitter} from '@angular/core';
           </a>
         </li>
         <li *ngFor="let hist of fmtHists">
-          <a href="javascript:;" (click)="showOrRmFmtHist.emit($event, hist)">
+          <a href="javascript:;" (click)="showOrRmFmtHist.emit({e: $event, hist: hist})">
             <i class="fa fa-trash z-op-icon"></i>&nbsp;&nbsp;{{hist.name}}
           </a>
         </li>
