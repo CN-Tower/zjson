@@ -6,8 +6,9 @@
   }
 }
 
-.init-theme (@bg-color, @tt-color, @bd-color) {
+.init-theme (@bg-color, @tt-color, @bd-color, @ft-color) {
   background: @bg-color;
+  color: @ft-color;
   header {
     .z-fmt-alts .alert-info {
       background-color: @tt-color;
@@ -37,7 +38,7 @@
       }
     }
   }
-  #worker {
+  #zjs-editors {
     .panel {
       border: 1px solid @tt-color;
       background-color: @bg-color;
@@ -47,8 +48,15 @@
         border: none;
       }
     }
-    #z-container {
+    #zjs-drager::after {
+      border-left: 1px solid  @tt-color;
+      border-right: 1px solid  @tt-color;
+    }
+    .zjs-editor-wp {
       border: 1px solid @tt-color;
     }
+    // #z-container {
+    //   border: 1px solid @tt-color;
+    // }
   }
 }
