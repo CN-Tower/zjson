@@ -19,9 +19,9 @@ export class MonacoEditorBase implements AfterViewInit {
   addLoaderScript() {
     const loaderScript: HTMLScriptElement = document.createElement('script');
     loaderScript.type = 'text/javascript';
-    loaderScript.src = 'assets/monaco/vs/loader.js';
+    loaderScript.src = 'assets/lib/monaco-editor/vs/loader.js';
     loaderScript.addEventListener('load', () => {
-      win.require.config({paths: {'vs': 'assets/monaco/vs'}});
+      win.require.config({paths: {'vs': 'assets/lib/monaco-editor/vs'}});
       win.require(['vs/editor/editor.main'], () => {
         this.broadcast.editorEmiter.emit(win.monaco.editor);
       });
