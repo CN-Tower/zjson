@@ -1,2 +1,2 @@
-export * from './shared-mq.service';
+export * from './shared-broadcast.service';
 export * from './shared-interface';
