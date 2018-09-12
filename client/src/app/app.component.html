@@ -10,7 +10,7 @@
           <config-theme class="col-lg-12" [conf]="conf"
                         [theme]="theme" (changeTheme)="onChangeTheme($event)"></config-theme>
           <config-indent class="col-lg-12" [conf]="conf"
-                        (updateTabsize)="updateTabsize($event)"></config-indent>
+                        (updateTabsize)="updateTabsize()"></config-indent>
           <config-type class="col-lg-12" [conf]="conf"
                         (doFormate)="doFormate($event)"></config-type>
         </div>
@@ -131,8 +131,6 @@
           <div id="format-container" class="zjs-editor-wp">
             <monaco-editor [options]="fmtEditorOptions" [(ngModel)]="formated" 
                            (afterInit)="afterEditorInit($event, 'format')"></monaco-editor>
-            <!-- <ngx-monaco-editor class="zjs-editor" [options]="fmtEditorOptions"
-                               [(ngModel)]="formated" (onInit)="onFmtEditorInit($event)"></ngx-monaco-editor> -->
           </div>
           <!-- <div id="z-container">
             <div id="z-stage" [class.fullWidth]="!isModelExpand">
