@@ -3,6 +3,9 @@
 @light-ft-color: #333;
 @dark-ft-color: #999;
 
+@light-shadow: #999;
+@dark-shadow: #555;
+
 @light-bg-color: #f2f2f2;
 @light-bd-color: #bbbbbb;
 @light-tt-color: #dddddd;
@@ -36,33 +39,57 @@
 @abyss-tt-color: #051336;
 
 .theme-light {
-  .init-theme (@light-bg-color, @light-tt-color, @light-bd-color, @light-ft-color);
+  .init-theme (
+    @light-bg-color, @light-tt-color,
+    @light-bd-color, @light-ft-color, @light-shadow
+  );
 }
 
 .theme-solarized {
-  .init-theme (@solarized-bg-color, @solarized-tt-color, @solarized-bd-color, @light-ft-color);
+  .init-theme (
+    @solarized-bg-color, @solarized-tt-color,
+    @solarized-bd-color, @light-ft-color, @light-shadow
+  );
 }
 
 .theme-dark {
-  .init-theme (@dark-bg-color, @dark-tt-color, @dark-bd-color, @dark-ft-color);
+  .init-theme (
+    @dark-bg-color, @dark-tt-color,
+    @dark-bd-color, @dark-ft-color, @dark-shadow
+  );
 }
 
 .theme-red {
-  .init-theme (@red-bg-color, @red-tt-color, @red-bd-color, @dark-ft-color);
+  .init-theme (
+    @red-bg-color, @red-tt-color,
+    @red-bd-color, @dark-ft-color, @dark-shadow
+  );
 }
 
 .theme-kimbie {
-  .init-theme (@kimbie-bg-color, @kimbie-tt-color, @kimbie-bd-color, @dark-ft-color);
+  .init-theme (
+    @kimbie-bg-color, @kimbie-tt-color,
+    @kimbie-bd-color, @dark-ft-color, @dark-ft-color
+  );
 }
 
 .theme-moonlight {
-  .init-theme (@moonlight-bg-color, @moonlight-tt-color, @moonlight-bd-color, @dark-ft-color);
+  .init-theme (
+    @moonlight-bg-color, @moonlight-tt-color,
+    @moonlight-bd-color, @dark-ft-color, @dark-ft-color
+  );
 }
 
 .theme-blue {
-  .init-theme (@blue-bg-color, @blue-tt-color, @blue-bd-color, @dark-ft-color);
+  .init-theme (
+    @blue-bg-color, @blue-tt-color,
+    @blue-bd-color, @dark-ft-color, @dark-ft-color
+  );
 }
 
 .theme-abyss {
-  .init-theme (@abyss-bg-color, @abyss-tt-color, @abyss-bd-color, @dark-ft-color);
+  .init-theme (
+    @abyss-bg-color, @abyss-tt-color,
+    @abyss-bd-color, @dark-ft-color, @dark-ft-color
+  );
 }
