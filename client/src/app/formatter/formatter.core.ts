@@ -1,54 +1,72 @@
-import { Configs, FmtData, FmtStatus, FmtChecker, FmterEles } from './formatter.conf';
+import { Observable } from 'rxjs';
+import { Configs, FmtStatus, FmtValidator, FmtBase } from './formatter.conf';
 
-export class Formatter extends FmterEles {
-  constructor() {
-    super();
-  }
+export class Formatter extends FmtBase {
+
+  constructor() { super(); }
+
   /**
    * 描述: 初始化格式器
    * ===================================================
-   * @arg source [string]
-   * @arg conf [Configs] 配置参数
+   * @arg fmtSource [string]
+   * @arg fmtConfig [Configs] 配置参数
    * @arg onFmted [Function] 回调
    * */
-  init(source: string, conf: Configs, onFmted: Function): void {
-    this.dt = new FmtData();
-    this.st = new FmtStatus();
-    this.ck = new FmtChecker();
-    this.dt.src = source;
-    this.dt.conf = conf;
-    this.level = 0;
-    this.rowIdx = 1;
-    this.isExpand = conf.model === 'expand';
-    this.baseIndent = this.help.setBaseIndent(conf);
+  format(fmtSource: string, fmtConfig: Configs) {
+    return Observable.create(observer => {
+      this.v = new FmtValidator();
+      this.fmtStatus = new FmtStatus();
+      this.fmtSource = fmtSource;
+      this.fmtConfig = fmtConfig;
+      this.fmtResult = '';
+      this.level = 0;
+      this.rowIdx = 1;
+      this.isExpand = fmtConfig.model === 'expand';
+      this.baseIndent = this.help.setBaseIndent(fmtConfig);
+      this.doFormatByTry();
+      this.setupFmtStatus();
+      observer.next({ fmtResult: this.fmtResult, fmtStatus: this.fmtStatus });
+      observer.complete();
+    });
+  }
+
+  /**
+   * 根据类型进程格式化
+   * ============================
+   */
+  doFormatByTry() {
     try {
-      let obj;
-      source === '' ? obj = source : eval(`obj = ${source}`);
-      if (['object', 'boolean'].includes(typeof obj) || obj === '') {
-        this.dt.src = obj;
-        this.doFormate1();
-        this.st.isSrcValid = true;
-        this.st.fmtedType = this.dt.conf.type;
+      if (this.fmtSource !== '') eval(`this.fmtSource = ${this.fmtSource}`);
+      if (this.help.isSpecialVal(this.fmtSource)) {
+        this.fmtObject = this.fmtSource;
+        this.doNormalFormat();
+        this.fmtStatus.isSrcValid = true;
+        this.fmtStatus.fmtedType = this.fmtConfig.type;
       } else {
-        this.doFormate2();
-        this.st.fmtedType = this.ck.srcAcType;
+        this.doSpecialFormat();
+        this.fmtStatus.fmtedType = this.v.srcAcType;
       }
     } catch (e) {
-      this.doFormate2();
-      this.st.fmtedType = this.ck.srcAcType;
+      this.doSpecialFormat();
+      this.fmtStatus.fmtedType = this.v.srcAcType;
     }
-    this.dt.html = this.dt.html === '' ? '' : this.rowIndex(1) + this.dt.html;
-    if (this.st.isSrcValid) {
-      if (this.ck.deepIdxCon) {
-        const expBrc = this.help.getBraceMir(this.ck.deepIdxCon.substr(-1));
+  }
+
+  /**
+   * 设置格式化状态
+   * ============================
+   */
+  setupFmtStatus() {
+    if (this.fmtStatus.isSrcValid) {
+      if (this.v.deepIdxCon) {
+        const expBrc = this.help.getBraceMir(this.v.deepIdxCon.substr(-1));
         this.expection('end', expBrc);
       }
-      this.st.fmtedType === conf.type
+      this.fmtStatus.fmtedType === this.fmtConfig.type
         ? this.expection('scc')
         : this.expection('war');
     }
-    this.st.fmtedLines = this.rowIdx;
-    onFmted(this.dt.html, this.dt.json, this.st);
+    this.fmtStatus.fmtedLines = this.rowIdx;
   }
 
   /**
@@ -57,177 +75,161 @@ export class Formatter extends FmterEles {
    * @arg object [object]
    * @arg conf [object, opt.] 配置参数
    * */
-  private doFormate1() {
-    const src = this.dt.src;
-    const conf = this.dt.conf;
-    switch (src) {
-      case true:
-      case false: return [this.boolFmt(src), src];
-      case null: return [this.nullFmt(src), src];
-      case '': return ['', ''];
+  private doNormalFormat() {
+    if ([true, false, null, ''].includes(this.fmtObject)) {
+      return this.fmtResult += String(this.fmtObject);
     }
-    let ps = {
-      obj: null, conf: conf, html: '', json: '',
-      isToJson: conf.type === 'json'
-    };
-    ps.obj = ps.isToJson ? JSON.parse(JSON.stringify(src)) : src;
-    ps.obj instanceof Array
-      ? this.arrayHandler(ps, rt => ps = rt)
-      : this.objectHandler(ps, rt => ps = rt);
-    this.dt.html = ps.html;
-    this.dt.json = ps.json;
-    return [ps.html, ps.json, true];
+    this.fmtObject = this.fmtConfig.isStrict
+      ? JSON.parse(JSON.stringify(this.fmtObject))
+      : this.fmtObject;
+    if (fn.typeOf(this.fmtObject, 'arr')) {
+      this.arrayHandler();
+    } else if (fn.typeOf(this.fmtObject, 'obj')) {
+      this.objectHandler();
+    }
   }
 
   /**
    * 对数组的处理
    * ============================
    */
-  private arrayHandler(ps: any, onEnd: Function) {
+  private arrayHandler() {
     let curIndent: string;
-    if (ps.obj.length > 0) {
-      ps.html += this.isExpand ? this.brcPre('[', 'arr', true) + this.brkline() : this.brcPre('[', 'arr');
-      ps.json += this.isExpand ? '[\n' : '[';
+    const fmtObject = this.fmtObject;
+    if (this.fmtObject.length > 0) {
+      this.fmtResult += this.brkLine4Normal('[');
+      if (this.isExpand) this.rowIdx ++;
       this.level++;
-      for (let i = 0; i < ps.obj.length; i++) {
+      for (let i = 0; i < fmtObject.length; i++) {
         curIndent = this.isExpand ? this.help.getCurIndent(this.baseIndent, this.level) : '';
-        const rtVal = this.valueHandler(ps.obj[i]);
-        ps.html += curIndent;
-        ps.html += rtVal[0];
-        ps.html += this.isExpand
-          ? i < ps.obj.length - 1 ? this.comma + this.brkline() : this.brkline()
-          : i < ps.obj.length - 1 ? this.comma : '';
-        ps.json += curIndent;
-        ps.json += rtVal[1];
-        ps.json += this.isExpand
-          ? i < ps.obj.length - 1 ? ',\n' : '\n'
-          : i < ps.obj.length - 1 ? ',' : '';
+        this.fmtResult += curIndent;
+        this.valueHandler(fmtObject[i]);
+        this.fmtResult += this.brkLine4Normal(i < fmtObject.length - 1 ? ',' : '');
       }
       this.level--;
       curIndent = this.isExpand ? this.help.getCurIndent(this.baseIndent, this.level) : '';
-      ps.html += curIndent + this.brcEnd(']');
-      ps.json += curIndent + ']';
+      this.fmtResult += curIndent + ']';
     } else {
-      ps.html += this.brcPre('[', 'arr') + this.brcEnd(']');
-      ps.json += '[]';
+      this.fmtResult += '[]';
     }
-    onEnd(ps);
   }
 
   /**
    * 对对象的处理
    * ============================
    */
-  private objectHandler(ps: any, onEnd: Function) {
+  private objectHandler() {
     let curIndent: string;
-    if (fn.len(ps.obj) > 0) {
-      ps.html += this.isExpand ? this.brcPre('{', 'obj', true) + this.brkline() : this.brcPre('{', 'obj');
-      ps.json += this.isExpand ? '{\n' : '{';
+    const fmtObject = this.fmtObject;
+    if (fn.len(fmtObject) > 0) {
+      this.fmtResult += this.brkLine4Normal('{');
       this.level++;
       let idx = 0;
-      const objLength = fn.len(ps.obj);
-      for (const key in ps.obj) {
-        if (ps.obj.hasOwnProperty(key)) {
+      const objLength = fn.len(fmtObject);
+      for (const key in fmtObject) {
+        if (fn.has(fmtObject, key)) {
           idx++;
-          const prop = ps.isToJson
-            ? `"${key}"`
-            : ps.conf.isQuoteKey ? this.help.quoteVal(key, ps.conf.quotes) : key;
+          const prop = this.help.quoteKey(key, this.fmtConfig);
           curIndent = this.isExpand ? this.help.getCurIndent(this.baseIndent, this.level) : '';
-          const rtVal = this.valueHandler(ps.obj[key]);
-          ps.html += curIndent;
-          ps.html += this.propFmt(prop);
-          ps.html += this.isExpand ? this.colon_ : this.colon;
-          ps.html += rtVal[0];
-          ps.html += this.isExpand
-            ? idx < objLength ? this.comma + this.brkline() : this.brkline()
-            : idx < objLength ? this.comma : '';
-          ps.json += curIndent;
-          ps.json += prop;
-          ps.json += this.isExpand ? ': ' : ':';
-          ps.json += rtVal[1];
-          ps.json += this.isExpand
-            ? idx < objLength ? ',\n' : '\n'
-            : idx < objLength ? ',' : '';
+          this.fmtResult += curIndent;
+          this.fmtResult += prop;
+          this.fmtResult += this.isExpand ? ': ' : ':';
+          this.valueHandler(fmtObject[key]);
+          this.fmtResult += this.brkLine4Normal(idx < objLength ? ',' : '');
         }
       }
       this.level--;
       curIndent = this.isExpand ? this.help.getCurIndent(this.baseIndent, this.level) : '';
-      ps.html += curIndent + this.brcEnd('}');
-      ps.json += curIndent + '}';
+      this.fmtResult += curIndent + '}';
     } else {
-      ps.html += this.brcPre('{', 'obj') + this.brcEnd('}');
-      ps.json += '{}';
+      this.fmtResult += '{}';
     }
-    onEnd(ps);
   }
 
   /**
    * 对值的分类和处理
    * ============================
    */
-  private valueHandler(value: any): any[] {
-    const conf = this.dt.conf;
+  private valueHandler(value: any) {
     switch (typeof value) {
       case 'undefined':
-        return [this.nullFmt(String(value)), String(value)];
-      case 'function':
-        return [this.funcFmt(String(value)), String(value)];
+      case 'function': return this.fmtResult += String(value);
       case 'number':
-        return [this.numbFmt(value), value];
-      case 'boolean':
-        return [this.boolFmt(value), value];
+      case 'boolean':  return this.fmtResult += value;
       case 'object':
-        this.dt.src = value;
-        return this.doFormate1();
+        this.fmtObject = value;
+        return this.doNormalFormat();
       case 'string':
-        const isToJson = conf && conf.hasOwnProperty('type') && conf.type === 'json';
-        const strVal = isToJson ? `"${value.replace(/"/mg, '\\"')}"` : `'${value.replace(/'/mg, '\\\'')}'`;
-        const strValue = strVal.split('<').join('&lt;').split('>').join('&gt;');
-        return [this.striFmt(strValue), strValue];
-      default: return [this.nullFmt(value), value];
+        return this.fmtResult += this.help.quoteVal(value, this.fmtConfig);
     }
+  }
+
+  /**
+   * 设置换行策略
+   * ============================
+   */
+  brkLine4Normal = (str: string) => {
+    if (!this.isExpand) return str;
+    this.rowIdx ++;
+    return str + '\n';
+  }
+  brkLine4Special = (str: string = '') => {
+    if (!this.isExpand) return this.fmtResult += str;
+    this.rowIdx ++;
+    this.fmtResult += `\n${this.help.getCurIndent(this.baseIndent, this.level) + str}`;
   }
 
   /**
    * 描述: 格式化错误的JSON
    * ===================================================
    * @param src [string]
-   * @param conf [Configs]
    */
-  private doFormate2() {
-    this.dt.src = this.dt.src.replace(/^\s*/, '');
-    if (this.dt.src.length > 0) {
-      const conf = this.dt.conf;
-      switch (this.dt.src[0]) {
-        case '\'':
-        case '"': this.quotaHandler(); break;
-        case ':': this.colonHandler(); break;
-        case ',': this.commaHandler(); break;
-        case '{': this.objPreHandler(); break;
-        case '}': this.objEndHandler(); break;
-        case '[': this.arrPreHandler(); break;
-        case ']': this.arrEndHandler(); break;
-        case '(': this.tupPreHandler(); break;
-        case ')': this.tupEndHandler(); break;
-      }
-      const unicMt = this.dt.src.match(/^u(\s)?'|^u(\s)?"/);
-      if (unicMt) {
-        return this.unicHandler(unicMt[0]);
-      }
-      const numbMt = this.dt.src.match(/^(-?[0-9]+\.?[0-9]*|0[xX][0-9a-fA-F]+)/);
-      if (numbMt) {
-        return this.numbHandler(numbMt[0]);
-      }
-      const boolMt = this.dt.src.match(/^(true|false|True|False)/);
-      if (boolMt) {
-        return this.boolHandler(boolMt[0]);
-      }
-      const nullMt = this.dt.src.match(/^(null|undefined|None|NaN)/);
-      if (nullMt) {
-        return this.nullHandler(nullMt[0]);
-      }
-      this.otheHandler();
+  private doSpecialFormat() {
+    this.fmtSource = this.fmtSource.replace(/^\s*/, '');
+    if (this.fmtSource.length === 0) return;
+    let isMatched = false;
+    switch (this.fmtSource[0]) {
+      case '\'':
+      case '"': isMatched = true; this.quotaHandler();  break;
+      case ':': isMatched = true; this.colonHandler();  break;
+      case ',': isMatched = true; this.commaHandler();  break;
+      case '{': isMatched = true; this.objPreHandler(); break;
+      case '}': isMatched = true; this.objEndHandler(); break;
+      case '[': isMatched = true; this.arrPreHandler(); break;
+      case ']': isMatched = true; this.arrEndHandler(); break;
+      case '(': isMatched = true; this.tupPreHandler(); break;
+      case ')': isMatched = true; this.tupEndHandler(); break;
     }
+    if (!isMatched) {
+      const unicMt = this.fmtSource.match(/^u(\s)?'|^u(\s)?"/);
+      if (unicMt) {
+        isMatched = true;
+        this.unicHandler(unicMt[0]);
+      }
+    }
+    if (!isMatched) {
+      const numbMt = this.fmtSource.match(/^(-?[0-9]+\.?[0-9]*|0[xX][0-9a-fA-F]+)/);
+      if (numbMt) {
+        isMatched = true;
+        this.numbHandler(numbMt[0]);
+      }
+    }
+    if (!isMatched) {
+      const boolMt = this.fmtSource.match(/^(true|false|True|False)/);
+      if (boolMt) {
+        isMatched = true;
+        this.boolHandler(boolMt[0]);
+      }
+    }
+    if (!isMatched) {
+      const nullMt = this.fmtSource.match(/^(null|undefined|None|NaN)/);
+      if (nullMt) {
+        isMatched = true;
+        this.nullHandler(nullMt[0]);
+      }
+    }
+    if (!isMatched) this.otheHandler();
+    return this.doSpecialFormat();
   }
 
   /**
@@ -235,28 +237,21 @@ export class Formatter extends FmterEles {
    * ============================
    */
   private quotaHandler() {
-    if (this.dt.src[0] === '\'') {
-      this.ck.isSrcJson = false;
-    }
-    const rest = this.help.getSrcRest(this.dt.src);
-    const restIdx = this.help.getNextQuoIdx(this.dt.src[0], rest);
-    this.chkExpect(this.dt.src[0]);
+    if (this.fmtSource[0] === '\'') this.v.isSrcJson = false;
+    const rest = this.help.getSrcRest(this.fmtSource);
+    const restIdx = this.help.getNextQuoIdx(this.fmtSource[0], rest);
+    this.chkExpect(this.fmtSource[0]);
     if (restIdx > -1) {
-      if (this.ck.exceptVal === 'ost') {
-        this.dt.html += this.propFmt(this.dt.src.substr(0, restIdx + 2));
-      } else {
-        this.dt.html += this.striFmt(this.dt.src.substr(0, restIdx + 2));
-      }
-      this.dt.json += this.dt.src.substr(0, restIdx + 2);
-      this.setExpect(this.dt.src[0]);
-      this.dt.src = this.help.getSrcRest(this.dt.src, restIdx + 2);
-      this.doFormate2();
+      const strInQuote = this.fmtConfig.isStrict
+        ? `"${this.fmtSource.substr(1, restIdx)}"`
+        : this.fmtSource.substr(0, restIdx + 2);
+      this.fmtResult += this.help.quoteStr(strInQuote, this.fmtConfig);
+      this.setExpect(this.fmtSource[0]);
+      this.fmtSource = this.help.getSrcRest(this.fmtSource, restIdx + 2);
     } else {
-      this.dt.html += this.striFmt(this.dt.src);
-      this.dt.json += this.dt.src;
+      this.fmtResult += this.help.quoteStr(this.fmtSource, this.fmtConfig, true);
       this.setExpect('!');
-      this.dt.src = '';
-      this.doFormate2();
+      this.fmtSource = '';
     }
   }
 
@@ -265,12 +260,10 @@ export class Formatter extends FmterEles {
    * ============================
    */
   private colonHandler() {
-    this.dt.html += this.isExpand ? this.colon_ : this.colon;
-    this.dt.json += this.isExpand ? ': ' : ':';
-    this.chkExpect(this.dt.src[0]);
-    this.setExpect(this.dt.src[0]);
-    this.dt.src = this.help.getSrcRest(this.dt.src);
-    this.doFormate2();
+    this.fmtResult += this.isExpand ? ': ' : ':';
+    this.chkExpect(this.fmtSource[0]);
+    this.setExpect(this.fmtSource[0]);
+    this.fmtSource = this.help.getSrcRest(this.fmtSource);
   }
 
   /**
@@ -279,14 +272,12 @@ export class Formatter extends FmterEles {
    */
   private commaHandler() {
     const curIndent = this.help.getCurIndent(this.baseIndent, this.level);
-    const bklIdt = this.isExpand ? this.brkline() + curIndent : '';
-    this.dt.html += this.comma + bklIdt;
-    this.dt.json += this.isExpand ? ',\n' + curIndent : ',';
-    this.chkExpect(this.dt.src[0]);
-    this.setExpect(this.dt.src[0]);
-    this.dt.src = this.help.getSrcRest(this.dt.src);
-    if (this.dt.src.replace(/\n|\s/mg, '') === '') this.expection('val');
-    this.doFormate2();
+    if (this.isExpand) this.rowIdx ++;
+    this.fmtResult += this.isExpand ? `,\n${curIndent}` : ',';
+    this.chkExpect(this.fmtSource[0]);
+    this.setExpect(this.fmtSource[0]);
+    this.fmtSource = this.help.getSrcRest(this.fmtSource);
+    if (this.fmtSource.replace(/\n|\s/mg, '') === '') this.expection('val');    // this.doSpecialFormat();
   }
 
   /**
@@ -294,23 +285,17 @@ export class Formatter extends FmterEles {
    * ============================
    */
   private objPreHandler() {
-    this.chkExpect(this.dt.src[0]);
-    this.setExpect(this.dt.src[0]);
-    if (this.dt.src[1] && this.dt.src[1] === '}') {
-      this.dt.html += this.brcPre('{', 'obj') + this.brcEnd('}');
-      this.dt.json += '{}';
+    this.chkExpect(this.fmtSource[0]);
+    this.setExpect(this.fmtSource[0]);
+    if (this.fmtSource[1] && this.fmtSource[1] === '}') {
+      this.fmtResult += '{}';
       this.setExpect('}');
-      this.dt.src = this.help.getSrcRest(this.dt.src, 2);
-      this.doFormate2();
+      this.fmtSource = this.help.getSrcRest(this.fmtSource, 2);
     } else {
       this.level++;
-      const curIndent = this.help.getCurIndent(this.baseIndent, this.level);
-      this.dt.html += this.isExpand ? this.brcPre('{', 'obj', true) : this.brcPre('{', 'obj');
-      this.dt.json += '{';
-      this.dt.html += this.isExpand ? this.brkline() + curIndent : '';
-      this.dt.json += this.isExpand ? '\n' + curIndent : '';
-      this.dt.src = this.help.getSrcRest(this.dt.src);
-      this.doFormate2();
+      this.fmtResult += '{';
+      this.brkLine4Special();
+      this.fmtSource = this.help.getSrcRest(this.fmtSource);
     }
   }
 
@@ -320,14 +305,10 @@ export class Formatter extends FmterEles {
    */
   private objEndHandler() {
     this.level--;
-    const curIndent = this.help.getCurIndent(this.baseIndent, this.level);
-    const bklIdt = this.isExpand ? this.brkline() + curIndent : '';
-    this.dt.html += bklIdt + this.brcEnd('}');
-    this.dt.json += this.isExpand ? `\n${curIndent}}` : '';
-    this.chkExpect(this.dt.src[0]);
-    this.setExpect(this.dt.src[0]);
-    this.dt.src = this.help.getSrcRest(this.dt.src);
-    this.doFormate2();
+    this.brkLine4Special('}');
+    this.chkExpect(this.fmtSource[0]);
+    this.setExpect(this.fmtSource[0]);
+    this.fmtSource = this.help.getSrcRest(this.fmtSource);
   }
 
   /**
@@ -335,23 +316,17 @@ export class Formatter extends FmterEles {
    * ============================
    */
   private arrPreHandler() {
-    this.chkExpect(this.dt.src[0]);
-    this.setExpect(this.dt.src[0]);
-    if (this.dt.src[1] && this.dt.src[1] === ']') {
-      this.dt.html += this.brcPre('[', 'arr') + this.brcEnd(']');
-      this.dt.json += '[]';
+    this.chkExpect(this.fmtSource[0]);
+    this.setExpect(this.fmtSource[0]);
+    if (this.fmtSource[1] && this.fmtSource[1] === ']') {
+      this.fmtResult += '[]';
       this.setExpect(']');
-      this.dt.src = this.help.getSrcRest(this.dt.src, 2);
-      this.doFormate2();
+      this.fmtSource = this.help.getSrcRest(this.fmtSource, 2);
     } else {
       this.level++;
-      const curIndent = this.help.getCurIndent(this.baseIndent, this.level);
-      this.dt.html += this.isExpand ? this.brcPre('[', 'arr', true) : this.brcPre('[', 'arr');
-      this.dt.json += '[';
-      this.dt.html += this.isExpand ? this.brkline() + curIndent : '';
-      this.dt.json += this.isExpand ? '\n' + curIndent : '';
-      this.dt.src = this.help.getSrcRest(this.dt.src);
-      this.doFormate2();
+      this.fmtResult += '[';
+      this.brkLine4Special();
+      this.fmtSource = this.help.getSrcRest(this.fmtSource);
     }
   }
 
@@ -361,14 +336,10 @@ export class Formatter extends FmterEles {
    */
   private arrEndHandler() {
     this.level--;
-    const curIndent = this.help.getCurIndent(this.baseIndent, this.level);
-    const bklIdt = this.isExpand ? this.brkline() + curIndent : '';
-    this.dt.html += bklIdt + this.brcEnd(']');
-    this.dt.json += this.isExpand ? `\n${curIndent}]` : '';
-    this.chkExpect(this.dt.src[0]);
-    this.setExpect(this.dt.src[0]);
-    this.dt.src = this.help.getSrcRest(this.dt.src);
-    this.doFormate2();
+    this.brkLine4Special(']');
+    this.chkExpect(this.fmtSource[0]);
+    this.setExpect(this.fmtSource[0]);
+    this.fmtSource = this.help.getSrcRest(this.fmtSource);
   }
 
   /**
@@ -376,24 +347,18 @@ export class Formatter extends FmterEles {
    * ============================
    */
   private tupPreHandler() {
-    this.ck.srcAcType = this.ck.srcAcType || 'pyMap';
-    this.chkExpect(this.dt.src[0]);
-    this.setExpect(this.dt.src[0]);
-    if (this.dt.src[1] && this.dt.src[1] === ')') {
-      this.dt.html += this.brcPre('(', 'arr') + this.brcEnd(')');
-      this.dt.json += '()';
+    this.v.srcAcType = this.v.srcAcType || 'pyMap';
+    this.chkExpect(this.fmtSource[0]);
+    this.setExpect(this.fmtSource[0]);
+    if (this.fmtSource[1] && this.fmtSource[1] === ')') {
+      this.fmtResult += this.fmtConfig.isStrict ? '[]' : '()';
       this.setExpect(')');
-      this.dt.src = this.help.getSrcRest(this.dt.src, 2);
-      this.doFormate2();
+      this.fmtSource = this.help.getSrcRest(this.fmtSource, 2);
     } else {
       this.level++;
-      const curIndent = this.help.getCurIndent(this.baseIndent, this.level);
-      this.dt.html += this.isExpand ? this.brcPre('(', 'arr', true) : this.brcPre('(', 'arr');
-      this.dt.json += '(';
-      this.dt.html += this.isExpand ? this.brkline() + curIndent : '';
-      this.dt.json += this.isExpand ? '\n' + curIndent : '';
-      this.dt.src = this.help.getSrcRest(this.dt.src);
-      this.doFormate2();
+      this.fmtResult += this.fmtConfig.isStrict ? '[' : '(';
+      this.brkLine4Special();
+      this.fmtSource = this.help.getSrcRest(this.fmtSource);
     }
   }
 
@@ -403,14 +368,10 @@ export class Formatter extends FmterEles {
    */
   private tupEndHandler() {
     this.level--;
-    const curIndent = this.help.getCurIndent(this.baseIndent, this.level);
-    const bklIdt = this.isExpand ? this.brkline() + curIndent : '';
-    this.dt.html += bklIdt + this.brcEnd(')');
-    this.dt.json += this.isExpand ? `\n${curIndent})` : '';
-    this.chkExpect(this.dt.src[0]);
-    this.setExpect(this.dt.src[0]);
-    this.dt.src = this.help.getSrcRest(this.dt.src);
-    this.doFormate2();
+    this.brkLine4Special(this.fmtConfig.isStrict ? ']' : ')');
+    this.chkExpect(this.fmtSource[0]);
+    this.setExpect(this.fmtSource[0]);
+    this.fmtSource = this.help.getSrcRest(this.fmtSource);
   }
 
   /**
@@ -418,29 +379,28 @@ export class Formatter extends FmterEles {
    * ============================
    */
   private unicHandler(unicMt: string) {
-    this.ck.srcAcType = this.ck.srcAcType || 'pyMap';
-    const rest = this.help.getSrcRest(this.dt.src, unicMt.length);
+    this.v.srcAcType = this.v.srcAcType || 'pyMap';
+    const rest = this.help.getSrcRest(this.fmtSource, unicMt.length);
     const restIdx = unicMt.indexOf('\'') > -1
       ? this.help.getNextQuoIdx('\'', rest)
       : this.help.getNextQuoIdx('"', rest);
     this.chkExpect('u');
     if (restIdx > -1) {
       const cutIdx = restIdx + unicMt.length + 1;
-      if (this.ck.exceptVal === 'ost') {
-        this.dt.html += this.propFmt(this.dt.src.substr(0, cutIdx));
+      let uniqStr;
+      if (this.fmtConfig.isStrict) {
+        uniqStr = `"${this.fmtSource.substr(unicMt.length, cutIdx - unicMt.length - 1)}"`;
+        this.fmtResult += this.help.quoteStr(uniqStr, this.fmtConfig);
       } else {
-        this.dt.html += this.striFmt(this.dt.src.substr(0, cutIdx));
+        uniqStr = this.fmtSource.substr(0, cutIdx);
+        this.fmtResult += this.help.quoteStr(uniqStr, this.fmtConfig, unicMt);
       }
-      this.dt.json += this.dt.src.substr(0, cutIdx);
       this.setExpect('u');
-      this.dt.src = this.help.getSrcRest(this.dt.src, cutIdx);
-      this.doFormate2();
+      this.fmtSource = this.help.getSrcRest(this.fmtSource, cutIdx);
     } else {
-      this.dt.html += this.striFmt(this.dt.src);
-      this.dt.json += this.dt.src;
+      this.fmtResult += this.help.quoteStr(this.fmtSource, this.fmtConfig, unicMt, true);
       this.setExpect('!');
-      this.dt.src = '';
-      this.doFormate2();
+      this.fmtSource = '';
     }
   }
 
@@ -449,12 +409,10 @@ export class Formatter extends FmterEles {
    * ============================
    */
   private numbHandler(numbMt: string) {
-    this.dt.html += this.numbFmt(numbMt);
-    this.dt.json += numbMt;
+    this.fmtResult += numbMt;
     this.chkExpect('n');
     this.setExpect('n');
-    this.dt.src = this.help.getSrcRest(this.dt.src, numbMt.length);
-    this.doFormate2();
+    this.fmtSource = this.help.getSrcRest(this.fmtSource, numbMt.length);
   }
 
   /**
@@ -462,13 +420,11 @@ export class Formatter extends FmterEles {
    * ============================
    */
   private boolHandler(boolMt: string) {
-    this.ck.srcAcType = this.ck.srcAcType || (['True', 'False'].includes(boolMt) ? 'pyMap' : 'jsObj');
-    this.dt.html += this.boolFmt(boolMt);
-    this.dt.json += boolMt;
+    this.v.srcAcType = this.v.srcAcType || (['True', 'False'].includes(boolMt) ? 'pyMap' : 'jsObj');
+    this.fmtResult += this.fmtConfig.isStrict ? boolMt.toLowerCase() : boolMt;
     this.chkExpect('b');
     this.setExpect('b');
-    this.dt.src = this.help.getSrcRest(this.dt.src, boolMt.length);
-    this.doFormate2();
+    this.fmtSource = this.help.getSrcRest(this.fmtSource, boolMt.length);
   }
 
   /**
@@ -476,13 +432,11 @@ export class Formatter extends FmterEles {
    * ============================
    */
   private nullHandler(nullMt: string) {
-    this.ck.srcAcType = this.ck.srcAcType || (['None'].includes(nullMt) ? 'pyMap' : 'jsObj');
-    this.dt.html += this.nullFmt(nullMt);
-    this.dt.json += nullMt;
+    this.v.srcAcType = this.v.srcAcType || (['None'].includes(nullMt) ? 'pyMap' : 'jsObj');
+    this.fmtResult += this.fmtConfig.isStrict ? 'null' : nullMt;
     this.chkExpect('N');
     this.setExpect('N');
-    this.dt.src = this.help.getSrcRest(this.dt.src, nullMt.length);
-    this.doFormate2();
+    this.fmtSource = this.help.getSrcRest(this.fmtSource, nullMt.length);
   }
 
   /**
@@ -490,14 +444,12 @@ export class Formatter extends FmterEles {
    * ============================
    */
   private otheHandler() {
-    const strMatch = this.dt.src.match(/^[^\{\}\[\]\(\):,]*/);
+    const strMatch = this.fmtSource.match(/^[^\{\}\[\]\(\):,]*/);
     const strMated = strMatch && strMatch[0] || '';
     if (strMated) {
-      this.dt.html += this.nullFmt(strMated);
-      this.dt.json += strMated;
+      this.fmtResult += strMated;
       this.chkExpect('!');
-      this.dt.src = this.help.getSrcRest(this.dt.src, strMated.length);
-      this.doFormate2();
+      this.fmtSource = this.help.getSrcRest(this.fmtSource, strMated.length);
     }
   }
 
@@ -506,8 +458,8 @@ export class Formatter extends FmterEles {
    * ============================
    */
   private chkExpect(sig: string) {
-    if (this.st.isSrcValid) {
-      switch (this.ck.exceptVal) {
+    if (this.fmtStatus.isSrcValid) {
+      switch (this.v.exceptVal) {
         case 'val':
           if (':,}])!'.includes(sig)) {
             this.expection('val');
@@ -517,7 +469,7 @@ export class Formatter extends FmterEles {
             this.expection('ost');
           } break;
         case 'end':
-          const endBrc = this.help.getBraceMir(this.ck.exceptType);
+          const endBrc = this.help.getBraceMir(this.v.exceptType);
           if (![',', endBrc].includes(sig)) {
             this.expection('end', endBrc);
           } break;
@@ -536,42 +488,42 @@ export class Formatter extends FmterEles {
   private setExpect(sig: string) {
     switch (sig) {
       case ':':
-        this.ck.exceptVal = 'val';
+        this.v.exceptVal = 'val';
         break;
       case ',':
-        this.ck.exceptType === '{'
-          ? this.ck.exceptVal = 'ost'
-          : this.ck.exceptVal = 'val';
+        this.v.exceptType === '{'
+          ? this.v.exceptVal = 'ost'
+          : this.v.exceptVal = 'val';
         break;
       case '{':
-        this.ck.exceptType = sig;
-        this.ck.deepIdxCon += sig;
-        this.ck.exceptVal = 'ost';
+        this.v.exceptType = sig;
+        this.v.deepIdxCon += sig;
+        this.v.exceptVal = 'ost';
         break;
       case '}':
-        this.ck.deepIdxCon = this.ck.deepIdxCon.substr(0, this.ck.deepIdxCon.length - 1);
-        this.ck.exceptType = this.ck.deepIdxCon.substr(-1);
-        this.ck.exceptVal = 'end';
+        this.v.deepIdxCon = this.v.deepIdxCon.substr(0, this.v.deepIdxCon.length - 1);
+        this.v.exceptType = this.v.deepIdxCon.substr(-1);
+        this.v.exceptVal = 'end';
         break;
       case '[':
-        this.ck.exceptType = sig;
-        this.ck.deepIdxCon += sig;
-        this.ck.exceptVal = 'val';
+        this.v.exceptType = sig;
+        this.v.deepIdxCon += sig;
+        this.v.exceptVal = 'val';
         break;
       case ']':
-        this.ck.deepIdxCon = this.ck.deepIdxCon.substr(0, this.ck.deepIdxCon.length - 1);
-        this.ck.exceptType = this.ck.deepIdxCon.substr(-1);
-        this.ck.exceptVal = 'end';
+        this.v.deepIdxCon = this.v.deepIdxCon.substr(0, this.v.deepIdxCon.length - 1);
+        this.v.exceptType = this.v.deepIdxCon.substr(-1);
+        this.v.exceptVal = 'end';
         break;
       case '(':
-        this.ck.exceptType = sig;
-        this.ck.deepIdxCon += sig;
-        this.ck.exceptVal = 'val';
+        this.v.exceptType = sig;
+        this.v.deepIdxCon += sig;
+        this.v.exceptVal = 'val';
         break;
       case ')':
-        this.ck.deepIdxCon = this.ck.deepIdxCon.substr(0, this.ck.deepIdxCon.length - 1);
-        this.ck.exceptType = this.ck.deepIdxCon.substr(-1);
-        this.ck.exceptVal = 'end';
+        this.v.deepIdxCon = this.v.deepIdxCon.substr(0, this.v.deepIdxCon.length - 1);
+        this.v.exceptType = this.v.deepIdxCon.substr(-1);
+        this.v.exceptVal = 'end';
         break;
       case 'u':
       case 'n':
@@ -579,9 +531,9 @@ export class Formatter extends FmterEles {
       case 'N':
       case '"':
       case '\'':
-        this.ck.exceptVal === 'ost'
-          ? this.ck.exceptVal = 'col'
-          : this.ck.exceptVal = 'end';
+        this.v.exceptVal === 'ost'
+          ? this.v.exceptVal = 'col'
+          : this.v.exceptVal = 'end';
         break;
     }
   }
@@ -596,10 +548,10 @@ export class Formatter extends FmterEles {
       end: 'danger', war: 'warning', scc: 'success'
     };
     if (['ost', 'col', 'val', 'end'].includes(type)) {
-      this.st.isSrcValid = false;
-      this.st.errRowIdx = this.rowIdx;
+      this.fmtStatus.isSrcValid = false;
+      this.fmtStatus.errRowIdx = this.rowIdx;
     }
-    this.st.altType = altTypes[type];
-    this.st.altInfo = { type: type, idx: this.rowIdx, brc: brc };
+    this.fmtStatus.altType = altTypes[type];
+    this.fmtStatus.altInfo = { type: type, idx: this.rowIdx, brc: brc };
   }
 }
