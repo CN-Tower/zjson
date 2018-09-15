@@ -5,10 +5,10 @@ import { APP_INFO } from '../app.service';
 @Component({
   selector: 'zjs-info',
   template: `
-    <span class="z-ico-hd" (click)="openModal(infoTpl)">
+    <span id="zjs-info" (click)="openModal(infoTpl)">
       <i class="fa fa-info-circle z-op-icon" title="{{'versionInfo' | translate}}"></i>
       <ng-template #infoTpl>
-        <div id="zjs-info">
+        <div id="zjs-info-modal">
           <div class="modal-header">
             <h4 class="modal-title pull-left">转杰森 | ZJSON</h4>
             <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
