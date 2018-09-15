@@ -1,0 +1,43 @@
+<div id="zjs-diff-editor" class="zjs-editor-item">
+  <div class="panel panel-default" [ngClass]="{'z-maximal': isDifMax}" [ngStyle]="maxFmtSize">
+    <div class="panel-heading no-select">
+      <div class="z-panel-icos">
+        <zjs-compare [formated]="originalModel" [icoClass]="'th-list'" (showDiffChange)="showDiffChange($event)"></zjs-compare>
+        <span id="format-btn" (click)="doFormate()">
+          <i class="fa fa-retweet z-op-icon-bg" title="{{'format' | translate}}"></i>
+        </span>
+        <span class="z-ico-hd" (click)="exchangeModels()">
+          <i class="fa fa-exchange z-op-icon" title="{{'clear' | translate}}"></i>
+        </span>
+        <span class="z-ico-hd" (click)="clearModified()">
+          <i class="fa fa-trash z-op-icon" title="{{'clear' | translate}}"></i>
+        </span>
+        <span class="z-ico-hd" (click)="saveModifiedChange()">
+          <i class="fa fa-save z-op-icon" title="{{'saveModified' | translate}}"></i>
+        </span>
+        <span (click)="copyModified()">
+          <i class="fa fa-copy z-op-icon" title="{{'copyModified' | translate}}"></i>
+        </span>
+        <span *ngIf="!isDifMax" (click)="maximalPanel()">
+          <i class="fa fa-window-maximize z-op-icon" title="{{'maximal' | translate}}"></i>
+        </span>
+        <span *ngIf="isDifMax" (click)="minimalPanel()">
+          <i class="fa fa-window-restore z-op-icon" title="{{'minimal' | translate}}"></i>
+        </span>
+        <span class="z-ico-hd close-ico" (click)="closeDiffEditor()">
+          <i class="fa fa-window-close-o z-op-icon" title="{{'close' | translate}}"></i>
+        </span>
+      </div>
+      <h3 class="panel-title">
+        {{'jsonCompare' | translate}}
+        <ng-container *ngIf="isLeftFmted">{{'leftSideIsFmt' | translate}}</ng-container>
+      </h3>
+    </div>
+    <div class="panel-body">
+      <div id="compare-container" class="zjs-editor-wp"> 
+        <monaco-diff-editor *ngIf="isShowEditor" [originalModel]="originalModel"
+                            [modifiedModel]="modifiedModel" (afterInit)="afterEditorInit($event)"></monaco-diff-editor>
+      </div>
+    </div>
+  </div>
+</div>
