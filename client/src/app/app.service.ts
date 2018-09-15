@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { Http } from '@angular/http';
-// import {Observable} from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
 
 export const APP_INFO = {
-  version: 'v3.2.2',
-  updateTime: '2018-08-26',
-  appUrl: 'http://zjson.net'
+  version: 'v4.1.1',
+  updateTime: '2018-09-14',
+  appUrl: 'http://10.63.244.252:8888'
 };
 
 @Injectable()
@@ -59,7 +59,7 @@ export class AppService {
           u"tuple": (u"Tuple_element_001", u"Tuple_element_002")
         }
       }
-    }`},
+    }`.replace(/\n|\s/gm, '')},
     {name: '转杰森 | ZJSON', src: `{
       "zjson": "转杰森 | ZJSON",
       "desc": "Online json formatter",
@@ -78,10 +78,34 @@ export class AppService {
         "string": "Hello World",
         "object": {"property": "value", "key": "val"}
       }
-    }`}
+    }`.replace(/\n|\s/gm, '')}
   ];
 
-  constructor(private http: Http) { }
+  constructor(private http: Http, private translate: TranslateService) { }
+
+  doTranslate(i18n: any) {
+    i18n.confs.show = this.translate.instant('showConfs');
+    i18n.confs.hide = this.translate.instant('hideConfs');
+    i18n.model.expand = this.translate.instant('expand');
+    i18n.model.combine = this.translate.instant('combine');
+  }
+
+  translateAltMsgs(i18n: any, alertInfo: any) {
+    fn.match(alertInfo.type, {
+      'ost': () => i18n.alert.ost = this.translate.instant('alert.ost', {
+          rowIdx: alertInfo.idx }),
+      'col': () => i18n.alert.col = this.translate.instant('alert.col', {
+          rowIdx: alertInfo.idx }),
+      'val': () => i18n.alert.val = this.translate.instant('alert.val', {
+          rowIdx: alertInfo.idx }),
+      'scc': () => i18n.alert.scc = this.translate.instant('alert.scc', {
+          rowIdx: alertInfo.idx }),
+      'war': () => i18n.alert.war = this.translate.instant('alert.war', {
+          rowIdx: alertInfo.idx }),
+      'end': () => i18n.alert.end = this.translate.instant('alert.end', {
+          rowIdx: alertInfo.idx, brc: alertInfo.brc }),
+    });
+  }
 
   getGreeting(lang: string): string {
     return this.greetings[lang][fn.random(this.greetings[lang].length)];
@@ -122,6 +146,22 @@ export class AppService {
 
   setAppTheme(theme: string) {
     window.localStorage['theme'] = theme;
+  }
+
+  getIsStrict() {
+    return window.localStorage['isStrict'] || false;
+  }
+
+  setIsStrict(isStrict: boolean) {
+    window.localStorage['isStrict'] = isStrict;
+  }
+
+  getIsEscape() {
+    return window.localStorage['isEscape'] || false;
+  }
+
+  setIsEscape(isEscape: boolean) {
+    window.localStorage['isEscape'] = isEscape;
   }
 
   getUserId() {
