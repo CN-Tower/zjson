@@ -35,7 +35,7 @@ export class ZjsHintComponent {
     broadcast.hintStream.subscribe((hintInfo: HintInfo) => {
       this.hintCtrl = 'show';
       this.hintMsg = hintInfo.hintMsg;
-      this.hintType = hintInfo.hintType;
+      this.hintType = hintInfo.hintType || 'success';
       fn.timeout('zjs-hint', 2500, () => this.hintCtrl = 'hide');
     });
   }
