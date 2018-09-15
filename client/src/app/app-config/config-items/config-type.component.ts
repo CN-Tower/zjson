@@ -8,7 +8,8 @@ import { Component, Input, Output, EventEmitter} from '@angular/core';
         <h4 class="conf-tt fl">{{'type' | translate}}</h4>
         <div class="conf-con fl">
           <div class="z-drop z-type-drop dropdown" dropdown>
-            <button dropdownToggle class="btn btn-default dropdown-toggle" type="button">
+            <button dropdownToggle [disabled]="conf.isStrict"
+                    class="btn btn-default dropdown-toggle" type="button">
               {{types[conf.type]}}&nbsp;
               <span class="caret"></span>
             </button>
