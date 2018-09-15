@@ -6,7 +6,7 @@
   }
 }
 
-.init-theme (@bg-color, @tt-color, @bd-color, @ft-color) {
+.init-theme (@bg-color, @tt-color, @bd-color, @ft-color, @shadow-color) {
   background: @bg-color;
   color: @ft-color;
   header {
@@ -52,11 +52,14 @@
       border-left: 1px solid  @tt-color;
       border-right: 1px solid  @tt-color;
     }
+    .zjs-placeholder {
+      color: @shadow-color;
+      a {
+        color: @shadow-color;
+      }
+    }
     .zjs-editor-wp {
       border: 1px solid @tt-color;
     }
-    // #z-container {
-    //   border: 1px solid @tt-color;
-    // }
   }
 }
