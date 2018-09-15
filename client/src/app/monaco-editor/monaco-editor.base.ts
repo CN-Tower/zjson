@@ -4,12 +4,13 @@ import { SharedBroadcastService } from '../shared/shared-broadcast.service';
 let isEditorLoaded: boolean = false;
 
 export class MonacoEditorBase implements AfterViewInit {
+
   constructor(public broadcast: SharedBroadcastService) {}
 
   ngAfterViewInit() {
     if (isEditorLoaded) {
       const editor = fn.get(win, 'monaco/editor');
-      if (editor) this.broadcast.editorEmiter.emit(editor);
+      if (editor) this.broadcast.editorReadyUp();
     } else {
       isEditorLoaded = true;
       this.addLoaderScript();
@@ -23,7 +24,7 @@ export class MonacoEditorBase implements AfterViewInit {
     loaderScript.addEventListener('load', () => {
       win.require.config({paths: {'vs': 'assets/lib/monaco-editor/vs'}});
       win.require(['vs/editor/editor.main'], () => {
-        this.broadcast.editorEmiter.emit(win.monaco.editor);
+        this.broadcast.editorReadyUp();
       });
     });
     document.body.appendChild(loaderScript);
