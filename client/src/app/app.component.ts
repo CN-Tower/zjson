@@ -1,9 +1,8 @@
-import { Component, OnInit, AfterViewInit, ViewEncapsulation, TemplateRef } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import { TranslateService, TranslationChangeEvent } from '@ngx-translate/core';
 import { AppService } from './app.service';
-import { SharedBroadcastService, EditorModal } from './shared/index';
+import { SharedBroadcastService, EditorModal, DiffType} from './shared/index';
 import { ZjsApp } from './app.component.class';
-import { Configs } from './formatter/formatter.conf';
 
 let editorW: number, sourceW: number, originX: number;
 
@@ -28,27 +27,22 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     this.lang = lang.match(/en|zh/) ? lang : 'zh';
     translate.use(this.lang);
     this.greeting = this.appService.getGreeting(this.lang);
-    this.conf = new Configs();
     this.appService.initFmtHists();
   }
 
   ngOnInit() {
     this.getFmtHists();
     this.checkAndUpdateApp();
-    this.doTranslate();
+    this.appService.doTranslate(this.i18n);
     this.translate.onLangChange.subscribe((event: TranslationChangeEvent) => {
-      this.doTranslate();
-      this.translateAltMsgs();
+      this.appService.doTranslate(this.i18n);
+      this.appService.translateAltMsgs(this.i18n, this.alertInfo);
     });
   }
 
   ngAfterViewInit() {
-    win['isRendered'] = true;
-    const $win = $(win);
-    this.isWindowBig = $win.width() >= 1025;
-    $win.resize(() => this.onWindowResize());
+    this.initZjsAppStyles();
     this.animateGreeting();
-    this.initAppStyles();
     this.fixCodeZoneWidth();
     this.initSearchIptEvent();
     this.initUploadEvent();
@@ -56,33 +50,32 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     this.initResizeZconEvent();
     this.onWindowResize();
     fn.timeout(500, () => this.onWindowResize());
-    fn.defer(() => this.onChangeTheme(this.appService.getAppTheme()));
-    $(document).on('click keyup', () => this.isPageActive = true);
   }
 
   /**
    * 执行json格式化
    * =================================*/
   doFormate(fmtSrc?: any, isSilence?: boolean) {
-    if (fmtSrc === undefined) {
-      fmtSrc = this.sourcest;
-    } else if (typeof fmtSrc === 'boolean') {
-      isSilence = fmtSrc;
-      fmtSrc = this.sourcest;
-    }
+    fn.match(typeof fmtSrc, {
+      'undefined': () => fmtSrc = this.sourcest,
+      'boolean': () => {
+        isSilence = fmtSrc;
+        fmtSrc = this.sourcest;
+      }
+    });
     this.isOriginEmpty = !this.formated;
     if (!this.sourcest && !this.fmtSourcest && !isSilence) {
       this.alertNotice(this.translate.instant('_format'), 'danger');
     } else {
       fmtSrc = fmtSrc.trim().replace(/\&/mg, '&amp;')
         .replace(/\</mg, '&lt;').replace(/\>/mg, '&gt;');
-      this.formatter.init(fmtSrc, this.conf , (html, json, fmtSt) => {
-        this.formated = json;
-        this.fmtSt = fmtSt;
-        if (html) {
-          this.alertType = this.fmtSt.altType;
-          this.alertInfo = this.fmtSt.altInfo;
-          this.translateAltMsgs();
+      this.formatter.format(fmtSrc, this.conf).subscribe(res => {
+        this.formated = res.fmtResult;
+        this.fmtStatus = res.fmtStatus;
+        if (this.formated) {
+          this.alertType = this.fmtStatus.altType;
+          this.alertInfo = this.fmtStatus.altInfo;
+          this.appService.translateAltMsgs(this.i18n, this.alertInfo);
           this.animateGreeting();
         } else {
           this.emptyFmt();
@@ -90,8 +83,8 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
         this.isOriginEmpty = !this.formated;
         this.isModelExpand = this.conf.model === 'expand';
         fn.defer(() => {
-          this.addScrollTop(0);
-          this.initStIdx();
+          this.addPositionIdx();
+          this.initPositionIdx();
           this.revealErrorRow();
           this.fmtSourcest = fmtSrc;
         });
@@ -121,9 +114,10 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
    * =================================*/
   revealErrorRow() {
     if (this.fmtEditor) {
-      if (!this.fmtSt.isSrcValid) {
-        const errRowIdx = this.fmtSt.errRowIdx;
-        this.fmtEditor.revealPositionInCenter({ lineNumber: errRowIdx, column: 1 });
+      if (!this.fmtStatus.isSrcValid) {
+        const errRowIdx = this.fmtStatus.errRowIdx;
+        this.goToPosition(errRowIdx);
+        this.addPositionIdx(errRowIdx);
         fn.defer(() => this.errRowDecorations = this.fmtEditor.deltaDecorations([], [
           {
             range: new win.monaco.Range(errRowIdx, 1, errRowIdx, 1),
@@ -134,9 +128,6 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
             }
           }
         ]));
-        // const scrollTop = errIdx * 18 - 240;
-        // this.scrollTo(scrollTop);
-        // this.addScrollTop(scrollTop);
       } else {
         this.fmtEditor.deltaDecorations(this.errRowDecorations, []);
       }
@@ -154,18 +145,33 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     this.updateTheme(them);
   }
 
+  setIsStrict(isStrict: boolean) {
+    this.conf.isStrict = isStrict;
+    this.appService.setIsStrict(isStrict);
+    this.doFormate(true);
+  }
+
+  setIsEscape(isEscape: boolean) {
+    this.conf.isEscape = isEscape;
+    this.appService.setIsEscape(isEscape);
+    this.doFormate(true);
+  }
+
   /**
    * 最大化窗口
    * =================================*/
   maximalPanel(type: 'src'|'fmt') {
     let panel;
-    if (type === 'src') {
+    fn.match(type, {
+      'src': () => {
         this.isSrcMax = true;
         panel = $('#zjs-source .panel')[0];
-    } else if (type === 'fmt') {
+      },
+      'fmt': () => {
         this.isFmtMax = true;
         panel = $('#zjs-format .panel')[0];
-    }
+      }
+    });
     fn.fullScreen(panel);
     fn.interval('checkIsFullScreen', 100, () => {
       if (fn.isFullScreen(panel)) {
@@ -178,13 +184,16 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     const winW = $win.width();
     const pW = winW - 40;
     const pH =  winH > 500 ? winH : 500;
-    if (type === 'src') {
+    fn.match(type, {
+      'src': () => {
         this.maxSrcSize = {height: pH + 'px', width: pW + 'px'};
         this.isSrcMax = true;
-    } else if (type === 'fmt') {
+      },
+      'fmt': () => {
         this.maxFmtSize = {height: pH + 'px', width: pW + 'px'};
         this.isFmtMax = true;
-    }
+      }
+    });
   }
 
   /**
@@ -266,7 +275,6 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
    * =================================*/
   showInLeft() {
     this.sourcest = this.formated;
-    $('.src-text').scrollTop(0);
   }
 
   /**
@@ -301,7 +309,6 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
       this.alertNotice(this.translate.instant('removeSavedSuccess'), 'success');
     } else {
       this.sourcest = $e.hist.src;
-      this.doFormate(this.sourcest);
     }
   }
 
@@ -356,8 +363,10 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
    * 全部展开
    * =================================*/
   expandAll() {
-    this.doFormate(this.formated);
-    this.updateFormatEditor();
+    if (this.formated) {
+      this.doFormate(this.conf.isEscape ? this.sourcest : this.formated, true);
+      this.updateFormatEditor();
+    }
   }
 
   /**
@@ -425,14 +434,49 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     this.updateFormatEditor();
   }
 
-  initAppStyles() {
+  initZjsAppStyles() {
     const that = this;
-    $('#z-container').click(function() {
-      that.addScrollTop($(this).scrollTop());
-      that.initStIdx();
+    win['isRendered'] = true;
+    const $win = $(win);
+    this.isWindowBig = $win.width() >= 1025;
+    $win.resize(() => this.onWindowResize());
+    $('#src-to-top').click(() => this.goToPosition(1, this.srcEditor));
+    $('#fmt-to-top').click(() => this.goToPosition(1, this.fmtEditor));
+    $('#source-container').hover(() => {
+      this.isSrcOnHover = true;
+      this.toggleEditorToTop('source');
+    }, () => {
+      this.isSrcOnHover = false;
+      this.isShowSrcToTop = false;
     });
-    const $chars = $(`<span id="zjs-chars" hidden>${fn.array(50, 'x').join('')}</span>`);
-    $('body').append($chars);
+    $('#format-container').hover(() => {
+      this.isFmtOnHover = true;
+      this.toggleEditorToTop('format');
+    }, () => {
+      this.isFmtOnHover = false;
+      this.isShowFmtToTop = false;
+    }).click(() => {
+      this.addPositionIdx();
+      this.initPositionIdx();
+    });
+    fn.defer(() => this.onChangeTheme(this.appService.getAppTheme()));
+    $(document).on('click keyup', () => this.isPageActive = true);
+  }
+
+  toggleEditorToTop(edtName: EditorModal) {
+    fn.match(edtName, {
+      'source': () => {
+        this.isShowSrcToTop = this.isSrcOnHover && this.chkIsScrolled(this.srcEditor);
+      },
+      'format': () => {
+        this.isShowFmtToTop = this.isFmtOnHover && this.chkIsScrolled(this.fmtEditor);
+      }
+    });
+  }
+
+  chkIsScrolled(editor: any) {
+    if (!editor) return false;
+    return Math.ceil(-editor.getScrolledVisiblePosition({}).top / 19) > 5;
   }
 
   /**
@@ -527,17 +571,24 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     });
   }
 
+  /**
+   * 代码编辑器渲染完成
+   * @param editor
+   * @param editorName
+   */
   afterEditorInit(editor: any, editorName: EditorModal) {
     fn.match(editorName, {
       'source': () => {
         this.srcEditor = editor;
         this.updateSourceEditor();
         this.updateFormatEditor();
+        editor.onDidScrollChange(() => this.toggleEditorToTop('source'));
       },
       'format': () => {
         this.fmtEditor = editor;
         this.updateSourceEditor();
         this.updateFormatEditor();
+        editor.onDidScrollChange(() => this.toggleEditorToTop('format'));
       }
     });
     this.updateTabsize();
@@ -564,15 +615,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
 
   updateSourceEditor() {
     fn.defer(() => {
-      if (this.srcEditor) {
-        this.srcEditor.layout();
-        const srcWidth = $('#source-container').width() - 78;
-        const charWidth = $('#zjs-chars').width() / 50;
-        this.srcEditor.updateOptions({
-          wordWrap: 'wordWrapColumn',
-          wordWrapColumn: Math.floor(srcWidth / charWidth)
-        });
-      }
+      if (this.srcEditor) this.srcEditor.layout();
     });
   }
 
@@ -581,17 +624,9 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
       if (this.fmtEditor) {
         this.fmtEditor.layout();
         if (this.conf.model === 'expand') {
-          this.fmtEditor.updateOptions({
-            wordWrap: 'off'
-          });
+          this.fmtEditor.updateOptions({wordWrap: 'off'});
         } else {
-          const minimapW = $('#format-container .minimap').width();
-          const fmtWidth = $('#format-container').width() - 78 - minimapW;
-          const charWidth = $('#zjs-chars').width() / 50;
-          this.fmtEditor.updateOptions({
-            wordWrap: 'wordWrapColumn',
-            wordWrapColumn: Math.floor(fmtWidth / charWidth)
-          });
+          this.fmtEditor.updateOptions({wordWrap: 'on'});
         }
       }
     });
@@ -618,7 +653,6 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
       }
       reader.addEventListener('load', () => {
         this.sourcest = reader.result.toString();
-        this.doFormate(this.sourcest);
         if (isInitFileIpt) {
           $('input.upload').replaceWith('<input type="file" class="upload hide">');
           this.initUploadEvent();
@@ -628,33 +662,50 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
   }
 
   /**
+   * 显示JSON对比窗口
+   * ===================================*/
+  showDiffChange(diffType: DiffType) {
+    this.diffType = diffType;
+    this.isShowDiff = true;
+  }
+
+  /**
+   * 保存对比修改代码
+   * ===================================*/
+  saveDiffModified(modified: string) {
+    this.sourcest = modified;
+  }
+
+  /**
    * 上一步和下一步位置
    * ===================================*/
   lastPosition() {
-    this.stIdx --;
-    if (this.stIdx < 0) this.stIdx = 0;
-    this.scrollTo(this.stArr[this.stIdx]);
+    this.goToPosition(this.positionIdxArr[this.positionIdx]);
+    this.positionIdx --;
+    if (this.positionIdx < 0) this.positionIdx = 0;
     this.nextPztCursor();
   }
 
   nextPosition() {
-    this.stIdx ++;
-    if (this.stIdx > this.stArr.length - 1) this.stIdx = this.stArr.length - 1;
-    this.scrollTo(this.stArr[this.stIdx]);
+    this.positionIdx ++;
+    if (this.positionIdx > this.positionIdxArr.length - 1) {
+      this.positionIdx = this.positionIdxArr.length - 1;
+    }
+    this.goToPosition(this.positionIdxArr[this.positionIdx]);
     this.nextPztCursor();
   }
 
-  scrollTo(top: number) {
-    $('#z-container').scrollTop(top);
+  goToPosition(lineIdx: number, editor: any = this.fmtEditor) {
+    editor.revealPositionInCenter({ lineNumber: lineIdx, column: 1 });
   }
 
-  initStIdx() {
-    this.stIdx = this.stArr.length > 0 ? this.stArr.length - 1 : 0;
+  initPositionIdx() {
+    this.positionIdx = this.positionIdxArr.length > 0 ? this.positionIdxArr.length - 1 : 0;
     this.nextPztCursor();
   }
 
   nextPztCursor() {
-    if (this.stIdx === this.stArr.length - 1) {
+    if (this.positionIdx === this.positionIdxArr.length - 1) {
       $('.next-postion').addClass('no-cursor');
     } else {
       $('.next-postion').removeClass('no-cursor');
@@ -664,59 +715,15 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
   /**
    * 点击代码时增加位置信息
    * ===================================*/
-  addScrollTop(top: number) {
-    if (top !== this.stArr[this.stArr.length - 1]) {
-      this.stArr.push(top);
-      if (this.stArr.length > 32) {
-        this.stArr.shift();
-      }
+  addPositionIdx(rowIdx: number = this.getCurRowIdx()) {
+    if (rowIdx !== this.positionIdxArr[this.positionIdxArr.length - 1]) {
+      this.positionIdxArr.push(rowIdx);
+      if (this.positionIdxArr.length > 100) this.positionIdxArr.shift();
     }
   }
 
-  /**
-   * i18n国际化
-   * =================================*/
-  doTranslate() {
-    this.i18n.confs.show = this.translate.instant('showConfs');
-    this.i18n.confs.hide = this.translate.instant('hideConfs');
-    this.i18n.model.expand = this.translate.instant('expand');
-    this.i18n.model.combine = this.translate.instant('combine');
-  }
-
-  translateAltMsgs() {
-    switch (this.alertInfo.type) {
-      case 'ost':
-        this.i18n.alert.ost = this.translate.instant('alert.ost', {
-          rowIdx: this.alertInfo.idx
-        });
-        break;
-      case 'col':
-        this.i18n.alert.col = this.translate.instant('alert.col', {
-          rowIdx: this.alertInfo.idx
-        });
-        break;
-      case 'val':
-        this.i18n.alert.val = this.translate.instant('alert.val', {
-          rowIdx: this.alertInfo.idx
-        });
-        break;
-      case 'scc':
-        this.i18n.alert.scc = this.translate.instant('alert.scc', {
-          rowIdx: this.alertInfo.idx
-        });
-        break;
-      case 'war':
-        this.i18n.alert.war = this.translate.instant('alert.war', {
-          rowIdx: this.alertInfo.idx
-        });
-        break;
-      case 'end':
-        this.i18n.alert.end = this.translate.instant('alert.end', {
-          rowIdx: this.alertInfo.idx, brc: this.alertInfo.brc
-        });
-        break;
-    }
-    this.alertMsg  = this.i18n.alert[this.alertInfo.type];
+  getCurRowIdx() {
+    return this.fmtEditor.getPosition().lineNumber;
   }
 
   /**
@@ -815,13 +822,13 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     }
     this.sharedLink = '';
     fn.copyText(`${this.appUrl}?sharedId=${this.appService.getUserId()}`);
-    this.showLoading();
+    this.broadcast.showLoading(3000);
     const success = () => {
-      this.isShowLoading = false;
+      this.broadcast.hideLoading();
       this.alertNotice(this.translate.instant('_shareSuccess'));
     };
     const error = () => {
-      this.isShowLoading = false;
+      this.broadcast.hideLoading();
       this.alertNotice(this.translate.instant('_shareJsonError'), 'danger');
     };
     /**electron ignore sta*/
@@ -840,21 +847,20 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
       const queryStr = isFromIpt ? $('#search-ipt').val() || '-' : location.href;
       const sharedId = fn.get(fn.parseQueryStr(queryStr), 'sharedId') || '';
       if (sharedId) {
-        this.showLoading();
+        this.broadcast.showLoading(3000);
         const error = () => {
-          this.isShowLoading = false;
+          this.broadcast.hideLoading();
           this.alertNotice(this.translate.instant('_getJsonError'), 'danger');
         };
         /**electron ignore sta*/
         this.appService.getSharedJson(sharedId).subscribe(res => {
-          this.isShowLoading = false;
+          this.broadcast.hideLoading();
           this.sourcest = res.sharedJson;
-          this.doFormate(this.sourcest);
         }, error);
         /**electron ignore end*/
         /**electron enable sta_*//*
         win.getSharedJson(sharedId, res => {
-          this.isShowLoading = false;
+          this.broadcast.hideLoading();
           this.sourcest = res.sharedJson;
           $('#format-btn').click();
         }, error);
@@ -864,10 +870,5 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
         this.alertNotice(this.translate.instant('_bdSharedLink'), 'danger');
       }
     });
-  }
-
-  showLoading() {
-    this.isShowLoading = true;
-    fn.timeout(3000, () => this.isShowLoading = false);
   }
 }
