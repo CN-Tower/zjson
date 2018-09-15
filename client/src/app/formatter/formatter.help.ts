@@ -4,9 +4,45 @@ export class FmtHelp {
   constructor() {}
 
   /**
+   * 描述: 给String Key打引号
+   */
+  quoteKey(str: string, conf: Configs) {
+    const quote = conf.isEscape ? `\\${conf.keyQuote}` : conf.keyQuote;
+    return quote + str + quote;
+  }
+
+  /**
+   * 描述: 给String Val打引号
+   */
+  quoteVal(str: string, conf: Configs) {
+    const quote = conf.isEscape ? `\\${conf.valQuote}` : conf.valQuote;
+    return fn.match(conf.valQuote, {
+      '\"': quote + str.replace(/"/mg, '\\"') + quote,
+      '\'': quote + str.replace(/'/mg, '\\\'') + quote
+    });
+  }
+
+  /**
    * 描述: 给String打引号
    */
-  quoteVal = (val: string, quo: string) => quo + val + quo;
+  quoteStr(str: string, conf: Configs, head?: any, isOnlyQuoteHead: boolean = false) {
+    if (!conf.isEscape) return str;
+    if (typeof head === 'boolean') {
+      isOnlyQuoteHead = head;
+      head = undefined;
+    }
+    str = !head
+      ? `\\${str}`
+      : str.replace(head, `${head.substr(0, head.length - 1)}\\${head.substr(-1)}`);
+    return isOnlyQuoteHead ? str : `${str.substr(0, str.length - 1)}\\${str.substr(-1)}`;
+  }
+
+  /**
+   * 描述: 判断是否为特殊值
+   */
+  isSpecialVal(val: any) {
+    return val === '' || ['object', 'boolean'].includes(typeof val);
+  }
 
   /**
    * 描述: 获取剩余字符串
