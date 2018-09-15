@@ -21,16 +21,28 @@
   #configs .panel {
     margin-bottom: 0;
   }
-  .z-sm-hide, .z-fmt-alts, #z-notice-text {
+  .z-sm-hide, .z-fmt-alts {
     display: none !important;
   }
 }
-#zjs-chars {
-  font-family: Consolas, "Courier New", monospace;
-  font-weight: normal;
-  font-size: 14px;
-  line-height: 19px;
-  letter-spacing: 0px;
+#zjs-info-modal {
+  .modal-title {
+    color: #333333;
+  }
+  .z-info-modal {
+    color: #333333;
+    table tr td{
+      &:nth-child(1) {
+        text-align: right;
+      }
+      &:nth-child(2) {
+        padding-left: 4px;
+      }
+    }
+    .divider-left {
+      margin-left: 4px;
+    }
+  }
 }
 .myContentClass {
   background: red;
@@ -63,11 +75,6 @@
     height: 100%;
     z-index: 998;
   }
-  .z-code-container {
-    margin-top: 0;
-    margin-bottom: 0;
-    text-align: left;
-  }
   header {
     padding: 0 20px;
     position: relative;
@@ -78,6 +85,20 @@
       z-index: 998;
       box-shadow: 0 6px 12px rgba(0,0,0,.175);
     }
+  }
+  .shadow-ico {
+    font-size: 24px;
+    cursor: pointer;
+    opacity: 0.5;
+    &:hover {
+      opacity: 1;
+    }
+  }
+  .zjs-to-Top {
+    position: absolute;
+    right: 35px;
+    bottom: 20px;
+    z-index: 1;
   }
   #zjs-editors {
     padding: 10px 20px;
@@ -120,6 +141,21 @@
       }
       &#zjs-source {
         width: 35%;
+        #source-container {
+          position: relative;
+          .zjs-placeholder {
+            position: absolute;
+            width: 80%;
+            height: 78px;
+            left: 0;
+            right: 0;
+            top: 50px;
+            margin: auto; 
+            text-align: center;
+            font-size: 24px;
+            z-index: 1;
+          }
+        }
       }
       &#zjs-drager {
         width: 1%;
@@ -143,21 +179,13 @@
         width: 64%;
         position: relative;
         #share-link {
-          font-size: 24px;
           position: absolute;
           top: 68px;
           right: 50px;
-          z-index: 100;
-          .fmted-ops {
-            opacity: 0.5;
-            cursor: pointer;
-            &:hover {
-              opacity: 1;
-            }
-          }
+          z-index: 99;
           div {
             &.search {
-              .fmted-ops;
+              .shadow-ico;
               &:hover input {
                 width: 160px;
                 transition: width .5s;
@@ -172,134 +200,22 @@
             }
             .fmted-op {
               .clear-fix;
-              .fmted-ops;
+              .shadow-ico;
               margin-top: 10px;
-            }
-            .opacity0 {
-              opacity: 0;
             }
           }
         }
-        #z-container {
-          width: 100%;
-          height: 100%;
-          overflow: auto;
+        #format-container {
           position: relative;
-          font-size: 14px;
-          line-height: 18px;
-          border-radius: 3px;
-          margin-left: -1px;
-          box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-          transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-          #z-stage {
+          #z-notice-text {
             position: absolute;
-            min-height: 100%;
-            top: 0;
+            top: 52px;
+            padding: 0 30px;
             font-size: 14px;
-            line-height: 18px;
             z-index: 1;
-            &.fullWidth {
-              width: 100%;
-            }
-            #z-notice-text {
-              margin: 6px 0 0 55px;
-              color: #999;
-              strong {
-                display: inline-block;
-                width: 72px;
-              }
-              a {
-                color: #999;
-              }
-            }
-            #z-index {
-              width: 40px;
-              min-height: 100%;
-              position: absolute;
-              top: 0;
-              left: 0;
-              padding: 6px 4px 6px 0;
-              z-index: 2;
-            }
-            .z-row-index {
-              position: absolute;
-              width: 40px;
-              left: -2px;
-              color: #555;
-              text-align: right;
-              z-index: 3;
-              font-weight: bold;
-              .z-hint-caret {
-                position: absolute;
-                right: -7px;
-                font-size: 18px;
-                color: red;
-              }
-              .z-idxes-wp {
-                .z-idxes {
-                  display: inline-block;
-                  width: 9px;
-                  height: 16px;
-                  background-size: auto 14px !important;
-                  &.z-idx-0 {background-position: -2px 1px;}
-                  &.z-idx-1 {background-position: -18px 1px;}
-                  &.z-idx-2 {background-position: -35px 1px;}
-                  &.z-idx-3 {background-position: -52px 1px;}
-                  &.z-idx-4 {background-position: -68px 1px;}
-                  &.z-idx-5 {background-position: -85px 1px;}
-                  &.z-idx-6 {background-position: -102px 1px;}
-                  &.z-idx-7 {background-position: -118px 1px;}
-                  &.z-idx-8 {background-position: -135px 1px;}
-                  &.z-idx-9 {background-position: -151px 1px;}
-                }
-              }
-            }
-            .operator {
-              position: absolute;
-              width: 10px;
-              height: 10px;
-              left: 44px;
-              margin-top: 4px;
-              cursor: pointer;
-              background-size: 10px 10px !important;
-              background-repeat: no-repeat;
-              background-position: center center;
-            }
-            .z-canvas {
-              border: none;
-              min-height: 100%;
-              padding: 6px 12px 6px 56px;
-              margin: 0;
-              box-sizing: border-box;
-              font-size: 14px;
-              line-height: 18px;
-              color: #555;
-              background: transparent;
-              &:focus {
-                border: none;
-                outline: none;
-              }
-              &.z-colp {
-                word-break: break-all;
-                word-wrap: break-word;
-              }
-              .z-brace {
-                .z-ellipsis {
-                  display: none;
-                  width: 18px;
-                  height: 6px;
-                  cursor: pointer;
-                  background-size: 22px 14px !important;
-                  background-repeat: no-repeat;
-                  background-position: center center;
-                }
-                &.collapsed .z-obj-val {
-                  display: none;
-                }
-                &.collapsed .z-ellipsis {
-                  display: inline-block;
-                }
-              }
+            strong {
+              display: inline-block;
+              width: 72px;
             }
           }
         }
