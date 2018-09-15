@@ -10,53 +10,45 @@ import { AppComponent } from './app.component';
 import { AppService } from './app.service';
 import { SharedBroadcastService } from './shared/index';
 import { BsDropdownModule, ModalModule } from 'ngx-bootstrap';
-import { MonacoEditorComponent } from './monaco-editor/index';
+import {
+  MonacoEditorComponent, MonacoDiffEditorComponent, ZjsDiffEditorComponent
+} from './monaco-editor/index';
 import {
   AppConfigComponent, ConfigLangComponent, ConfigThemeComponent,
   ConfigIndentComponent, ConfigTypeComponent
 } from './app-config/index';
 import {
   ZjsHintComponent, ZjsTitleComponent, ZjsNoticeComponent, ZjsInfoComponent,
-  ZjsHistComponent, ZjsLoadingComponent, ZjsUpdateComponent
+  ZjsHistComponent, ZjsLoadingComponent, ZjsUpdateComponent, ZjsCompareComponent
 } from './attachments';
+
+export function TranslateFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
 
 @NgModule({
   imports: [
-    BrowserModule,
-    FormsModule,
-    HttpModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: (http: HttpClient) => new TranslateHttpLoader(http, './assets/i18n/', '.json'),
-        deps: [HttpClient]
-      }
-    }),
-    BsDropdownModule.forRoot(),
-    ModalModule.forRoot()
+    BrowserModule, FormsModule, HttpModule,
+    HttpClientModule, BrowserAnimationsModule,
+    BsDropdownModule.forRoot(), ModalModule.forRoot(),
+    TranslateModule.forRoot({loader: {
+      provide: TranslateLoader, deps: [HttpClient],
+      useFactory: TranslateFactory
+    }})
   ],
   declarations: [
-    AppComponent,
-    AppConfigComponent,
-    ConfigLangComponent,
-    ConfigThemeComponent,
-    ConfigIndentComponent,
-    ConfigTypeComponent,
-    MonacoEditorComponent,
-    ZjsHintComponent,
-    ZjsTitleComponent,
-    ZjsNoticeComponent,
-    ZjsInfoComponent,
-    ZjsHistComponent,
-    ZjsLoadingComponent,
-    ZjsUpdateComponent
+    AppComponent, AppConfigComponent, ConfigLangComponent,
+    ConfigThemeComponent, ConfigIndentComponent, ConfigTypeComponent,
+    MonacoEditorComponent, MonacoDiffEditorComponent,
+    ZjsDiffEditorComponent, ZjsHintComponent, ZjsTitleComponent,
+    ZjsNoticeComponent, ZjsInfoComponent, ZjsHistComponent,
+    ZjsLoadingComponent, ZjsUpdateComponent, ZjsCompareComponent
   ],
   providers: [
-    AppService,
-    SharedBroadcastService
+    AppService, SharedBroadcastService
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [
+    AppComponent
+  ]
 })
 export class AppModule { }
