@@ -26,17 +26,9 @@ import { SharedBroadcastService } from '../shared/shared-broadcast.service';
 })
 export class MonacoEditorComponent extends MonacoEditorBase implements OnInit, ControlValueAccessor {
   @ViewChild('editorContainer') _editorContainer: ElementRef;
-  @Input('options')
-  set options(options: any) {
-    this._options = options;
-    if (this._editor) {
-      this._editor.dispose();
-      this.initMonacoEditor();
-    }
-  }
+  @Input() options: any;
   @Output() afterInit: EventEmitter<any> = new EventEmitter();
 
-  private _options: any;
   private _editor: any;
   private _value: string = '';
 
@@ -64,7 +56,8 @@ export class MonacoEditorComponent extends MonacoEditorBase implements OnInit, C
 
   initMonacoEditor() {
     const container = this._editorContainer.nativeElement;
-    this._editor = win.monaco.editor.create(container, this._options);
+    if (this._editor) this._editor.dispose();
+    this._editor = win.monaco.editor.create(container, this.options);
     this._editor.setValue(this._value);
     this._editor.onDidChangeModelContent(() => {
       const value = this._editor.getValue();
