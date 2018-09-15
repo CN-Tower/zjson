@@ -1,7 +1,7 @@
 <div id="zjson" class="theme-{{theme}}">
 
   <zjs-hint></zjs-hint>
- 
+
   <!-- ============= ZJSON HEADER ============= -->
   <header class="app-header">
     <app-config [conf]="conf" [lang]="lang" [theme]="theme">
@@ -19,7 +19,7 @@
       </div>
     </app-config>
     <zjs-title></zjs-title>
-    <zjs-notice [alertType]="alertType" [alertMsg]="alertMsg" [greeting]="greeting"></zjs-notice>
+    <zjs-notice [alertType]="alertType" [alertMsg]="i18n.alert[alertInfo.type]" [greeting]="greeting"></zjs-notice>
   </header> 
   <!-- HEADER END -->
 
@@ -35,20 +35,28 @@
             <span *ngIf="!isSrcMax && isOnLeft" class="z-sm-hide" (click)="pushToMiddle()">
               <i class="fa fa-pause z-op-icon" title="{{'pushToMiddle' | translate}}"></i>
             </span>
-            <zjs-info></zjs-info>
+            <span *ngIf="!conf.isEscape" class="z-ico-hd" (click)="setIsEscape(true)">
+              <i class="fa fa-circle-o z-op-icon" title="{{'isEscape' | translate}}"></i>
+            </span>
+            <span *ngIf="conf.isEscape" class="z-ico-hd" (click)="setIsEscape(false)">
+              <i class="fa fa-dot-circle-o z-op-icon" title="{{'isEscape' | translate}}"></i>
+            </span>
             <span class="z-ico-hd" (click)="clearSourc()">
               <i class="fa fa-trash z-op-icon" title="{{'clear' | translate}}"></i>
             </span>
+            <zjs-hist *ngIf="!isSrcMax" [fmtHists]="fmtHists" (showOrRmFmtHist)="showOrRmFmtHist($event)"></zjs-hist>
             <span class="z-ico-hd" (click)="upload()">
               <i class="fa fa-upload z-op-icon" title="{{'upload' | translate}}"></i>
               <input type="file" class="upload hide">
             </span> 
-            <zjs-hist *ngIf="!isSrcMax" [fmtHists]="fmtHists" (showOrRmFmtHist)="showOrRmFmtHist($event)"></zjs-hist>
-            <span id="format-btn" *ngIf="!isSrcMax" (click)="doFormate()">
-              <i class="fa fa-retweet z-op-icon-bg" title="{{'format' | translate}}"></i>
+            <span *ngIf="!conf.isStrict" class="z-ico-hd" (click)="setIsStrict(true)">
+              <i class="fa fa-toggle-off z-op-icon" title="{{'isStrict' | translate}}"></i>
             </span>
-            <span class="z-ico-hd" (click)="doFormate()">
-              <i class="fa fa-magic z-op-icon" title="{{'format' | translate}}"></i>
+            <span *ngIf="conf.isStrict" class="z-ico-hd" (click)="setIsStrict(false)">
+              <i class="fa fa-toggle-on z-op-icon" title="{{'isStrict' | translate}}"></i>
+            </span>
+            <span id="format-btn" *ngIf="!isSrcMax" (click)="conf.isStrict = true; doFormate()">
+              <i class="fa fa-retweet z-op-icon-bg" title="{{'fmtToJson' | translate}}"></i>
             </span>
             <span *ngIf="!isSrcMax" (click)="maximalPanel('src')">
               <i class="fa fa-window-maximize z-op-icon" title="{{'maximal' | translate}}"></i>
@@ -62,6 +70,10 @@
         </div>
         <div class="panel-body">
           <div id="source-container" class="zjs-editor-wp">
+            <div *ngIf="!sourcest" class="zjs-placeholder z-sm-hide no-select" [innerHTML]="'placeHolder' | translate"></div>
+            <div [class.hide]="!isShowSrcToTop" id="src-to-top" class="zjs-to-Top">
+              <i class="fa fa-arrow-circle-o-up shadow-ico" title="{{'backToTop' | translate}}"></i>
+            </div>
             <monaco-editor [options]="srcEditorOptions"
                           [(ngModel)]="sourcest" (ngModelChange)="doFormate(true)"
                           (afterInit)="afterEditorInit($event, 'source')"></monaco-editor>
@@ -79,7 +91,7 @@
         <div class="panel-heading no-select">
           <div class="z-panel-icos">
             <span *ngIf="!isFmtMax" class="z-ico-hd z-show-left" (click)="showInLeft()">
-              <i class="fa fa-arrow-left z-op-icon" title="{{'showInLeft' | translate}}"></i>
+              <i class="fa fa-hand-o-left z-op-icon" title="{{'showInLeft' | translate}}"></i>
             </span>
             <span *ngIf="conf.model=='expand'" class="z-ico-hd" (click)="conf.model='combine'; expandAll()">
               <i class="fa fa-compress z-op-icon" title="{{i18n.model.combine}}"></i>
@@ -90,17 +102,15 @@
             <span class="z-ico-hd" (click)="clearFmted()">
               <i class="fa fa-trash z-op-icon" title="{{'clear' | translate}}"></i>
             </span>
-            <span class="z-ico-hd" (click)="download()">
-              <i class="fa fa-download z-op-icon" title="{{'download' | translate}}"></i>
-            </span>
             <span *ngIf="!isFmtMax" class="z-ico-hd" (click)="saveFmted()">
               <i class="fa fa-save z-op-icon" title="{{'save' | translate}}"></i>
             </span>
-            <span class="z-sm-hide" (click)="copyFmted()">
-              <i class="fa fa-columns z-op-icon" title="{{'copy' | translate}}"></i>
+            <span class="z-ico-hd" (click)="download()">
+              <i class="fa fa-download z-op-icon" title="{{'download' | translate}}"></i>
             </span>
+            <zjs-compare [formated]="formated" [icoClass]="'columns'" (showDiffChange)="showDiffChange($event)"></zjs-compare>
             <span *ngIf="!isFmtMax" (click)="copyFmted()">
-              <i class="fa fa-clone z-op-icon" title="{{'copy' | translate}}"></i>
+              <i class="fa fa-copy z-op-icon" title="{{'copy' | translate}}"></i>
             </span>
             <span *ngIf="!isFmtMax" (click)="maximalPanel('fmt')">
               <i class="fa fa-window-maximize z-op-icon" title="{{'maximal' | translate}}"></i>
@@ -131,47 +141,45 @@
             </div>
           </div>
           <div id="format-container" class="zjs-editor-wp">
+            <div *ngIf="!formated" id="z-notice-text" class="zjs-placeholder z-sm-hide no-select">
+              <p>{{'zNotice' | translate}}</p>
+              <i class="fa fa-star"></i>&nbsp;<strong>{{'project' | translate}}:</strong>&nbsp;&nbsp;
+              <a class="links" target="_blank" href="http://github.com/CN-Tower/zjson">
+                http://github.com/CN-Tower/zjson
+              </a><br>
+              <i class="fa fa-star"></i>&nbsp;<strong>{{'funclib' | translate}}:</strong>&nbsp;&nbsp;
+              <a class="links" target="_blank" href="http://github.com/CN-Tower/funclib.js">
+                http://github.com/CN-Tower/funclib.js
+              </a><br>
+              <!--electron ignore sta-->
+              <i class="fa fa-star"></i>&nbsp;<strong>{{'download_' | translate}}:</strong>&nbsp;&nbsp;
+              <a class="links" target="_blank" href="{{updateUrl}}">
+                zjson-win32-x64.exe (v{{remoteVersion}})
+              </a><br>
+              <!--electron ignore end-->
+              <!--electron enable sta_--><!--
+              <i class="fa fa-star"></i>&nbsp;<strong>{{'website' | translate}}:</strong>&nbsp;&nbsp;
+              <a class="links" target="_blank" href="http://www.zjson.net">
+                http://www.zjson.net
+              </a><br>
+              --><!--electron enable end_-->
+            </div>
+            <div [class.hide]="!isShowFmtToTop" id="fmt-to-top" class="zjs-to-Top">
+              <i class="fa fa-arrow-circle-o-up shadow-ico" title="{{'backToTop' | translate}}"></i>
+            </div>
             <monaco-editor [options]="fmtEditorOptions" [(ngModel)]="formated" 
                            (afterInit)="afterEditorInit($event, 'format')"></monaco-editor>
           </div>
-          <!-- <div id="z-container">
-            <div id="z-stage" [class.fullWidth]="!isModelExpand">
-              <div *ngIf="!formated" id="z-notice-text" class="no-select">
-                <p>{{'zNotice' | translate}}</p>
-                <i class="fa fa-star"></i>&nbsp;<strong>{{'project' | translate}}:</strong>&nbsp;&nbsp;
-                <a class="links" target="_blank" href="http://github.com/CN-Tower/zjson">
-                  http://github.com/CN-Tower/zjson
-                </a><br>
-                <i class="fa fa-star"></i>&nbsp;<strong>{{'funclib' | translate}}:</strong>&nbsp;&nbsp;
-                <a class="links" target="_blank" href="http://github.com/CN-Tower/funclib.js">
-                  http://github.com/CN-Tower/funclib.js
-                </a><br> -->
-                <!--electron ignore sta-->
-                <!-- <i class="fa fa-star"></i>&nbsp;<strong>{{'download_' | translate}}:</strong>&nbsp;&nbsp;
-                <a class="links" target="_blank" href="{{updateUrl}}">
-                  zjson-win32-x64.exe (v{{remoteVersion}})
-                </a><br> -->
-                <!--electron ignore end-->
-                <!--electron enable sta_--><!--
-                <i class="fa fa-star"></i>&nbsp;<strong>{{'website' | translate}}:</strong>&nbsp;&nbsp;
-                <a class="links" target="_blank" href="http://www.zjson.net">
-                  http://www.zjson.net
-                </a><br>
-                --><!--electron enable end_-->
-              <!-- </div>
-              <div id="z-index" [style.height]="setRowIdxWpHeight()"></div>
-              <pre *ngIf="isModelExpand" class="z-canvas"
-                    [attr.contenteditable]="isFmtedEditAb"></pre>
-              <div *ngIf="!isModelExpand" class="z-canvas z-colp"
-                    [attr.contenteditable]="isFmtedEditAb"></div>
-            </div>
-          </div> -->
         </div>
       </div>
     </div>
     <!-- FMTED END -->
+
+    <zjs-diff-editor *ngIf="isShowDiff" [formated]="formated" [fmtConf]="conf"
+                    [diffType]="diffType" [sourcest]="sourcest"
+                    (closePanel)="isShowDiff = false" (saveModified)="saveDiffModified($event)"></zjs-diff-editor>
   </section>
 </div>
 
-<zjs-loading *ngIf="isShowLoading"></zjs-loading>
-<zjs-update *ngIf="isShowLoading"></zjs-update>
+<zjs-update></zjs-update>
+<zjs-loading></zjs-loading>
