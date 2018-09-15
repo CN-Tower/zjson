@@ -1,3 +1,4 @@
+export * from './zjs-compare.component';
 export * from './zjs-hint.component';
 export * from './zjs-title.component';
 export * from './zjs-notice.component';
