@@ -55,7 +55,7 @@
             <span *ngIf="conf.isStrict" class="z-ico-hd" (click)="setIsStrict(false)">
               <i class="fa fa-toggle-on z-op-icon" title="{{'isStrict' | translate}}"></i>
             </span>
-            <span id="format-btn" *ngIf="!isSrcMax" (click)="conf.isStrict = true; doFormate()">
+            <span id="format-btn" *ngIf="!isSrcMax" (click)="doFormate()">
               <i class="fa fa-retweet z-op-icon-bg" title="{{'fmtToJson' | translate}}"></i>
             </span>
             <span *ngIf="!isSrcMax" (click)="maximalPanel('src')">

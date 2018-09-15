@@ -6,7 +6,7 @@ import 'rxjs/add/operator/map';
 export const APP_INFO = {
   version: 'v4.1.1',
   updateTime: '2018-09-14',
-  appUrl: 'http://10.63.244.252:8888'
+  appUrl: 'http://www.zjson.net'
 };
 
 @Injectable()
