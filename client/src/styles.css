@@ -31,6 +31,9 @@ html, body {
 .cl-red {
   color: rgb(250, 54, 54) !important;
 }
+.opacity0 {
+  opacity: 0;
+}
 .no-select {
   user-select: none;
   -webkit-touch-callout: none;
