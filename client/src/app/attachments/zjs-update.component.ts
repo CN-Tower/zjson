@@ -1,6 +1,7 @@
 import { Component, Input, TemplateRef} from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { AppService } from '../app.service';
+import { IgnoreInfo } from '../shared';
 
 @Component({
   selector: 'zjs-update',
@@ -36,7 +37,10 @@ export class ZjsUpdateComponent {
   }
 
   cancelUpdate() {
-    if (this.isNoShowUdate) this.appService.setIgnoreVersion(this.remoteVersion);
+    if (this.isNoShowUdate) {
+      const ignoreInfo: IgnoreInfo = {ignoreTime: fn.time(), ignoreVersion: this.remoteVersion};
+      this.appService.setIgnoreVersion(ignoreInfo);
+    }
     this.modalRef.hide();
   }
 

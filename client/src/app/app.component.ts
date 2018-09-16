@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import { TranslateService, TranslationChangeEvent } from '@ngx-translate/core';
 import { AppService } from './app.service';
-import { SharedBroadcastService, EditorModal, DiffType} from './shared/index';
+import { SharedBroadcastService, EditorModal, DiffType, IgnoreInfo} from './shared/index';
 import { ZjsApp } from './app.component.class';
 
 let editorW: number, sourceW: number, originX: number;
@@ -339,7 +339,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
    * 清空操作
    * =================================*/
   clearFmted() {
-    if (this.fmtSourcest) {
+    if (this.formated) {
       this.emptyFmt();
     } else {
       this.alertNotice(this.translate.instant('_clear'), 'danger');
@@ -734,14 +734,21 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     this.checkAppVersion(false);
     this.refreshVisitCount();
     this.getSharedJson(false);
-    this.getUpdateUrl();
+    this.appService.getUpdateUrl().subscribe(res => {
+      this.remoteVersion = res.version;
+      this.updateUrl = res.updateUrl;
+    });
     fn.interval('refresh-visit-count', 300000, () => this.refreshVisitCount());
     /**electron ignore end*/
     /**electron enable sta_*//*
     fn.defer(() => win.checkAppVersion(res => {
       if (res.version !== res.localVersion) {
-        const noUpVersion = this.appService.getIgnoreVersion();
-        if (!noUpVersion || res.version !== noUpVersion) {
+        let ignoreInfo: IgnoreInfo = this.appService.getIgnoreVersion();
+        if (fn.time() - ignoreInfo.ignoreTime > 86400000) {
+          ignoreInfo = undefined;
+          this.appService.setIgnoreVersion(undefined);
+        }
+        if (!fn.get(ignoreInfo, 'ignoreVersion') || res.version !== ignoreInfo.ignoreVersion) {
           this.updateUrl = res.updateUrl;
           this.remoteVersion = res.version;
           $('#updateBtn').click();
@@ -751,16 +758,6 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     *//**electron enable end_*/
     this.pollingVisitCount();
     fn.interval('polling-visit-count', 15000, () => this.pollingVisitCount());
-  }
-
-  /**
-   * 获取App下载地址
-   * =================================*/
-  getUpdateUrl() {
-    this.appService.getUpdateUrl().subscribe(res => {
-      this.remoteVersion = res.version;
-      this.updateUrl = res.updateUrl;
-    });
   }
 
   /**

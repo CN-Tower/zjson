@@ -8,3 +8,7 @@ export interface FmtHist {
   src: any;
 }
 export type DiffType = 'src' | 'new' | string;
+export interface IgnoreInfo {
+  ignoreTime: number;
+  ignoreVersion: string;
+}

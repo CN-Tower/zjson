@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
+import { IgnoreInfo } from './shared';
 
 export const APP_INFO = {
   version: 'v4.1.1',
@@ -128,7 +129,7 @@ export class AppService {
     return window.localStorage['ignoreVersion'];
   }
 
-  setIgnoreVersion(version: string) {
+  setIgnoreVersion(version: IgnoreInfo) {
     window.localStorage['ignoreVersion'] = version;
   }
 
@@ -138,9 +139,12 @@ export class AppService {
 
   getEditorTheme(theme: string) {
     return fn.match(theme, {
-      'dark': () => theme = 'vs-dark',
-      'light': () => theme = 'vs',
-      '@default': () => theme = 'vs-dark'
+      'dark':      'vs-dark',
+      'light':     'vs',
+      'blue':      'blue',
+      'solarized': 'solarized-light',
+      'moonlight': 'solarized-dark',
+      '@default': () => 'vs-dark'
     });
   }
 

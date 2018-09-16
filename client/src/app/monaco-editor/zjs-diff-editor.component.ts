@@ -51,6 +51,10 @@ export class ZjsDiffEditorComponent implements OnInit, AfterViewInit, OnDestroy 
     $(win).off('resize', this.resizeEditor);
   }
 
+  resizeEditor = () => {
+    if (this.editor) this.editor.layout();
+  }
+
   afterEditorInit(editorInfo: any) {
     this.editor = editorInfo.editor;
     this.editorModel = editorInfo.editorModel;
@@ -107,10 +111,6 @@ export class ZjsDiffEditorComponent implements OnInit, AfterViewInit, OnDestroy 
     this.originalModel = { code: this.originalCode };
     this.modifiedModel = { code: this.modifiedCode };
     fn.defer(() => this.isShowEditor = true);
-  }
-
-  resizeEditor = () => {
-    if (this.editor) this.editor.layout();
   }
 
   clearModified() {

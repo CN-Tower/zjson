@@ -1,5 +1,5 @@
 import { AfterViewInit } from '@angular/core';
-import { SharedBroadcastService } from '../shared/shared-broadcast.service';
+import { SharedBroadcastService, MONACO_THEMES } from '../shared';
 
 let isEditorLoaded: boolean = false;
 
@@ -25,13 +25,21 @@ export class MonacoEditorBase implements AfterViewInit {
     loaderScript.addEventListener('load', () => {
       win.require.config({paths: {'vs': 'assets/lib/monaco-editor/vs'}});
       win.require(['vs/editor/editor.main'], () => {
+        this.defineEditorThemes();
         this.broadcast.editorReadyUp();
       });
     });
     document.body.appendChild(loaderScript);
     /**electron ignore end*/
     /**electron enable sta_*//*
-    fn.defer(() => win.loadMonacoEditor(() => this.broadcast.editorReadyUp()));
+    fn.defer(() => win.loadMonacoEditor(() => {
+      this.defineEditorThemes();
+      this.broadcast.editorReadyUp();
+    }));
     *//**electron enable end_*/
+  }
+
+  defineEditorThemes() {
+    fn.forIn(MONACO_THEMES, (themeName, themeDetail) => win.monaco.editor.defineTheme(themeName, themeDetail));
   }
 }
