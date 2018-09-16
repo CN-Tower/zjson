@@ -55,7 +55,7 @@ export class ZjsDiffEditorComponent implements OnInit, AfterViewInit, OnDestroy 
     this.editor = editorInfo.editor;
     this.editorModel = editorInfo.editorModel;
     this.broadcast.hideLoading();
-    this.editor.onDidUpdateDiff(() => this.broadcast.hideLoading());
+    // this.editor.onDidUpdateDiff(() => this.broadcast.hideLoading());
     this.editorModel.onDidChangeContent(() => {
       this.modifiedCode = this.getModelContent();
     });

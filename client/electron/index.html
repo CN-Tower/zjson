@@ -30,7 +30,7 @@
     </div>
   </app-root>
 
-  <script>var win = window;</script>
+  <script>var win = window; var path = require('path');</script>
   <script type="text/javascript" src="./runtime.js"></script>
   <script type="text/javascript" src="./polyfills.js"></script>
   <script type="text/javascript" src="./assets/lib/jquery.min.js"></script>
@@ -44,5 +44,16 @@
   <script type="text/javascript" src="./assets/lib/FileSaver.js"></script>
   <script type="text/javascript" src="./zjson.js"></script>
   <script>require('./renderer.js')</script>
+  <script src="./assets/lib/monaco-editor/vs/loader.js"></script>
+  <script>
+    window.loadMonacoEditor = onLoaded => {
+      const pathPrefix = {
+        1: 'dist',
+        2: 'resources/app'
+      }[ 2 ];
+      require.config({ paths: { 'vs': path.resolve(`./${pathPrefix}/assets/lib/monaco-editor/vs`) }});
+      require(['vs/editor/editor.main'], () => onLoaded());
+    }
+  </script>
 </body>
 </html>

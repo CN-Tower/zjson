@@ -6,15 +6,14 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "start": "npm run unignore && ng serve --proxy-config proxy.conf.json -o",
+    "start": "node build/pre-build.js && ng serve --proxy-config proxy.conf.json -o",
     "build": "node build/pre-build.js && ng build --prod",
     "build:electron": "node build/pre-build.js electron && ng build --prod",
     "update": "npm run build && node build/update-zjson.js",
     "electron:dist": "electron dist",
     "electron": "npm run build:electron && node build/electron.conf.js && electron dist",
     "electron:package": "electron-packager dist zjson --platform=win32 --out=build/package --icon=dist/zjson.ico --overwrite",
-    "package": "npm run electron && npm run electron:package && npm run unignore",
-    "unignore": "node build/pre-build.js"
+    "package": "npm run electron && npm run electron:package && node build/pre-build.js"
   },
   "private": true,
   "dependencies": {

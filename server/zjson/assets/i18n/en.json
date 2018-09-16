@@ -23,6 +23,7 @@
     "format": "Format Source",
     "save": "Save",
     "copy": "Copy",
+    "exchange": "Exchange",
     "saveModified": "Save Modified",
     "copyModified": "copy Modified",
     "clear": "Clear",

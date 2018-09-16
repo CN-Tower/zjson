@@ -33,24 +33,52 @@ const eabEndElStr = '<!--electron enable end-->';
 const eabStaElStr_ = '<!--electron enable sta_--><!--';
 const eabEndElStr_ = '--><!--electron enable end_-->';
 
-const tsPath = 'src/app/app.component.ts';
-const elPath = 'src/app/app.component.html';
-let tsStr = fn.rd(tsPath)
-let elStr = fn.rd(elPath)
+const isElectron = process.argv[2] === 'electron';
 
-if (process.argv[2] === 'electron') {
-  tsStr = tsStr.replace(ignStaTs, ingStaTsStr_).replace(ingEndTs, ingEndTsStr_)
-               .replace(eabStaTs_, eabStaTsStr).replace(eabEndTs_, eabEndTsStr);
-  elStr = elStr.replace(ignStaEl, ingStaElStr_).replace(ingEndEl, ingEndElStr_)
-               .replace(eabStaEl_, eabStaElStr).replace(eabEndEl_, eabEndElStr);
-} else {
-  tsStr = tsStr.replace(ignStaTs_, ingStaTsStr).replace(ingEndTs_, ingEndTsStr)
-               .replace(eabStaTs, eabStaTsStr_).replace(eabEndTs, eabEndTsStr_);
-  elStr = elStr.replace(ignStaEl_, ingStaElStr).replace(ingEndEl_, ingEndElStr)
-               .replace(eabStaEl, eabStaElStr_).replace(eabEndEl, eabEndElStr_);
+const tsPaths = [
+  'src/app/app.component.ts',
+  'src/app/monaco-editor/monaco-editor.base.ts'
+];
+const elPaths = ['src/app/app.component.html'];
+
+tsPaths.forEach(tsPath => doElectronReplace('ts', tsPath));
+elPaths.forEach(elPath => doElectronReplace('el', elPath));
+
+function doElectronReplace(fileType, filePath) {
+  fn.match(fileType, {
+    'ts': () => {
+      if (isElectron) {
+        fn.wt(filePath, fn.rd(filePath)
+          .replace(ignStaTs, ingStaTsStr_).replace(ingEndTs, ingEndTsStr_)
+          .replace(eabStaTs_, eabStaTsStr).replace(eabEndTs_, eabEndTsStr)
+        );
+      } else {
+        fn.wt(filePath, fn.rd(filePath)
+          .replace(ignStaTs_, ingStaTsStr).replace(ingEndTs_, ingEndTsStr)
+          .replace(eabStaTs, eabStaTsStr_).replace(eabEndTs, eabEndTsStr_)
+        );
+      }
+    },
+    'el': () => {
+      if (isElectron) {
+        fn.wt(filePath, fn.rd(filePath)
+          .replace(ignStaEl, ingStaElStr_).replace(ingEndEl, ingEndElStr_)
+          .replace(eabStaEl_, eabStaElStr).replace(eabEndEl_, eabEndElStr)
+        );
+      } else {
+        fn.wt(filePath, fn.rd(filePath)
+          .replace(ignStaEl_, ingStaElStr).replace(ingEndEl_, ingEndElStr)
+          .replace(eabStaEl, eabStaElStr_).replace(eabEndEl, eabEndElStr_)
+        );
+      }
+    }
+  })
 }
 
-fn.wt(tsPath, tsStr);
-fn.wt(elPath, elStr);
-
 fn.rm('dist/');
+
+if (isElectron) {
+  const fnPath = './src/assets/lib/funclib.min.js';
+  fn.rm(fnPath);
+  fn.cp('./node_modules/funclib/funclib.min.js', fnPath);
+}
