@@ -601,6 +601,11 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
       theme = this.appService.getEditorTheme(theme);
       if (this.srcEditor && this.fmtEditor) {
         win.monaco.editor.setTheme(theme);
+        if (['vs', 'vs-dark'].includes(theme)) {
+          this.fmtEditor.updateOptions({minimap: { enabled: true}});
+        } else {
+          this.fmtEditor.updateOptions({minimap: { enabled: false}});
+        }
       }
     });
   }
