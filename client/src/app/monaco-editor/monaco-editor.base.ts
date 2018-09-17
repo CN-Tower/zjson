@@ -1,5 +1,6 @@
 import { AfterViewInit } from '@angular/core';
-import { SharedBroadcastService, MONACO_THEMES } from '../shared';
+import { SharedBroadcastService } from '../shared';
+import { MONACO_THEMES } from './monaco-themes';
 
 let isEditorLoaded: boolean = false;
 
