@@ -354,9 +354,9 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     this.formated = '';
     this.fmtSourcest = '';
     if (!this.isOriginEmpty) this.animateGreeting();
-    /**electron enable sta*/
+    /**electron enable sta_*//*
     fn.defer(() => win.onLinksLoad());
-    /**electron enable end*/
+    *//**electron enable end_*/
   }
 
   /**
@@ -737,7 +737,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
    * 检测、轮询、刷新APP
    * =================================*/
   checkAndUpdateApp() {
-    /**electron ignore sta_*//*
+    /**electron ignore sta*/
     this.checkAppVersion(false);
     this.refreshVisitCount();
     this.getSharedJson(false);
@@ -746,8 +746,8 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
       this.updateUrl = res.updateUrl;
     });
     fn.interval('refresh-visit-count', 300000, () => this.refreshVisitCount());
-    *//**electron ignore end_*/
-    /**electron enable sta*/
+    /**electron ignore end*/
+    /**electron enable sta_*//*
     fn.defer(() => win.checkAppVersion(res => {
       if (res.version !== res.localVersion) {
         let ignoreInfo: IgnoreInfo = this.appService.getIgnoreVersion();
@@ -762,7 +762,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
         }
       }
     }));
-    /**electron enable end*/
+    *//**electron enable end_*/
     this.pollingVisitCount();
     fn.interval('polling-visit-count', 15000, () => this.pollingVisitCount());
   }
@@ -803,14 +803,14 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
    * =================================*/
   pollingVisitCount() {
     const userId = this.appService.getUserId();
-    /**electron ignore sta_*//*
+    /**electron ignore sta*/
     this.appService.pollingVisitCount(userId, this.isOnInit).subscribe((res: any) => {
       if (res['vc']) win['vc'] = res.vc;
     });
-    *//**electron ignore end_*/
-    /**electron enable sta*/
+    /**electron ignore end*/
+    /**electron enable sta_*//*
     fn.defer(() => win.pollingVisitCount(userId, this.isOnInit));
-    /**electron enable end*/
+    *//**electron enable end_*/
     this.isOnInit = false;
   }
 
@@ -835,12 +835,12 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
       this.broadcast.hideLoading();
       this.alertNotice(this.translate.instant('_shareJsonError'), 'danger');
     };
-    /**electron ignore sta_*//*
+    /**electron ignore sta*/
     this.appService.shareFormated(this.formated).subscribe(success, error);
-    *//**electron ignore end_*/
-    /**electron enable sta*/
+    /**electron ignore end*/
+    /**electron enable sta_*//*
     win.shareFormated(this.formated, this.appService.getUserId(), success, error);
-    /**electron enable end*/
+    *//**electron enable end_*/
   }
 
   /**
@@ -856,19 +856,19 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
           this.broadcast.hideLoading();
           this.alertNotice(this.translate.instant('_getJsonError'), 'danger');
         };
-        /**electron ignore sta_*//*
+        /**electron ignore sta*/
         this.appService.getSharedJson(sharedId).subscribe(res => {
           this.broadcast.hideLoading();
           this.sourcest = res.sharedJson;
         }, error);
-        *//**electron ignore end_*/
-        /**electron enable sta*/
+        /**electron ignore end*/
+        /**electron enable sta_*//*
         win.getSharedJson(sharedId, res => {
           this.broadcast.hideLoading();
           this.sourcest = res.sharedJson;
           $('#format-btn').click();
         }, error);
-        /**electron enable end*/
+        *//**electron enable end_*/
       }
       if (!sharedId && isFromIpt) {
         this.alertNotice(this.translate.instant('_bdSharedLink'), 'danger');

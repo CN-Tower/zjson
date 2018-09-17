@@ -19,7 +19,7 @@ export class MonacoEditorBase implements AfterViewInit {
   }
 
   addLoaderScript() {
-    /**electron ignore sta_*//*
+    /**electron ignore sta*/
     const loaderScript: HTMLScriptElement = document.createElement('script');
     loaderScript.type = 'text/javascript';
     loaderScript.src = 'assets/lib/monaco-editor/vs/loader.js';
@@ -31,13 +31,13 @@ export class MonacoEditorBase implements AfterViewInit {
       });
     });
     document.body.appendChild(loaderScript);
-    *//**electron ignore end_*/
-    /**electron enable sta*/
+    /**electron ignore end*/
+    /**electron enable sta_*//*
     fn.defer(() => win.loadMonacoEditor(() => {
       this.defineEditorThemes();
       this.broadcast.editorReadyUp();
     }));
-    /**electron enable end*/
+    *//**electron enable end_*/
   }
 
   defineEditorThemes() {
