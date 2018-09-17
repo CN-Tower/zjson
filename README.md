@@ -2,16 +2,19 @@
 > 全力打造最好用的json格式化工具，欢迎一起来玩！
 
 ### 访问地址
-- 地址: http://zjson.net
-- QQ群: 174136590
+- 公网地址: http://zjson.net
+- 内网地址: http://10.63.244.252:8888
+- GitHub: &nbsp;&nbsp;http://github.com/CN-Tower/zjson
+- QQ群: &nbsp;&nbsp;&nbsp;&nbsp;174136590
 
-<p align="center">
-  <img width="100%" src="zjson.png">
-</p>
+#### 主页界面
+![](/upload/file/20180917/1537167176255_.jpg)
+#### 对比界面
+![](/upload/file/20180917/1537167188033_.jpg)
 
 ### 简单介绍
 
-转杰森是使用Angular6+Typescript+Bootstrap3开发的一个在线Json格式化工具，功能强大、界面美观，有很多高级特性：
+转杰森是使用Angular6 + Typescript + ngx-bootstrap + monaco-editor开发的一个在线Json格式化工具，功能丰富强大、界面简洁美观，还有很多高级特性：
 
 - 支持错误的json解析及错误行号和错误类型提示；
 - 支持python unicode集合的解析；
@@ -21,13 +24,13 @@
 - 支持线上json分享；
 - 支持多种皮肤切换；
 - 支持JSON转义、压缩；
-- 支持JSON标准化析；
-- 支持JSON对比；
+- 支持JSON标准化析，把非标准JSON（如：js的object）转化为标准JSON格式；
+- 支持JSON对比（有与原码对比、与历史比对和与新建代码对比三种模式）；
 - 还有更多的功能、配置、特性等你去发现！
 
 相比其它在线格式化工具，如：bejson.com和json.cn等，转杰森界面更加专业、功能更加实用，绝对是开发和测试的好工具。
 
-欢迎各位大虾一起来玩，也欢迎使用、提需求和提BUG。
+欢迎各位大虾一起来玩，Start、Fork或提Issue都是极好的！
 
 ### 一起来玩
 ```
@@ -49,46 +52,79 @@ $ npm run update
 ### 项目结构
 ```
 zjson
-├── client                              # 前端
-│   ├── node_modules/                   # 前端依赖包
-│   ├── src                             # 源
-│   │   ├── app                         # 前端源
-│   │   │   ├── animations              # 动画
-│   │   │   │   └── toggle-slid.ts      # 滑动动画
-│   │   │   ├── formatter               # 格式化
-│   │   │   │   ├── formatter.conf.ts   # 格式化配置
-│   │   │   │   ├── formatter.help.ts   # 格式化帮助
-│   │   │   │   └── formatter.main.ts   # 格式化主文件
-│   │   │   ├── app.component.html      # 转杰森页面
-│   │   │   ├── app.component.less      # 转杰森样式
-│   │   │   ├── app.component.ts        # 转杰森组件
-│   │   │   ├── app.component.spec.ts   # 转杰森测试用例
-│   │   │   ├── app.modules.ts          # 转杰森模块
-│   │   │   └── app.service.ts          # 转杰森服务
-│   │   ├── assets                      # 静态资源
-│   │   │   ├── css                     # 样式
-│   │   │   │   ├── animate.css         # animate样式库
-│   │   │   │   ├── loading.css         # 加载页面样式
-│   │   │   │   └── themes.less         # 代码主题
-│   │   │   ├── i18n                    # 国际化
-│   │   │   │   ├── en.json             # 英文
-│   │   │   │   └── zh.json             # 中文
-│   │   │   ├── img/                    # 图片
-│   │   │   └── lib                     # 依赖库
-│   │   │       └── FileSaver.js        # 下载插件
-│   │   ├── favicon.ico                 # 图标
-│   │   ├── index.html                  # 主页面
-│   │   ├── main.ts                     # 入口文件
-│   │   ├── styles.css                  # 全局样式
-│   │   ├── typings.d.ts                # 全局变量
-│   │   └── ...                         # 其它
-│   ├── tools                           # 工具
-│   │   └── update-zjson.js             # 发布
-│   ├── package.json                    # 前端依赖
-│   ├── angular.json                    # Angular-cli配置文件
-│   ├── proxy.conf.json                 # 代理配置文件
-│   ├── README.md                       # 说明文档
-│   └── ...                             # 其它
+├── client                              
+│   ├── node_modules/                   
+│   ├── src                             
+│   │   ├── app                         
+│   │   │   ├── app-config
+│   │   │   │   ├── config-items
+│   │   │   │   │   ├── config-indent.component.ts
+│   │   │   │   │   ├── config-indent.component.ts
+│   │   │   │   │   ├── config-indent.component.ts
+│   │   │   │   │   └── config-indent.component.ts
+│   │   │   │   ├── app-config.component.html
+│   │   │   │   ├── app-config.component.less
+│   │   │   │   ├── app-config.component.ts
+│   │   │   │   └── index.ts
+│   │   │   ├── attachments
+│   │   │   │   ├── index.ts
+│   │   │   │   ├── zjs-attachment.ts
+│   │   │   │   ├── zjs-hint.component.ts
+│   │   │   │   ├── zjs-hist.component.ts
+│   │   │   │   ├── zjs-info.component.ts
+│   │   │   │   ├── zjs-loading.component.ts
+│   │   │   │   ├── zjs-notice.component.ts
+│   │   │   │   ├── zjs-title.component.ts
+│   │   │   │   └── zjs-update.component.ts
+│   │   │   ├── formatter
+│   │   │   │   ├── index.ts          
+│   │   │   │   ├── formatter.conf.ts
+│   │   │   │   ├── formatter.core.ts
+│   │   │   │   └── formatter.help.ts
+│   │   │   ├── monaco-editor        
+│   │   │   │   ├── index.ts
+│   │   │   │   ├── monaco-editor.base.ts
+│   │   │   │   └── monaco-editor.component.ts
+│   │   │   ├── shared
+│   │   │   │   ├── index.ts
+│   │   │   │   ├── shared-broadcast.service.ts
+│   │   │   │   ├── shared-interface.ts
+│   │   │   │   ├── shared-style.less
+│   │   │   │   └── theme.less
+│   │   │   ├── app.component.class  
+│   │   │   ├── app.component.html   
+│   │   │   ├── app.component.less   
+│   │   │   ├── app.component.ts     
+│   │   │   ├── app.component.spec.ts
+│   │   │   ├── app.modules.ts       
+│   │   │   └── app.service.ts       
+│   │   ├── assets                  
+│   │   │   ├── css                 
+│   │   │   │   ├── animate.css     
+│   │   │   │   └── loading.css     
+│   │   │   ├── i18n                
+│   │   │   │   ├── en.json         
+│   │   │   │   └── zh.json         
+│   │   │   ├── lib 
+│   │   │   │   ├── monaco-editor/  
+│   │   │   │   ├── bootstrap.min.js  
+│   │   │   │   ├── FileSaver.js   
+│   │   │   │   ├── funclib.min.js
+│   │   │   │   └── jquery.min.js                 
+│   │   │   └── img/  
+│   │   ├── favicon.ico             
+│   │   ├── index.html              
+│   │   ├── main.ts                 
+│   │   ├── styles.css              
+│   │   ├── typings.d.ts            
+│   │   └── ...                     
+│   ├── tools                       
+│   │   └── update-zjson.js         
+│   ├── package.json                
+│   ├── angular.json                
+│   ├── proxy.conf.json             
+│   ├── README.md                   
+│   └── ...                         
 ├── server                              # 后端
 │   ├── node_modules/                   # 后端依赖包
 │   ├── views/                          # Jade视图
