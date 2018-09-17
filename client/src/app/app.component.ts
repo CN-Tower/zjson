@@ -459,6 +459,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
       this.addPositionIdx();
       this.initPositionIdx();
     });
+    this.broadcast.showLoading(20000);
     fn.defer(() => this.onChangeTheme(this.appService.getAppTheme()));
     $(document).on('click keyup', () => this.isPageActive = true);
   }
@@ -577,6 +578,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
    * @param editorName
    */
   afterEditorInit(editor: any, editorName: EditorModal) {
+    this.broadcast.hideLoading();
     fn.match(editorName, {
       'source': () => {
         this.srcEditor = editor;
