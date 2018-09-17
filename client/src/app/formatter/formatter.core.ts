@@ -129,7 +129,7 @@ export class Formatter extends FmtBase {
       for (const key in fmtObject) {
         if (fn.has(fmtObject, key)) {
           idx++;
-          const prop = this.help.quoteKey(key, this.fmtConfig);
+          const prop = this.help.quoteNormalStr(key, this.fmtConfig, this.fmtConfig.keyQuote);
           curIndent = this.isExpand ? this.help.getCurIndent(this.baseIndent, this.level) : '';
           this.fmtResult += curIndent;
           this.fmtResult += prop;
@@ -160,7 +160,7 @@ export class Formatter extends FmtBase {
         this.fmtObject = value;
         return this.doNormalFormat();
       case 'string':
-        return this.fmtResult += this.help.quoteVal(value, this.fmtConfig);
+        return this.fmtResult += this.help.quoteNormalStr(value, this.fmtConfig, this.fmtConfig.valQuote);
     }
   }
 
@@ -241,15 +241,16 @@ export class Formatter extends FmtBase {
     const rest = this.help.getSrcRest(this.fmtSource);
     const restIdx = this.help.getNextQuoIdx(this.fmtSource[0], rest);
     this.chkExpect(this.fmtSource[0]);
+    const quoteMt = this.fmtSource.substr(0, 1);
+    let strInQuote = '';
     if (restIdx > -1) {
-      const strInQuote = this.fmtConfig.isStrict
-        ? `"${this.fmtSource.substr(1, restIdx)}"`
-        : this.fmtSource.substr(0, restIdx + 2);
-      this.fmtResult += this.help.quoteStr(strInQuote, this.fmtConfig);
+      strInQuote = this.fmtSource.substr(1, restIdx);
+      this.fmtResult += this.help.quoteSpecialStr(strInQuote, this.fmtConfig, quoteMt);
       this.setExpect(this.fmtSource[0]);
       this.fmtSource = this.help.getSrcRest(this.fmtSource, restIdx + 2);
     } else {
-      this.fmtResult += this.help.quoteStr(this.fmtSource, this.fmtConfig, true);
+      strInQuote = this.fmtSource.substr(1);
+      this.fmtResult += this.help.quoteSpecialStr(strInQuote, this.fmtConfig, quoteMt);
       this.setExpect('!');
       this.fmtSource = '';
     }
@@ -385,20 +386,16 @@ export class Formatter extends FmtBase {
       ? this.help.getNextQuoIdx('\'', rest)
       : this.help.getNextQuoIdx('"', rest);
     this.chkExpect('u');
+    let uniqStr = '';
     if (restIdx > -1) {
       const cutIdx = restIdx + unicMt.length + 1;
-      let uniqStr;
-      if (this.fmtConfig.isStrict) {
-        uniqStr = `"${this.fmtSource.substr(unicMt.length, cutIdx - unicMt.length - 1)}"`;
-        this.fmtResult += this.help.quoteStr(uniqStr, this.fmtConfig);
-      } else {
-        uniqStr = this.fmtSource.substr(0, cutIdx);
-        this.fmtResult += this.help.quoteStr(uniqStr, this.fmtConfig, unicMt);
-      }
+      uniqStr = this.fmtSource.substr(unicMt.length, cutIdx - unicMt.length - 1);
+      this.fmtResult += this.help.quoteSpecialStr(uniqStr, this.fmtConfig, unicMt);
       this.setExpect('u');
       this.fmtSource = this.help.getSrcRest(this.fmtSource, cutIdx);
     } else {
-      this.fmtResult += this.help.quoteStr(this.fmtSource, this.fmtConfig, unicMt, true);
+      uniqStr = this.fmtSource.substr(unicMt.length);
+      this.fmtResult += this.help.quoteSpecialStr(uniqStr, this.fmtConfig, unicMt);
       this.setExpect('!');
       this.fmtSource = '';
     }
