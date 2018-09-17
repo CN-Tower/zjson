@@ -4,37 +4,33 @@ export class FmtHelp {
   constructor() {}
 
   /**
-   * 描述: 给String Key打引号
+   * 描述: 给String打引号
    */
-  quoteKey(str: string, conf: Configs) {
-    const quote = conf.isEscape ? `\\${conf.keyQuote}` : conf.keyQuote;
-    return quote + str + quote;
-  }
-
-  /**
-   * 描述: 给String Val打引号
-   */
-  quoteVal(str: string, conf: Configs) {
-    const quote = conf.isEscape ? `\\${conf.valQuote}` : conf.valQuote;
-    return fn.match(conf.valQuote, {
-      '\"': quote + str.replace(/"/mg, '\\"') + quote,
-      '\'': quote + str.replace(/'/mg, '\\\'') + quote
+  quoteNormalStr(qtStr: string, conf: Configs, quote: string) {
+    const quote_ = conf.isEscape ? `\\${quote}` : quote;
+    return fn.match(quote, {
+      '\"': () => {
+        qtStr = conf.isEscape ? qtStr.replace(/"/mg, '\\\\\\"') : qtStr.replace(/"/mg, '\\"');
+        return quote_ + qtStr + quote_;
+      },
+      '\'': () => {
+        qtStr = conf.isEscape ? qtStr.replace(/'/mg, '\\\\\\\'') : qtStr.replace(/'/mg, '\\\'');
+        return quote_ + qtStr + quote_;
+      }
     });
   }
 
   /**
-   * 描述: 给String打引号
+   * 描述: 给非正常String打引号
    */
-  quoteStr(str: string, conf: Configs, head?: any, isOnlyQuoteHead: boolean = false) {
-    if (!conf.isEscape) return str;
-    if (typeof head === 'boolean') {
-      isOnlyQuoteHead = head;
-      head = undefined;
+  quoteSpecialStr(qtStr: string, conf: Configs, quoteMt: any) {
+    const quote = conf.isStrict ? conf.valQuote : quoteMt.substr(-1);
+    qtStr = qtStr.replace(/\\\"/mg, '\"');
+    qtStr = this.quoteNormalStr(qtStr, conf, quote);
+    if (!conf.isStrict && quoteMt.length > 1) {
+      qtStr = quoteMt.substr(0, quoteMt.length - 1) + qtStr;
     }
-    str = !head
-      ? `\\${str}`
-      : str.replace(head, `${head.substr(0, head.length - 1)}\\${head.substr(-1)}`);
-    return isOnlyQuoteHead ? str : `${str.substr(0, str.length - 1)}\\${str.substr(-1)}`;
+    return qtStr;
   }
 
   /**
