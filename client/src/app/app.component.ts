@@ -459,7 +459,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
       this.addPositionIdx();
       this.initPositionIdx();
     });
-    this.broadcast.showLoading(20000);
+    this.broadcast.showLoading(25000);
     fn.defer(() => this.onChangeTheme(this.appService.getAppTheme()));
     $(document).on('click keyup', () => this.isPageActive = true);
   }

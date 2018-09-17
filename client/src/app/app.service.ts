@@ -142,6 +142,7 @@ export class AppService {
       'dark':      'vs-dark',
       'light':     'vs',
       'blue':      'blue',
+      'abyss':     'abyss',
       'solarized': 'solarized-light',
       'moonlight': 'solarized-dark',
       '@default': () => 'vs-dark'
