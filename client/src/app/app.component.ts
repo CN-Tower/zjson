@@ -67,8 +67,6 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     if (!this.sourcest && !this.fmtSourcest && !isSilence) {
       this.alertNotice(this.translate.instant('_format'), 'danger');
     } else {
-      fmtSrc = fmtSrc.trim().replace(/\&/mg, '&amp;')
-        .replace(/\</mg, '&lt;').replace(/\>/mg, '&gt;');
       this.formatter.format(fmtSrc, this.conf).subscribe(res => {
         this.formated = res.fmtResult;
         this.fmtStatus = res.fmtStatus;
