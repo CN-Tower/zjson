@@ -1,14 +1,28 @@
 import { Configs } from './formatter.conf';
 
 export class FmtHelp {
-  constructor() {}
+  /**
+   * 描述: 回避转义字符
+   */
+  escapeArr = [
+    {ptn: /(?!\\[b|f|n|r|t|x|v|'|"|0])\\/mg, str: '\\\\'},
+    {ptn: /\r\n|\\r\\n/mg, str: ''},
+    {ptn: /\n\r|\\n\\r/mg, str: ''},
+    {ptn: /\n/mg,   str: '\\n'},
+    {ptn: /\r/mg,   str: '\\r'},
+    {ptn: /\f/mg,   str: '\\f'},
+    {ptn: /\t/mg,   str: '\\t'},
+    {ptn: //mg,    str: '\\b'},
+    {ptn: //mg,    str: '\\v'}
+  ];
 
   /**
    * 描述: 给String打引号
    */
-  quoteNormalStr(qtStr: string, conf: Configs, quote: string) {
-    qtStr = qtStr.replace(/\r\n/mg, '');
-    qtStr = qtStr.replace(/\n/mg, '\\n');
+  quoteNormalStr(qtStr: string, conf: Configs, quote: string, isFromAbnormal?: boolean) {
+    this.escapeArr.forEach(esItem => {
+      qtStr = qtStr.replace(esItem.ptn, esItem.str);
+    });
     const quote_ = conf.isEscape ? `\\${quote}` : quote;
     return fn.match(quote, {
       '\"': () => {
@@ -27,8 +41,10 @@ export class FmtHelp {
    */
   quoteSpecialStr(qtStr: string, conf: Configs, quoteMt: any) {
     const quote = conf.isStrict ? conf.valQuote : quoteMt.substr(-1);
+    qtStr = qtStr.replace(/(?!\\[b|f|n|\\|r|t|x|v|'|"|0])\\/mg, '');
     qtStr = qtStr.replace(/\\\"/mg, '\"');
-    qtStr = this.quoteNormalStr(qtStr, conf, quote);
+    qtStr = qtStr.replace(/\\\'/mg, '\'');
+    qtStr = this.quoteNormalStr(qtStr, conf, quote, true);
     if (!conf.isStrict && quoteMt.length > 1) {
       qtStr = quoteMt.substr(0, quoteMt.length - 1) + qtStr;
     }
