@@ -5,9 +5,8 @@ export class FmtHelp {
    * 描述: 回避转义字符
    */
   escapeArr = [
-    {ptn: /(?!\\[b|f|n|r|t|x|v|'|"|0])\\/mg, str: '\\\\'},
-    {ptn: /\r\n|\\r\\n/mg, str: ''},
-    {ptn: /\n\r|\\n\\r/mg, str: ''},
+    {ptn: /\r\n/mg, str: ''},
+    {ptn: /\n\r/mg, str: ''},
     {ptn: /\n/mg,   str: '\\n'},
     {ptn: /\r/mg,   str: '\\r'},
     {ptn: /\f/mg,   str: '\\f'},
@@ -20,10 +19,12 @@ export class FmtHelp {
    * 描述: 给String打引号
    */
   quoteNormalStr(qtStr: string, conf: Configs, quote: string, isFromAbnormal?: boolean) {
-    this.escapeArr.forEach(esItem => {
-      qtStr = qtStr.replace(esItem.ptn, esItem.str);
-    });
+    qtStr = isFromAbnormal
+      ? qtStr.replace(/(?!\\[b|f|n|\\|r|t|x|v|'|"|0])\\/mg, '\\\\')
+      : qtStr.replace(/\\/mg, '\\\\');
+    this.escapeArr.forEach(esp => qtStr = qtStr.replace(esp.ptn, esp.str));
     const quote_ = conf.isEscape ? `\\${quote}` : quote;
+    if (conf.isEscape) qtStr = qtStr.replace(/\\/mg, '\\\\');
     return fn.match(quote, {
       '\"': () => {
         qtStr = conf.isEscape ? qtStr.replace(/"/mg, '\\\\\\"') : qtStr.replace(/"/mg, '\\"');
