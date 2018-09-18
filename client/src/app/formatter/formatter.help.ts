@@ -7,6 +7,8 @@ export class FmtHelp {
    * 描述: 给String打引号
    */
   quoteNormalStr(qtStr: string, conf: Configs, quote: string) {
+    qtStr = qtStr.replace(/\r\n/mg, '');
+    qtStr = qtStr.replace(/\n/mg, '\\n');
     const quote_ = conf.isEscape ? `\\${quote}` : quote;
     return fn.match(quote, {
       '\"': () => {
