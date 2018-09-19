@@ -48,8 +48,14 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     this.initUploadEvent();
     this.initOpenDragEvent();
     this.initResizeZconEvent();
+    this.broadcast.showLoading(25000);
     this.onWindowResize();
     fn.timeout(500, () => this.onWindowResize());
+    fn.defer(() => {
+      this.onChangeTheme(this.appService.getAppTheme());
+      this.conf.isStrict = String(this.appService.getIsStrict()) === 'true';
+      this.conf.isEscape = String(this.appService.getIsEscape()) === 'true';
+    });
   }
 
   /**
@@ -67,7 +73,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     if (!this.sourcest && !this.fmtSourcest && !isSilence) {
       this.alertNotice(this.translate.instant('_format'), 'danger');
     } else {
-      this.formatter.format(fmtSrc, this.conf).subscribe(res => {
+      this.formatter.format(fmtSrc, this.conf, this).subscribe(res => {
         this.formated = res.fmtResult;
         this.fmtStatus = res.fmtStatus;
         if (this.formated) {
@@ -146,6 +152,12 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
   setIsStrict(isStrict: boolean) {
     this.conf.isStrict = isStrict;
     this.appService.setIsStrict(isStrict);
+    if (isStrict) {
+      this.broadcast.changeQuote({quoteIdx: 1});
+    } else {
+      const qtIdx = this.appService.getQuoteIdx();
+      this.broadcast.changeQuote({quoteIdx: qtIdx});
+    }
     this.doFormate(true);
   }
 
@@ -457,8 +469,6 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
       this.addPositionIdx();
       this.initPositionIdx();
     });
-    this.broadcast.showLoading(25000);
-    fn.defer(() => this.onChangeTheme(this.appService.getAppTheme()));
     $(document).on('click keyup', () => this.isPageActive = true);
   }
 
@@ -592,12 +602,13 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
       }
     });
     this.updateTabsize();
+    this.updateTheme();
   }
 
   updateTheme(theme: string = this.theme) {
     fn.defer(() => {
-      theme = this.appService.getEditorTheme(theme);
       if (this.srcEditor && this.fmtEditor) {
+        theme = this.appService.getEditorTheme(theme);
         win.monaco.editor.setTheme(theme);
         if (['vs', 'vs-dark'].includes(theme)) {
           this.fmtEditor.updateOptions({minimap: { enabled: true}});
