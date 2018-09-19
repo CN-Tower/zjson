@@ -7,11 +7,12 @@
 @dark-shadow: #666666;
 
 @light-bg-color: #ffffff;
-@light-pn-color: #f9f9f9;
-@light-bd-color: #dddddd;
-@light-tt-color: #eeeeee;
+@light-pn-color: #ececec;
+@light-bd-color: #bbbbbb;
+@light-tt-color: #dcdcdc;
 
-@solarized-bg-color: #eee8d5;
+@solarized-bg-color: #fdf6e3;
+@solarized-pn-color: #eee8d5;
 @solarized-bd-color: #bbbbbb;
 @solarized-tt-color: #ddd6c1;
 
@@ -28,6 +29,7 @@
 @kimbie-tt-color: #513718;
 
 @moonlight-bg-color: #002b36;
+@moonlight-pn-color: #002b36;
 @moonlight-bd-color: #5f5f5f;
 @moonlight-tt-color: #003847;
 
@@ -48,7 +50,7 @@
 
 .theme-solarized {
   .init-theme (
-    @solarized-bg-color, @solarized-bg-color, @solarized-tt-color,
+    @solarized-bg-color, @solarized-pn-color, @solarized-tt-color,
     @solarized-bd-color, @light-ft-color, @light-shadow
   );
 }
@@ -76,7 +78,7 @@
 
 .theme-moonlight {
   .init-theme (
-    @moonlight-bg-color, @moonlight-bg-color, @moonlight-tt-color,
+    @moonlight-bg-color, @moonlight-pn-color, @moonlight-tt-color,
     @moonlight-bd-color, @dark-ft-color, @dark-shadow
   );
 }
