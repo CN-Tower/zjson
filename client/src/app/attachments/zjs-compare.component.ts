@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ViewChild} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild} from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { AppService } from '../app.service';
 import { SharedBroadcastService, FmtHist } from '../shared/index';
@@ -17,18 +17,24 @@ import { SharedBroadcastService, FmtHist } from '../shared/index';
       </ul>
   </span>`
 })
-export class ZjsCompareComponent {
+export class ZjsCompareComponent implements OnInit {
   @ViewChild('dropdown') dropdown: any;
   @Input() formated: string;
   @Input() icoClass: string = '';
+  @Input() fmtHists?: FmtHist[];
   @Output() showDiffChange: EventEmitter<any> = new EventEmitter();
-  fmtHists: FmtHist[] = this.appService.getFmtHists();
 
   constructor(
     private appService: AppService,
     private translate: TranslateService,
     private broadcast: SharedBroadcastService
   ) { }
+
+  ngOnInit() {
+    if (this.fmtHists === undefined) {
+      this.fmtHists = this.appService.getFmtHists();
+    }
+  }
 
   onShown() {
     if (!this.formated.trim()) {
