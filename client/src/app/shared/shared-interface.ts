@@ -12,3 +12,8 @@ export interface IgnoreInfo {
   ignoreTime: number;
   ignoreVersion: string;
 }
+export type QuoteIdx = 1 | 2 | 3 | 4;
+export interface QuoteInfo {
+  quoteIdx: QuoteIdx;
+  isNormal?: boolean;
+}
