@@ -10,7 +10,7 @@
           <th><span>{{'lang' | translate}}</span></th>
           <th>{{'theme' | translate}}</th>
           <th>{{'indent' | translate}}</th>
-          <th>{{'type' | translate}}</th>
+          <th>{{'quote' | translate}}</th>
         </tr>
       </thead>
       <tbody>
@@ -18,7 +18,7 @@
           <td><span>{{languages[lang]?.long}}</span></td>
           <td class="capitalize">{{theme}}</td>
           <td>{{conf.indent}} {{'space' | translate}}</td>
-          <td>{{types[conf?.type]}}</td>
+          <td>{{conf.keyQuote}}key{{conf.keyQuote}}: {{conf.valQuote}}val{{conf.valQuote}}</td>
         </tr>
       </tbody>
     </table>
