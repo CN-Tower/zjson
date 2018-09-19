@@ -26,11 +26,8 @@ import { Component, Input, Output, EventEmitter} from '@angular/core';
 export class ConfigThemeComponent {
   @Input() conf: any;
   @Input() theme: string;
+  @Input() themes: string[] = [];
   @Output() changeTheme: EventEmitter<any> = new EventEmitter();
-
-  themes: any[] = [
-    'light', 'solarized', 'dark', 'red', 'kimbie', 'moonlight', 'blue', 'abyss'
-  ];
 
   constructor() { }
 }
