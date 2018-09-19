@@ -105,5 +105,6 @@
     "noHist": "No saved record !",
     "saveSuccess": "Save Success !",
     "removeSavedSuccess": "Delete record Success !",
-    "copySuccess": "Copy Success !"
+    "copySuccess": "Copy Success !",
+    "quote": "Quote"
 }
