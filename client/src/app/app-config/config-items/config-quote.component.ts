@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter} from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import { QuoteIdx, QuoteInfo, SharedBroadcastService } from '../../shared';
 import { AppService } from '../../app.service';
 
@@ -43,7 +43,7 @@ import { AppService } from '../../app.service';
     </div>`,
   styleUrls: ['../app-config.component.less']
 })
-export class ConfigQuoteComponent {
+export class ConfigQuoteComponent implements OnInit {
   @Input() conf: any;
   @Input() isShowDiff: boolean;
   @Output() doFormate: EventEmitter<any> = new EventEmitter();
@@ -60,6 +60,12 @@ export class ConfigQuoteComponent {
       this.changeQuote(qtInfo.quoteIdx);
       if (qtInfo.isNormal !== undefined) this.isNormal = qtInfo.isNormal;
     });
+  }
+
+  ngOnInit() {
+    if (this.conf.keyQuote === undefined || this.conf.valQuote === undefined) {
+      this.changeQuote(this.appService.getQuoteIdx());
+    }
   }
 
   changeQuote(qtIdx: QuoteIdx, isStore?: boolean) {
