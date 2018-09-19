@@ -7,7 +7,7 @@ import { IgnoreInfo, QuoteIdx, QuoteInfo } from './shared';
 export const APP_INFO = {
   version: 'v4.1.2',
   updateTime: '2018-09-19',
-  appUrl: 'http://10.63.244.252:8888'
+  appUrl: 'http://www.zjson.net'
 };
 
 export const APP_THEMES: string[] = [

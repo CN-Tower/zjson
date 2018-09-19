@@ -105,5 +105,6 @@
     "noHist": "没有保存的历史！",
     "saveSuccess": "保存成功！",
     "removeSavedSuccess": "清除成功！",
-    "copySuccess": "复制成功！"
+    "copySuccess": "复制成功！",
+    "quote": "引 号"
 }
