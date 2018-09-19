@@ -12,7 +12,11 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class ZjsDiffEditorComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() diffType: DiffType;
-  @Input() fmtConf: Configs;
+  @Input('fmtConf')
+  set fmtConf(fmtConf: Configs) {
+    this._fmtConf = fn.deepCopy(fmtConf);
+    this._fmtConf.model = 'expand';
+  }
   @Input() formated: string;
   @Input() sourcest: string;
   @Output() closePanel: EventEmitter<any> = new EventEmitter();
@@ -37,8 +41,6 @@ export class ZjsDiffEditorComponent implements OnInit, AfterViewInit, OnDestroy 
   ) { }
 
   ngOnInit() {
-    this._fmtConf = fn.deepCopy(this.fmtConf);
-    this._fmtConf.model = 'expand';
     this.originalCode = this.formated;
     this.showDiffChange(this.diffType);
   }
@@ -59,7 +61,6 @@ export class ZjsDiffEditorComponent implements OnInit, AfterViewInit, OnDestroy 
     this.editor = editorInfo.editor;
     this.editorModel = editorInfo.editorModel;
     this.broadcast.hideLoading();
-    // this.editor.onDidUpdateDiff(() => this.broadcast.hideLoading());
     this.editorModel.onDidChangeContent(() => {
       this.modifiedCode = this.getModelContent();
     });
@@ -99,7 +100,7 @@ export class ZjsDiffEditorComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   formatAndInitEditor(code: string) {
-    this.formatter.format(code, this._fmtConf).subscribe(fmted => {
+    this.formatter.format(code, this._fmtConf, this).subscribe(fmted => {
       this.modifiedCode = fmted.fmtResult;
       this.initDiffEditor();
     });
