@@ -12,7 +12,7 @@ export class Formatter extends FmtBase {
    * @arg fmtConfig [Configs] 配置参数
    * @arg onFmted [Function] 回调
    * */
-  format(fmtSource: string, fmtConfig: Configs) {
+  format(fmtSource: string, fmtConfig: Configs, that: any) {
     return Observable.create(observer => {
       this.v = new FmtValidator();
       this.fmtStatus = new FmtStatus();
@@ -23,7 +23,7 @@ export class Formatter extends FmtBase {
       this.rowIdx = 1;
       this.isExpand = fmtConfig.model === 'expand';
       this.baseIndent = this.help.setBaseIndent(fmtConfig);
-      this.doFormatByTry();
+      this.doFormatByTry(that);
       this.setupFmtStatus();
       observer.next({ fmtResult: this.fmtResult, fmtStatus: this.fmtStatus });
       observer.complete();
@@ -34,19 +34,22 @@ export class Formatter extends FmtBase {
    * 根据类型进程格式化
    * ============================
    */
-  doFormatByTry() {
+  doFormatByTry(that: any) {
     try {
       if (this.fmtSource !== '') eval(`this.fmtSource = ${this.fmtSource}`);
       if (this.help.isSpecialVal(this.fmtSource)) {
         this.fmtObject = this.fmtSource;
+        this.help.broadcastQuote(that, this.fmtConfig, true);
         this.doNormalFormat();
         this.fmtStatus.isSrcValid = true;
         this.fmtStatus.fmtedType = this.fmtConfig.type;
       } else {
+        this.help.broadcastQuote(that, this.fmtConfig);
         this.doSpecialFormat();
         this.fmtStatus.fmtedType = this.v.srcAcType;
       }
     } catch (e) {
+      this.help.broadcastQuote(that, this.fmtConfig);
       this.doSpecialFormat();
       this.fmtStatus.fmtedType = this.v.srcAcType;
     }
@@ -242,15 +245,16 @@ export class Formatter extends FmtBase {
     const restIdx = this.help.getNextQuoIdx(this.fmtSource[0], rest);
     this.chkExpect(this.fmtSource[0]);
     const quoteMt = this.fmtSource.substr(0, 1);
+    const isProperty = this.v.exceptVal === 'ost';
     let strInQuote = '';
     if (restIdx > -1) {
       strInQuote = this.fmtSource.substr(1, restIdx);
-      this.fmtResult += this.help.quoteSpecialStr(strInQuote, this.fmtConfig, quoteMt);
+      this.fmtResult += this.help.quoteSpecialStr(strInQuote, this.fmtConfig, quoteMt, isProperty);
       this.setExpect(this.fmtSource[0]);
       this.fmtSource = this.help.getSrcRest(this.fmtSource, restIdx + 2);
     } else {
       strInQuote = this.fmtSource.substr(1);
-      this.fmtResult += this.help.quoteSpecialStr(strInQuote, this.fmtConfig, quoteMt);
+      this.fmtResult += this.help.quoteSpecialStr(strInQuote, this.fmtConfig, quoteMt, isProperty);
       this.setExpect('!');
       this.fmtSource = '';
     }
@@ -386,16 +390,17 @@ export class Formatter extends FmtBase {
       ? this.help.getNextQuoIdx('\'', rest)
       : this.help.getNextQuoIdx('"', rest);
     this.chkExpect('u');
+    const isProperty = this.v.exceptVal === 'ost';
     let uniqStr = '';
     if (restIdx > -1) {
       const cutIdx = restIdx + unicMt.length + 1;
       uniqStr = this.fmtSource.substr(unicMt.length, cutIdx - unicMt.length - 1);
-      this.fmtResult += this.help.quoteSpecialStr(uniqStr, this.fmtConfig, unicMt);
+      this.fmtResult += this.help.quoteSpecialStr(uniqStr, this.fmtConfig, unicMt, isProperty);
       this.setExpect('u');
       this.fmtSource = this.help.getSrcRest(this.fmtSource, cutIdx);
     } else {
       uniqStr = this.fmtSource.substr(unicMt.length);
-      this.fmtResult += this.help.quoteSpecialStr(uniqStr, this.fmtConfig, unicMt);
+      this.fmtResult += this.help.quoteSpecialStr(uniqStr, this.fmtConfig, unicMt, isProperty);
       this.setExpect('!');
       this.fmtSource = '';
     }
