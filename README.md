@@ -2,15 +2,16 @@
 > 全力打造最好用的json格式化工具，欢迎一起来玩！
 
 ### 访问地址
-- 公网地址: http://zjson.net
-- 内网地址: http://10.63.244.252:8888
-- GitHub: &nbsp;&nbsp;http://github.com/CN-Tower/zjson
-- QQ群: &nbsp;&nbsp;&nbsp;&nbsp;174136590
+- 地址: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://zjson.net
+- FuncLib: http://funclib.net
+- GitHub: &nbsp;http://github.com/CN-Tower/zjson
+- GitHub: &nbsp;http://github.com/CN-Tower/funclib.js
+- QQ群: &nbsp;&nbsp;&nbsp;174136590
 
 #### 主页界面
-![](/upload/file/20180917/1537167176255_.jpg)
+![](/zjson.png)
 #### 对比界面
-![](/upload/file/20180917/1537167188033_.jpg)
+![](/zjson-diff.png)
 
 ### 简单介绍
 
