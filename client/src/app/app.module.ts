@@ -15,7 +15,7 @@ import {
 } from './monaco-editor/index';
 import {
   AppConfigComponent, ConfigLangComponent, ConfigThemeComponent,
-  ConfigIndentComponent, ConfigTypeComponent
+  ConfigIndentComponent, ConfigQuoteComponent
 } from './app-config/index';
 import {
   ZjsHintComponent, ZjsTitleComponent, ZjsNoticeComponent, ZjsInfoComponent,
@@ -38,7 +38,7 @@ export function TranslateFactory(http: HttpClient) {
   ],
   declarations: [
     AppComponent, AppConfigComponent, ConfigLangComponent,
-    ConfigThemeComponent, ConfigIndentComponent, ConfigTypeComponent,
+    ConfigThemeComponent, ConfigIndentComponent, ConfigQuoteComponent,
     MonacoEditorComponent, MonacoDiffEditorComponent,
     ZjsDiffEditorComponent, ZjsHintComponent, ZjsTitleComponent,
     ZjsNoticeComponent, ZjsInfoComponent, ZjsHistComponent,
