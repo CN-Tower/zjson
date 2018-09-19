@@ -31,6 +31,10 @@ export abstract class ZjsApp {
   diffType: DiffType;
   toggleConfTiele: string;
   theme: string;
+  themes: string[] = [
+    'light', 'solarized', 'moonlight', 'blue', 'dark',
+    // 'red', 'kimbie', 'abyss'
+  ];
   altMsgs: any = {};
   positionIdxArr: number[] = [];
   positionIdx: number = 0;
@@ -68,14 +72,14 @@ export abstract class ZjsApp {
   fmtEditorOptions: any = {
     theme: this.appService.getEditorTheme(this.appService.getAppTheme()),
     language: 'json',
-    tabSize: 2
+    tabSize: 2,
+    minimap: {
+      enabled: false
+    }
   };
   getFmtHists = () => this.fmtHists = this.appService.getFmtHists();
   getTimeStr = () => fn.fmtDate('MM-dd hh:mm:ss');
   setRowIdxWpHeight = () => $('.z-canvas').height() + 12 + 'px';
 
-  constructor (public appService: AppService) {
-    this.conf.isStrict = String(this.appService.getIsStrict()) === 'true';
-    this.conf.isEscape = String(this.appService.getIsEscape()) === 'true';
-  }
+  constructor (public appService: AppService) { }
 }
