@@ -126,24 +126,24 @@ zjson
 │   ├── proxy.conf.json             
 │   ├── README.md                   
 │   └── ...                         
-├── server                              # 后端
-│   ├── node_modules/                   # 后端依赖包
-│   ├── views/                          # Jade视图
-│   ├── zjson/                          # 转杰森静态文件
-│   ├── bin                             # 运行
-│   │   └── www                         # 运行文件
-│   ├── routes                          # 路由
-│   │   ├── api.js                      # 接口
-│   │   └── index.js                    # 索引
-│   ├── work                            # 工作目录
-│   │   └── visits-count.work.js        # 访问计数
-│   ├── app.js                          # 服务器
-│   └── package.json                    # 后端依赖
-├── .editorconfig                       # Set coding style (indents, charset, etc.)
-├── .gitignore                          # You know the drill...
-├── Dockerfile                          # Dockerfile
-├── nginx.conf                          # nginx配置
-├── zjson.sh                            # Docker辅助
-├── README.md                           # 说明文档
-└── ...                                 # 其它
+├── server                      
+│   ├── node_modules/           
+│   ├── views/                  
+│   ├── zjson/                  
+│   ├── bin                     
+│   │   └── www                 
+│   ├── routes                  
+│   │   ├── api.js              
+│   │   └── index.js            
+│   ├── work                    
+│   │   └── visits-count.work.js
+│   ├── app.js                  
+│   └── package.json            
+├── .editorconfig               
+├── .gitignore                  
+├── Dockerfile                  
+├── nginx.conf                  
+├── zjson.sh                    
+├── README.md                   
+└── ...                         
 ```
