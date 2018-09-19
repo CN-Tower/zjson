@@ -2,11 +2,11 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
-import { IgnoreInfo } from './shared';
+import { IgnoreInfo, QuoteIdx, QuoteInfo } from './shared';
 
 export const APP_INFO = {
-  version: 'v4.1.1',
-  updateTime: '2018-09-14',
+  version: 'v4.1.2',
+  updateTime: '2018-09-19',
   appUrl: 'http://www.zjson.net'
 };
 
@@ -60,7 +60,7 @@ export class AppService {
           u"tuple": (u"Tuple_element_001", u"Tuple_element_002")
         }
       }
-    }`.replace(/\n|\s/gm, '')},
+    }`.replace(/\n\s*/gm, '')},
     {name: '转杰森 | ZJSON', src: `{
       "zjson": "转杰森 | ZJSON",
       "desc": "Online json formatter",
@@ -79,7 +79,7 @@ export class AppService {
         "string": "Hello World",
         "object": {"property": "value", "key": "val"}
       }
-    }`.replace(/\n|\s/gm, '')}
+    }`.replace(/\n\s*/gm, '')}
   ];
 
   constructor(private http: Http, private translate: TranslateService) { }
@@ -167,6 +167,14 @@ export class AppService {
 
   setIsEscape(isEscape: boolean) {
     window.localStorage['isEscape'] = isEscape;
+  }
+
+  setQuoteIdx(qtIdx: QuoteIdx) {
+    window.localStorage['quoteIdx'] = qtIdx;
+  }
+
+  getQuoteIdx(): QuoteIdx {
+    return window.localStorage['quoteIdx'] || 1;
   }
 
   getUserId() {
