@@ -33,15 +33,16 @@ export class FmtHelp {
       '\'': () => {
         qtStr = conf.isEscape ? qtStr.replace(/'/mg, '\\\\\\\'') : qtStr.replace(/'/mg, '\\\'');
         return quote_ + qtStr + quote_;
-      }
+      },
+      '@default': qtStr
     });
   }
 
   /**
    * 描述: 给非正常String打引号
    */
-  quoteSpecialStr(qtStr: string, conf: Configs, quoteMt: any) {
-    const quote = conf.isStrict ? conf.valQuote : quoteMt.substr(-1);
+  quoteSpecialStr(qtStr: string, conf: Configs, quoteMt: any, isProperty: boolean) {
+    const quote = isProperty ? conf.keyQuote : conf.valQuote;
     qtStr = qtStr.replace(/(?!\\[b|f|n|\\|r|t|x|v|'|"|0])\\/mg, '');
     qtStr = qtStr.replace(/\\\"/mg, '\"');
     qtStr = qtStr.replace(/\\\'/mg, '\'');
@@ -50,6 +51,19 @@ export class FmtHelp {
       qtStr = quoteMt.substr(0, quoteMt.length - 1) + qtStr;
     }
     return qtStr;
+  }
+
+  /**
+   * 描述: 根据实际情况设置引号类型
+   */
+  broadcastQuote(that: any, conf: Configs, isNormal?: boolean) {
+    let qtIdx = that.appService.getQuoteIdx();
+    if (isNormal || conf.isStrict) {
+      that.broadcast.changeQuote({quoteIdx: qtIdx, isNormal: true});
+    } else {
+      if (qtIdx > 2) qtIdx = 1;
+      that.broadcast.changeQuote({quoteIdx: qtIdx, isNormal: false});
+    }
   }
 
   /**
