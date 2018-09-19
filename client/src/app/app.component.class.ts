@@ -1,6 +1,6 @@
 import { Configs, FmtStatus } from './formatter/formatter.conf';
 import { Formatter } from './formatter/formatter.core';
-import { AppService, APP_INFO } from './app.service';
+import { AppService, APP_INFO, APP_THEMES } from './app.service';
 import { DiffType } from './shared/index';
 
 export abstract class ZjsApp {
@@ -31,10 +31,7 @@ export abstract class ZjsApp {
   diffType: DiffType;
   toggleConfTiele: string;
   theme: string;
-  themes: string[] = [
-    'light', 'solarized', 'moonlight', 'blue', 'dark',
-    // 'red', 'kimbie', 'abyss'
-  ];
+  themes: string[] = APP_THEMES;
   altMsgs: any = {};
   positionIdxArr: number[] = [];
   positionIdx: number = 0;
