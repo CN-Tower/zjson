@@ -108,7 +108,8 @@
             <span class="z-ico-hd" (click)="download()">
               <i class="fa fa-download z-op-icon" title="{{'download' | translate}}"></i>
             </span>
-            <zjs-compare [formated]="formated" [icoClass]="'columns'" (showDiffChange)="showDiffChange($event)"></zjs-compare>
+            <zjs-compare [icoClass]="'columns'" [formated]="formated"
+                         [fmtHists]="fmtHists" (showDiffChange)="showDiffChange($event)"></zjs-compare>
             <span *ngIf="!isFmtMax" (click)="copyFmted()">
               <i class="fa fa-copy z-op-icon" title="{{'copy' | translate}}"></i>
             </span>
