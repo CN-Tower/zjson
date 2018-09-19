@@ -16,7 +16,7 @@ import { SharedBroadcastService } from '../shared/shared-broadcast.service';
     </div>`
 })
 export class ZjsLoadingComponent implements OnInit {
-  isShowLoading: boolean = false;
+  isShowLoading: boolean = true;
 
   constructor(private broadcast: SharedBroadcastService) { }
 
