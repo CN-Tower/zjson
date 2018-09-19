@@ -7,8 +7,13 @@ import { IgnoreInfo, QuoteIdx, QuoteInfo } from './shared';
 export const APP_INFO = {
   version: 'v4.1.2',
   updateTime: '2018-09-19',
-  appUrl: 'http://www.zjson.net'
+  appUrl: 'http://10.63.244.252:8888'
 };
+
+export const APP_THEMES: string[] = [
+  'light', 'solarized', 'moonlight', 'blue', 'dark', 'abyss'
+  // 'red', 'kimbie'
+];
 
 @Injectable()
 export class AppService {
@@ -134,7 +139,8 @@ export class AppService {
   }
 
   getAppTheme() {
-    return window.localStorage['theme'] || 'dark';
+    const storedTheme = window.localStorage['theme'];
+    return APP_THEMES.includes(storedTheme) ? storedTheme : 'dark';
   }
 
   getEditorTheme(theme: string) {
