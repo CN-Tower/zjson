@@ -9,8 +9,8 @@ export class Configs {
   public type: 'json' | 'jsObj' | 'pyMap' = 'json';
   public indent: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 = 2;
   public sgIndent: string = ' ';
-  public keyQuote: '\'' | '\"' | '' = '\"';
-  public valQuote: '\'' | '\"' = '\"';
+  public keyQuote: '\'' | '\"' | '';
+  public valQuote: '\'' | '\"';
   public isStrict: boolean;
   public isEscape: boolean;
 }
