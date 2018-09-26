@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
-import { IgnoreInfo, QuoteIdx, QuoteInfo } from './shared';
+import { IgnoreInfo, QuoteIdx, AlertInfo } from './shared';
 
 export const APP_INFO = {
-  version: 'v4.1.3',
+  version: 'v4.1.2',
   updateTime: '2018-09-19',
   appUrl: 'http://www.zjson.net'
 };
@@ -96,7 +96,7 @@ export class AppService {
     i18n.model.combine = this.translate.instant('combine');
   }
 
-  translateAltMsgs(i18n: any, alertInfo: any) {
+  translateAltMsgs(i18n: any, alertInfo: AlertInfo) {
     fn.match(alertInfo.type, {
       'ost': () => i18n.alert.ost = this.translate.instant('alert.ost', {
           rowIdx: alertInfo.idx }),
@@ -110,6 +110,7 @@ export class AppService {
           rowIdx: alertInfo.idx }),
       'end': () => i18n.alert.end = this.translate.instant('alert.end', {
           rowIdx: alertInfo.idx, brc: alertInfo.brc }),
+      'err': () => i18n.alert.err = this.translate.instant('alert.err')
     });
   }
 
