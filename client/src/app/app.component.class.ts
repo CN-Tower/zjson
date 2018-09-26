@@ -1,7 +1,7 @@
 import { Configs, FmtStatus } from './formatter/formatter.conf';
 import { Formatter } from './formatter/formatter.core';
 import { AppService, APP_INFO, APP_THEMES } from './app.service';
-import { DiffType } from './shared/index';
+import { DiffType, AlertType, AlertInfo } from './shared/index';
 
 export abstract class ZjsApp {
   appUrl: string = APP_INFO.appUrl;
@@ -42,8 +42,8 @@ export abstract class ZjsApp {
   conf: Configs = new Configs();
   fmtStatus: FmtStatus = new FmtStatus();
   formatter: Formatter = new Formatter();
-  alertInfo: any = {type: '', idx: NaN, brc: ''};
-  alertType: 'info'|'success'|'warning'|'danger' = 'info';
+  alertInfo: AlertInfo = {type: '', idx: NaN, brc: ''};
+  alertType: AlertType = 'info';
   greeting: string;
   srcEditor: any;
   fmtEditor: any;
