@@ -13,7 +13,16 @@ export interface IgnoreInfo {
   ignoreVersion: string;
 }
 export type QuoteIdx = 1 | 2 | 3 | 4;
+export type Indent = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 export interface QuoteInfo {
   quoteIdx: QuoteIdx;
   isNormal?: boolean;
 }
+export type AlertType = 'info' | 'success' | 'warning' | 'danger';
+export interface AlertInfo {
+  type: FmtErrType;
+  idx: number;
+  brc: string;
+}
+export type FmtErrType = 'ost' | 'col' | 'val' | 'end' | 'scc' | 'war' | 'err' | '';
+export type FmtedType = 'json' | 'jsObj' | 'pyMap' | 'other' | '';
