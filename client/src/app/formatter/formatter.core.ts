@@ -1,5 +1,6 @@
 import { Observable } from 'rxjs';
 import { Configs, FmtStatus, FmtValidator, FmtBase } from './formatter.conf';
+import { FmtErrType } from '../shared';
 
 export class Formatter extends FmtBase {
 
@@ -23,10 +24,15 @@ export class Formatter extends FmtBase {
       this.rowIdx = 1;
       this.isExpand = fmtConfig.model === 'expand';
       this.baseIndent = this.help.setBaseIndent(fmtConfig);
-      this.doFormatByTry(that);
-      this.setupFmtStatus();
-      observer.next({ fmtResult: this.fmtResult, fmtStatus: this.fmtStatus });
-      observer.complete();
+      try {
+        this.doFormatByTry(that);
+      } catch (err) {
+        this.fmtStatus.isFmtError = true;
+      } finally {
+        this.setupFmtStatus();
+        observer.next({ fmtResult: this.fmtResult, fmtStatus: this.fmtStatus });
+        observer.complete();
+      }
     });
   }
 
@@ -60,7 +66,9 @@ export class Formatter extends FmtBase {
    * ============================
    */
   setupFmtStatus() {
-    if (this.fmtStatus.isSrcValid) {
+    if (this.fmtStatus.isFmtError && !this.fmtStatus.errRowIdx) {
+      this.expection('err');
+    } else if (this.fmtStatus.isSrcValid) {
       if (this.v.deepIdxCon) {
         const expBrc = this.help.getBraceMir(this.v.deepIdxCon.substr(-1));
         this.expection('end', expBrc);
@@ -544,16 +552,16 @@ export class Formatter extends FmtBase {
    * 期待返回设置
    * ============================
    */
-  private expection(type: string, brc: string = '') {
-    const altTypes = {
-      ost: 'danger', col: 'danger', val: 'danger',
-      end: 'danger', war: 'warning', scc: 'success'
-    };
+  private expection(type: FmtErrType, brc: string = '') {
     if (['ost', 'col', 'val', 'end'].includes(type)) {
       this.fmtStatus.isSrcValid = false;
       this.fmtStatus.errRowIdx = this.rowIdx;
     }
-    this.fmtStatus.altType = altTypes[type];
+    this.fmtStatus.altType = fn.match(type, {
+      'war': 'warning',
+      'scc': 'success',
+      '@default': 'danger'
+    });
     this.fmtStatus.altInfo = { type: type, idx: this.rowIdx, brc: brc };
   }
 }
