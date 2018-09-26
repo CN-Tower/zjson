@@ -73,9 +73,9 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     if (!this.sourcest && !this.fmtSourcest && !isSilence) {
       this.alertNotice(this.translate.instant('_format'), 'danger');
     } else {
-      this.formatter.format(fmtSrc, this.conf, this).subscribe(res => {
-        this.formated = res.fmtResult;
-        this.fmtStatus = res.fmtStatus;
+      this.formatter.format(fmtSrc, this.conf, this).subscribe(fmted => {
+        this.formated = fmted.fmtResult;
+        this.fmtStatus = fmted.fmtStatus;
         if (this.formated) {
           this.alertType = this.fmtStatus.altType;
           this.alertInfo = this.fmtStatus.altInfo;
@@ -146,7 +146,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
       this.theme = them;
       this.appService.setAppTheme(them);
     }
-    this.updateTheme(them);
+    this.updateEditorTheme(them);
   }
 
   setIsStrict(isStrict: boolean) {
@@ -265,8 +265,8 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
   }
 
   asyncEditorWidth() {
-    fn.interval('asyncSrcEdtW', 0, () => this.updateSourceEditor());
-    fn.interval('asyncFmtEdtW', 0, () => this.updateFormatEditor());
+    fn.interval('asyncSrcEdtW', 0, () => this.updateSrcEditorOpts());
+    fn.interval('asyncFmtEdtW', 0, () => this.updateFmtEditorOpts());
   }
 
   animateEditorWidth(editor: EditorModal, percent: string) {
@@ -375,7 +375,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
   expandAll() {
     if (this.formated) {
       this.doFormate(this.conf.isEscape ? this.sourcest : this.formated, true);
-      this.updateFormatEditor();
+      this.updateFmtEditorOpts();
     }
   }
 
@@ -440,8 +440,8 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
       $maxPanel.width(winW - 40).height(winH - 30);
     }
     $('.z-fmt-alts').width((winW - 40) * 0.35);
-    this.updateSourceEditor();
-    this.updateFormatEditor();
+    this.updateSrcEditorOpts();
+    this.updateFmtEditorOpts();
   }
 
   initZjsAppStyles() {
@@ -534,8 +534,8 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     $zSrce.css('width', srcP + '%');
     $zJson.css('width', 99 - srcP + '%');
     this.isOnLeft = Math.abs(srcP - 35) < 0.1;
-    this.updateSourceEditor();
-    this.updateFormatEditor();
+    this.updateSrcEditorOpts();
+    this.updateFmtEditorOpts();
     return false;
   }
 
@@ -581,78 +581,10 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
   }
 
   /**
-   * 代码编辑器渲染完成
-   * @param editor
-   * @param editorName
-   */
-  afterEditorInit(editor: any, editorName: EditorModal) {
-    this.broadcast.hideLoading();
-    fn.match(editorName, {
-      'source': () => {
-        this.srcEditor = editor;
-        this.updateSourceEditor();
-        this.updateFormatEditor();
-        editor.onDidScrollChange(() => this.toggleEditorToTop('source'));
-      },
-      'format': () => {
-        this.fmtEditor = editor;
-        this.updateSourceEditor();
-        this.updateFormatEditor();
-        editor.onDidScrollChange(() => this.toggleEditorToTop('format'));
-      }
-    });
-    this.updateTabsize();
-    this.updateTheme();
-  }
-
-  updateTheme(theme: string = this.theme) {
-    fn.defer(() => {
-      if (this.srcEditor && this.fmtEditor) {
-        theme = this.appService.getEditorTheme(theme);
-        win.monaco.editor.setTheme(theme);
-        if (['vs', 'vs-dark'].includes(theme)) {
-          this.fmtEditor.updateOptions({minimap: { enabled: true}});
-        } else {
-          this.fmtEditor.updateOptions({minimap: { enabled: false}});
-        }
-      }
-    });
-  }
-
-  updateTabsize() {
-    this.doFormate(true);
-    if (this.srcEditor && this.fmtEditor) {
-      [this.srcEditor, this.fmtEditor].forEach(editor => {
-        const model = editor.getModel();
-        model.updateOptions({tabSize: this.conf.indent});
-      });
-    }
-  }
-
-  updateSourceEditor() {
-    fn.defer(() => {
-      if (this.srcEditor) this.srcEditor.layout();
-    });
-  }
-
-  updateFormatEditor() {
-    fn.defer(() => {
-      if (this.fmtEditor) {
-        this.fmtEditor.layout();
-        if (this.conf.model === 'expand') {
-          this.fmtEditor.updateOptions({wordWrap: 'off'});
-        } else {
-          this.fmtEditor.updateOptions({wordWrap: 'on'});
-        }
-      }
-    });
-  }
-
-  /**
-   * 读取文件
+   * 读取上传或拖放的文件
    * ===================================*/
   readSrcFile(file: any, isInitFileIpt: boolean) {
-    if (file.size > 80000) {
+    if (file.size > 150000) {
       this.alertNotice(this.translate.instant('_largeFile'), 'danger');
       if (isInitFileIpt) {
         $('input.upload').replaceWith('<input type="file" class="upload hide">');
@@ -678,6 +610,75 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
   }
 
   /**
+   * 代码编辑器渲染完成
+   * ===================================*/
+  afterEditorInit(editor: any, editorName: EditorModal) {
+    this.broadcast.hideLoading();
+    fn.match(editorName, {
+      'source': () => {
+        this.srcEditor = editor;
+        this.updateSrcEditorOpts();
+        this.updateFmtEditorOpts();
+        editor.onDidScrollChange(() => this.toggleEditorToTop('source'));
+      },
+      'format': () => {
+        this.fmtEditor = editor;
+        this.updateSrcEditorOpts();
+        this.updateFmtEditorOpts();
+        editor.onDidScrollChange(() => this.toggleEditorToTop('format'));
+      }
+    });
+    this.updateEditorTabsize();
+    this.updateEditorTheme();
+  }
+
+  /**
+   * 更新编辑器参数
+   * ===================================*/
+  updateEditorTheme(theme: string = this.theme) {
+    fn.defer(() => {
+      if (this.srcEditor && this.fmtEditor) {
+        theme = this.appService.getEditorTheme(theme);
+        win.monaco.editor.setTheme(theme);
+        if (['vs', 'vs-dark'].includes(theme)) {
+          this.fmtEditor.updateOptions({minimap: { enabled: true}});
+        } else {
+          this.fmtEditor.updateOptions({minimap: { enabled: false}});
+        }
+      }
+    });
+  }
+
+  updateEditorTabsize() {
+    this.doFormate(true);
+    if (this.srcEditor && this.fmtEditor) {
+      [this.srcEditor, this.fmtEditor].forEach(editor => {
+        const model = editor.getModel();
+        model.updateOptions({tabSize: this.conf.indent});
+      });
+    }
+  }
+
+  updateSrcEditorOpts() {
+    fn.defer(() => {
+      if (this.srcEditor) this.srcEditor.layout();
+    });
+  }
+
+  updateFmtEditorOpts() {
+    fn.defer(() => {
+      if (this.fmtEditor) {
+        this.fmtEditor.layout();
+        if (this.conf.model === 'expand') {
+          this.fmtEditor.updateOptions({wordWrap: 'off'});
+        } else {
+          this.fmtEditor.updateOptions({wordWrap: 'on'});
+        }
+      }
+    });
+  }
+
+  /**
    * 显示JSON对比窗口
    * ===================================*/
   showDiffChange(diffType: DiffType) {
@@ -693,7 +694,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
   }
 
   /**
-   * 上一步和下一步位置
+   * 编辑和跳转的位置信息
    * ===================================*/
   lastPosition() {
     this.goToPosition(this.positionIdxArr[this.positionIdx]);
@@ -728,9 +729,6 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     }
   }
 
-  /**
-   * 点击代码时增加位置信息
-   * ===================================*/
   addPositionIdx(rowIdx: number = this.getCurRowIdx()) {
     if (rowIdx !== this.positionIdxArr[this.positionIdxArr.length - 1]) {
       this.positionIdxArr.push(rowIdx);
