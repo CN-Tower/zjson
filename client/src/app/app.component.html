@@ -12,7 +12,7 @@
           <config-theme class="col-lg-12" [conf]="conf" [themes]="themes"
                         [theme]="theme" (changeTheme)="onChangeTheme($event)"></config-theme>
           <config-indent class="col-lg-12" [conf]="conf"
-                        (updateTabsize)="updateTabsize()"></config-indent>
+                        (updateTabsize)="updateEditorTabsize()"></config-indent>
           <config-quote class="col-lg-12" [conf]="conf" [isShowDiff]="isShowDiff"
                         (doFormate)="doFormate($event)"></config-quote>
         </div>
