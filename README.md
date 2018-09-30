@@ -60,9 +60,9 @@ zjson
 │   │   │   ├── app-config
 │   │   │   │   ├── config-items
 │   │   │   │   │   ├── config-indent.component.ts
-│   │   │   │   │   ├── config-indent.component.ts
-│   │   │   │   │   ├── config-indent.component.ts
-│   │   │   │   │   └── config-indent.component.ts
+│   │   │   │   │   ├── config-lang.component.ts
+│   │   │   │   │   ├── config-quote.component.ts
+│   │   │   │   │   └── config-theme.component.ts
 │   │   │   │   ├── app-config.component.html
 │   │   │   │   ├── app-config.component.less
 │   │   │   │   ├── app-config.component.ts
@@ -70,6 +70,7 @@ zjson
 │   │   │   ├── attachments
 │   │   │   │   ├── index.ts
 │   │   │   │   ├── zjs-attachment.ts
+│   │   │   │   ├── zjs-compare.component.ts
 │   │   │   │   ├── zjs-hint.component.ts
 │   │   │   │   ├── zjs-hist.component.ts
 │   │   │   │   ├── zjs-info.component.ts
@@ -77,15 +78,19 @@ zjson
 │   │   │   │   ├── zjs-notice.component.ts
 │   │   │   │   ├── zjs-title.component.ts
 │   │   │   │   └── zjs-update.component.ts
-│   │   │   ├── formatter
-│   │   │   │   ├── index.ts          
+│   │   │   ├── formatter       
 │   │   │   │   ├── formatter.conf.ts
 │   │   │   │   ├── formatter.core.ts
 │   │   │   │   └── formatter.help.ts
 │   │   │   ├── monaco-editor        
 │   │   │   │   ├── index.ts
+│   │   │   │   ├── monaco-diff-editor.component.ts
 │   │   │   │   ├── monaco-editor.base.ts
-│   │   │   │   └── monaco-editor.component.ts
+│   │   │   │   ├── monaco-editor.component.ts
+│   │   │   │   ├── monaco-editor.themes.ts
+│   │   │   │   ├── zjs-diff-editor.component.html
+│   │   │   │   ├── zjs-diff-editor.component.less
+│   │   │   │   └── zjs-diff-editor.component.ts
 │   │   │   ├── shared
 │   │   │   │   ├── index.ts
 │   │   │   │   ├── shared-broadcast.service.ts
@@ -95,8 +100,8 @@ zjson
 │   │   │   ├── app.component.class  
 │   │   │   ├── app.component.html   
 │   │   │   ├── app.component.less   
-│   │   │   ├── app.component.ts     
 │   │   │   ├── app.component.spec.ts
+│   │   │   ├── app.component.ts     
 │   │   │   ├── app.modules.ts       
 │   │   │   └── app.service.ts       
 │   │   ├── assets                  
