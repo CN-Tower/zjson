@@ -2,30 +2,31 @@
   <div class="panel panel-default" [ngClass]="{'z-maximal': isDifMax}" [ngStyle]="maxFmtSize">
     <div class="panel-heading no-select">
       <div class="z-panel-icos">
-        <zjs-compare [formated]="originalModel" [icoClass]="'th-list'" (showDiffChange)="showDiffChange($event)"></zjs-compare>
+        <zjs-compare [formated]="originalModel" [icoClass]="'th-list'"
+                     (showDiffChange)="showDiffChange($event)" tooltip="{{'jsonCompare' | translate}}"></zjs-compare>
         <span id="format-btn" (click)="doFormate()">
-          <i class="fa fa-retweet z-op-icon-bg" title="{{'format' | translate}}"></i>
+          <i class="fa fa-retweet z-op-icon-bg" tooltip="{{'format' | translate}}"></i>
         </span>
         <span class="z-ico-hd" (click)="exchangeModels()">
-          <i class="fa fa-exchange z-op-icon" title="{{'exchange' | translate}}"></i>
+          <i class="fa fa-exchange z-op-icon" tooltip="{{'exchange' | translate}}"></i>
         </span>
         <span class="z-ico-hd" (click)="clearModified()">
-          <i class="fa fa-trash z-op-icon" title="{{'clear' | translate}}"></i>
+          <i class="fa fa-trash z-op-icon" tooltip="{{'clear' | translate}}"></i>
         </span>
         <span class="z-ico-hd" (click)="saveModifiedChange()">
-          <i class="fa fa-save z-op-icon" title="{{'saveModified' | translate}}"></i>
+          <i class="fa fa-save z-op-icon" tooltip="{{'saveModified' | translate}}"></i>
         </span>
         <span (click)="copyModified()">
-          <i class="fa fa-copy z-op-icon" title="{{'copyModified' | translate}}"></i>
+          <i class="fa fa-copy z-op-icon" tooltip="{{'copyModified' | translate}}"></i>
         </span>
         <span *ngIf="!isDifMax" (click)="maximalPanel()">
-          <i class="fa fa-window-maximize z-op-icon" title="{{'maximal' | translate}}"></i>
+          <i class="fa fa-window-maximize z-op-icon" tooltip="{{'maximal' | translate}}"></i>
         </span>
         <span *ngIf="isDifMax" (click)="minimalPanel()">
-          <i class="fa fa-window-restore z-op-icon" title="{{'minimal' | translate}}"></i>
+          <i class="fa fa-window-restore z-op-icon" tooltip="{{'minimal' | translate}}"></i>
         </span>
         <span class="z-ico-hd close-ico" (click)="closeDiffEditor()">
-          <i class="fa fa-window-close-o z-op-icon" title="{{'close' | translate}}"></i>
+          <i class="fa fa-window-close-o z-op-icon" tooltip="{{'close' | translate}}"></i>
         </span>
       </div>
       <h3 class="panel-title">

@@ -36,8 +36,8 @@
     "fmted": "结果",
     "fmtToJson": "转为JSON",
     "jsonCompare": "JSON对比",
-    "isStrict": "标准JSON开关",
-    "isEscape": "转义JSON开关",
+    "isStrict": "JSON标准化开关",
+    "isEscape": "JSON转义开关",
     "close": "关闭",
     "selectCompareTar": "选择对比目标",
     "cpWidthSrc": "与原始代码对比",
@@ -75,6 +75,7 @@
     "noMoreShow": "不再提示",
     "downloadNow": "立即下载",
     "updateLater": "暂不升级",
+    "unescapeSrc": "源码反转义",
     "search": "分享链接查找",
     "shareLink": "生成分享链接",
     "lastStep": "上一步位置",
@@ -99,7 +100,8 @@
         "val": "第{{rowIdx}}行，不是一个合法的值！",
         "end": "第{{rowIdx}}行，期望一个“逗号”或一个“{{brc}}”！",
         "war": "非正常Json转换，行数：{{rowIdx}}行！",
-        "scc": "格式化成功，行数：{{rowIdx}}行！"
+        "scc": "格式化成功，行数：{{rowIdx}}行！",
+        "err": "解析出错，过大的非正常Json字符串！"
     },
     "zNotice": "亲爱的码友们，zjson.net和funclib.js（zjson所依赖的一个函数库）已经开源啦，有兴趣的话就一起来玩吧！",
     "noHist": "没有保存的历史！",

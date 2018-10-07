@@ -9,7 +9,7 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { AppService } from './app.service';
 import { SharedBroadcastService } from './shared/index';
-import { BsDropdownModule, ModalModule } from 'ngx-bootstrap';
+import { BsDropdownModule, ModalModule, TooltipModule } from 'ngx-bootstrap';
 import {
   MonacoEditorComponent, MonacoDiffEditorComponent, ZjsDiffEditorComponent
 } from './monaco-editor/index';
@@ -30,7 +30,7 @@ export function TranslateFactory(http: HttpClient) {
   imports: [
     BrowserModule, FormsModule, HttpModule,
     HttpClientModule, BrowserAnimationsModule,
-    BsDropdownModule.forRoot(), ModalModule.forRoot(),
+    BsDropdownModule.forRoot(), ModalModule.forRoot(), TooltipModule.forRoot(),
     TranslateModule.forRoot({loader: {
       provide: TranslateLoader, deps: [HttpClient],
       useFactory: TranslateFactory

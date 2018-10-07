@@ -177,34 +177,6 @@
       /* ------------------- ZJS-FORMAT ------------------- */
       &#zjs-format {
         width: 64%;
-        position: relative;
-        #share-link {
-          position: absolute;
-          top: 68px;
-          right: 50px;
-          z-index: 99;
-          div {
-            &.search {
-              .shadow-ico;
-              &:hover input {
-                width: 160px;
-                transition: width .5s;
-              }
-              input {
-                width: 0px;
-                height: 24px;
-                font-size: 14px;
-                transition: width .5s;
-                margin: 6px 4px 0 0;
-              }
-            }
-            .fmted-op {
-              .clear-fix;
-              .shadow-ico;
-              margin-top: 10px;
-            }
-          }
-        }
         #format-container {
           position: relative;
           #z-notice-text {
@@ -217,6 +189,33 @@
               display: inline-block;
               width: 72px;
             }
+          }
+        }
+      }
+      .share-link {
+        position: absolute;
+        top: 24px;
+        right: 48px;
+        z-index: 99;
+        div {
+          &.search {
+            .shadow-ico;
+            &:hover input {
+              width: 160px;
+              transition: width .5s;
+            }
+            input {
+              width: 0px;
+              height: 24px;
+              font-size: 14px;
+              transition: width .5s;
+              margin: 6px 4px 0 0;
+            }
+          }
+          .fmted-op {
+            .clear-fix;
+            .shadow-ico;
+            margin-top: 10px;
           }
         }
       }

@@ -4,7 +4,7 @@ import { Component, Input, Output, EventEmitter} from '@angular/core';
   selector: 'zjs-hist',
   template: `
     <span  class="z-ico-hd dropdown" dropdown>
-      <i dropdownToggle class="fa fa-database z-op-icon dropdown-toggle" title="{{'saved' | translate}}"></i>
+      <i dropdownToggle class="fa fa-database z-op-icon dropdown-toggle"></i>
       <ul *dropdownMenu id="hist-ops" class="dropdown-menu">
         <li *ngIf="fmtHists.length==0">
           <a href="javascript:;">

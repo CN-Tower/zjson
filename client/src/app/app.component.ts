@@ -370,6 +370,13 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
   }
 
   /**
+   * 源代码反转义
+   * =================================*/
+  unescapeSource() {
+    this.sourcest = this.sourcest.replace(/\\"/mg, '"').replace(/\\\\/mg, '\\');
+  }
+
+  /**
    * 全部展开
    * =================================*/
   expandAll() {

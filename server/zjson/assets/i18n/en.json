@@ -75,6 +75,7 @@
     "noMoreShow": "Don't show this again",
     "downloadNow": "Download Now",
     "updateLater": "Upgrade Later",
+    "unescapeSrc": "Unescape source",
     "search": "Search by shared link",
     "shareLink": "Generate shared link",
     "lastStep": "Prev step position",
@@ -99,7 +100,8 @@
         "val": "Invalid value in line: {{rowIdx}} !",
         "end": "Expect a comma or a \"{{brc}}\" in line: {{rowIdx}} !",
         "war": "Formated {{rowIdx}} lines, abnormal JSON source !",
-        "scc": "Success formated {{rowIdx}} lines !"
+        "scc": "Success formated {{rowIdx}} lines !",
+        "err": "Parse Error, an excessive abnormal Json!"
     },
     "zNotice": "Dear code friends, zjson.net and funclib.js (a zjson dependency) are open source now. If you are interested, click the links below!",
     "noHist": "No saved record !",

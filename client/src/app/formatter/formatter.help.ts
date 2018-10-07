@@ -19,19 +19,20 @@ export class FmtHelp {
    * 描述: 给String打引号
    */
   quoteNormalStr(qtStr: string, conf: Configs, quote: string, isFromAbnormal?: boolean) {
+    const isEscape = conf.isEscape && conf.keyQuote === '"' && quote === '"' && (!isFromAbnormal || conf.isStrict);
     qtStr = isFromAbnormal
       ? qtStr.replace(/(?!\\[b|f|n|\\|r|t|x|v|'|"|0])\\/mg, '\\\\')
       : qtStr.replace(/\\/mg, '\\\\');
     this.escapeArr.forEach(esp => qtStr = qtStr.replace(esp.ptn, esp.str));
-    const quote_ = conf.isEscape ? `\\${quote}` : quote;
-    if (conf.isEscape) qtStr = qtStr.replace(/\\/mg, '\\\\');
+    const quote_ = isEscape ? `\\${quote}` : quote;
+    if (isEscape) qtStr = qtStr.replace(/\\/mg, '\\\\');
     return fn.match(quote, {
       '\"': () => {
-        qtStr = conf.isEscape ? qtStr.replace(/"/mg, '\\\\\\"') : qtStr.replace(/"/mg, '\\"');
+        qtStr = isEscape ? qtStr.replace(/"/mg, '\\\\\\"') : qtStr.replace(/"/mg, '\\"');
         return quote_ + qtStr + quote_;
       },
       '\'': () => {
-        qtStr = conf.isEscape ? qtStr.replace(/'/mg, '\\\\\\\'') : qtStr.replace(/'/mg, '\\\'');
+        qtStr = qtStr.replace(/'/mg, '\\\'');
         return quote_ + qtStr + quote_;
       },
       '@default': qtStr

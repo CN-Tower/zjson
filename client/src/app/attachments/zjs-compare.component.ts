@@ -7,7 +7,7 @@ import { SharedBroadcastService, FmtHist } from '../shared/index';
   selector: 'zjs-compare',
   template: `
     <span class="z-sm-hide dropdown" #dropdown="bs-dropdown" (onShown)="onShown()" dropdown>
-      <i dropdownToggle class="fa fa-{{icoClass}} z-op-icon dropdown-toggle" title="{{'jsonCompare' | translate}}"></i>
+      <i dropdownToggle class="fa fa-{{icoClass}} z-op-icon dropdown-toggle"></i>
       <ul *dropdownMenu class="dropdown-menu dropdown-menu-right">
         <li><a href="javascript:;" (click)="showDiffChange.emit('src')">{{'cpWidthSrc' | translate}}</a></li>
         <li><a href="javascript:;" (click)="showDiffChange.emit('new')">{{'cpWidthNew' | translate}}</a></li>

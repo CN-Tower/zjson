@@ -5,8 +5,8 @@ import 'rxjs/add/operator/map';
 import { IgnoreInfo, QuoteIdx, AlertInfo } from './shared';
 
 export const APP_INFO = {
-  version: 'v4.1.2',
-  updateTime: '2018-09-19',
+  version: 'v4.1.4',
+  updateTime: '2018-10-07',
   appUrl: 'http://www.zjson.net'
 };
 

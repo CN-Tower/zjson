@@ -30,39 +30,43 @@
         <div class="panel-heading no-select">
           <div class="z-panel-icos">
             <span *ngIf="!isSrcMax && !isOnLeft" class="z-sm-hide" (click)="pushToLeft()">
-              <i class="fa fa-step-backward z-op-icon" title="{{'pushToLeft' | translate}}"></i>
+              <i class="fa fa-step-backward z-op-icon" tooltip="{{'pushToLeft' | translate}}"></i>
             </span>
             <span *ngIf="!isSrcMax && isOnLeft" class="z-sm-hide" (click)="pushToMiddle()">
-              <i class="fa fa-pause z-op-icon" title="{{'pushToMiddle' | translate}}"></i>
+              <i class="fa fa-pause z-op-icon" tooltip="{{'pushToMiddle' | translate}}"></i>
+            </span>
+            <span class="z-sm-hide" (click)="unescapeSource()">
+              <i class="fa fa-magic z-op-icon" tooltip="{{'unescapeSrc' | translate}}"></i>
             </span>
             <span *ngIf="!conf.isEscape" class="z-ico-hd" (click)="setIsEscape(true)">
-              <i class="fa fa-circle-o z-op-icon" title="{{'isEscape' | translate}}"></i>
+              <i class="fa fa-circle-o z-op-icon" tooltip="{{'isEscape' | translate}}"></i>
             </span>
             <span *ngIf="conf.isEscape" class="z-ico-hd" (click)="setIsEscape(false)">
-              <i class="fa fa-dot-circle-o z-op-icon" title="{{'isEscape' | translate}}"></i>
+              <i class="fa fa-dot-circle-o z-op-icon" tooltip="{{'isEscape' | translate}}"></i>
             </span>
             <span class="z-ico-hd" (click)="clearSourc()">
-              <i class="fa fa-trash z-op-icon" title="{{'clear' | translate}}"></i>
+              <i class="fa fa-trash z-op-icon" tooltip="{{'clear' | translate}}"></i>
             </span>
-            <zjs-hist *ngIf="!isSrcMax" [fmtHists]="fmtHists" (showOrRmFmtHist)="showOrRmFmtHist($event)"></zjs-hist>
+            <zjs-hist *ngIf="!isSrcMax" [fmtHists]="fmtHists"
+                      (showOrRmFmtHist)="showOrRmFmtHist($event)" tooltip="{{'saved' | translate}}"></zjs-hist>
             <span class="z-ico-hd" (click)="upload()">
-              <i class="fa fa-upload z-op-icon" title="{{'upload' | translate}}"></i>
+              <i class="fa fa-upload z-op-icon" tooltip="{{'upload' | translate}}"></i>
               <input type="file" class="upload hide">
             </span> 
             <span *ngIf="!conf.isStrict" class="z-ico-hd" (click)="setIsStrict(true)">
-              <i class="fa fa-toggle-off z-op-icon" title="{{'isStrict' | translate}}"></i>
+              <i class="fa fa-toggle-off z-op-icon" tooltip="{{'isStrict' | translate}}"></i>
             </span>
             <span *ngIf="conf.isStrict" class="z-ico-hd" (click)="setIsStrict(false)">
-              <i class="fa fa-toggle-on z-op-icon" title="{{'isStrict' | translate}}"></i>
+              <i class="fa fa-toggle-on z-op-icon" tooltip="{{'isStrict' | translate}}"></i>
             </span>
             <span id="format-btn" *ngIf="!isSrcMax" (click)="doFormate()">
-              <i class="fa fa-retweet z-op-icon-bg" title="{{'fmtToJson' | translate}}"></i>
+              <i class="fa fa-retweet z-op-icon-bg" tooltip="{{'fmtToJson' | translate}}"></i>
             </span>
             <span *ngIf="!isSrcMax" (click)="maximalPanel('src')">
-              <i class="fa fa-window-maximize z-op-icon" title="{{'maximal' | translate}}"></i>
+              <i class="fa fa-window-maximize z-op-icon" tooltip="{{'maximal' | translate}}"></i>
             </span>
             <span *ngIf="isSrcMax" (click)="minimalPanel('src')">
-              <i class="fa fa-window-restore z-op-icon" title="{{'minimal' | translate}}"></i>
+              <i class="fa fa-window-restore z-op-icon" tooltip="{{'minimal' | translate}}"></i>
             </span>
           </div>
           <h3 class="panel-title z-ptt-long">{{'source_' | translate}}</h3>
@@ -91,57 +95,57 @@
         <div class="panel-heading no-select">
           <div class="z-panel-icos">
             <span *ngIf="!isFmtMax" class="z-ico-hd z-show-left" (click)="showInLeft()">
-              <i class="fa fa-hand-o-left z-op-icon" title="{{'showInLeft' | translate}}"></i>
+              <i class="fa fa-hand-o-left z-op-icon" tooltip="{{'showInLeft' | translate}}"></i>
             </span>
             <span *ngIf="conf.model=='expand'" class="z-ico-hd" (click)="conf.model='combine'; expandAll()">
-              <i class="fa fa-compress z-op-icon" title="{{i18n.model.combine}}"></i>
+              <i class="fa fa-compress z-op-icon" tooltip="{{i18n.model.combine}}"></i>
             </span>
             <span *ngIf="conf.model=='combine'" class="z-ico-hd" (click)="conf.model='expand'; expandAll()">
-              <i class="fa fa-expand z-op-icon" title="{{i18n.model.expand}}"></i>
+              <i class="fa fa-expand z-op-icon" tooltip="{{i18n.model.expand}}"></i>
             </span>
             <span class="z-ico-hd" (click)="clearFmted()">
-              <i class="fa fa-trash z-op-icon" title="{{'clear' | translate}}"></i>
+              <i class="fa fa-trash z-op-icon" tooltip="{{'clear' | translate}}"></i>
             </span>
             <span *ngIf="!isFmtMax" class="z-ico-hd" (click)="saveFmted()">
-              <i class="fa fa-save z-op-icon" title="{{'save' | translate}}"></i>
+              <i class="fa fa-save z-op-icon" tooltip="{{'save' | translate}}"></i>
             </span>
             <span class="z-ico-hd" (click)="download()">
-              <i class="fa fa-download z-op-icon" title="{{'download' | translate}}"></i>
+              <i class="fa fa-download z-op-icon" tooltip="{{'download' | translate}}"></i>
             </span>
-            <zjs-compare [icoClass]="'columns'" [formated]="formated"
-                         [fmtHists]="fmtHists" (showDiffChange)="showDiffChange($event)"></zjs-compare>
+            <zjs-compare [icoClass]="'columns'" [formated]="formated" [fmtHists]="fmtHists"
+                         (showDiffChange)="showDiffChange($event)" tooltip="{{'jsonCompare' | translate}}"></zjs-compare>
             <span *ngIf="!isFmtMax" (click)="copyFmted()">
-              <i class="fa fa-copy z-op-icon" title="{{'copy' | translate}}"></i>
+              <i class="fa fa-copy z-op-icon" tooltip="{{'copy' | translate}}"></i>
             </span>
             <span *ngIf="!isFmtMax" (click)="maximalPanel('fmt')">
-              <i class="fa fa-window-maximize z-op-icon" title="{{'maximal' | translate}}"></i>
+              <i class="fa fa-window-maximize z-op-icon" tooltip="{{'maximal' | translate}}"></i>
             </span>
             <span *ngIf="isFmtMax" (click)="minimalPanel('fmt')">
-              <i class="fa fa-window-restore z-op-icon" title="{{'minimal' | translate}}"></i>
+              <i class="fa fa-window-restore z-op-icon" tooltip="{{'minimal' | translate}}"></i>
             </span>
           </div>
           <h3 class="panel-title z-ptt-long">{{'fmted_' | translate}}</h3>
           <h3 class="panel-title z-ptt-short hide">{{'fmted' | translate}}</h3>
         </div>
         <div class="panel-body">
-          <div id="share-link">
-            <div class="search">
-              <input id="search-ipt" class="opacity0 fl" type="text" (paste)="getSharedJson()">
-              <i class="fa fa-search" title="{{'search' | translate}}" (click)="getSharedJson()"></i>
-            </div>
-            <div *ngIf="formated">
-              <div class="fmted-op">
-                <i class="fa fa-link fr" title="{{'shareLink' | translate}}" (click)="shareFormated()"></i>
-              </div>
-              <div class="fmted-op">
-                <i class="fa fa-chevron-up fr" title="{{'lastStep' | translate}}" (click)="lastPosition()"></i>
-              </div>
-              <div class="fmted-op next-postion">
-                <i class="fa fa-chevron-down fr" title="{{'nextStep' | translate}}" (click)="nextPosition()"></i>
-              </div>
-            </div>
-          </div>
           <div id="format-container" class="zjs-editor-wp">
+            <div class="share-link">
+              <div class="search">
+                <input id="search-ipt" class="opacity0 fl" type="text" (paste)="getSharedJson()">
+                <i class="fa fa-search" title="{{'search' | translate}}" (click)="getSharedJson()"></i>
+              </div>
+              <div *ngIf="formated">
+                <div class="fmted-op">
+                  <i class="fa fa-link fr" title="{{'shareLink' | translate}}" (click)="shareFormated()"></i>
+                </div>
+                <div class="fmted-op">
+                  <i class="fa fa-chevron-up fr" title="{{'lastStep' | translate}}" (click)="lastPosition()"></i>
+                </div>
+                <div class="fmted-op next-postion">
+                  <i class="fa fa-chevron-down fr" title="{{'nextStep' | translate}}" (click)="nextPosition()"></i>
+                </div>
+              </div>
+            </div>
             <div *ngIf="!formated" id="z-notice-text" class="zjs-placeholder z-sm-hide no-select">
               <p>{{'zNotice' | translate}}</p>
               <i class="fa fa-star"></i>&nbsp;<strong>{{'project' | translate}}:</strong>&nbsp;&nbsp;

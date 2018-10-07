@@ -75,6 +75,7 @@
     "noMoreShow": "Don't show this again",
     "downloadNow": "Download Now",
     "updateLater": "Upgrade Later",
+    "unescapeSrc": "Unescape source",
     "search": "Search by shared link",
     "shareLink": "Generate shared link",
     "lastStep": "Prev step position",
