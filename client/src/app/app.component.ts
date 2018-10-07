@@ -48,7 +48,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     this.initUploadEvent();
     this.initOpenDragEvent();
     this.initResizeZconEvent();
-    this.broadcast.showLoading(25000);
+    this.broadcast.showLoading(30000);
     this.onWindowResize();
     fn.timeout(500, () => this.onWindowResize());
     fn.defer(() => {
