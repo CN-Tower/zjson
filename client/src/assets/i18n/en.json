@@ -109,6 +109,7 @@
     "zNotice": "Dear code friends, zjson.net and funclib.js (a zjson dependency) are open source now. If you are interested, click the links below!",
     "noHist": "No saved record !",
     "saveSuccess": "Save Success !",
+    "formatSuccess": "Format Success !",
     "removeSavedSuccess": "Delete record Success !",
     "copySuccess": "Copy Success !",
     "newCompareSuccess": "New Compare Success !",
