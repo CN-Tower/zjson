@@ -100,6 +100,34 @@
     bottom: 20px;
     z-index: 1;
   }
+  .editor-operations {
+    position: absolute;
+    top: 24px;
+    right: 35px;
+    z-index: 99;
+    div {
+      .clear-fix;
+      margin-top: 10px;
+      &:nth-child(1) {
+        margin-top: 0;
+      }
+      i {
+        .shadow-ico;
+      }
+    }
+  }
+  .zjs-placeholder {
+    position: absolute;
+    width: 80%;
+    height: 78px;
+    left: 0;
+    right: 0;
+    top: 50px;
+    margin: auto; 
+    text-align: center;
+    font-size: 24px;
+    z-index: 1;
+  }
   #zjs-editors {
     padding: 10px 20px;
     .clear-fix;
@@ -143,18 +171,6 @@
         width: 35%;
         #source-container {
           position: relative;
-          .zjs-placeholder {
-            position: absolute;
-            width: 80%;
-            height: 78px;
-            left: 0;
-            right: 0;
-            top: 50px;
-            margin: auto; 
-            text-align: center;
-            font-size: 24px;
-            z-index: 1;
-          }
         }
       }
       &#zjs-drager {
@@ -177,6 +193,24 @@
       /* ------------------- ZJS-FORMAT ------------------- */
       &#zjs-format {
         width: 64%;
+        .share-links {
+          div {
+            &.search {
+              font-size: 24px;
+              &:hover input {
+                width: 160px;
+                transition: width .5s;
+              }
+              input {
+                width: 0px;
+                height: 24px;
+                font-size: 14px;
+                transition: width .5s;
+                margin: 6px 4px 0 0;
+              }
+            }
+          }
+        }
         #format-container {
           position: relative;
           #z-notice-text {
@@ -189,33 +223,6 @@
               display: inline-block;
               width: 72px;
             }
-          }
-        }
-      }
-      .share-link {
-        position: absolute;
-        top: 24px;
-        right: 48px;
-        z-index: 99;
-        div {
-          &.search {
-            .shadow-ico;
-            &:hover input {
-              width: 160px;
-              transition: width .5s;
-            }
-            input {
-              width: 0px;
-              height: 24px;
-              font-size: 14px;
-              transition: width .5s;
-              margin: 6px 4px 0 0;
-            }
-          }
-          .fmted-op {
-            .clear-fix;
-            .shadow-ico;
-            margin-top: 10px;
           }
         }
       }
