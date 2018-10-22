@@ -1,7 +1,8 @@
 import { Component, OnInit, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import { TranslateService, TranslationChangeEvent } from '@ngx-translate/core';
 import { AppService } from './app.service';
-import { SharedBroadcastService, EditorModal, DiffType, IgnoreInfo} from './shared/index';
+import { MonacoEditorService } from './monaco-editor/monaco-eidtor.service';
+import { SharedBroadcastService, EditorModal, DiffType} from './shared/index';
 import { ZjsApp } from './app.component.class';
 
 let editorW: number, sourceW: number, originX: number;
@@ -18,7 +19,8 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
   constructor(
     public appService: AppService,
     private translate: TranslateService,
-    private broadcast: SharedBroadcastService
+    private broadcast: SharedBroadcastService,
+    private editorService: MonacoEditorService
   ) {
     super(appService);
     const lang = this.appService.getAppLang() || translate.getBrowserLang();
@@ -120,7 +122,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     if (this.fmtEditor) {
       if (!this.fmtStatus.isSrcValid) {
         const errRowIdx = this.fmtStatus.errRowIdx;
-        this.goToPosition(errRowIdx);
+        this.editorService.goToPosition(errRowIdx, this.fmtEditor);
         this.addPositionIdx(errRowIdx);
         fn.defer(() => this.errRowDecorations = this.fmtEditor.deltaDecorations([], [
           {
@@ -146,7 +148,8 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
       this.theme = them;
       this.appService.setAppTheme(them);
     }
-    this.updateEditorTheme(them);
+    this.editorService.updateEditorTheme(this.fmtEditor);
+    this.broadcast.changeEditorOpts('theme');
   }
 
   setIsStrict(isStrict: boolean) {
@@ -291,8 +294,8 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
    * 保存到历史记录
    * =================================*/
   saveFmted() {
-    const svTime = this.getTimeStr();
     if (this.formated) {
+      const svTime = this.getTimeStr();
       this.sourcest = this.formated;
       if (this.saveFmtTime !== svTime) {
         this.saveFmtTime = svTime;
@@ -457,8 +460,8 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     const $win = $(win);
     this.isWindowBig = $win.width() >= 1025;
     $win.resize(() => this.onWindowResize());
-    $('#src-to-top').click(() => this.goToPosition(1, this.srcEditor));
-    $('#fmt-to-top').click(() => this.goToPosition(1, this.fmtEditor));
+    $('#src-to-top').click(() => this.editorService.goToPosition(1, this.srcEditor));
+    $('#fmt-to-top').click(() => this.editorService.goToPosition(1, this.fmtEditor));
     $('#source-container').hover(() => {
       this.isSrcOnHover = true;
       this.toggleEditorToTop('source');
@@ -482,17 +485,12 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
   toggleEditorToTop(edtName: EditorModal) {
     fn.match(edtName, {
       'source': () => {
-        this.isShowSrcToTop = this.isSrcOnHover && this.chkIsScrolled(this.srcEditor);
+        this.isShowSrcToTop = this.isSrcOnHover && this.editorService.checkIsScrolled(this.srcEditor);
       },
       'format': () => {
-        this.isShowFmtToTop = this.isFmtOnHover && this.chkIsScrolled(this.fmtEditor);
+        this.isShowFmtToTop = this.isFmtOnHover && this.editorService.checkIsScrolled(this.fmtEditor);
       }
     });
-  }
-
-  chkIsScrolled(editor: any) {
-    if (!editor) return false;
-    return Math.ceil(-editor.getScrolledVisiblePosition({}).top / 19) > 5;
   }
 
   /**
@@ -626,43 +624,24 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
         this.srcEditor = editor;
         this.updateSrcEditorOpts();
         this.updateFmtEditorOpts();
-        editor.onDidScrollChange(() => this.toggleEditorToTop('source'));
       },
       'format': () => {
         this.fmtEditor = editor;
         this.updateSrcEditorOpts();
         this.updateFmtEditorOpts();
-        editor.onDidScrollChange(() => this.toggleEditorToTop('format'));
       }
     });
     this.updateEditorTabsize();
-    this.updateEditorTheme();
-  }
-
-  /**
-   * 更新编辑器参数
-   * ===================================*/
-  updateEditorTheme(theme: string = this.theme) {
-    fn.defer(() => {
-      if (this.srcEditor && this.fmtEditor) {
-        theme = this.appService.getEditorTheme(theme);
-        win.monaco.editor.setTheme(theme);
-        if (['vs', 'vs-dark'].includes(theme)) {
-          this.fmtEditor.updateOptions({minimap: { enabled: true}});
-        } else {
-          this.fmtEditor.updateOptions({minimap: { enabled: false}});
-        }
-      }
-    });
+    this.editorService.updateEditorTheme(this.fmtEditor);
+    editor.onDidScrollChange(() => this.toggleEditorToTop(editorName));
   }
 
   updateEditorTabsize() {
     this.doFormate(true);
     if (this.srcEditor && this.fmtEditor) {
-      [this.srcEditor, this.fmtEditor].forEach(editor => {
-        const model = editor.getModel();
-        model.updateOptions({tabSize: this.conf.indent});
-      });
+      this.broadcast.tabsize = this.conf.indent;
+      this.editorService.updateEditorTabsize(this.srcEditor, this.fmtEditor);
+      this.broadcast.changeEditorOpts('tabsize');
     }
   }
 
@@ -694,17 +673,10 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
   }
 
   /**
-   * 保存对比修改代码
-   * ===================================*/
-  saveDiffModified(modified: string) {
-    this.sourcest = modified;
-  }
-
-  /**
    * 编辑和跳转的位置信息
    * ===================================*/
   lastPosition() {
-    this.goToPosition(this.positionIdxArr[this.positionIdx]);
+    this.editorService.goToPosition(this.positionIdxArr[this.positionIdx], this.fmtEditor);
     this.positionIdx --;
     if (this.positionIdx < 0) this.positionIdx = 0;
     this.nextPztCursor();
@@ -715,12 +687,8 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     if (this.positionIdx > this.positionIdxArr.length - 1) {
       this.positionIdx = this.positionIdxArr.length - 1;
     }
-    this.goToPosition(this.positionIdxArr[this.positionIdx]);
+    this.editorService.goToPosition(this.positionIdxArr[this.positionIdx], this.fmtEditor);
     this.nextPztCursor();
-  }
-
-  goToPosition(lineIdx: number, editor: any = this.fmtEditor) {
-    editor.revealPositionInCenter({ lineNumber: lineIdx, column: 1 });
   }
 
   initPositionIdx() {
