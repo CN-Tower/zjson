@@ -1,5 +1,5 @@
 import {
-  Component, OnInit, Input, Output, EventEmitter,
+  Component, OnInit, OnDestroy, Input, Output, EventEmitter,
   ViewChild, ElementRef, forwardRef, NgZone
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -24,11 +24,12 @@ import { SharedBroadcastService } from '../shared/shared-broadcast.service';
     multi: true
   }]
 })
-export class MonacoEditorComponent extends MonacoEditorBase implements OnInit, ControlValueAccessor {
+export class MonacoEditorComponent extends MonacoEditorBase implements OnInit, OnDestroy, ControlValueAccessor {
   @ViewChild('editorContainer') _editorContainer: ElementRef;
   @Input() options: any;
   @Output() afterInit: EventEmitter<any> = new EventEmitter();
 
+  private sub: any;
   private _editor: any;
   private _value: string = '';
 
@@ -42,15 +43,21 @@ export class MonacoEditorComponent extends MonacoEditorBase implements OnInit, C
   }
 
   ngOnInit() {
-    this.broadcast.editorStream.subscribe(() => this.initMonacoEditor());
+    if (this.broadcast.isEditorLoaded) {
+      this.initMonacoEditor();
+    } else {
+      this.sub = this.broadcast.editorStream.subscribe(() => this.initMonacoEditor());
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.sub) this.sub.unsubscribe();
   }
 
   writeValue(value: any) {
     this._value = value || '';
     fn.defer(() => {
-      if (this._editor) {
-        this._editor.setValue(this._value);
-      }
+      if (this._editor) this._editor.setValue(this._value);
     });
   }
 
