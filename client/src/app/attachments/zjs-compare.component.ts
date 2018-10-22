@@ -12,19 +12,24 @@ import { SharedBroadcastService, FmtHist } from '../shared/index';
         <li *ngIf="icoClass == 'columns'">
           <a href="javascript:;" (click)="showDiffChange.emit('newC')">{{'newCompare' | translate}}</a>
         </li>
-        <ng-container *ngIf="formated || icoClass == 'th-list'">
+        <ng-container *ngIf="icoClass == 'columns' && formated">
           <li class="divider dropdown-divider"></li>
-          <li *ngIf="icoClass == 'columns'">
+          <li>
             <a href="javascript:;" (click)="showDiffChange.emit('new')">{{'cpWidthNew' | translate}}</a>
           </li>
-          <li *ngIf="icoClass == 'columns'">
+          <li>
             <a href="javascript:;" (click)="showDiffChange.emit('src')">{{'cpWidthSrc' | translate}}</a>
           </li>
           <li *ngFor="let hist of fmtHists">
             <a href="javascript:;" (click)="showDiffChange.emit({type: 'his', hist: hist})">{{hist.name}}</a>
           </li>
         </ng-container>
-        <ng-container *ngIf="compareHists.length">
+        <ng-container *ngIf="icoClass == 'th-list'">
+          <li *ngFor="let hist of fmtHists">
+            <a href="javascript:;" (click)="showDiffChange.emit({type: 'his', hist: hist})">{{hist.name}}</a>
+          </li>
+        </ng-container>
+        <ng-container *ngIf="icoClass == 'columns' && compareHists.length">
           <li class="divider dropdown-divider"></li>
           <li *ngFor="let hist of compareHists">
             <a href="javascript:;" (click)="compareHistChange($event, hist)">

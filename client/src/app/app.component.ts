@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewInit, ViewEncapsulation } from '@angular/co
 import { TranslateService, TranslationChangeEvent } from '@ngx-translate/core';
 import { AppService } from './app.service';
 import { MonacoEditorService } from './monaco-editor/monaco-eidtor.service';
-import { SharedBroadcastService, EditorModal, DiffType} from './shared/index';
+import { SharedBroadcastService, EditorModal, DiffType, IgnoreInfo} from './shared/index';
 import { ZjsApp } from './app.component.class';
 
 let editorW: number, sourceW: number, originX: number;
