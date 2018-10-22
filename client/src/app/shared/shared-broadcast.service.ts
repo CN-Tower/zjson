@@ -1,5 +1,5 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { HintInfo, QuoteInfo } from './shared-interface';
+import { HintInfo, QuoteInfo, EditorOptions } from './shared-interface';
 
 @Injectable()
 export class SharedBroadcastService {
@@ -7,11 +7,16 @@ export class SharedBroadcastService {
   private hintEmiter: EventEmitter<any> = new EventEmitter;
   private editorEmiter: EventEmitter<any> = new EventEmitter;
   private quoteEmiter: EventEmitter<QuoteInfo | boolean> = new EventEmitter;
+  private editorOptEmiter: EventEmitter<EditorOptions> = new EventEmitter;
 
   loadingStream: any = this.loadingEmiter.asObservable();
   hintStream: any = this.hintEmiter.asObservable();
   editorStream: any = this.editorEmiter.asObservable();
   quoteStream: any = this.quoteEmiter.asObservable();
+  editorOptStream: any = this.editorOptEmiter.asObservable();
+
+  isEditorLoaded: boolean = false;
+  tabsize: number = 2;
 
   constructor() { }
 
@@ -25,4 +30,5 @@ export class SharedBroadcastService {
   showHint = (hintInfo: HintInfo) => this.hintEmiter.emit(hintInfo);
   editorReadyUp = () => this.editorEmiter.emit();
   changeQuote = (quoteInfo: QuoteInfo) => this.quoteEmiter.emit(quoteInfo);
+  changeEditorOpts = (editorOpt: EditorOptions) => this.editorOptEmiter.emit(editorOpt);
 }
