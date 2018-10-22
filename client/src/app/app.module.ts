@@ -11,7 +11,7 @@ import { AppService } from './app.service';
 import { SharedBroadcastService } from './shared/index';
 import { BsDropdownModule, ModalModule, TooltipModule } from 'ngx-bootstrap';
 import {
-  MonacoEditorComponent, MonacoDiffEditorComponent, ZjsDiffEditorComponent
+  MonacoEditorComponent, MonacoDiffEditorComponent, MonacoEditorService, ZjsDiffEditorComponent
 } from './monaco-editor/index';
 import {
   AppConfigComponent, ConfigLangComponent, ConfigThemeComponent,
@@ -45,7 +45,7 @@ export function TranslateFactory(http: HttpClient) {
     ZjsLoadingComponent, ZjsUpdateComponent, ZjsCompareComponent
   ],
   providers: [
-    AppService, SharedBroadcastService
+    AppService, MonacoEditorService, SharedBroadcastService
   ],
   bootstrap: [
     AppComponent
