@@ -3,11 +3,12 @@ export interface HintInfo {
   hintType?: 'danger'|'success';
 }
 export type EditorModal = 'source' | 'format';
+export type DiffEditors = 'original' | 'modified';
 export interface FmtHist {
   name: string;
   src: any;
 }
-export type DiffType = 'src' | 'new' | string;
+export type DiffType = 'src' | 'new' | 'newC' | string;
 export interface IgnoreInfo {
   ignoreTime: number;
   ignoreVersion: string;
@@ -26,3 +27,4 @@ export interface AlertInfo {
 }
 export type FmtErrType = 'ost' | 'col' | 'val' | 'end' | 'scc' | 'war' | 'err' | '';
 export type FmtedType = 'json' | 'jsObj' | 'pyMap' | 'other' | '';
+export type EditorOptions = 'tabsize' | 'theme';
