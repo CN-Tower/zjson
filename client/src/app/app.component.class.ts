@@ -74,9 +74,8 @@ export abstract class ZjsApp {
       enabled: false
     }
   };
-  getFmtHists = () => this.fmtHists = this.appService.getFmtHists();
   getTimeStr = () => fn.fmtDate('MM-dd hh:mm:ss');
-  setRowIdxWpHeight = () => $('.z-canvas').height() + 12 + 'px';
+  getFmtHists = () => this.fmtHists = this.appService.getFmtHists();
 
   constructor (public appService: AppService) { }
 }
