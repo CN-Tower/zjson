@@ -17,7 +17,7 @@
         <span class="z-ico-hd" (click)="showDiffChange('newC', true)">
           <i class="fa fa-file-o z-op-icon" tooltip="{{!isDifMax ? ('newCompare' | translate) : ''}}"></i>
         </span>
-        <zjs-hist *ngIf="!isSrcMax" [fmtHists]="compareHists" [isMenuRight]="true"
+        <zjs-hist [fmtHists]="compareHists" [isMenuRight]="true"
                   (showOrRmFmtHist)="showOrRmFmtHist($event)" tooltip="{{!isDifMax ? ('saved' | translate) : ''}}"></zjs-hist>
         <span class="z-ico-hd" (click)="saveCompare()">
           <i class="fa fa-save z-op-icon" tooltip="{{!isDifMax ? ('saveCompare' | translate) : ''}}"></i>
