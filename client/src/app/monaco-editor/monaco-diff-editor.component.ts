@@ -49,7 +49,7 @@ export class MonacoDiffEditorComponent extends MonacoEditorBase implements OnIni
   }
 
   ngOnInit() {
-    this.broadcast.editorStream.subscribe(() => this.initMonacoEditor());
+    this.initMonacoEditor();
   }
 
   ngOnDestroy() {
