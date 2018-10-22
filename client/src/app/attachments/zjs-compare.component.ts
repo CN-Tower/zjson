@@ -6,14 +6,23 @@ import { SharedBroadcastService, FmtHist } from '../shared/index';
 @Component({
   selector: 'zjs-compare',
   template: `
-    <span class="z-sm-hide dropdown" #dropdown="bs-dropdown" (onShown)="onShown()" dropdown>
+    <span class="z-sm-hide dropdown" #dropdown="bs-dropdown" dropdown>
       <i dropdownToggle class="fa fa-{{icoClass}} z-op-icon dropdown-toggle"></i>
       <ul *dropdownMenu class="dropdown-menu dropdown-menu-right">
-        <li><a href="javascript:;" (click)="showDiffChange.emit('src')">{{'cpWidthSrc' | translate}}</a></li>
-        <li><a href="javascript:;" (click)="showDiffChange.emit('new')">{{'cpWidthNew' | translate}}</a></li>
-        <li *ngFor="let hist of fmtHists">
-          <a href="javascript:;" (click)="showDiffChange.emit(hist.name)">{{hist.name}}</a>
+        <li *ngIf="icoClass == 'columns'">
+          <a href="javascript:;" (click)="showDiffChange.emit('newC')">{{'newCompare' | translate}}</a>
         </li>
+        <ng-container *ngIf="formated || icoClass == 'th-list'">
+          <li *ngIf="icoClass == 'columns'">
+            <a href="javascript:;" (click)="showDiffChange.emit('new')">{{'cpWidthNew' | translate}}</a>
+          </li>
+          <li *ngIf="icoClass == 'columns'">
+            <a href="javascript:;" (click)="showDiffChange.emit('src')">{{'cpWidthSrc' | translate}}</a>
+          </li>
+          <li *ngFor="let hist of fmtHists">
+            <a href="javascript:;" (click)="showDiffChange.emit(hist.name)">{{hist.name}}</a>
+          </li>
+        </ng-container>
       </ul>
   </span>`
 })
@@ -33,13 +42,6 @@ export class ZjsCompareComponent implements OnInit {
   ngOnInit() {
     if (this.fmtHists === undefined) {
       this.fmtHists = this.appService.getFmtHists();
-    }
-  }
-
-  onShown() {
-    if (!this.formated.trim()) {
-      this.dropdown.hide();
-      this.broadcast.showHint({hintMsg: this.translate.instant('fmtedRequired'), hintType: 'danger'});
     }
   }
 }
