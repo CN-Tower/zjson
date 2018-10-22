@@ -5,9 +5,9 @@ import 'rxjs/add/operator/map';
 import { IgnoreInfo, QuoteIdx, AlertInfo } from './shared';
 
 export const APP_INFO = {
-  version: 'v4.1.4',
-  updateTime: '2018-10-07',
-  appUrl: 'http://www.zjson.net'
+  version: 'v4.1.5',
+  updateTime: '2018-10-22',
+  appUrl: 'http://10.63.244.252:8888'
 };
 
 export const APP_THEMES: string[] = [
@@ -233,6 +233,26 @@ export class AppService {
     let fmtHists = this.getFmtHists();
     fmtHists = fmtHists.filter(ht => ht.name !== hist.name);
     window.localStorage['fmtHists'] = JSON.stringify(fmtHists);
+  }
+
+  getCompareHists() {
+    const compareHists = window.localStorage['compareHists'];
+    return compareHists ? JSON.parse(compareHists) : [];
+  }
+
+  setCompareHists(hist: any) {
+    const compareHists = this.getCompareHists();
+    compareHists.unshift(hist);
+    if (compareHists.length > 8) {
+      compareHists.pop();
+    }
+    window.localStorage['compareHists'] = JSON.stringify(compareHists);
+  }
+
+  rmvCompareHists(hist: any) {
+    let compareHists = this.getCompareHists();
+    compareHists = compareHists.filter(ht => ht.name !== hist.name);
+    window.localStorage['compareHists'] = JSON.stringify(compareHists);
   }
 
   getLocalVersion() {
