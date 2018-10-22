@@ -8,12 +8,14 @@ export class SharedBroadcastService {
   private editorEmiter: EventEmitter<any> = new EventEmitter;
   private quoteEmiter: EventEmitter<QuoteInfo | boolean> = new EventEmitter;
   private editorOptEmiter: EventEmitter<EditorOptions> = new EventEmitter;
+  private compareHistEmiter: EventEmitter<any> = new EventEmitter;
 
   loadingStream: any = this.loadingEmiter.asObservable();
   hintStream: any = this.hintEmiter.asObservable();
   editorStream: any = this.editorEmiter.asObservable();
   quoteStream: any = this.quoteEmiter.asObservable();
   editorOptStream: any = this.editorOptEmiter.asObservable();
+  compareHistStream: any = this.compareHistEmiter.asObservable();
 
   isEditorLoaded: boolean = false;
   tabsize: number = 2;
@@ -31,4 +33,5 @@ export class SharedBroadcastService {
   editorReadyUp = () => this.editorEmiter.emit();
   changeQuote = (quoteInfo: QuoteInfo) => this.quoteEmiter.emit(quoteInfo);
   changeEditorOpts = (editorOpt: EditorOptions) => this.editorOptEmiter.emit(editorOpt);
+  changeCompareHist = () => this.compareHistEmiter.emit();
 }
