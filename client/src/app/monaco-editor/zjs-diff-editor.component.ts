@@ -27,7 +27,7 @@ export class ZjsDiffEditorComponent implements OnInit, AfterViewInit, OnDestroy 
   isDifMax: boolean = false;
   isShowSource: boolean = true;
   isShowDiffEditor: boolean = false;
-  isLeftFmted: boolean = true;
+  isLeftFmted: boolean = false;
   eidtorSub: any;
   maxFmtSize: any = null;
   diffEditor: any;
@@ -69,6 +69,9 @@ export class ZjsDiffEditorComponent implements OnInit, AfterViewInit, OnDestroy 
   ngOnInit() {
     this.originalCode = this.formated;
     if (!['newC', 'new'].includes(this.diffType)) this.isShowSource = false;
+    if (this.diffType === 'new' || fn.get(this.diffType, 'type') === 'his') {
+      this.isLeftFmted = true;
+    }
     this.showDiffChange(this.diffType);
     this.getCompareHists();
     this.eidtorSub = this.broadcast.editorOptStream.subscribe((eidtorOpt: EditorOptions) => {
@@ -147,6 +150,7 @@ export class ZjsDiffEditorComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   resizeEditor = () => {
+    $('#zjs-diff-editor .panel').width($(win).width() - 42);
     if (this.diffEditor) this.diffEditor.layout();
     if (this.originalEditor && this.modifiedEditor) {
       this.originalEditor.layout();
@@ -216,9 +220,14 @@ export class ZjsDiffEditorComponent implements OnInit, AfterViewInit, OnDestroy 
         this.formatAndInitEditor(this.sourcest);
       },
       '@default': () => {
-        const fmtHists: FmtHist[] = this.appService.getFmtHists();
-        const modelCode = fn.get(fn.find(fmtHists, {name: diffType}), 'src');
-        this.formatAndInitEditor(modelCode);
+        fn.match(fn.get(diffType, 'type'), {
+          'his': () => {
+            this.formatAndInitEditor(fn.get(diffType, '/hist/src'));
+          },
+          'cpr': () => {
+            this.showOrRmFmtHist(diffType);
+          }
+        });
       }
     });
   }
@@ -283,8 +292,9 @@ export class ZjsDiffEditorComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   showOrRmFmtHist($e: any) {
-    if ($e.e.target.tagName === 'I') {
+    if (fn.get($e, '/e/target/tagName') === 'I') {
       this.appService.rmvCompareHists($e.hist);
+      this.broadcast.changeCompareHist();
       this.getCompareHists();
       this.alertNotice(this.translate.instant('removeSavedSuccess'), 'success');
     } else {
@@ -309,6 +319,7 @@ export class ZjsDiffEditorComponent implements OnInit, AfterViewInit, OnDestroy 
         const histName = this.saveCprTime + ` ( ${appdix} | ${appdix_} )`;
         const hist = {name: histName, ori: this.originalCode, mod: this.modifiedCode};
         this.appService.setCompareHists(hist);
+        this.broadcast.changeCompareHist();
         this.getCompareHists();
         this.alertNotice(this.translate.instant('saveSuccess'));
       }
