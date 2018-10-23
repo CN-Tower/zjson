@@ -1,37 +1,40 @@
 const fn = require('funclib');
 
-const ignStaTs = /\/\*\*electron ignore sta\*\//mgi;
-const ingEndTs = /\/\*\*electron ignore end\*\//mgi;
-const ignStaTs_ = /\/\*\*electron ignore sta_\*\/\/\*/mgi;
-const ingEndTs_ = /\*\/\/\*\*electron ignore end_\*\//mgi;
-const ingStaTsStr = '/**electron ignore sta*/';
-const ingEndTsStr = '/**electron ignore end*/';
-const ingStaTsStr_ = '/**electron ignore sta_*//*';
-const ingEndTsStr_ = '*//**electron ignore end_*/';
-const eabStaTs = /\/\*\*electron enable sta\*\//mgi;
-const eabEndTs = /\/\*\*electron enable end\*\//mgi;
-const eabStaTs_ = /\/\*\*electron enable sta_\*\/\/\*/mgi;
-const eabEndTs_ = /\*\/\/\*\*electron enable end_\*\//mgi;
-const eabStaTsStr = '/**electron enable sta*/';
-const eabEndTsStr = '/**electron enable end*/';
-const eabStaTsStr_ = '/**electron enable sta_*//*';
-const eabEndTsStr_ = '*//**electron enable end_*/';
-const ignStaEl = /<!--electron ignore sta-->/mgi;
-const ingEndEl = /<!--electron ignore end-->/mgi;
-const ignStaEl_ = /<!--electron ignore sta_--><!--/mgi;
-const ingEndEl_ = /--><!--electron ignore end_-->/mgi;
-const ingStaElStr = '<!--electron ignore sta-->';
-const ingEndElStr = '<!--electron ignore end-->';
-const ingStaElStr_ = '<!--electron ignore sta_--><!--';
-const ingEndElStr_ = '--><!--electron ignore end_-->';
-const eabStaEl = /<!--electron enable sta-->/mgi;
-const eabEndEl = /<!--electron enable end-->/mgi;
-const eabStaEl_ = /<!--electron enable sta_--><!--/mgi;
-const eabEndEl_ = /--><!--electron enable end_-->/mgi;
-const eabStaElStr = '<!--electron enable sta-->';
-const eabEndElStr = '<!--electron enable end-->';
-const eabStaElStr_ = '<!--electron enable sta_--><!--';
-const eabEndElStr_ = '--><!--electron enable end_-->';
+const ignStaTs  = /\/\*\*==================== electron ignore sta ====================\*\//mgi;
+const ignEndTs  = /\/\*\*==================== electron ignore end ====================\*\//mgi;
+const ignStaTs_ = /\/\*\*==================== electron ignore sta ====================/mgi;
+const ignEndTs_ = /======================= electron ignore end ====================\*\//mgi;
+const ignStaTsStr  = '/**==================== electron ignore sta ====================*/';
+const ignEndTsStr  = '/**==================== electron ignore end ====================*/';
+const ignStaTsStr_ = '/**==================== electron ignore sta ====================';
+const ignEndTsStr_ = '======================= electron ignore end ====================*/';
+
+const eabStaTs  = /\/\*\*==================== electron enable sta ====================\*\//mgi;
+const eabEndTs  = /\/\*\*==================== electron enable end ====================\*\//mgi;
+const eabStaTs_ = /\/\*\*==================== electron enable sta ====================/mgi;
+const eabEndTs_ = /======================= electron enable end ====================\*\//mgi;
+const eabStaTsStr  = '/**==================== electron enable sta ====================*/';
+const eabEndTsStr  = '/**==================== electron enable end ====================*/';
+const eabStaTsStr_ = '/**==================== electron enable sta ====================';
+const eabEndTsStr_ = '======================= electron enable end ====================*/';
+
+const ignStaEl  = /<!--==================== electron ignore sta ====================-->/mgi;
+const ignEndEl  = /<!--==================== electron ignore end ====================-->/mgi;
+const ignStaEl_ = /<!--==================== electron ignore sta ====================/mgi;
+const ignEndEl_ = /======================== electron ignore end ====================-->/mgi;
+const ignStaElStr  = '<!--==================== electron ignore sta ====================-->';
+const ignEndElStr  = '<!--==================== electron ignore end ====================-->';
+const ignStaElStr_ = '<!--==================== electron ignore sta ====================';
+const ignEndElStr_ = '======================== electron ignore end ====================-->';
+
+const eabStaEl  = /<!--==================== electron enable sta ====================-->/mgi;
+const eabEndEl  = /<!--==================== electron enable end ====================-->/mgi;
+const eabStaEl_ = /<!--==================== electron enable sta ====================/mgi;
+const eabEndEl_ = /======================== electron enable end ====================-->/mgi;
+const eabStaElStr  = '<!--==================== electron enable sta ====================-->';
+const eabEndElStr  = '<!--==================== electron enable end ====================-->';
+const eabStaElStr_ = '<!--==================== electron enable sta ====================';
+const eabEndElStr_ = '======================== electron enable end ====================-->';
 
 const isElectron = process.argv[2] === 'electron';
 
@@ -39,7 +42,9 @@ const tsPaths = [
   'src/app/app.component.ts',
   'src/app/monaco-editor/monaco-editor.base.ts'
 ];
-const elPaths = ['src/app/app.component.html'];
+const elPaths = [
+  'src/app/app.component.html'
+];
 
 tsPaths.forEach(tsPath => doElectronReplace('ts', tsPath));
 elPaths.forEach(elPath => doElectronReplace('el', elPath));
@@ -49,12 +54,12 @@ function doElectronReplace(fileType, filePath) {
     'ts': () => {
       if (isElectron) {
         fn.wt(filePath, fn.rd(filePath)
-          .replace(ignStaTs, ingStaTsStr_).replace(ingEndTs, ingEndTsStr_)
+          .replace(ignStaTs, ignStaTsStr_).replace(ignEndTs, ignEndTsStr_)
           .replace(eabStaTs_, eabStaTsStr).replace(eabEndTs_, eabEndTsStr)
         );
       } else {
         fn.wt(filePath, fn.rd(filePath)
-          .replace(ignStaTs_, ingStaTsStr).replace(ingEndTs_, ingEndTsStr)
+          .replace(ignStaTs_, ignStaTsStr).replace(ignEndTs_, ignEndTsStr)
           .replace(eabStaTs, eabStaTsStr_).replace(eabEndTs, eabEndTsStr_)
         );
       }
@@ -62,12 +67,12 @@ function doElectronReplace(fileType, filePath) {
     'el': () => {
       if (isElectron) {
         fn.wt(filePath, fn.rd(filePath)
-          .replace(ignStaEl, ingStaElStr_).replace(ingEndEl, ingEndElStr_)
+          .replace(ignStaEl, ignStaElStr_).replace(ignEndEl, ignEndElStr_)
           .replace(eabStaEl_, eabStaElStr).replace(eabEndEl_, eabEndElStr)
         );
       } else {
         fn.wt(filePath, fn.rd(filePath)
-          .replace(ignStaEl_, ingStaElStr).replace(ingEndEl_, ingEndElStr)
+          .replace(ignStaEl_, ignStaElStr).replace(ignEndEl_, ignEndElStr)
           .replace(eabStaEl, eabStaElStr_).replace(eabEndEl, eabEndElStr_)
         );
       }
