@@ -475,9 +475,11 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     }, () => {
       this.isFmtOnHover = false;
       this.isShowFmtToTop = false;
-    }).click(() => {
-      this.addPositionIdx();
-      this.initPositionIdx();
+    }).click(e => {
+      if ($(e.target).hasClass('view-line')) {
+        this.addPositionIdx();
+        this.initPositionIdx();
+      }
     });
     $(document).on('click keyup', () => this.isPageActive = true);
   }
@@ -682,13 +684,15 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     this.nextPztCursor();
   }
 
-  nextPosition() {
-    this.positionIdx ++;
-    if (this.positionIdx > this.positionIdxArr.length - 1) {
-      this.positionIdx = this.positionIdxArr.length - 1;
+  nextPosition(e: any) {
+    if (!$(e.target).hasClass('no-cursor')) {
+      this.positionIdx ++;
+      if (this.positionIdx > this.positionIdxArr.length - 1) {
+        this.positionIdx = this.positionIdxArr.length - 1;
+      }
+      this.editorService.goToPosition(this.positionIdxArr[this.positionIdx], this.fmtEditor);
+      this.nextPztCursor();
     }
-    this.editorService.goToPosition(this.positionIdxArr[this.positionIdx], this.fmtEditor);
-    this.nextPztCursor();
   }
 
   initPositionIdx() {
@@ -698,9 +702,9 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
 
   nextPztCursor() {
     if (this.positionIdx === this.positionIdxArr.length - 1) {
-      $('.next-postion').addClass('no-cursor');
+      $('.next-postion i').addClass('no-cursor');
     } else {
-      $('.next-postion').removeClass('no-cursor');
+      $('.next-postion i').removeClass('no-cursor');
     }
   }
 
