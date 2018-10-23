@@ -367,7 +367,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     this.formated = '';
     this.fmtSourcest = '';
     if (!this.isOriginEmpty) this.animateGreeting();
-    /**==================== electron enable sta ====================
+    /**==================== electron enable sta ======================
     fn.defer(() => win.onLinksLoad());
     ======================= electron enable end ====================*/
   }
@@ -729,7 +729,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     });
     fn.interval('refresh-visit-count', 300000, () => this.refreshVisitCount());
     /**==================== electron ignore end ====================*/
-    /**==================== electron enable sta ====================
+    /**==================== electron enable sta ======================
     fn.defer(() => win.checkAppVersion(res => {
       if (res.version !== res.localVersion) {
         let ignoreInfo: IgnoreInfo = this.appService.getIgnoreVersion();
@@ -790,7 +790,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
       if (res['vc']) win['vc'] = res.vc;
     });
     /**==================== electron ignore end ====================*/
-    /**==================== electron enable sta ====================
+    /**==================== electron enable sta ======================
     fn.defer(() => win.pollingVisitCount(userId, this.isOnInit));
     ======================= electron enable end ====================*/
     this.isOnInit = false;
@@ -820,7 +820,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     /**==================== electron ignore sta ====================*/
     this.appService.shareFormated(this.formated).subscribe(success, error);
     /**==================== electron ignore end ====================*/
-    /**==================== electron enable sta ====================
+    /**==================== electron enable sta ======================
     win.shareFormated(this.formated, this.appService.getUserId(), success, error);
     ======================= electron enable end ====================*/
   }
@@ -844,7 +844,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
           this.sourcest = res.sharedJson;
         }, error);
         /**==================== electron ignore end ====================*/
-        /**==================== electron enable sta ====================
+        /**==================== electron enable sta ======================
         win.getSharedJson(sharedId, res => {
           this.broadcast.hideLoading();
           this.sourcest = res.sharedJson;
