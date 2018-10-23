@@ -25,7 +25,7 @@ export class MonacoEditorBase implements AfterViewInit {
       });
       document.body.appendChild(loaderScript);
       /**==================== electron ignore end ====================*/
-      /**==================== electron enable sta ====================
+      /**==================== electron enable sta ======================
       fn.defer(() => win.loadMonacoEditor(() => {
         this.defineEditorThemes();
         this.broadcast.editorReadyUp();
