@@ -367,9 +367,9 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     this.formated = '';
     this.fmtSourcest = '';
     if (!this.isOriginEmpty) this.animateGreeting();
-    /**electron enable sta_*//*
+    /**==================== electron enable sta ====================
     fn.defer(() => win.onLinksLoad());
-    *//**electron enable end_*/
+    ======================= electron enable end ====================*/
   }
 
   /**
@@ -719,7 +719,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
    * 检测、轮询、刷新APP
    * =================================*/
   checkAndUpdateApp() {
-    /**electron ignore sta*/
+    /**==================== electron ignore sta ====================*/
     this.checkAppVersion(false);
     this.refreshVisitCount();
     this.getSharedJson(false);
@@ -728,8 +728,8 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
       this.updateUrl = res.updateUrl;
     });
     fn.interval('refresh-visit-count', 300000, () => this.refreshVisitCount());
-    /**electron ignore end*/
-    /**electron enable sta_*//*
+    /**==================== electron ignore end ====================*/
+    /**==================== electron enable sta ====================
     fn.defer(() => win.checkAppVersion(res => {
       if (res.version !== res.localVersion) {
         let ignoreInfo: IgnoreInfo = this.appService.getIgnoreVersion();
@@ -744,7 +744,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
         }
       }
     }));
-    *//**electron enable end_*/
+    ======================= electron enable end ====================*/
     this.pollingVisitCount();
     fn.interval('polling-visit-count', 15000, () => this.pollingVisitCount());
   }
@@ -785,14 +785,14 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
    * =================================*/
   pollingVisitCount() {
     const userId = this.appService.getUserId();
-    /**electron ignore sta*/
+    /**==================== electron ignore sta ====================*/
     this.appService.pollingVisitCount(userId, this.isOnInit).subscribe((res: any) => {
       if (res['vc']) win['vc'] = res.vc;
     });
-    /**electron ignore end*/
-    /**electron enable sta_*//*
+    /**==================== electron ignore end ====================*/
+    /**==================== electron enable sta ====================
     fn.defer(() => win.pollingVisitCount(userId, this.isOnInit));
-    *//**electron enable end_*/
+    ======================= electron enable end ====================*/
     this.isOnInit = false;
   }
 
@@ -817,12 +817,12 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
       this.broadcast.hideLoading();
       this.alertNotice(this.translate.instant('_shareJsonError'), 'danger');
     };
-    /**electron ignore sta*/
+    /**==================== electron ignore sta ====================*/
     this.appService.shareFormated(this.formated).subscribe(success, error);
-    /**electron ignore end*/
-    /**electron enable sta_*//*
+    /**==================== electron ignore end ====================*/
+    /**==================== electron enable sta ====================
     win.shareFormated(this.formated, this.appService.getUserId(), success, error);
-    *//**electron enable end_*/
+    ======================= electron enable end ====================*/
   }
 
   /**
@@ -838,19 +838,19 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
           this.broadcast.hideLoading();
           this.alertNotice(this.translate.instant('_getJsonError'), 'danger');
         };
-        /**electron ignore sta*/
+        /**==================== electron ignore sta ====================*/
         this.appService.getSharedJson(sharedId).subscribe(res => {
           this.broadcast.hideLoading();
           this.sourcest = res.sharedJson;
         }, error);
-        /**electron ignore end*/
-        /**electron enable sta_*//*
+        /**==================== electron ignore end ====================*/
+        /**==================== electron enable sta ====================
         win.getSharedJson(sharedId, res => {
           this.broadcast.hideLoading();
           this.sourcest = res.sharedJson;
           $('#format-btn').click();
         }, error);
-        *//**electron enable end_*/
+        ======================= electron enable end ====================*/
       }
       if (!sharedId && isFromIpt) {
         this.alertNotice(this.translate.instant('_bdSharedLink'), 'danger');
