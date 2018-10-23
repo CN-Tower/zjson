@@ -20,20 +20,20 @@ const eabEndTsStr_ = '======================= electron enable end ==============
 
 const ignStaEl  = /<!--==================== electron ignore sta ====================-->/mgi;
 const ignEndEl  = /<!--==================== electron ignore end ====================-->/mgi;
-const ignStaEl_ = /<!--==================== electron ignore sta ====================--/mgi;
+const ignStaEl_ = /<!--==================== electron ignore sta ====================---/mgi;
 const ignEndEl_ = /======================== electron ignore end ====================-->/mgi;
 const ignStaElStr  = '<!--==================== electron ignore sta ====================-->';
 const ignEndElStr  = '<!--==================== electron ignore end ====================-->';
-const ignStaElStr_ = '<!--==================== electron ignore sta ====================--';
+const ignStaElStr_ = '<!--==================== electron ignore sta ====================---';
 const ignEndElStr_ = '======================== electron ignore end ====================-->';
 
 const eabStaEl  = /<!--==================== electron enable sta ====================-->/mgi;
 const eabEndEl  = /<!--==================== electron enable end ====================-->/mgi;
-const eabStaEl_ = /<!--==================== electron enable sta ====================--/mgi;
+const eabStaEl_ = /<!--==================== electron enable sta ====================---/mgi;
 const eabEndEl_ = /======================== electron enable end ====================-->/mgi;
 const eabStaElStr  = '<!--==================== electron enable sta ====================-->';
 const eabEndElStr  = '<!--==================== electron enable end ====================-->';
-const eabStaElStr_ = '<!--==================== electron enable sta ====================--';
+const eabStaElStr_ = '<!--==================== electron enable sta ====================---';
 const eabEndElStr_ = '======================== electron enable end ====================-->';
 
 const isElectron = process.argv[2] === 'electron';
