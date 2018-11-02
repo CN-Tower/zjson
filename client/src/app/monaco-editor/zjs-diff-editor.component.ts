@@ -204,12 +204,18 @@ export class ZjsDiffEditorComponent implements OnInit, AfterViewInit, OnDestroy 
   showDiffChange(diffType: DiffType, isShowHint: boolean = false) {
     fn.match(diffType, {
       'newC': () => {
+        if (isShowHint) {
+          if (this.originalCode === '' && this.modifiedCode === '') {
+            this.alertNotice(this.translate.instant('_clear'), 'danger');
+          } else {
+            this.alertNotice(this.translate.instant('clearSuccess'));
+          }
+        }
         this.isShowSource = true;
         this.isLeftFmted = false;
         this.originalCode = '';
         this.modifiedCode = '';
         this.initEditEditors();
-        if (isShowHint) this.alertNotice(this.translate.instant('newCompareSuccess'));
       },
       'new': () => {
         this.isShowSource = true;
