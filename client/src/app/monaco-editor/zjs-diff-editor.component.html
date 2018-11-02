@@ -8,7 +8,7 @@
         <span *ngIf="!isShowSource" class="z-ico-hd" (click)="initEditEditors()">
           <i class="fa fa-pencil z-op-icon" tooltip="{{!isDifMax ? ('editCompare' | translate) : ''}}"></i>
         </span>
-        <zjs-compare [formated]="originalModel" [icoClass]="'th-list'"
+        <zjs-compare [formated]="originalModel" [compareType]="'inner'"
                      (showDiffChange)="showDiffChange($event)"
                      tooltip="{{!isDifMax ? ('compareSrcFrom' | translate) : ''}}"></zjs-compare>
         <span class="z-ico-hd" (click)="exchangeModels()">
