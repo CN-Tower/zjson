@@ -15,7 +15,7 @@
           <i class="fa fa-exchange z-op-icon" tooltip="{{!isDifMax ? ('exchange' | translate) : ''}}"></i>
         </span>
         <span class="z-ico-hd" (click)="showDiffChange('newC', true)">
-          <i class="fa fa-file-o z-op-icon" tooltip="{{!isDifMax ? ('newCompare' | translate) : ''}}"></i>
+          <i class="fa fa-trash z-op-icon" tooltip="{{!isDifMax ? ('clear' | translate) : ''}}"></i>
         </span>
         <zjs-hist [fmtHists]="compareHists" [isMenuRight]="true"
                   (showOrRmFmtHist)="showOrRmFmtHist($event)" tooltip="{{!isDifMax ? ('saved' | translate) : ''}}"></zjs-hist>
