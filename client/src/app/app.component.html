@@ -53,12 +53,6 @@
               <i class="fa fa-upload z-op-icon" tooltip="{{!isSrcMax ? ('upload' | translate) : ''}}"></i>
               <input type="file" class="upload hide">
             </span> 
-            <span *ngIf="!conf.isStrict" class="z-ico-hd" (click)="setIsStrict(true)">
-              <i class="fa fa-toggle-off z-op-icon" tooltip="{{!isSrcMax ? ('isStrict' | translate) : ''}}"></i>
-            </span>
-            <span *ngIf="conf.isStrict" class="z-ico-hd" (click)="setIsStrict(false)">
-              <i class="fa fa-toggle-on z-op-icon" tooltip="{{!isSrcMax ? ('isStrict' | translate) : ''}}"></i>
-            </span>
             <span id="format-btn" *ngIf="!isSrcMax" (click)="doFormate()">
               <i class="fa fa-retweet z-op-icon-bg" tooltip="{{!isSrcMax ? ('fmtToJson' | translate) : ''}}"></i>
             </span>
@@ -103,6 +97,12 @@
             <span *ngIf="conf.model=='combine'" class="z-ico-hd" (click)="conf.model='expand'; expandAll()">
               <i class="fa fa-expand z-op-icon" tooltip="{{!isFmtMax ? (i18n.model.expand) : ''}}"></i>
             </span>
+            <span *ngIf="!conf.isStrict" class="z-ico-hd" (click)="setIsStrict(true)">
+              <i class="fa fa-toggle-off z-op-icon" tooltip="{{!isFmtMax ? ('isStrict' | translate) : ''}}"></i>
+            </span>
+            <span *ngIf="conf.isStrict" class="z-ico-hd" (click)="setIsStrict(false)">
+              <i class="fa fa-toggle-on z-op-icon" tooltip="{{!isFmtMax ? ('isStrict' | translate) : ''}}"></i>
+            </span>
             <span class="z-ico-hd" (click)="clearFmted()">
               <i class="fa fa-trash z-op-icon" tooltip="{{!isFmtMax ? ('clear' | translate) : ''}}"></i>
             </span>
@@ -112,8 +112,6 @@
             <span class="z-ico-hd" (click)="download()">
               <i class="fa fa-download z-op-icon" tooltip="{{!isFmtMax ? ('download' | translate) : ''}}"></i>
             </span>
-            <zjs-compare [icoClass]="'columns'" [formated]="formated" [fmtHists]="fmtHists"
-                         (showDiffChange)="showDiffChange($event)" tooltip="{{!isFmtMax ? ('jsonCompare' | translate) : ''}}"></zjs-compare>
             <span *ngIf="!isFmtMax" (click)="copyFmted()">
               <i class="fa fa-copy z-op-icon" tooltip="{{!isFmtMax ? ('copy' | translate) : ''}}"></i>
             </span>
@@ -125,7 +123,11 @@
               <i class="fa fa-window-maximize z-op-icon"></i>
             </span>
           </div>
-          <h3 class="panel-title z-ptt-long">{{'fmted_' | translate}}</h3>
+          <h3 class="panel-title z-ptt-long">
+            {{'fmted_' | translate}}
+            <zjs-compare class="zjs-compare-btn" [compareType]="'outer'" [formated]="formated"
+                         [fmtHists]="fmtHists" (showDiffChange)="showDiffChange($event)"></zjs-compare>
+          </h3>
           <h3 class="panel-title z-ptt-short hide">{{'fmted' | translate}}</h3>
         </div>
         <div class="panel-body">
