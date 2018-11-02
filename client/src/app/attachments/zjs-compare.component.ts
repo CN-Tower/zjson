@@ -7,12 +7,15 @@ import { SharedBroadcastService, FmtHist } from '../shared/index';
   selector: 'zjs-compare',
   template: `
     <span class="z-sm-hide dropdown" #dropdown="bs-dropdown" dropdown>
-      <i dropdownToggle class="fa fa-{{icoClass}} z-op-icon dropdown-toggle"></i>
-      <ul *dropdownMenu class="dropdown-menu dropdown-menu-right">
-        <li *ngIf="icoClass == 'columns'">
+      <button *ngIf="compareType == 'outer'" dropdownToggle class="btn btn-default btn-xs compare-btn dropdown-toggle">
+        {{'jsonCompare' | translate}}
+      </button>
+      <i *ngIf="compareType == 'inner'" dropdownToggle class="fa fa-th-list z-op-icon dropdown-toggle"></i>
+      <ul *dropdownMenu class="dropdown-menu" [class.dropdown-menu-right]="compareType == 'inner'">
+        <li *ngIf="compareType == 'outer'">
           <a href="javascript:;" (click)="showDiffChange.emit('newC')">{{'newCompare' | translate}}</a>
         </li>
-        <ng-container *ngIf="icoClass == 'columns' && formated">
+        <ng-container *ngIf="compareType == 'outer' && formated">
           <li class="divider dropdown-divider"></li>
           <li>
             <a href="javascript:;" (click)="showDiffChange.emit('new')">{{'cpWidthNew' | translate}}</a>
@@ -24,12 +27,12 @@ import { SharedBroadcastService, FmtHist } from '../shared/index';
             <a href="javascript:;" (click)="showDiffChange.emit({type: 'his', hist: hist})">{{hist.name}}</a>
           </li>
         </ng-container>
-        <ng-container *ngIf="icoClass == 'th-list'">
+        <ng-container *ngIf="compareType == 'inner'">
           <li *ngFor="let hist of fmtHists">
             <a href="javascript:;" (click)="showDiffChange.emit({type: 'his', hist: hist})">{{hist.name}}</a>
           </li>
         </ng-container>
-        <ng-container *ngIf="icoClass == 'columns' && compareHists.length">
+        <ng-container *ngIf="compareType == 'outer' && compareHists.length">
           <li class="divider dropdown-divider"></li>
           <li *ngFor="let hist of compareHists">
             <a href="javascript:;" (click)="compareHistChange($event, hist)">
@@ -38,15 +41,22 @@ import { SharedBroadcastService, FmtHist } from '../shared/index';
           </li>
         </ng-container>
       </ul>
-  </span>`
+    </span>`,
+  styles: [`
+    button.compare-btn {
+      margin-top: -4px;
+      color: #333;
+      background-color: #ccc;
+      border-color: #bbb;
+    }
+  `]
 })
 export class ZjsCompareComponent implements OnInit, OnDestroy {
-  @ViewChild('dropdown') dropdown: any;
+  @Input() compareType: string;
   @Input() formated: string;
-  @Input() icoClass: string = '';
   @Input() fmtHists?: FmtHist[];
   @Output() showDiffChange: EventEmitter<any> = new EventEmitter();
-
+  @ViewChild('dropdown') dropdown: any;
   compareHists: any[] = [];
   histsSub: any;
   getCompareHists: any = () => this.compareHists = this.appService.getCompareHists();
