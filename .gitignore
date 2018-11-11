@@ -4,10 +4,9 @@
 /client/dist
 /client/tmp
 /client/out-tsc
-/client/package-lock.json
 /client/build/package/
 /client/electron/node_modules
-/server/package-lock.json
+**/package-lock.json
 
 # dependencies
 /client/node_modules
