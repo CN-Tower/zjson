@@ -7,7 +7,7 @@ import { SharedBroadcastService, FmtHist } from '../shared/index';
   selector: 'zjs-compare',
   template: `
     <span class="z-sm-hide dropdown" #dropdown="bs-dropdown" dropdown>
-      <button *ngIf="compareType == 'outer'" dropdownToggle class="btn btn-default btn-xs compare-btn dropdown-toggle">
+      <button *ngIf="compareType == 'outer'" dropdownToggle class="btn btn-default btn-xs zjs-compare-btn dropdown-toggle">
         {{'jsonCompare' | translate}}
       </button>
       <i *ngIf="compareType == 'inner'" dropdownToggle class="fa fa-th-list z-op-icon dropdown-toggle"></i>
@@ -41,15 +41,7 @@ import { SharedBroadcastService, FmtHist } from '../shared/index';
           </li>
         </ng-container>
       </ul>
-    </span>`,
-  styles: [`
-    button.compare-btn {
-      margin-top: -4px;
-      color: #333;
-      background-color: #ccc;
-      border-color: #bbb;
-    }
-  `]
+    </span>`
 })
 export class ZjsCompareComponent implements OnInit, OnDestroy {
   @Input() compareType: string;
