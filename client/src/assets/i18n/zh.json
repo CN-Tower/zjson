@@ -15,6 +15,9 @@
     "type": "类 型",
     "indent": "缩 进",
     "theme": "主 题",
+    "quote": "引 号",
+    "compare": "对比",
+    "edit": "编辑",
     "success": "成 功：",
     "error": "错 误：",
     "welecome": "欢 迎：",
@@ -113,6 +116,5 @@
     "removeSavedSuccess": "清除成功！",
     "copySuccess": "复制成功！",
     "clearSuccess": "清除成功！",
-    "exchangeSuccess": "交换成功！",
-    "quote": "引 号"
+    "exchangeSuccess": "交换成功！"
 }
