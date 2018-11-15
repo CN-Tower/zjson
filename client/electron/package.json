@@ -2,5 +2,8 @@
   "name": "zjson",
   "version": "4.1.6",
   "license": "MIT",
-  "main": "main.js"
+  "main": "main.js",
+  "dependencies": {
+    "node-fetch": "^2.3.0"
+  }
 }

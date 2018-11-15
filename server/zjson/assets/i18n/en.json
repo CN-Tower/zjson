@@ -15,6 +15,9 @@
     "type": "Type",
     "indent": "Indent",
     "theme": "Theme",
+    "quote": "Quote",
+    "compare": "Compare",
+    "edit": "Edit",
     "success": "Success：",
     "error": "Error:",
     "welecome": "Welcome:",
@@ -113,6 +116,5 @@
     "removeSavedSuccess": "Delete record Success !",
     "copySuccess": "Copy Success !",
     "clearSuccess": "Clear Success !",
-    "exchangeSuccess": "Exchange Success !",
-    "quote": "Quote"
+    "exchangeSuccess": "Exchange Success !"
 }

@@ -50,7 +50,8 @@
       const pathPrefix = {
         1: 'dist',
         2: 'resources/app'
-      }[ 2 ];
+      }[/**/2/**/];
+      fn.log(process.argv);
       require.config({ paths: { 'vs': path.resolve(`./${pathPrefix}/assets/lib/monaco-editor/vs`) }});
       require(['vs/editor/editor.main'], () => onLoaded());
     }

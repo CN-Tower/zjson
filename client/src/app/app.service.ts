@@ -6,7 +6,7 @@ import { IgnoreInfo, QuoteIdx, AlertInfo } from './shared';
 
 export const APP_INFO = {
   version: 'v4.1.6',
-  updateTime: '2018-11-02',
+  updateTime: '2018-11-15',
   appUrl: 'https://www.zjson.net'
 };
 

@@ -734,7 +734,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     fn.interval('refresh-visit-count', 300000, () => this.refreshVisitCount());
     /**==================== electron ignore end ====================*/
     /**==================== electron enable sta ======================
-    fn.defer(() => win.checkAppVersion(res => {
+    fn.defer(() => win.checkAppVersion().then(res => {
       if (res.version !== res.localVersion) {
         let ignoreInfo: IgnoreInfo = this.appService.getIgnoreVersion();
         if (fn.time() - ignoreInfo.ignoreTime > 86400000) {
@@ -795,7 +795,9 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     });
     /**==================== electron ignore end ====================*/
     /**==================== electron enable sta ======================
-    fn.defer(() => win.pollingVisitCount(userId, this.isOnInit));
+    fn.defer(() => win.pollingVisitCount(userId, this.isOnInit).then(res => {
+      if (res['vc']) win['vc'] = res.vc;
+    }));
     ======================= electron enable end ====================*/
     this.isOnInit = false;
   }
@@ -825,7 +827,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     this.appService.shareFormated(this.formated).subscribe(success, error);
     /**==================== electron ignore end ====================*/
     /**==================== electron enable sta ======================
-    win.shareFormated(this.formated, this.appService.getUserId(), success, error);
+    win.shareFormated(this.formated, this.appService.getUserId()).then(success).catch(error);
     ======================= electron enable end ====================*/
   }
 
@@ -849,11 +851,11 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
         }, error);
         /**==================== electron ignore end ====================*/
         /**==================== electron enable sta ======================
-        win.getSharedJson(sharedId, res => {
+        win.getSharedJson(sharedId).then(res => {
           this.broadcast.hideLoading();
           this.sourcest = res.sharedJson;
           $('#format-btn').click();
-        }, error);
+        }).catch(error);
         ======================= electron enable end ====================*/
       }
       if (!sharedId && isFromIpt) {

@@ -1,6 +1,14 @@
 const fn = require('funclib');
 const glob = require('glob');
 
+let indexHtml = fn.rd('electron/index.html');
+if (process.argv[2] === 'package') {
+  indexHtml = indexHtml.replace(/\/\*\*\/\d\/\*\*\//mg, '/**/2/**/');
+} else {
+  indexHtml = indexHtml.replace(/\/\*\*\/\d\/\*\*\//mg, '/**/1/**/');
+}
+fn.wt('electron/index.html', indexHtml);
+
 fn.progress.start('Electron config', {type: 'spi'});
 fn.rm('build/package');
 

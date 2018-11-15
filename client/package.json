@@ -12,8 +12,9 @@
     "update": "npm run build && node build/update-zjson.js",
     "electron:dist": "electron dist",
     "electron": "npm run build:electron && node build/electron.conf.js && electron dist",
+    "electron:build": "npm run build:electron && node build/electron.conf.js package",
     "electron:package": "electron-packager dist zjson --platform=win32 --out=build/package --icon=dist/zjson.ico --overwrite",
-    "package": "npm run electron && npm run electron:package && node build/pre-build.js"
+    "package": "npm run electron:build && npm run electron:package && node build/pre-build.js"
   },
   "private": true,
   "dependencies": {
