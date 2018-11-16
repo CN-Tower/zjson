@@ -5,7 +5,6 @@
 /client/tmp
 /client/out-tsc
 /client/build/package/
-/client/electron/node_modules
 **/package-lock.json
 
 # dependencies
