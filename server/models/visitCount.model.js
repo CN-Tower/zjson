@@ -1,5 +1,12 @@
 const mongoose = require('mongoose');
-const VisitCountSchema = require('../schemas/visitCount.schema');
+
+const VisitCountSchema = new mongoose.Schema({
+    name: String,
+    count: Number,
+}, {
+  collection: 'visitCount'
+});
+
 const VisitCountModel = mongoose.model('visit-count', VisitCountSchema);
 
 VisitCountModel.addOneVisit = function(callback) {
