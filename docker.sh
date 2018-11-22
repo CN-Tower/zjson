@@ -1,4 +1,5 @@
 #!/usr/sh
+
 cd zjson
 npm install pm2 --global
 npm install
