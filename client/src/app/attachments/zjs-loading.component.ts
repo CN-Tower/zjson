@@ -1,10 +1,11 @@
 import { Component, OnInit} from '@angular/core';
 import { SharedBroadcastService } from '../shared/shared-broadcast.service';
+import { style } from '@angular/animations';
 
 @Component({
   selector: 'zjs-loading',
   template: `
-    <div *ngIf="isShowLoading" class="z-loading">
+    <div id="zjs-loading">
       <div class="loadingBg"></div>
       <div class="loadingText top45">
         <div class="loadingGif">
@@ -13,16 +14,20 @@ import { SharedBroadcastService } from '../shared/shared-broadcast.service';
           </div>
         </div>
       </div>
-    </div>`
+    </div>`,
+  styles: [`
+    #zjs-loading {
+      display: none;
+    }
+  `]
 })
 export class ZjsLoadingComponent implements OnInit {
-  isShowLoading: boolean = true;
 
   constructor(private broadcast: SharedBroadcastService) { }
 
   ngOnInit() {
     this.broadcast.loadingStream.subscribe(isShow => {
-      this.isShowLoading = isShow;
+      $('#zjs-loading').css('display', isShow ? 'block' : 'none');
     });
   }
 }
