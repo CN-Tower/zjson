@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Http } from '@angular/http';
-import 'rxjs/add/operator/map';
 import { IgnoreInfo, QuoteIdx, AlertInfo } from './shared';
+import 'rxjs/add/operator/map';
 
 export const APP_INFO = {
-  version: 'v4.1.6',
-  updateTime: '2018-11-15',
+  version: 'v4.1.7',
+  updateTime: '2018-11-22',
   appUrl: 'https://www.zjson.net'
 };
 
