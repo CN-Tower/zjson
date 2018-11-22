@@ -4,6 +4,7 @@
   "license": "MIT",
   "main": "main.js",
   "dependencies": {
+    "font-awesome": "^4.7.0",
     "node-fetch": "^2.3.0"
   }
 }
