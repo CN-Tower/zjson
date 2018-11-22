@@ -5,12 +5,13 @@ const SharedJsonSchema = new mongoose.Schema({
   sharedJson: String,
   updateTime: Number,
 }, {
+  timestamps: true,
   collection: 'sharedJson'
 });
 
 const SharedJsonModel = mongoose.model('shared-json', SharedJsonSchema);
 
-SharedJsonModel.getSjList = function (userId, callback) {
+SharedJsonModel.getSjList = function (callback) {
   this.find({}, callback);
 }
 
