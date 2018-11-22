@@ -454,6 +454,9 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     this.updateFmtEditorOpts();
   }
 
+  /**
+   * 初始化应用样式和事件
+   * ===================================*/
   initZjsAppStyles() {
     const that = this;
     win['isRendered'] = true;
@@ -484,6 +487,9 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     $(document).on('click keyup', () => this.isPageActive = true);
   }
 
+  /**
+   * 编辑器内容回到顶部
+   * ===================================*/
   toggleEditorToTop(edtName: EditorModal) {
     fn.match(edtName, {
       'source': () => {
