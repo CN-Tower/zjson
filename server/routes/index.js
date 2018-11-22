@@ -1,10 +1,11 @@
 const express = require('express');
 const fn = require('funclib');
-const router = express.Router();
 const vcService = require('../service/visitCount.service');
 const VersionModel = require('../models/version.model');
 const UsersModel = require('../models/users.model');
 const SharedJsonModel = require('../models/sharedJson.model');
+
+const router = express.Router();
 
 router.get('/', function(req, res, next) {
   res.status(200).send('Api work!');
