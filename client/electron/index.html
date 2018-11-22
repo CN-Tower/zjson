@@ -9,6 +9,9 @@
   <link rel="Bookmark" href="favicon.ico">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="stylesheet" href="./assets/css/loading.css">
+  <link rel="stylesheet" href="./assets/lib/animate.min.css">
+  <link rel="stylesheet" href="./assets/lib/bootstrap.min.css">
+  <link rel="stylesheet" href="./node_modules/font-awesome/css/font-awesome.min.css">
   <link rel="stylesheet" href="./styles.css">
 </head>
 
@@ -50,7 +53,7 @@
       const pathPrefix = {
         1: 'dist',
         2: 'resources/app'
-      }[/**/2/**/];
+      }[/**/1/**/];
       fn.log(process.argv);
       require.config({ paths: { 'vs': path.resolve(`./${pathPrefix}/assets/lib/monaco-editor/vs`) }});
       require(['vs/editor/editor.main'], () => onLoaded());
