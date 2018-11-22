@@ -1,3 +1,3 @@
 #!/bin/bash
 
-pm2 start /home/zjson/server/bin/www
+pm2 start /home/zjson/server/app.js
