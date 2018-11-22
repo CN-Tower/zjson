@@ -1,13 +1,13 @@
-const express = require('express');
-const fn = require('funclib');
-const path = require('path');
-const logger = require('morgan');
+const express  = require('express');
+const path     = require('path');
+const fn       = require('funclib');
+const logger   = require('morgan');
 const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
-const timeout = require('connect-timeout');
+const bodyParser   = require('body-parser');
+const timeout  = require('connect-timeout');
 const mongoose = require('mongoose');
-const routers = require('./routes');
-const config = require('./config');
+const routers  = require('./routes');
+const config   = require('./config');
 
 require('./service/taskThread.service')();
 
