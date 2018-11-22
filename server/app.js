@@ -15,10 +15,10 @@ mongoose.connect(config.dburl);
 
 const db = mongoose.connection;
 db.on('error', () => {
-  fn.log('数据库连接失败！', { title: 'MongoDB', color: 'red' });
+  fn.log('Connect MongoDB failed!', { title: 'MongoDB', color: 'red' });
 });
 db.once('open', () => {
-  fn.log('数据库连接成功！', { title: 'MongoDB', color: 'green' });
+  fn.log('Connect MongoDB Success!', { title: 'MongoDB', color: 'green' });
 });
 
 const app = express();
