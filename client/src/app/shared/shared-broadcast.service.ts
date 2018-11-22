@@ -17,6 +17,7 @@ export class SharedBroadcastService {
   editorOptStream: any = this.editorOptEmiter.asObservable();
   compareHistStream: any = this.compareHistEmiter.asObservable();
 
+  isEditorLoading: boolean = false;
   isEditorLoaded: boolean = false;
   tabsize: number = 2;
 
@@ -28,7 +29,10 @@ export class SharedBroadcastService {
       fn.timeout('zjs-loading-timer', time, () => this.hideLoading());
     }
   }
-  hideLoading = () => this.loadingEmiter.emit(false);
+  hideLoading = () => {
+    this.loadingEmiter.emit(false);
+    fn.timeout('zjs-loading-timer', false);
+  }
   showHint = (hintInfo: HintInfo) => this.hintEmiter.emit(hintInfo);
   editorReadyUp = () => this.editorEmiter.emit();
   changeQuote = (quoteInfo: QuoteInfo) => this.quoteEmiter.emit(quoteInfo);
