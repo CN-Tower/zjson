@@ -1,12 +1,10 @@
 const express = require('express');
 const fn = require('funclib');
 const router = express.Router();
-const util = require('../tools/util');
 const vcService = require('../service/visitCount.service');
 const VersionModel = require('../models/version.model');
 const UsersModel = require('../models/users.model');
 const SharedJsonModel = require('../models/sharedJson.model');
-const timeout = require('connect-timeout');
 
 router.get('/', function(req, res, next) {
   res.status(200).send('Api work!');
@@ -17,8 +15,8 @@ router.get('/', function(req, res, next) {
 router.get('/zjson/online', function(req, res, next) {
   try {
     UsersModel.getOnline((err, num) => {
-      if (err) return util.logErr(err, 'Get Online Error', res);
-      return res.status(200).send({'online': num});
+      if (err) return next(err);
+      res.status(200).send({'online': num});
     });
   } catch (err) {
     return next(err);
@@ -30,7 +28,7 @@ router.get('/zjson/online', function(req, res, next) {
 router.get('/zjson/users', function(req, res, next) {
   try {
     UsersModel.getUsers((err, docs) => {
-      if (err) return util.logErr(err, 'Get All Users Error', res);
+      if (err) return next(err);
       res.status(200).send({'online': docs.length, 'users': docs});
     });
   } catch (err) {
@@ -43,7 +41,7 @@ router.get('/zjson/users', function(req, res, next) {
 router.get('/zjson/user/:userId', function(req, res, next) {
   try {
     UsersModel.getOneUserById(req.params['userId'], (err, doc) => {
-      if (err) return util.logErr(err, 'Get User Info Error', res);
+      if (err) return next(err);
       res.status(200).send(doc);
     });
   } catch (err) {
@@ -56,7 +54,7 @@ router.get('/zjson/user/:userId', function(req, res, next) {
 router.get('/zjson/version', function(req, res, next) {
   try {
     VersionModel.getVersion((err, doc) => {
-      if (err) return util.logErr(err, 'Get Version Error', res);
+      if (err) return next(err);
       res.status(200).send({'version': doc.version});
     });
   } catch (err) {
@@ -72,7 +70,7 @@ router.post('/zjson/version', function(req, res, next) {
     const version = fn.get(req.body, 'version');
     if (fn.typeVal(version, 'str')) {
       VersionModel.setVersion(version, err => {
-        if (err) return util.logErr(err, 'Set Version Error', res);
+        if (err) return next(err);
         res.status(200).send({'status': 'ok', 'version': version});
       });
     } else {
@@ -88,7 +86,7 @@ router.post('/zjson/version', function(req, res, next) {
 router.get('/zjson/appVersion', function(req, res, next) {
   try {
     VersionModel.getAppVersion((err, doc) => {
-      if (err) return util.logErr(err, 'Get App Version Error', res);
+      if (err) return next(err);
       const info = {version: doc.version, updateUrl: doc.updateUrl};
       res.status(200).send(info);
     });
@@ -104,7 +102,7 @@ router.post('/zjson/appVersion', function(req, res, next) {
     const data = req.body;
     if (['version', 'updateUrl'].every(key => fn.get(data, key, 'str'))) {
       VersionModel.setAppVersion(data, err => {
-        if (err) return util.logErr(err, 'Set App Version Error', res);
+        if (err) return next(err);
         const info = {'version': data.version, 'updateUrl': data.updateUrl};
         res.status(200).send(info);
       });
@@ -120,7 +118,7 @@ router.post('/zjson/appVersion', function(req, res, next) {
  * ===================================== */
 router.get('/refreshVc/:userId', function(req, res, next) {
   try {
-    vcService.refreshVc(req.params['userId'], req.query['isExpire'], userId => {
+    vcService.refreshVc(req.params['userId'], req.query['isExpire'], next, userId => {
       res.status(200).send({'id': userId});
     });
   } catch (err) {
@@ -132,7 +130,7 @@ router.get('/refreshVc/:userId', function(req, res, next) {
  * ===================================== */
 router.get('/pollingVc/:userId', function(req, res, next) {
   try {
-    vcService.pollingVc(req.params['userId'], req.query['isOnInit'], vc => {
+    vcService.pollingVc(req.params['userId'], req.query['isOnInit'], next, vc => {
       res.status(200).send({'vc': vc});
     });
   } catch (err) {
@@ -145,7 +143,7 @@ router.get('/pollingVc/:userId', function(req, res, next) {
 router.get('/sharedJsonList', function(req, res, next) {
   try {
     SharedJsonModel.getSjList((err, docs) => {
-      if (err) return util.logErr(err, 'Get Shared Json List Error', res);
+      if (err) return next(err);
       res.status(200).send({'total': docs.length, 'sharedJsonList': docs});
     });
   } catch (err) {
@@ -158,7 +156,7 @@ router.get('/sharedJsonList', function(req, res, next) {
 router.get('/sharedJson/:userId', function(req, res, next) {
   try {
     SharedJsonModel.getSjByUserId(req.params['userId'], (err, doc) => {
-      if (err) return util.logErr(err, 'Get Shared Json Error', res);
+      if (err) return next(err);
       res.status(200).send(doc);
     });
   } catch (err) {
@@ -172,19 +170,18 @@ router.post('/sharedJson', function(req, res, next) {
   try {
     const data = req.body;
     data.updateTime = fn.time();
-    const logErr = err => util.logErr(err, 'Get Shared Json Error', res);
     SharedJsonModel.getSjsByUserId(data.userId, (err, docs) => {
-      if (err) return logErr(err);
+      if (err) return next(err);
       if (docs && docs.length === 1) {
         SharedJsonModel.updateSjById(data.userId, data, (err, doc) => {
-          if (err) return logErr(err);
+          if (err) return next(err);
           res.status(200).send({'status': 'ok'});
         });
       } else {
         SharedJsonModel.removeSjById(data.userId, (err, doc) => {
-          if (err) return logErr(err);
+          if (err) return next(err);
           SharedJsonModel.createSj(data, (err, doc) => {
-            if (err) return logErr(err);
+            if (err) return next(err);
             res.status(200).send({'status': 'ok'});
           });
         });
