@@ -1,10 +1,11 @@
 const dburls = {
   0: 'mongodb://127.0.0.1/zjson',
-  1: 'mongodb://10.40.154.118:26001/zjson'
+  1: 'mongodb://user:pass@dbhost/zjson',
+  2: 'mongodb://10.40.154.118/zjson',
 }
 
 module.exports = {
   port: 3300,
-  dburl: dburls[1],
+  dburl: dburls[ 0 ],
   sharedJsonExp: 2 * 24 * 60 * 60 * 1000
 }
