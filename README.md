@@ -31,7 +31,7 @@
 相比其它在线格式化工具，如：bejson.com和json.cn等，转杰森界面更加专业、功能更加实用，绝对是开发和测试的好工具。
 
 
-欢迎各位大虾一起来玩，Start、Fork或提Issue都是极好的！
+欢迎各位大虾一起来玩，Star、Fork或提Issue都是极好的！
 
 ![](/mean.png)
 
