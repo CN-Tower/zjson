@@ -18,26 +18,15 @@ import { APP_INFO } from '../app.service';
           <div class="z-info-modal modal-body">
             <table>
               <tr>
-                <td>{{'version' | translate}}:</td>
+                <td>{{'versionInfo' | translate}}:</td>
                 <td>{{version}}</td>
-              </tr>
-              <tr>
-                <td>{{'author' | translate}}:</td>
-                <td>@CN-Tower</td>
-              </tr>
-              <tr>
-                <td>{{'email' | translate}}:</td>
-                <td>cntower@yahoo.com</td>
-              </tr>
-              <tr>
-                <td>{{'qqGroup' | translate}}:</td>
-                <td>174136590</td>
               </tr>
               <tr>
                 <td>{{'updateTime' | translate}}:</td>
                 <td>{{updateTime}}</td>
               </tr>
             </table>
+            <img id="zjs-qr-code" src="assets/img/mean_stack.png" alt="QQGroup: 174136590">
           </div>
         </div>
       </ng-template>
