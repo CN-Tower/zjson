@@ -7,17 +7,18 @@ const SharedJsonModel = require('../models/sharedJson.model');
 
 const router = express.Router();
 
-router.get('/', function(req, res, next) {
-  res.status(200).send('Api work!');
+router.get('/', function (req, res, next) {
+  res.status(200).send({ status: 1, message: 'Api work!' });
 });
 
 /* ### 获取在线人数
  * ===================================== */
-router.get('/zjson/online', function(req, res, next) {
+router.get('/zjson/online', function (req, res, next) {
   try {
     UsersModel.getOnline((err, num) => {
+      if (req.timedout) return;
       if (err) return next(err);
-      res.status(200).send({'online': num});
+      res.status(200).send({ 'online': num });
     });
   } catch (err) {
     return next(err);
@@ -26,11 +27,12 @@ router.get('/zjson/online', function(req, res, next) {
 
 /* ### 获取在线用户列表
  * ===================================== */
-router.get('/zjson/users', function(req, res, next) {
+router.get('/zjson/users', function (req, res, next) {
   try {
     UsersModel.getUsers((err, docs) => {
+      if (req.timedout) return;
       if (err) return next(err);
-      res.status(200).send({'online': docs.length, 'users': docs});
+      res.status(200).send({ 'online': docs.length, 'users': docs });
     });
   } catch (err) {
     return next(err);
@@ -39,9 +41,10 @@ router.get('/zjson/users', function(req, res, next) {
 
 /* ### 获取用户信息
  * ===================================== */
-router.get('/zjson/user/:userId', function(req, res, next) {
+router.get('/zjson/user/:userId', function (req, res, next) {
   try {
     UsersModel.getOneUserById(req.params['userId'], (err, doc) => {
+      if (req.timedout) return;
       if (err) return next(err);
       res.status(200).send(doc);
     });
@@ -52,11 +55,12 @@ router.get('/zjson/user/:userId', function(req, res, next) {
 
 /* ### 获取ZJSON版本
  * ===================================== */
-router.get('/zjson/version', function(req, res, next) {
+router.get('/zjson/version', function (req, res, next) {
   try {
     VersionModel.getVersion((err, doc) => {
+      if (req.timedout) return;
       if (err) return next(err);
-      res.status(200).send({'version': doc.version});
+      res.status(200).send({ 'version': doc.version });
     });
   } catch (err) {
     fn.log(err);
@@ -66,16 +70,17 @@ router.get('/zjson/version', function(req, res, next) {
 
 /* ### 设置ZJSON版本
  * ===================================== */
-router.post('/zjson/version', function(req, res, next) {
+router.post('/zjson/version', function (req, res, next) {
   try {
     const version = fn.get(req.body, 'version');
     if (fn.typeVal(version, 'str')) {
       VersionModel.setVersion(version, err => {
+        if (req.timedout) return;
         if (err) return next(err);
-        res.status(200).send({'status': 'ok', 'version': version});
+        res.status(200).send({ 'status': 'ok', 'version': version });
       });
     } else {
-      res.status(400).send({'errorMsg': 'Request Body is invalid!'});
+      res.status(400).send({ 'errorMsg': 'Request Body is invalid!' });
     }
   } catch (err) {
     return next(err);
@@ -84,11 +89,12 @@ router.post('/zjson/version', function(req, res, next) {
 
 /* ### 获取ZJSON桌面安装版版本
  * ===================================== */
-router.get('/zjson/appVersion', function(req, res, next) {
+router.get('/zjson/appVersion', function (req, res, next) {
   try {
     VersionModel.getAppVersion((err, doc) => {
+      if (req.timedout) return;
       if (err) return next(err);
-      const info = {version: doc.version, updateUrl: doc.updateUrl};
+      const info = { version: doc.version, updateUrl: doc.updateUrl };
       res.status(200).send(info);
     });
   } catch (err) {
@@ -98,17 +104,18 @@ router.get('/zjson/appVersion', function(req, res, next) {
 
 /* ### 设置ZJSON桌面安装版版本
  * ===================================== */
-router.post('/zjson/appVersion', function(req, res, next) {
+router.post('/zjson/appVersion', function (req, res, next) {
   try {
     const data = req.body;
     if (['version', 'updateUrl'].every(key => fn.get(data, key, 'str'))) {
       VersionModel.setAppVersion(data, err => {
+        if (req.timedout) return;
         if (err) return next(err);
-        const info = {'version': data.version, 'updateUrl': data.updateUrl};
+        const info = { 'version': data.version, 'updateUrl': data.updateUrl };
         res.status(200).send(info);
       });
     } else {
-      res.status(400).send({'errorMsg': 'Request Body is invalid!'});
+      res.status(400).send({ 'errorMsg': 'Request Body is invalid!' });
     }
   } catch (err) {
     return next(err);
@@ -117,35 +124,20 @@ router.post('/zjson/appVersion', function(req, res, next) {
 
 /* ### 刷新访问量
  * ===================================== */
-router.get('/refreshVc/:userId', function(req, res, next) {
-  try {
-    vcService.refreshVc(req.params['userId'], req.query['isExpire'], next, userId => {
-      res.status(200).send({'id': userId});
-    });
-  } catch (err) {
-    return next(err);
-  }
-});
+router.get('/refreshVc/:userId', vcService.refreshVc);
 
 /* ### 轮询访问量
  * ===================================== */
-router.get('/pollingVc/:userId', function(req, res, next) {
-  try {
-    vcService.pollingVc(req.params['userId'], req.query['isOnInit'], next, vc => {
-      res.status(200).send({'vc': vc});
-    });
-  } catch (err) {
-    return next(err);
-  }
-});
+router.get('/pollingVc/:userId', vcService.pollingVc);
 
 /* ### 获取所用用户分享的JSON
  * ===================================== */
-router.get('/sharedJsonList', function(req, res, next) {
+router.get('/sharedJsonList', function (req, res, next) {
   try {
     SharedJsonModel.getSjList((err, docs) => {
+      if (req.timedout) return;
       if (err) return next(err);
-      res.status(200).send({'total': docs.length, 'sharedJsonList': docs});
+      res.status(200).send({ 'total': docs.length, 'sharedJsonList': docs });
     });
   } catch (err) {
     return next(err);
@@ -154,9 +146,10 @@ router.get('/sharedJsonList', function(req, res, next) {
 
 /* ### 获取用户分享的JSON
  * ===================================== */
-router.get('/sharedJson/:userId', function(req, res, next) {
+router.get('/sharedJson/:userId', function (req, res, next) {
   try {
     SharedJsonModel.getSjByUserId(req.params['userId'], (err, doc) => {
+      if (req.timedout) return;
       if (err) return next(err);
       res.status(200).send(doc);
     });
@@ -167,23 +160,27 @@ router.get('/sharedJson/:userId', function(req, res, next) {
 
 /* ### 分享的JSON
  * ===================================== */
-router.post('/sharedJson', function(req, res, next) {
+router.post('/sharedJson', function (req, res, next) {
   try {
     const data = req.body;
     data.updateTime = fn.time();
     SharedJsonModel.getSjsByUserId(data.userId, (err, docs) => {
+      if (req.timedout) return;
       if (err) return next(err);
       if (docs && docs.length === 1) {
-        SharedJsonModel.updateSjById(data.userId, data, (err, doc) => {
+        SharedJsonModel.updateSjById(data.userId, data, (err) => {
+          if (req.timedout) return;
           if (err) return next(err);
-          res.status(200).send({'status': 'ok'});
+          res.status(200).send({ 'status': 'ok' });
         });
       } else {
-        SharedJsonModel.removeSjById(data.userId, (err, doc) => {
+        SharedJsonModel.removeSjById(data.userId, (err) => {
+          if (req.timedout) return;
           if (err) return next(err);
-          SharedJsonModel.createSj(data, (err, doc) => {
+          SharedJsonModel.createSj(data, (err) => {
+            if (req.timedout) return;
             if (err) return next(err);
-            res.status(200).send({'status': 'ok'});
+            res.status(200).send({ 'status': 'ok' });
           });
         });
       }
@@ -192,5 +189,5 @@ router.post('/sharedJson', function(req, res, next) {
     return next(err);
   }
 });
- 
+
 module.exports = router;
