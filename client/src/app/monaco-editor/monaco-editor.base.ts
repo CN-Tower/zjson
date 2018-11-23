@@ -21,24 +21,35 @@ export class MonacoEditorBase implements AfterViewInit {
       // loaderScript.addEventListener('load', () => {
       //   win.require.config({paths: {'vs': 'assets/lib/monaco-editor/vs'}});
       // -------------------------------------------------------------
-      // -------------------- cdnjs monaco editor --------------------
+      // --------------------------- cdn1 ----------------------------
       loaderScript.src = 'https://cdn.staticfile.org/monaco-editor/0.15.0/min/vs/loader.js';
-      // loaderScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.15.0/min/vs/loader.js';
       loaderScript.addEventListener('load', () => {
         win.require.config({paths: {'vs': 'https://cdn.staticfile.org/monaco-editor/0.15.0/min/vs'}});
-        // win.require.config({paths: {'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.15.0/min/vs'}});
         win.MonacoEnvironment = {
           getWorkerUrl: function(workerId, label) {
             return `data:text/javascript;charset=utf-8,${encodeURIComponent(`
               self.MonacoEnvironment = {
                 baseUrl: 'https://cdn.staticfile.org/monaco-editor/0.15.0/min/'
-                // baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.15.0/min/'
               };
               importScripts('https://cdn.staticfile.org/monaco-editor/0.15.0/min/vs/base/worker/workerMain.js');`
-              // importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.15.0/min/vs/base/worker/workerMain.js');`
             )}`;
           }
         };
+      // -------------------------------------------------------------
+      // --------------------------- cdn2 ----------------------------
+      // loaderScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.15.0/min/vs/loader.js';
+      // loaderScript.addEventListener('load', () => {
+      //   win.require.config({paths: {'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.15.0/min/vs'}});
+      //   win.MonacoEnvironment = {
+      //     getWorkerUrl: function(workerId, label) {
+      //       return `data:text/javascript;charset=utf-8,${encodeURIComponent(`
+      //         self.MonacoEnvironment = {
+      //           baseUrl: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.15.0/min/'
+      //         };
+      //         importScripts('https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.15.0/min/vs/base/worker/workerMain.js');`
+      //       )}`;
+      //     }
+      //   };
       // -------------------------------------------------------------
         win.require(['vs/editor/editor.main'], () => {
           this.defineEditorThemes();
