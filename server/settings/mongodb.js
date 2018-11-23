@@ -18,7 +18,7 @@ module.exports = function () {
 
   db.on('disconnected', () => {
     fn.log('Reconnecting to MongoDB...', { title: 'MongoDB', color: 'green' });
-    mongoose.connect(config.dbUrl, { useNewUrlParser: true });
+    fn.timeout(5000, () => mongoose.connect(config.dbUrl, { useNewUrlParser: true }));
   });
 
   mongoose.connect(config.dbUrl, { useNewUrlParser: true }); 
