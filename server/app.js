@@ -5,21 +5,11 @@ const logger   = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser   = require('body-parser');
 const timeout  = require('connect-timeout');
-const mongoose = require('mongoose');
 const routers  = require('./routes');
 const config   = require('./config');
 
+require('./settings/mongodb')();
 require('./service/taskThread.service')();
-
-mongoose.connect(config.dburl);
-
-const db = mongoose.connection;
-db.on('error', () => {
-  fn.log('Connect MongoDB failed!', { title: 'MongoDB', color: 'red' });
-});
-db.once('open', () => {
-  fn.log('Connect MongoDB Success!', { title: 'MongoDB', color: 'green' });
-});
 
 const app = express();
 
@@ -56,6 +46,6 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(config.port, () => {
-  fn.log(`Listenig on port: ${config.port}`, { title: 'ZJSON.NET', color: 'green' });
+  fn.log(`Server is Listenig on port: ${config.port}`, { title: 'ZJSON.NET', color: 'green' });
 });
 
