@@ -63,7 +63,6 @@ router.get('/zjson/version', function (req, res, next) {
       res.status(200).send({ 'version': doc.version });
     });
   } catch (err) {
-    fn.log(err);
     return next(err);
   }
 });
