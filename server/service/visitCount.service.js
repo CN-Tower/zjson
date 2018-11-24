@@ -40,7 +40,7 @@ exports.pollingVc = function (req, res, next) {
  * ------------------------------------------------------------*/
 exports.refreshVc = function (req, res, next) {
   try {
-    const userId = req.params['userId'];
+    let userId = req.params['userId'];
     const isExpire = req.query['isExpire'];
     UsersModel.getOneUserById(userId, (err, doc) => {
       if (req.timedout) return;
