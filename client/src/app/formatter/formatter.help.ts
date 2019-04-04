@@ -4,7 +4,7 @@ export class FmtHelp {
   /**
    * 描述: 回避转义字符
    */
-  escapeArr = [
+  private escapeArr = [
     {ptn: /\r\n/mg, str: ''},
     {ptn: /\n\r/mg, str: ''},
     {ptn: /\n/mg,   str: '\\n'},

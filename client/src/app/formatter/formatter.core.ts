@@ -182,12 +182,12 @@ export class Formatter extends FmtBase {
   brkLine4Normal = (str: string) => {
     if (!this.isExpand) return str;
     this.rowIdx ++;
-    return str + '\n';
+    return str + '\r\n';
   }
   brkLine4Special = (str: string = '') => {
     if (!this.isExpand) return this.fmtResult += str;
     this.rowIdx ++;
-    this.fmtResult += `\n${this.help.getCurIndent(this.baseIndent, this.level) + str}`;
+    this.fmtResult += `\r\n${this.help.getCurIndent(this.baseIndent, this.level) + str}`;
   }
 
   /**
@@ -286,11 +286,11 @@ export class Formatter extends FmtBase {
   private commaHandler() {
     const curIndent = this.help.getCurIndent(this.baseIndent, this.level);
     if (this.isExpand) this.rowIdx ++;
-    this.fmtResult += this.isExpand ? `,\n${curIndent}` : ',';
+    this.fmtResult += this.isExpand ? `,\r\n${curIndent}` : ',';
     this.chkExpect(this.fmtSource[0]);
     this.setExpect(this.fmtSource[0]);
     this.fmtSource = this.help.getSrcRest(this.fmtSource);
-    if (this.fmtSource.replace(/\n|\s/mg, '') === '') this.expection('val');    // this.doSpecialFormat();
+    if (this.fmtSource.replace(/(\r)?\n|\s/mg, '') === '') this.expection('val');    // this.doSpecialFormat();
   }
 
   /**

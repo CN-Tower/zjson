@@ -4,57 +4,57 @@ import { AppService, APP_INFO, APP_THEMES } from './app.service';
 import { DiffType, AlertType, AlertInfo } from './shared/index';
 
 export abstract class ZjsApp {
-  appUrl: string = APP_INFO.appUrl;
-  lang: string;
-  version: string;
-  remoteVersion: string;
-  sharedLink: string;
-  isOnLeft: boolean = true;
-  isOnInit: boolean = true;
-  isPageActive: boolean = true;
-  updateUrl: string = '';
-  isWindowBig: boolean;
-  sourcest: string = '';
-  formated: string = '';
-  alertMsg: string = '';
-  saveFmtTime: string;
-  fmtSourcest: string;
-  fmtHists: any[] = [];
-  maxSrcSize: any = null;
-  maxFmtSize: any = null;
-  isSrcMax: boolean = false;
-  isFmtMax: boolean = false;
-  isModelExpand: boolean = false;
-  isFmtedEditAb: boolean = true;
-  isOriginEmpty: boolean = true;
-  isShowDiff: boolean = false;
-  diffType: DiffType;
-  toggleConfTiele: string;
-  theme: string;
-  themes: string[] = APP_THEMES;
-  altMsgs: any = {};
-  positionIdxArr: number[] = [];
-  positionIdx: number = 0;
-  isShowSrcToTop: boolean = false;
-  isShowFmtToTop: boolean = false;
-  isSrcOnHover: boolean = false;
-  isFmtOnHover: boolean = false;
-  conf: Configs = new Configs();
-  fmtStatus: FmtStatus = new FmtStatus();
-  formatter: Formatter = new Formatter();
-  alertInfo: AlertInfo = {type: '', idx: NaN, brc: ''};
-  alertType: AlertType = 'info';
-  greeting: string;
-  srcEditor: any;
-  fmtEditor: any;
-  errRowIndex: number;
-  errRowDecorations: any[] = [];
-  i18n: any = {
+  public appUrl: string = APP_INFO.appUrl;
+  public lang: string;
+  public version: string;
+  public remoteVersion: string;
+  public sharedLink: string;
+  public isOnLeft: boolean = true;
+  public isOnInit: boolean = true;
+  public isPageActive: boolean = true;
+  public updateUrl: string = '';
+  public isWindowBig: boolean;
+  public sourcest: string = '';
+  public formated: string = '';
+  public alertMsg: string = '';
+  public saveFmtTime: string;
+  public fmtSourcest: string;
+  public fmtHists: any[] = [];
+  public maxSrcSize: any = null;
+  public maxFmtSize: any = null;
+  public isSrcMax: boolean = false;
+  public isFmtMax: boolean = false;
+  public isModelExpand: boolean = false;
+  public isFmtedEditAb: boolean = true;
+  public isOriginEmpty: boolean = true;
+  public isShowDiff: boolean = false;
+  public diffType: DiffType;
+  public toggleConfTiele: string;
+  public theme: string;
+  public themes: string[] = APP_THEMES;
+  public altMsgs: any = {};
+  public positionIdxArr: number[] = [];
+  public positionIdx: number = 0;
+  public isShowSrcToTop: boolean = false;
+  public isShowFmtToTop: boolean = false;
+  public isSrcOnHover: boolean = false;
+  public isFmtOnHover: boolean = false;
+  public conf: Configs = new Configs();
+  public fmtStatus: FmtStatus = new FmtStatus();
+  public formatter: Formatter = new Formatter();
+  public alertInfo: AlertInfo = {type: '', idx: NaN, brc: ''};
+  public alertType: AlertType = 'info';
+  public greeting: string;
+  public srcEditor: any;
+  public fmtEditor: any;
+  public errRowIndex: number;
+  public errRowDecorations: any[] = [];
+  public i18n: any = {
     confs: {show: '', hide: ''},
     model: {expand: '', combine: ''},
     alert: {ost: '', col: '', val: '', end: '', war: '', scc: ''}
   };
-  srcEditorOptions: any = {
+  public srcEditorOptions: any = {
     language: 'text/plain',
     tabSize: 2,
     wordWrap: 'on',
@@ -66,7 +66,7 @@ export abstract class ZjsApp {
       horizontal: 'hidden'
     }
   };
-  fmtEditorOptions: any = {
+  public fmtEditorOptions: any = {
     theme: this.appService.getEditorTheme(this.appService.getAppTheme()),
     language: 'json',
     tabSize: 2,

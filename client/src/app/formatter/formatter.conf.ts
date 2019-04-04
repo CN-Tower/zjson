@@ -6,14 +6,14 @@ import { AlertType, AlertInfo, Indent, FmtedType } from '../shared';
  * =======================================
  */
 export class Configs {
-  model: 'expand' | 'combine' = 'expand';
-  type: FmtedType = 'json';
-  indent: Indent = 2;
-  sgIndent: string = ' ';
-  keyQuote: '\'' | '\"' | '';
-  valQuote: '\'' | '\"';
-  isStrict: boolean;
-  isEscape: boolean;
+  public model: 'expand' | 'combine' = 'expand';
+  public type: FmtedType = 'json';
+  public indent: Indent = 2;
+  public sgIndent: string = ' ';
+  public keyQuote: '\'' | '\"' | '';
+  public valQuote: '\'' | '\"';
+  public isStrict: boolean;
+  public isEscape: boolean;
 }
 
 /**
@@ -21,15 +21,15 @@ export class Configs {
  * =======================================
  */
 export class FmtStatus {
-  isSrcValid: boolean = true;
-  isFmtError: boolean = false;
-  fmtedRows: number = 0;
-  errRowStr: number = 0;
-  errRowIdx: number = 0;
-  fmtedLines: number = 0;
-  altType: AlertType = 'info';
-  altInfo: AlertInfo = { type: '', idx: NaN, brc: '' };
-  fmtedType: FmtedType = 'json';
+  public isSrcValid: boolean = true;
+  public isFmtError: boolean = false;
+  public fmtedRows: number = 0;
+  public errRowStr: number = 0;
+  public errRowIdx: number = 0;
+  public fmtedLines: number = 0;
+  public altType: AlertType = 'info';
+  public altInfo: AlertInfo = { type: '', idx: NaN, brc: '' };
+  public fmtedType: FmtedType = 'json';
 }
 
 /**
@@ -37,11 +37,11 @@ export class FmtStatus {
  * =======================================
  */
 export class FmtValidator {
-  exceptVal: string = '';
-  exceptType: string = '';
-  deepIdxCon: string = '';
-  isSrcJson: boolean = true;
-  srcAcType: FmtedType = '';
+  public exceptVal: string = '';
+  public exceptType: string = '';
+  public deepIdxCon: string = '';
+  public isSrcJson: boolean = true;
+  public srcAcType: FmtedType = '';
 }
 
 /**
@@ -49,15 +49,15 @@ export class FmtValidator {
  * =======================================
  */
 export class FmtBase {
-  v: FmtValidator;
-  fmtObject: any;
-  fmtSource: any;
-  fmtResult: string;
-  fmtConfig: Configs;
-  fmtStatus: FmtStatus;
-  help: FmtHelp = new FmtHelp();
-  level: number = 0;
-  rowIdx: number = 1;
-  baseIndent: string = '';
-  isExpand: boolean;
+  public v: FmtValidator;
+  public fmtObject: any;
+  public fmtSource: any;
+  public fmtResult: string;
+  public fmtConfig: Configs;
+  public fmtStatus: FmtStatus;
+  public help: FmtHelp = new FmtHelp();
+  public level: number = 0;
+  public rowIdx: number = 1;
+  public baseIndent: string = '';
+  public isExpand: boolean;
 }
