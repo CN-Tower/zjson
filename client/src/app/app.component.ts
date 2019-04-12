@@ -185,12 +185,11 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
         panel = $('#zjs-format .panel')[0];
       }
     });
-    fn.fullScreen(panel);
-    fn.interval('checkIsFullScreen', 100, () => {
-      if (fn.isFullScreen(panel)) {
-        fn.interval('checkIsFullScreen', false);
-        fn.timeout(100, () => fn.fullScreenChange(() => this.minimalPanel()));
-      }
+    fn.fullScreen(panel, () => {
+      this.fullScreenEvent = fn.fullScreenChange(() => {
+        this.minimalPanel();
+        this.fullScreenEvent.remove();
+      });
     });
     const $win = $(win);
     const winH = $win.height() - 20;
@@ -213,9 +212,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
    * 最小化窗口
    * =================================*/
   minimalPanel(type?: 'src'|'fmt') {
-    fn.exitFullScreen($('#zjs-source .panel')[0]);
-    fn.exitFullScreen($('#zjs-format .panel')[0]);
-    fn.fullScreenChange(false);
+    fn.exitFullScreen(() => this.fullScreenEvent.remove());
     this.isSrcMax = false;
     this.isFmtMax = false;
     this.maxSrcSize = null;
@@ -236,7 +233,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
   download() {
     if (this.formated) {
       const blob = new Blob([this.formated], {type: ''});
-      saveAs(blob, `zjson-${String(fn.time()).substr(-6)}.json`);
+      saveAs(blob, `zjson-${String(Date.now()).substr(-6)}.json`);
     } else {
       this.alertNotice(this.translate.instant('_download'), 'danger');
     }

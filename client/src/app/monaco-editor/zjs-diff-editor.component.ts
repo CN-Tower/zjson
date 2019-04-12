@@ -24,29 +24,28 @@ export class ZjsDiffEditorComponent implements OnInit, AfterViewInit, OnDestroy 
   @Input() sourcest: string;
   @Output() closePanel: EventEmitter<any> = new EventEmitter();
 
-  isDifMax: boolean = false;
-  isShowSource: boolean = true;
-  isShowDiffEditor: boolean = false;
-  isLeftFmted: boolean = false;
-  eidtorSub: any;
-  maxFmtSize: any = null;
-  diffEditor: any;
-  editorModel: any;
-  originalModel: any;
-  originalCode: string;
-  modifiedModel: any;
-  modifiedCode: string;
-  originalEditor: any;
-  modifiedEditor: any;
-  isShowOriToTop: boolean = false;
-  isShowModToTop: boolean = false;
-  isShowDifToTop: boolean = false;
-  isOriOnHover: boolean = false;
-  isModOnHover: boolean = false;
-  isDifOnHover: boolean = false;
-  private _fmtConf: Configs;
-  formatter: Formatter = new Formatter();
-  editorOptions: any = {
+  public isDifMax: boolean = false;
+  public isShowSource: boolean = true;
+  public isShowDiffEditor: boolean = false;
+  public isLeftFmted: boolean = false;
+  public eidtorSub: any;
+  public maxFmtSize: any = null;
+  public diffEditor: any;
+  public editorModel: any;
+  public originalModel: any;
+  public originalCode: string;
+  public modifiedModel: any;
+  public modifiedCode: string;
+  public originalEditor: any;
+  public modifiedEditor: any;
+  public isShowOriToTop: boolean = false;
+  public isShowModToTop: boolean = false;
+  public isShowDifToTop: boolean = false;
+  public isOriOnHover: boolean = false;
+  public isModOnHover: boolean = false;
+  public isDifOnHover: boolean = false;
+  public formatter: Formatter = new Formatter();
+  public editorOptions: any = {
     language: 'json',
     tabSize: 2,
     theme: this.appService.getEditorTheme(this.appService.getAppTheme()),
@@ -54,9 +53,11 @@ export class ZjsDiffEditorComponent implements OnInit, AfterViewInit, OnDestroy 
       enabled: false
     }
   };
-  compareHists: any;
-  saveCprTime: string;
-  getTimeStr = () => fn.fmtDate('MM-dd hh:mm:ss');
+  public compareHists: any;
+  public saveCprTime: string;
+  public fullScreenEvent: any = { remove: () => {} };
+  private _fmtConf: Configs;
+  getTimeStr = () => fn.fmtDate('MM-dd hh:mm:ss', Date.now());
   getCompareHists = () => this.compareHists = this.appService.getCompareHists();
 
   constructor(
@@ -334,19 +335,17 @@ export class ZjsDiffEditorComponent implements OnInit, AfterViewInit, OnDestroy 
 
   maximalPanel() {
     const panel = $('#zjs-diff-editor .panel')[0];
-    fn.fullScreen(panel);
     this.isDifMax = true;
-    fn.interval('checkIsFullScreen', 100, () => {
-      if (fn.isFullScreen(panel)) {
-        fn.interval('checkIsFullScreen', false);
-        fn.timeout(100, () => fn.fullScreenChange(() => this.minimalPanel()));
-      }
+    fn.fullScreen(panel, () => {
+      this.fullScreenEvent = fn.fullScreenChange(() => {
+        this.minimalPanel();
+        this.fullScreenEvent.remove();
+      });
     });
   }
 
   minimalPanel() {
-    fn.exitFullScreen($('#zjs-diff-editor .panel')[0]);
-    fn.fullScreenChange(false);
+    fn.exitFullScreen(() => this.fullScreenEvent.remove());
     this.isDifMax = false;
   }
 

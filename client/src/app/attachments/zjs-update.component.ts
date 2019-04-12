@@ -38,7 +38,7 @@ export class ZjsUpdateComponent {
 
   cancelUpdate() {
     if (this.isNoShowUdate) {
-      const ignoreInfo: IgnoreInfo = {ignoreTime: fn.time(), ignoreVersion: this.remoteVersion};
+      const ignoreInfo: IgnoreInfo = {ignoreTime: Date.now(), ignoreVersion: this.remoteVersion};
       this.appService.setIgnoreVersion(ignoreInfo);
     }
     this.modalRef.hide();

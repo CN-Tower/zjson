@@ -49,6 +49,7 @@ export abstract class ZjsApp {
   public fmtEditor: any;
   public errRowIndex: number;
   public errRowDecorations: any[] = [];
+  public fullScreenEvent: any = { remove: () => {} };
   public i18n: any = {
     confs: {show: '', hide: ''},
     model: {expand: '', combine: ''},
@@ -74,7 +75,7 @@ export abstract class ZjsApp {
       enabled: false
     }
   };
-  getTimeStr = () => fn.fmtDate('MM-dd hh:mm:ss');
+  getTimeStr = () => fn.fmtDate('MM-dd hh:mm:ss', Date.now());
   getFmtHists = () => this.fmtHists = this.appService.getFmtHists();
 
   constructor (public appService: AppService) { }

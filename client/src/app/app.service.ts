@@ -189,7 +189,7 @@ export class AppService {
     if (userId) {
       return userId;
     } else {
-      const rdUserId = `ZJSON-${fn.rdid()}`;
+      const rdUserId = `ZJSON-${fn.gid()}`;
       this.setUserId(rdUserId);
       return rdUserId;
     }
@@ -269,13 +269,13 @@ export class AppService {
 
   setRefreshTime() {
     if (this.checkIsExpire()) {
-      window.localStorage['refreshTime'] = fn.time();
+      window.localStorage['refreshTime'] = Date.now();
     }
   }
 
   checkIsExpire() {
     const lastRefreshTime = window.localStorage['refreshTime'];
-    if (lastRefreshTime && fn.time() - lastRefreshTime < 299000) {
+    if (lastRefreshTime && Date.now() - lastRefreshTime < 299000) {
       return false;
     }
     return true;
