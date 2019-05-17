@@ -14,7 +14,7 @@ export class Formatter extends FmtBase {
    * @arg onFmted [Function] 回调
    * */
   format(fmtSource: string, fmtConfig: Configs, that: any) {
-    return Observable.create(observer => {
+    return Observable.create((observer: any) => {
       this.v = new FmtValidator();
       this.fmtStatus = new FmtStatus();
       this.fmtSource = fmtSource;
@@ -560,7 +560,7 @@ export class Formatter extends FmtBase {
     this.fmtStatus.altType = fn.match(type, {
       'war': 'warning',
       'scc': 'success',
-      '@default': 'danger'
+      'default': 'danger'
     });
     this.fmtStatus.altInfo = { type: type, idx: this.rowIdx, brc: brc };
   }

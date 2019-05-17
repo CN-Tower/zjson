@@ -35,7 +35,7 @@ export class FmtHelp {
         qtStr = qtStr.replace(/'/mg, '\\\'');
         return quote_ + qtStr + quote_;
       },
-      '@default': qtStr
+      'default': qtStr
     });
   }
 

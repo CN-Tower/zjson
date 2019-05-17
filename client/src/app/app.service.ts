@@ -5,8 +5,8 @@ import { IgnoreInfo, QuoteIdx, AlertInfo } from './shared';
 import 'rxjs/add/operator/map';
 
 export const APP_INFO = {
-  version: 'v4.1.9',
-  updateTime: '2019-04-04',
+  version: 'v4.1.10',
+  updateTime: '2019-05-17',
   appUrl: 'https://www.zjson.net'
 };
 
@@ -152,7 +152,7 @@ export class AppService {
       'abyss':     'abyss',
       'solarized': 'solarized-light',
       'moonlight': 'solarized-dark',
-      '@default': () => 'vs-dark'
+      'default': () => 'vs-dark'
     });
   }
 

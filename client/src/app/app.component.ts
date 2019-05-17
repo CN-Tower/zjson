@@ -75,7 +75,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     if (!this.sourcest && !this.fmtSourcest && !isSilence) {
       this.alertNotice(this.translate.instant('_format'), 'danger');
     } else {
-      this.formatter.format(fmtSrc, this.conf, this).subscribe(fmted => {
+      this.formatter.format(fmtSrc, this.conf, this).subscribe((fmted: any) => {
         this.formated = fmted.fmtResult;
         this.fmtStatus = fmted.fmtStatus;
         if (this.formated) {

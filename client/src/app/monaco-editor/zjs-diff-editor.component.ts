@@ -226,7 +226,7 @@ export class ZjsDiffEditorComponent implements OnInit, AfterViewInit, OnDestroy 
       'src': () => {
         this.formatAndInitEditor(this.sourcest);
       },
-      '@default': () => {
+      'default': () => {
         fn.match(fn.get(diffType, 'type'), {
           'his': () => {
             this.formatAndInitEditor(fn.get(diffType, '/hist/src'));

@@ -32,7 +32,7 @@
     "bootstrap": "^3.3.7",
     "core-js": "^2.5.4",
     "font-awesome": "^4.7.0",
-    "funclib": "^3.5.7",
+    "funclib": "^3.5.8",
     "jquery": "^3.3.1",
     "monaco-editor": "^0.14.3",
     "ngx-bootstrap": "^3.0.1",
