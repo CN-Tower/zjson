@@ -41,23 +41,25 @@ exports.pollingVc = function (req, res, next) {
 exports.refreshVc = function (req, res, next) {
   try {
     let userId = req.params['userId'];
-    const isExpire = req.query['isExpire'];
     UsersModel.getOneUserById(userId, (err, doc) => {
       if (req.timedout) return;
       if (err) return next(err);
       if (doc) {
-        if (isExpire === 'yes' && doc.isKeepAc) {
+        UsersModel.updateUser(userId, err => {
+          if (err) fn.log(fn.get(err, 'message'), 'Update User Err, UserId: ' + userId);
+        });
+        if (req.query['isExpire'] === 'yes' && doc.isKeepAc) {
           VisitCountModel.addOneVisit(err => {
-            if (err) fn.log(fn.get(err, 'message'), 'Add One Visit Err');
+            if (err) fn.log(fn.get(err, 'message'), 'Add One Visit Err, UserId: ' + userId);
           });
         }
         res.status(200).send({'id': null});
       } else {
         VisitCountModel.addOneVisit(err => {
-          if (err) fn.log(fn.get(err, 'message'), 'Add One Visit Err');
+          if (err) fn.log(fn.get(err, 'message'), 'Add One Visit Err, UserId: ' + userId);
         });
-        userId = 'ZJSON-' + fn.rdid();
-        const vtTime = fn.time();
+        userId = 'ZJSON-' + fn.gid();
+        const vtTime = Date.now();
         const newUser = {
           'userId': userId,
           'vtTime': vtTime,
@@ -70,9 +72,14 @@ exports.refreshVc = function (req, res, next) {
           res.status(200).send({'id': userId});
         });
         setUserExpireTime(userId);
-        fn.timeout(5 * 60 * 1000, () => {
-          UsersModel.updateUser(userId, err => {
-            if (err) fn.log(fn.get(err, 'message'), 'Update User Err');
+        fn.timeout(300000, () => {
+          UsersModel.getUsersById(userId, (err, doc) => {
+            if (err) fn.log(fn.get(err, 'message'), 'Get User Err, UserId: ' + userId);
+            if (doc) {
+              UsersModel.updateUser(userId, err => {
+                if (err) fn.log(fn.get(err, 'message'), 'Update User Err, UserId: ' + userId);
+              });
+            }
           });
         });
       }
@@ -93,7 +100,7 @@ function setUserExpireTime(userId) {
 function addLoseUser(userId) {
   UsersModel.createUser({
     'userId': userId,
-    'vtTime': fn.time(),
+    'vtTime': Date.now(),
     'isActive': true,
     'isKeepAc': true
   });

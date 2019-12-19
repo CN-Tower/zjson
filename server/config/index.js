@@ -7,5 +7,6 @@ const dbUrls = {
 module.exports = {
   port: 3000,
   dbUrl: dbUrls[ 0 ],
+  activeUserExp: 10 * 60 * 1000,
   sharedJsonExp: 2 * 24 * 60 * 60 * 1000
 }

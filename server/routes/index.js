@@ -162,7 +162,7 @@ router.get('/sharedJson/:userId', function (req, res, next) {
 router.post('/sharedJson', function (req, res, next) {
   try {
     const data = req.body;
-    data.updateTime = fn.time();
+    data.updateTime = Date.now();
     SharedJsonModel.getSjsByUserId(data.userId, (err, docs) => {
       if (req.timedout) return;
       if (err) return next(err);

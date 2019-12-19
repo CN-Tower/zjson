@@ -37,9 +37,7 @@ UsersModel.removeUser = function (userId, callback) {
 }
 
 UsersModel.updateUser = function (userId, callback) {
-  this.findOneAndUpdate(
-    { "userId": userId }, { $set: { 'isKeepAc': true } }, callback
-  );
+  this.findOneAndUpdate( { "userId": userId }, { $set: { 'isKeepAc': true, 'vtTime': Date.now() } }, callback );
 }
 
 module.exports = UsersModel;
