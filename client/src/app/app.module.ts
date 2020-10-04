@@ -21,6 +21,7 @@ import {
   ZjsHintComponent, ZjsTitleComponent, ZjsNoticeComponent, ZjsInfoComponent,
   ZjsHistComponent, ZjsLoadingComponent, ZjsUpdateComponent, ZjsCompareComponent
 } from './attachments';
+import { ZjsonPanelComponent } from './zjson-panel/zjson-panel.component';
 
 export function TranslateFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -42,7 +43,7 @@ export function TranslateFactory(http: HttpClient) {
     MonacoEditorComponent, MonacoDiffEditorComponent,
     ZjsDiffEditorComponent, ZjsHintComponent, ZjsTitleComponent,
     ZjsNoticeComponent, ZjsInfoComponent, ZjsHistComponent,
-    ZjsLoadingComponent, ZjsUpdateComponent, ZjsCompareComponent
+    ZjsLoadingComponent, ZjsUpdateComponent, ZjsCompareComponent, ZjsonPanelComponent
   ],
   providers: [
     AppService, MonacoEditorService, SharedBroadcastService
