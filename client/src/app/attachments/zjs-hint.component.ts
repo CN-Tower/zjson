@@ -1,6 +1,6 @@
 import { Component} from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { SharedBroadcastService, HintInfo } from '../shared/index';
+import { SharedBroadcastService, HintInfo } from '../@shared/index';
 
 @Component({
   selector: 'zjs-hint',

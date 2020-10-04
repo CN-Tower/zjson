@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Http } from '@angular/http';
-import { IgnoreInfo, QuoteIdx, AlertInfo } from './shared';
+import { IgnoreInfo, QuoteIdx, AlertInfo } from './@shared';
 import 'rxjs/add/operator/map';
 
 export const APP_INFO = {

@@ -1,5 +1,5 @@
 import { Component, OnInit} from '@angular/core';
-import { SharedBroadcastService } from '../shared/shared-broadcast.service';
+import { SharedBroadcastService } from '../@shared/shared-broadcast.service';
 import { style } from '@angular/animations';
 
 @Component({

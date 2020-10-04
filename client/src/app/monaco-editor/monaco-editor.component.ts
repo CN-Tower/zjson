@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MonacoEditorBase } from './monaco-editor.base';
-import { SharedBroadcastService } from '../shared/shared-broadcast.service';
+import { SharedBroadcastService } from '../@shared/shared-broadcast.service';
 
 @Component({
   selector: 'monaco-editor',

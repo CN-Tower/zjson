@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
-import { QuoteIdx, QuoteInfo, SharedBroadcastService } from '../../shared';
+import { QuoteIdx, QuoteInfo, SharedBroadcastService } from '../../@shared';
 import { AppService } from '../../app.service';
 
 @Component({

@@ -1,7 +1,7 @@
 import { Configs, FmtStatus } from './formatter/formatter.conf';
 import { Formatter } from './formatter/formatter.core';
 import { AppService, APP_INFO, APP_THEMES } from './app.service';
-import { DiffType, AlertType, AlertInfo } from './shared/index';
+import { DiffType, AlertType, AlertInfo } from './@shared/index';
 
 export abstract class ZjsApp {
   public appUrl: string = APP_INFO.appUrl;

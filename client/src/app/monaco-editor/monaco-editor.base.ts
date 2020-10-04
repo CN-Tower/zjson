@@ -1,5 +1,5 @@
 import { AfterViewInit } from '@angular/core';
-import { SharedBroadcastService } from '../shared';
+import { SharedBroadcastService } from '../@shared';
 import { MONACO_THEMES } from './monaco-editor.themes';
 
 export class MonacoEditorBase implements AfterViewInit {

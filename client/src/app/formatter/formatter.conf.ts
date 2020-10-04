@@ -1,5 +1,5 @@
 import { FmtHelp } from './formatter.help';
-import { AlertType, AlertInfo, Indent, FmtedType } from '../shared';
+import { AlertType, AlertInfo, Indent, FmtedType } from '../@shared';
 
 /**
  * 格式化配置

@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit, AfterViewInit, OnDestroy} from '@angular/core';
 import { AppService } from '../app.service';
-import { SharedBroadcastService, DiffType, FmtHist, EditorOptions, DiffEditors } from '../shared/index';
+import { SharedBroadcastService, DiffType, FmtHist, EditorOptions, DiffEditors } from '../@shared/index';
 import { Configs } from '../formatter/formatter.conf';
 import { Formatter } from '../formatter/formatter.core';
 import { TranslateService } from '@ngx-translate/core';

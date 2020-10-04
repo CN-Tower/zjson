@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { Configs, FmtStatus, FmtValidator, FmtBase } from './formatter.conf';
-import { FmtErrType } from '../shared';
+import { FmtErrType } from '../@shared';
 
 export class Formatter extends FmtBase {
 

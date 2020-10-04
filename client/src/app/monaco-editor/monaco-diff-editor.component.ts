@@ -1,6 +1,6 @@
 import { Component, Input, Output, ViewChild, EventEmitter, ElementRef, OnInit, OnDestroy } from '@angular/core';
 import { MonacoEditorBase } from './monaco-editor.base';
-import { SharedBroadcastService } from '../shared/shared-broadcast.service';
+import { SharedBroadcastService } from '../@shared/shared-broadcast.service';
 import { AppService } from '../app.service';
 
 @Component({

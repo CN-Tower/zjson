@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AppService } from '../app.service';
-import { SharedBroadcastService } from '../shared/shared-broadcast.service';
+import { SharedBroadcastService } from '../@shared/shared-broadcast.service';
 
 @Injectable()
 export class MonacoEditorService {

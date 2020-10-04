@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { AppService } from './app.service';
-import { SharedBroadcastService } from './shared/index';
+import { SharedBroadcastService } from './@shared/index';
 import { BsDropdownModule, ModalModule, TooltipModule } from 'ngx-bootstrap';
 import {
   MonacoEditorComponent, MonacoDiffEditorComponent, MonacoEditorService, ZjsDiffEditorComponent

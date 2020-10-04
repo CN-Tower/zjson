@@ -1,7 +1,7 @@
 import { Component, Input, TemplateRef} from '@angular/core';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { AppService } from '../app.service';
-import { IgnoreInfo } from '../shared';
+import { IgnoreInfo } from '../@shared';
 
 @Component({
   selector: 'zjs-update',

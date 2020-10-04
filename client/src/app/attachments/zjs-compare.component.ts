@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, OnDestroy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { AppService } from '../app.service';
-import { SharedBroadcastService, FmtHist } from '../shared/index';
+import { SharedBroadcastService, FmtHist } from '../@shared/index';
 
 @Component({
   selector: 'zjs-compare',
