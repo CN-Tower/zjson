@@ -23,6 +23,7 @@ export class ZjsDiffEditorComponent implements OnInit, AfterViewInit, OnDestroy 
   @Input() formated: string;
   @Input() sourcest: string;
   @Input() fullscreen: boolean;
+  @Input() isElectronApp: boolean;
   @Output() closePanel: EventEmitter<any> = new EventEmitter();
 
   public isDifMax: boolean = false;

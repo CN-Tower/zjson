@@ -3,7 +3,7 @@ import { TranslateService, TranslationChangeEvent } from '@ngx-translate/core';
 import { AppService } from './app.service';
 import { MonacoEditorService } from './monaco-editor/monaco-eidtor.service';
 import { SharedBroadcastService, EditorModal, DiffType, IgnoreInfo} from './@shared/index';
-import { ZjsApp } from './app.component.class';
+import { ZjsApp } from './app.base';
 
 let editorW: number, sourceW: number, originX: number;
 
@@ -30,6 +30,11 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     translate.use(this.lang);
     this.greeting = this.appService.getGreeting(this.lang);
     this.appService.initFmtHists();
+    /**==================== electron ignore sta ====================*/
+    /**==================== electron ignore end ====================*/
+    /**==================== electron enable sta ======================
+    this.isElectronApp = true;
+    ======================= electron enable end ====================*/
   }
 
   ngOnInit() {
@@ -376,7 +381,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     this.fmtSourcest = '';
     if (!this.isOriginEmpty) this.animateGreeting();
     /**==================== electron enable sta ======================
-    fn.defer(() => win.onLinksLoad());
+    fn.defer(() => win.electronUtils.onLinksLoad());
     ======================= electron enable end ====================*/
   }
 
@@ -752,7 +757,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     fn.interval('refresh-visit-count', 300000, () => this.refreshVisitCount());
     /**==================== electron ignore end ====================*/
     /**==================== electron enable sta ======================
-    fn.defer(() => win.checkAppVersion().then(res => {
+    fn.defer(() => win.electronUtils.checkAppVersion().then(res => {
       if (res.version !== res.localVersion) {
         let ignoreInfo: IgnoreInfo = this.appService.getIgnoreVersion();
         if (fn.get(ignoreInfo, 'ignoreTime') && fn.now() - ignoreInfo.ignoreTime > 86400000) {
@@ -769,6 +774,16 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     ======================= electron enable end ====================*/
     this.pollingVisitCount();
     fn.interval('polling-visit-count', 15000, () => this.pollingVisitCount());
+  }
+
+  /**
+   * 点击页面链接
+   * =================================*/
+  onLinkClick(e: any) {
+    if (this.isElectronApp) {
+      e.preventDefault();
+      win.electronUtils.openUrl($(e.target).attr('href'));
+    }
   }
 
   /**
@@ -813,7 +828,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     });
     /**==================== electron ignore end ====================*/
     /**==================== electron enable sta ======================
-    fn.defer(() => win.pollingVisitCount(userId, this.isOnInit).then(res => {
+    fn.defer(() => win.electronUtils.pollingVisitCount(userId, this.isOnInit).then(res => {
       if (res['vc']) win['vc'] = res.vc;
     }));
     ======================= electron enable end ====================*/
@@ -845,7 +860,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     this.appService.shareFormated(this.formated).subscribe(success, error);
     /**==================== electron ignore end ====================*/
     /**==================== electron enable sta ======================
-    win.shareFormated(this.formated, this.appService.getUserId()).then(success).catch(error);
+    win.electronUtils.shareFormated(this.formated, this.appService.getUserId()).then(success).catch(error);
     ======================= electron enable end ====================*/
   }
 
@@ -869,7 +884,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
         }, error);
         /**==================== electron ignore end ====================*/
         /**==================== electron enable sta ======================
-        win.getSharedJson(sharedId).then(res => {
+        win.electronUtils.getSharedJson(sharedId).then(res => {
           this.broadcast.hideLoading();
           this.sourcest = res.sharedJson;
           $('#format-btn').click();

@@ -1,6 +1,6 @@
 {
   "name": "zjson",
-  "version": "0.0.0",
+  "version": "5.1.1",
   "scripts": {
     "ng": "ng",
     "test": "ng test",
@@ -12,15 +12,13 @@
     "update": "npm run build && node build/update-zjson.js",
     "electron:dist": "electron dist",
     "electron": "npm run build:electron && node build/electron.conf.js && electron dist",
-    "electron:build": "npm run build:electron && node build/electron.conf.js package",
-    "electron:package:win": "electron-packager dist zjson --platform=win32 --out=build/package --icon=dist/electron/zjson.ico --overwrite",
-    "electron:package:mac": "electron-packager dist zjson --platform=darwin --out=build/package --icon=dist/electron/zjson.ico --overwrite",
-    "electron:package:macm1": "electron-packager dist zjson --platform=mas --out=build/package --icon=dist/electron/zjson.ico --overwrite",
+    "electron:build": "node build/clear.js && npm run build:electron && node build/electron.conf.js package",
+    "electron:package:win": "electron-packager dist zjson --platform=win32 --out=build/package --icon=dist/zjson.ico --overwrite",
+    "electron:package:mac": "electron-packager dist zjson --platform=darwin --out=build/package --icon=dist/zjson.ico --overwrite",
     "package:win": "npm run electron:build && npm run electron:package:win && node build/pre-build.js",
     "package:mac": "npm run electron:build && npm run electron:package:mac && node build/pre-build.js && npm run make:dmg",
-    "package:macm1": "npm run electron:build && npm run electron:package:macm1 && node build/pre-build.js && npm run make:dmg",
     "make:dmg": "electron-installer-dmg build/package/zjson-darwin-x64 zjson-darwin-x64",
-    "make:dmgm1": "electron-installer-dmg build/package/zjson-mas-x64 zjson-mas-x64"
+    "make:msi": "electron-installer-dmg build/package/zjson-darwin-x64 zjson-darwin-x64"
   },
   "private": true,
   "dependencies": {
@@ -38,7 +36,7 @@
     "bootstrap": "^3.3.7",
     "core-js": "^2.5.4",
     "font-awesome": "^4.7.0",
-    "funclib": "^3.5.8",
+    "funclib": "^6.0.3",
     "jquery": "^3.3.1",
     "monaco-editor": "^0.14.3",
     "ngx-bootstrap": "^3.0.1",
@@ -57,9 +55,9 @@
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~8.9.4",
     "codelyzer": "~4.2.1",
-    "electron": "^2.0.18",
+    "electron": "^13.2.1",
     "electron-installer-dmg": "^3.0.0",
-    "electron-packager": "^12.1.0",
+    "electron-packager": "^15.3.0",
     "electron-wix-msi": "^3.2.0",
     "glob": "^7.1.2",
     "jasmine-core": "~2.99.1",

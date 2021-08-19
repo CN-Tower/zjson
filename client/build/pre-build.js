@@ -1,4 +1,5 @@
 const fn = require('funclib');
+const pkg = require('../package.json');
 
 const ignStaTs  = /\/\*\*==================== electron ignore sta ====================\*\//mgi;
 const ignEndTs  = /\/\*\*==================== electron ignore end ====================\*\//mgi;
@@ -79,6 +80,13 @@ function doElectronReplace(fileType, filePath) {
     }
   })
 }
+const appServicePath = './src/app/app.service.ts';
+fn.wt(
+  appServicePath,
+  fn.rd(appServicePath)
+    .replace(/version:\s?'(\d{1,3}\.){2}\d{1,3}',/, `version: '${pkg.version}',`)
+    .replace(/updateTime:\s?'\d{4}(-\d{2}){2}',/, `updateTime: '${fn.fmtDate('yyyy-MM-dd', new Date())}',`)
+  );
 
 fn.rm('dist/');
 

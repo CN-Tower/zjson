@@ -122,12 +122,22 @@
             <span *ngIf="!isFmtMax" (click)="copyFmted()">
               <i class="fa fa-copy z-op-icon" tooltip="{{!isFmtMax ? ('copy' | translate) : ''}}"></i>
             </span>
-            <span *ngIf="isFmtMax" (click)="minimalPanel('fmt')">
-              <i class="fa fa-window-restore z-op-icon"></i>
-            </span>
-            <span *ngIf="!isFmtMax" (click)="maximalPanel('fmt')" tooltip="{{'maximal' | translate}}">
-              <i class="fa fa-window-maximize z-op-icon"></i>
-            </span>
+            <ng-container *ngIf="isElectronApp">
+              <span *ngIf="!fullscreen" (click)="toggleFullscreen(true)">
+                <i class="fa fa-window-maximize z-op-icon" tooltip="{{'maximal' | translate}}"></i>
+              </span>
+              <span *ngIf="fullscreen" (click)="toggleFullscreen(false)">
+                <i class="fa fa-window-restore z-op-icon" tooltip="{{'minimal' | translate}}"></i>
+              </span>
+            </ng-container>
+            <ng-container *ngIf="!isElectronApp">
+              <span *ngIf="isFmtMax" (click)="minimalPanel('fmt')">
+                <i class="fa fa-window-restore z-op-icon"></i>
+              </span>
+              <span *ngIf="!isFmtMax" (click)="maximalPanel('fmt')" tooltip="{{'maximal' | translate}}">
+                <i class="fa fa-window-maximize z-op-icon"></i>
+              </span>
+            </ng-container>
           </div>
           <h3 class="panel-title z-ptt-long">
             {{'fmted_' | translate}}
@@ -158,22 +168,26 @@
             <div *ngIf="!formated" id="z-notice-text" class="zjs-mata-links z-sm-hide no-select">
               <p>{{'zNotice' | translate}}</p>
               <i class="fa fa-star"></i>&nbsp;<strong>{{'project' | translate}}:</strong>&nbsp;&nbsp;
-              <a class="links" target="_blank" href="http://github.com/CN-Tower/zjson">
+              <a class="links" target="_blank" href="http://github.com/CN-Tower/zjson" (click)="onLinkClick($event)">
                 http://github.com/CN-Tower/zjson
               </a><br>
               <i class="fa fa-star"></i>&nbsp;<strong>{{'funclib' | translate}}:</strong>&nbsp;&nbsp;
-              <a class="links" target="_blank" href="http://github.com/CN-Tower/funclib.js">
+              <a class="links" target="_blank" href="http://github.com/CN-Tower/funclib.js" (click)="onLinkClick($event)">
                 http://github.com/CN-Tower/funclib.js
               </a><br>
               <!--==================== electron ignore sta ====================-->
-              <i class="fa fa-star"></i>&nbsp;<strong>{{'download_' | translate}}:</strong>&nbsp;&nbsp;
-              <a class="links" target="_blank" href="{{updateUrl}}">
+              <i class="fa fa-star"></i>&nbsp;<strong>{{'download_' | translate}}(Mac):</strong>&nbsp;&nbsp;
+              <a class="links" target="_blank" href="{{downloadUrl}}/zjson-darwin-x64-v{{version}}.msi">
+                zjson-win32-x64.exe (v{{remoteVersion}})
+              </a><br>
+              <i class="fa fa-star"></i>&nbsp;<strong>{{'download_' | translate}}(Win):</strong>&nbsp;&nbsp;
+              <a class="links" target="_blank" href="{{downloadUrl}}/zjson-darwin-x64-v{{version}}.dmg">
                 zjson-win32-x64.exe (v{{remoteVersion}})
               </a><br>
               <!--==================== electron ignore end ====================-->
               <!--==================== electron enable sta ====================---
               <i class="fa fa-star"></i>&nbsp;<strong>{{'website' | translate}}:</strong>&nbsp;&nbsp;
-              <a class="links" target="_blank" href="http://www.zjson.net">
+              <a class="links" target="_blank" href="http://www.zjson.net" (click)="onLinkClick($event)">
                 http://www.zjson.net
               </a><br>
               ======================== electron enable end ====================-->
@@ -192,7 +206,7 @@
     <zjs-diff-editor *ngIf="isShowDiff" [formated]="formated"
                     [fmtConf]="conf" [fullscreen]="fullscreen"
                     [diffType]="diffType" [sourcest]="sourcest"
-                    (closePanel)="isShowDiff = false"></zjs-diff-editor>
+                    [isElectronApp]="isElectronApp" (closePanel)="isShowDiff = false"></zjs-diff-editor>
   </section>
 
   <div class="z-bottom-fix"></div>

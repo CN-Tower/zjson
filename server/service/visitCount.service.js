@@ -58,7 +58,7 @@ exports.refreshVc = function (req, res, next) {
         VisitCountModel.addOneVisit(err => {
           if (err) fn.log(fn.get(err, 'message'), 'Add One Visit Err, UserId: ' + userId);
         });
-        userId = 'ZJSON-' + fn.gid();
+        userId = 'ZJSON-' + fn.randomId();
         const vtTime = Date.now();
         const newUser = {
           'userId': userId,

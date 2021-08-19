@@ -45,7 +45,7 @@ export class ZjsUpdateComponent {
   }
 
   doUpdate() {
-    win.openUrl(this.updateUrl);
+    win.electronUtils.openUrl(this.updateUrl);
     this.modalRef.hide();
   }
 }

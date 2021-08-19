@@ -5,9 +5,10 @@ import { IgnoreInfo, QuoteIdx, AlertInfo } from './@shared';
 import 'rxjs/add/operator/map';
 
 export const APP_INFO = {
-  version: 'v4.1.10',
-  updateTime: '2019-05-17',
-  appUrl: 'https://www.zjson.net'
+  version: '5.1.1',
+  updateTime: '2021-08-20',
+  appUrl: 'https://www.zjson.net',
+  downloadUrl: 'https://www.zjson.net/download/'
 };
 
 export const APP_THEMES: string[] = [
@@ -189,7 +190,7 @@ export class AppService {
     if (userId) {
       return userId;
     } else {
-      const rdUserId = `ZJSON-${fn.gid()}`;
+      const rdUserId = `ZJSON-${fn.randomId()}`;
       this.setUserId(rdUserId);
       return rdUserId;
     }

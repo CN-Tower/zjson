@@ -29,12 +29,14 @@
         <span class="z-ico-hd" (click)="saveCompare()">
           <i class="fa fa-save z-op-icon" tooltip="{{!isDifMax ? ('saveCompare' | translate) : ''}}"></i>
         </span>
-        <span *ngIf="!isDifMax" (click)="maximalPanel()">
-          <i class="fa fa-window-maximize z-op-icon" tooltip="{{!isDifMax ? ('maximal' | translate) : ''}}"></i>
-        </span>
-        <span *ngIf="isDifMax" (click)="minimalPanel()">
-          <i class="fa fa-window-restore z-op-icon" tooltip="{{!isDifMax ? ('minimal' | translate) : ''}}"></i>
-        </span>
+        <ng-container *ngIf="!isElectronApp">
+          <span *ngIf="!isDifMax" (click)="maximalPanel()">
+            <i class="fa fa-window-maximize z-op-icon" tooltip="{{!isDifMax ? ('maximal' | translate) : ''}}"></i>
+          </span>
+          <span *ngIf="isDifMax" (click)="minimalPanel()">
+            <i class="fa fa-window-restore z-op-icon" tooltip="{{!isDifMax ? ('minimal' | translate) : ''}}"></i>
+          </span>
+        </ng-container>
         <span class="z-ico-hd close-ico" (click)="closeDiffEditor()" tooltip="{{!isDifMax ? ('close' | translate) : ''}}">
           <i class="fa fa-times z-op-icon-bg"></i>
         </span>
