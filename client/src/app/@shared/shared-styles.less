@@ -5,10 +5,19 @@
     clear:both;
   }
 }
-
 .init-theme (@bg-color, @pn-color, @tt-color, @bd-color, @ft-color, @shadow-color) {
   background: @bg-color;
   color: @ft-color;
+  .z-notice-fullscreen {
+    &:not(.z-formated) {
+      .z-fmt-alts {
+        .alert {
+          color: @ft-color;
+          background: @bg-color;
+        }
+      }
+    }
+  }
   header {
     .z-fmt-alts .alert-info {
       background-color: @tt-color;
@@ -61,5 +70,14 @@
     .zjs-editor-wp {
       border: 1px solid @tt-color;
     }
+  }
+  .z-bottom-fix {
+    width: 100%;
+    height: 25px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    background: @bg-color;
+    z-index: -1;
   }
 }

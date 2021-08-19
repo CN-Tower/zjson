@@ -171,6 +171,17 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
   }
 
   /**
+   * 满屏操作
+   * =================================*/
+  toggleFullscreen(fullscreen: boolean) {
+    this.fullscreen = fullscreen;
+    fn.defer(() => {
+      this.onWindowResize();
+      this.animateGreeting();
+    });
+  }
+
+  /**
    * 最大化窗口
    * =================================*/
   maximalPanel(type: 'src'|'fmt') {
@@ -390,7 +401,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
    * 问候语动画
    * ===================================*/
   animateGreeting() {
-    if (this.alertType === 'info' && this.isWindowBig) {
+    if (this.alertType === 'info' && (this.isWindowBig || this.fullscreen)) {
       fn.defer(() => {
         const $greeting = $('#z-greeting');
         const greetingIn = () => {
@@ -424,7 +435,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     const winW = $win.width();
     const winH = $win.height();
     const wH = winH - 100;
-    $work.height(wH);
+    $work.height(wH + 2);
     $panel.height(wH - 10);
     if (winW >= 1025) {
       if (!this.isWindowBig) {
@@ -744,7 +755,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     fn.defer(() => win.checkAppVersion().then(res => {
       if (res.version !== res.localVersion) {
         let ignoreInfo: IgnoreInfo = this.appService.getIgnoreVersion();
-        if (fn.get(ignoreInfo, 'ignoreTime') && fn.time() - ignoreInfo.ignoreTime > 86400000) {
+        if (fn.get(ignoreInfo, 'ignoreTime') && fn.now() - ignoreInfo.ignoreTime > 86400000) {
           ignoreInfo = undefined;
           this.appService.setIgnoreVersion(undefined);
         }

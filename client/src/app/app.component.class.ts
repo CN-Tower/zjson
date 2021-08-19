@@ -49,6 +49,7 @@ export abstract class ZjsApp {
   public fmtEditor: any;
   public errRowIndex: number;
   public errRowDecorations: any[] = [];
+  public fullscreen: boolean = false;
   public fullScreenEvent: any = { remove: () => {} };
   public i18n: any = {
     confs: {show: '', hide: ''},

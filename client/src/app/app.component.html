@@ -1,6 +1,11 @@
-<div id="zjson" class="theme-{{theme}}">
+<div id="zjson" class="theme-{{theme}}" [class.fullscreen]="fullscreen">
 
   <zjs-hint></zjs-hint>
+  
+  <ng-container *ngIf="fullscreen">
+    <zjs-notice class="z-notice-fullscreen" [class.z-formated]="alertType !== 'info'"
+      [alertType]="alertType" [alertMsg]="i18n.alert[alertInfo.type]" [greeting]="greeting"></zjs-notice>
+  </ng-container>
 
   <!-- ============= ZJSON HEADER ============= -->
   <header class="app-header">
@@ -19,7 +24,9 @@
       </div>
     </app-config>
     <zjs-title></zjs-title>
-    <zjs-notice [alertType]="alertType" [alertMsg]="i18n.alert[alertInfo.type]" [greeting]="greeting"></zjs-notice>
+    <ng-container *ngIf="!fullscreen">
+      <zjs-notice [alertType]="alertType" [alertMsg]="i18n.alert[alertInfo.type]" [greeting]="greeting"></zjs-notice>
+    </ng-container>
   </header> 
   <!-- HEADER END -->
 
@@ -56,11 +63,11 @@
             <span id="format-btn" *ngIf="!isSrcMax" (click)="doFormate()">
               <i class="fa fa-retweet z-op-icon-bg" tooltip="{{!isSrcMax ? ('fmtToJson' | translate) : ''}}"></i>
             </span>
-            <span *ngIf="!isSrcMax" (click)="maximalPanel('src')">
-              <i class="fa fa-window-maximize z-op-icon" tooltip="{{!isSrcMax ? ('maximal' | translate) : ''}}"></i>
+            <span *ngIf="!fullscreen" (click)="toggleFullscreen(true)">
+              <i class="fa fa-window-maximize z-op-icon" tooltip="{{'maximal' | translate}}"></i>
             </span>
-            <span *ngIf="isSrcMax" (click)="minimalPanel('src')">
-              <i class="fa fa-window-restore z-op-icon" tooltip="{{!isSrcMax ? ('minimal' | translate) : ''}}"></i>
+            <span *ngIf="fullscreen" (click)="toggleFullscreen(false)">
+              <i class="fa fa-window-restore z-op-icon" tooltip="{{'minimal' | translate}}"></i>
             </span>
           </div>
           <h3 class="panel-title z-ptt-long">{{'source_' | translate}}</h3>
@@ -116,10 +123,9 @@
               <i class="fa fa-copy z-op-icon" tooltip="{{!isFmtMax ? ('copy' | translate) : ''}}"></i>
             </span>
             <span *ngIf="isFmtMax" (click)="minimalPanel('fmt')">
-              <i class="fa fa-window-restore z-op-icon" tooltip="{{!isFmtMax ? ('minimal' | translate) : ''}}"></i>
+              <i class="fa fa-window-restore z-op-icon"></i>
             </span>
-            <span *ngIf="!isFmtMax" (click)="maximalPanel('fmt')"
-                  tooltip="{{!isFmtMax ? ('maximal' | translate) : ''}}">
+            <span *ngIf="!isFmtMax" (click)="maximalPanel('fmt')" tooltip="{{'maximal' | translate}}">
               <i class="fa fa-window-maximize z-op-icon"></i>
             </span>
           </div>
@@ -183,10 +189,13 @@
     </div>
     <!-- FMTED END -->
 
-    <zjs-diff-editor *ngIf="isShowDiff" [formated]="formated" [fmtConf]="conf"
+    <zjs-diff-editor *ngIf="isShowDiff" [formated]="formated"
+                    [fmtConf]="conf" [fullscreen]="fullscreen"
                     [diffType]="diffType" [sourcest]="sourcest"
                     (closePanel)="isShowDiff = false"></zjs-diff-editor>
   </section>
+
+  <div class="z-bottom-fix"></div>
 </div>
 
 <zjs-loading></zjs-loading>

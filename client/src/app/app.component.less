@@ -24,6 +24,11 @@
   .z-sm-hide, .z-fmt-alts {
     display: none !important;
   }
+  .z-notice-fullscreen {
+    .z-fmt-alts {
+      display: block !important;
+    }
+  }
 }
 #zjs-info-modal {
   .modal-title {
@@ -55,8 +60,54 @@
   width: 100%;
   margin-top: 15px;
 }
+/** zjson */
 #zjson {
   padding-top: 25px;
+  &.fullscreen {
+    padding-top: 28px;
+    header {
+      display: none;
+    }
+    .z-notice-fullscreen {
+      display: block;
+      width: 100vw;
+      height: 28px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      .z-fmt-alts {
+        height: 28px;
+        width: 100% !important;
+        position: initial;
+        .alert {
+          height: 28px;
+          line-height: 28px;
+          border: none;
+          border-radius: 0;
+          text-align: left;
+          padding-left: 86px;
+          .alt-tt {
+            left: 15px !important;
+          }
+        }
+      }
+    }
+    #zjs-editors {
+      padding: 0;
+      height: calc(100vh - 22px) !important;
+      .zjs-editor-item {
+        .panel {
+          height: calc(100vh - 22px) !important;
+        }
+      }
+    }
+    #zjs-diff-editor {
+      width: 100vw !important;
+    }
+  }
+  .z-notice-fullscreen {
+    display: none;
+  }
   .z-op-icon {
     cursor: pointer;
     &:hover {

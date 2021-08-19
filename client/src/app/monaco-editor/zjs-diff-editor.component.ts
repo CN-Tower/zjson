@@ -22,6 +22,7 @@ export class ZjsDiffEditorComponent implements OnInit, AfterViewInit, OnDestroy 
   }
   @Input() formated: string;
   @Input() sourcest: string;
+  @Input() fullscreen: boolean;
   @Output() closePanel: EventEmitter<any> = new EventEmitter();
 
   public isDifMax: boolean = false;
@@ -151,7 +152,7 @@ export class ZjsDiffEditorComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   resizeEditor = () => {
-    $('#zjs-diff-editor .panel').width($(win).width() - 42);
+    $('#zjs-diff-editor .panel').width($(win).width() - (this.fullscreen ? 0 : 42));
     if (this.diffEditor) this.diffEditor.layout();
     if (this.originalEditor && this.modifiedEditor) {
       this.originalEditor.layout();
