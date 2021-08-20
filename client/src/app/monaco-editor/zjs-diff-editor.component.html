@@ -10,7 +10,7 @@
           <i class="fa fa-pencil"></i>&nbsp;{{'edit' | translate}}
         </button>
         <!-- <span *ngIf="isShowSource" class="z-ico-hd" (click)="isShowSource = false; initDiffEditor()">
-          <i class="fa fa-check z-op-icon" tooltip="{{!isDifMax ? ('jsonCompare' | translate) : ''}}"></i>
+          <i class="fa fa-check z-op-icon" tooltip="{{!isDifMax ? ('fileCompare' | translate) : ''}}"></i>
         </span>
         <span *ngIf="!isShowSource" class="z-ico-hd" (click)="initEditEditors()">
           <i class="fa fa-pencil z-op-icon" tooltip="{{!isDifMax ? ('editCompare' | translate) : ''}}"></i>
@@ -42,7 +42,7 @@
         </span>
       </div>
       <h3 class="panel-title">
-        {{'jsonCompare' | translate}}
+        {{'fileCompare' | translate}}
         <ng-container *ngIf="isLeftFmted">{{'leftSideIsFmt' | translate}}</ng-container>
       </h3>
     </div>
@@ -59,7 +59,7 @@
             <div class="fmted-op" title="{{'format' | translate}}">
               <i class="fa fa-retweet fr" (click)="doFormateCode('original')"></i>
             </div>
-            <div class="fmted-op" title="{{'jsonCompare' | translate}}">
+            <div class="fmted-op" title="{{'fileCompare' | translate}}">
               <i class="fa fa-check fr" (click)="isShowSource = false; initDiffEditor()"></i>
             </div>
           </div>
@@ -85,7 +85,7 @@
             <div class="fmted-op" title="{{'format' | translate}}">
               <i class="fa fa-retweet fr" (click)="doFormateCode('modified')"></i>
             </div>
-            <div class="fmted-op" title="{{'jsonCompare' | translate}}">
+            <div class="fmted-op" title="{{'fileCompare' | translate}}">
               <i class="fa fa-check fr" (click)="isShowSource = false; initDiffEditor()"></i>
             </div>
           </div>

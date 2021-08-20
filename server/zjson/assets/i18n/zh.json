@@ -37,7 +37,7 @@
     "fmted_": "解析结果",
     "fmted": "结果",
     "fmtToJson": "转为JSON",
-    "jsonCompare": "JSON对比",
+    "fileCompare": "文件对比",
     "editCompare": "编辑对比代码",
     "compareSrcFrom": "对比代码源自...",
     "isStrict": "JSON标准化开关",

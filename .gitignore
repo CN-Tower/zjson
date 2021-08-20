@@ -6,6 +6,9 @@
 /client/out-tsc
 /client/build/package/
 **/package-lock.json
+**/*.dmg
+**/*.msi
+**/*.exe
 
 # dependencies
 /client/node_modules

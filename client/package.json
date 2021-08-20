@@ -17,7 +17,7 @@
     "electron:package:mac": "electron-packager dist zjson --platform=darwin --out=build/package --icon=dist/zjson.ico --overwrite",
     "package:win": "npm run electron:build && npm run electron:package:win && node build/pre-build.js",
     "package:mac": "npm run electron:build && npm run electron:package:mac && node build/pre-build.js && npm run make:dmg",
-    "make:dmg": "electron-installer-dmg build/package/zjson-darwin-x64 zjson-darwin-x64",
+    "make:dmg": "electron-installer-dmg build/package/zjson-darwin-x64/zjson.app zjson-darwin-x64",
     "make:msi": "electron-installer-dmg build/package/zjson-darwin-x64 zjson-darwin-x64"
   },
   "private": true,

@@ -167,26 +167,25 @@
             </div>
             <div *ngIf="!formated" id="z-notice-text" class="zjs-mata-links z-sm-hide no-select">
               <p>{{'zNotice' | translate}}</p>
-              <i class="fa fa-star"></i>&nbsp;<strong>{{'project' | translate}}:</strong>&nbsp;&nbsp;
+              <i class="fa fa-star"></i>&nbsp;&nbsp;<strong>{{'project' | translate}}:</strong>&nbsp;&nbsp;
               <a class="links" target="_blank" href="http://github.com/CN-Tower/zjson" (click)="onLinkClick($event)">
                 http://github.com/CN-Tower/zjson
               </a><br>
-              <i class="fa fa-star"></i>&nbsp;<strong>{{'funclib' | translate}}:</strong>&nbsp;&nbsp;
+              <i class="fa fa-star"></i>&nbsp;&nbsp;<strong>{{'funclib' | translate}}:</strong>&nbsp;&nbsp;
               <a class="links" target="_blank" href="http://github.com/CN-Tower/funclib.js" (click)="onLinkClick($event)">
                 http://github.com/CN-Tower/funclib.js
               </a><br>
               <!--==================== electron ignore sta ====================-->
-              <i class="fa fa-star"></i>&nbsp;<strong>{{'download_' | translate}}(Mac):</strong>&nbsp;&nbsp;
-              <a class="links" target="_blank" href="{{downloadUrl}}/zjson-darwin-x64-v{{version}}.msi">
-                zjson-win32-x64.exe (v{{remoteVersion}})
+              <i class="fa fa-cloud-download"></i>&nbsp;<strong>{{'download_' | translate}}:</strong>&nbsp;&nbsp;
+              <a class="links" target="_blank" href="{{downloadUrl}}/zjson-win32-x64-v{{remoteVersion}}.msi">
+                > zjson-win32-x64-v{{remoteVersion}}.msi (Windows)
               </a><br>
-              <i class="fa fa-star"></i>&nbsp;<strong>{{'download_' | translate}}(Win):</strong>&nbsp;&nbsp;
-              <a class="links" target="_blank" href="{{downloadUrl}}/zjson-darwin-x64-v{{version}}.dmg">
-                zjson-win32-x64.exe (v{{remoteVersion}})
+              &nbsp;&nbsp;<a class="links" style="margin-left: 90px" target="_blank" href="{{downloadUrl}}/zjson-darwin-x64-v{{remoteVersion}}.dmg">
+                > zjson-darwin-x64-v{{remoteVersion}}.dmg (MacOS)
               </a><br>
               <!--==================== electron ignore end ====================-->
               <!--==================== electron enable sta ====================---
-              <i class="fa fa-star"></i>&nbsp;<strong>{{'website' | translate}}:</strong>&nbsp;&nbsp;
+              <i class="fa fa-star"></i>&nbsp;&nbsp;<strong>{{'website' | translate}}:</strong>&nbsp;&nbsp;
               <a class="links" target="_blank" href="http://www.zjson.net" (click)="onLinkClick($event)">
                 http://www.zjson.net
               </a><br>

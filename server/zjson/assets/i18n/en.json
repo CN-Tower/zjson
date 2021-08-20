@@ -37,7 +37,7 @@
     "fmted_": "Formated",
     "fmted": "Fmted",
     "fmtToJson": "Format to JSON",
-    "jsonCompare": "JSON Compare",
+    "fileCompare": "File Compare",
     "editCompare": "Edit Compare",
     "compareSrcFrom": "Compare Src From ...",
     "isStrict": "Standard JSON Switch",
