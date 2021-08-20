@@ -6,6 +6,7 @@ import { DiffType, AlertType, AlertInfo } from './@shared/index';
 export abstract class ZjsApp {
   public isElectronApp: boolean = false;
   public appUrl: string = APP_INFO.appUrl;
+  public downloadUrl: string = APP_INFO.downloadUrl;
   public lang: string;
   public version: string;
   public remoteVersion: string = APP_INFO.version;
