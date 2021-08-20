@@ -6,7 +6,7 @@ const rootPath = path.resolve(__dirname, '../');
 
 const programType = process.argv[2];
 
-if (programType === 'mac') {
+if (programType === 'dmg') {
   const srcPath = path.join(rootPath, 'zjson-darwin-x64.dmg');
   const pkgName = path.join(rootPath, `zjson-darwin-x64-v${pkg.version}.dmg`);
   fn.mv(srcPath, pkgName);
