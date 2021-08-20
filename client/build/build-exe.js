@@ -11,10 +11,16 @@ const pkgPath = path.join(rootPath, pkgName);
 (async () => {
   try {
     await electronInstaller.createWindowsInstaller({
-      appDirectory: 'build/package/zjson-win32-x64',
-      outputDirectory: '.',
+      appDirectory: srcPath,
+      outputDirectory: rootPath,
       authors: 'CN-Tower',
-      exe: pkgName,
+      //exe: pkgName,
+      setupIcon: path.join(srcPath, 'resources/app/zjson.ico'),
+      iconUrl: path.join(srcPath, 'resources/app/zjson.ico'),
+      noMsi: true,
+      setupExe: pkgName,
+      title: 'zjson',
+      description: 'A powerful json formate tool!',
     });
     fn.log(`打包完成: ${fn.chalk(pkgPath, 'blue')}`, '#zjson');
   } catch (e) {
