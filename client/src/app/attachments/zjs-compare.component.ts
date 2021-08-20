@@ -8,7 +8,7 @@ import { SharedBroadcastService, FmtHist } from '../@shared/index';
   template: `
     <span class="z-sm-hide dropdown" #dropdown="bs-dropdown" dropdown>
       <button *ngIf="compareType == 'outer'" dropdownToggle class="btn btn-default btn-xs zjs-compare-btn dropdown-toggle">
-        {{'fileCompare' | translate}}
+        {{'textCompare' | translate}}
       </button>
       <i *ngIf="compareType == 'inner'" dropdownToggle class="fa fa-th-list z-op-icon dropdown-toggle"></i>
       <ul *dropdownMenu class="dropdown-menu" [class.dropdown-menu-right]="compareType == 'inner'">

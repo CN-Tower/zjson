@@ -3,7 +3,6 @@ declare var jQuery: any;
 declare var $: any;
 declare var win: any;
 declare var saveAs: any;
-declare var window: Window;
 declare var module: NodeModule;
 interface NodeModule { id: string; }
 declare var fn: fn.Funclib;

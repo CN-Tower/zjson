@@ -1,9 +1,10 @@
 import { Component, OnInit, AfterViewInit, ViewEncapsulation } from '@angular/core';
 import { TranslateService, TranslationChangeEvent } from '@ngx-translate/core';
-import { AppService } from './app.service';
-import { MonacoEditorService } from './monaco-editor/monaco-eidtor.service';
-import { SharedBroadcastService, EditorModal, DiffType, IgnoreInfo} from './@shared/index';
 import { ZjsApp } from './app.base';
+import { AppService } from './app.service';
+import { ScreenService } from './screen.service';
+import { MonacoEditorService } from './monaco-editor/monaco-eidtor.service';
+import { SharedBroadcastService, EditorModal, DiffType, IgnoreInfo } from './@shared/index';
 
 let editorW: number, sourceW: number, originX: number;
 
@@ -20,7 +21,8 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     public appService: AppService,
     private translate: TranslateService,
     private broadcast: SharedBroadcastService,
-    private editorService: MonacoEditorService
+    private editorService: MonacoEditorService,
+    private screenService: ScreenService,
   ) {
     super(appService);
     const lang = this.appService.getAppLang() || translate.getBrowserLang();
@@ -201,8 +203,8 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
         panel = $('#zjs-format .panel')[0];
       }
     });
-    fn.fullScreen(panel, () => {
-      this.fullScreenEvent = fn.fullScreenChange(() => {
+    this.screenService.fullScreen(panel, () => {
+      this.fullScreenEvent = this.screenService.fullScreenChange(() => {
         this.minimalPanel();
         this.fullScreenEvent.remove();
       });
@@ -228,7 +230,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
    * 最小化窗口
    * =================================*/
   minimalPanel(type?: 'src'|'fmt') {
-    fn.exitFullScreen(() => this.fullScreenEvent.remove());
+    this.screenService.exitFullScreen(() => this.fullScreenEvent.remove());
     this.isSrcMax = false;
     this.isFmtMax = false;
     this.maxSrcSize = null;

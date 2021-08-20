@@ -5,6 +5,7 @@ import { Configs } from '../formatter/formatter.conf';
 import { Formatter } from '../formatter/formatter.core';
 import { TranslateService } from '@ngx-translate/core';
 import { MonacoEditorService } from './monaco-eidtor.service';
+import { ScreenService } from '../screen.service';
 
 let editorW: number, sourceW: number, originX: number;
 
@@ -66,7 +67,8 @@ export class ZjsDiffEditorComponent implements OnInit, AfterViewInit, OnDestroy 
     private appService: AppService,
     private translate: TranslateService,
     private broadcast: SharedBroadcastService,
-    private editorService: MonacoEditorService
+    private editorService: MonacoEditorService,
+    private screenService: ScreenService,
   ) { }
 
   ngOnInit() {
@@ -338,8 +340,8 @@ export class ZjsDiffEditorComponent implements OnInit, AfterViewInit, OnDestroy 
   maximalPanel() {
     const panel = $('#zjs-diff-editor .panel')[0];
     this.isDifMax = true;
-    fn.fullScreen(panel, () => {
-      this.fullScreenEvent = fn.fullScreenChange(() => {
+    this.screenService.fullScreen(panel, () => {
+      this.fullScreenEvent = this.screenService.fullScreenChange(() => {
         this.minimalPanel();
         this.fullScreenEvent.remove();
       });
@@ -347,7 +349,7 @@ export class ZjsDiffEditorComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   minimalPanel() {
-    fn.exitFullScreen(() => this.fullScreenEvent.remove());
+    this.screenService.exitFullScreen(() => this.fullScreenEvent.remove());
     this.isDifMax = false;
   }
 
