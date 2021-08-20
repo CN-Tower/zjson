@@ -8,7 +8,7 @@ export const APP_INFO = {
   version: '5.1.1',
   updateTime: '2021-08-20',
   appUrl: 'https://www.zjson.net',
-  downloadUrl: 'https://www.zjson.net/download/'
+  downloadUrl: 'https://www.zjson.net/download'
 };
 
 export const APP_THEMES: string[] = [
