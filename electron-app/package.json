@@ -4,6 +4,7 @@
   "license": "MIT",
   "main": "main.js",
   "dependencies": {
+    "funclib": "^6.0.5",
     "node-fetch": "^2.3.0"
   }
 }
