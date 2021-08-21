@@ -14,7 +14,6 @@ let editorW: number, sourceW: number, originX: number;
   styleUrls: ['./app.component.less', './@shared/theme.less'],
   encapsulation: ViewEncapsulation.None
 })
-
 export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
 
   constructor(
