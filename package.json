@@ -20,7 +20,7 @@
     "package:dmg": "electron-installer-dmg package/zjson-darwin-x64/zjson.app package/zjson-darwin-x64 && node scripts/rename.js dmg",
     "package:exe": "node scripts/build-exe.js && node scripts/rename.js exe",
     "preview": "serve build",
-    "clear": "node scripts/clear.js all"
+    "clear": "node scripts/clear.js"
   },
   "private": true,
   "dependencies": {
