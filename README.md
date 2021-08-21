@@ -1,7 +1,7 @@
 # 转杰森 | ZJSON
 > 全力打造最好用的json格式化工具，欢迎一起来玩！
 
-### 访问地址
+### 一、访问地址
 - WebSite: https://www.zjson.net
 - FuncLib: https://www.funclib.net
 - GitHub: &nbsp;https://github.com/CN-Tower/zjson
@@ -12,7 +12,7 @@
 #### 对比界面
 ![](/zjson-diff.png)
 
-### 简单介绍
+### 二、简单介绍
 
 转杰森是使用MEAN-STACK ( MongoDB + Express + Angular + NodeJS技术栈 ) 开发的一个JSON格式化和编辑工具，功能丰富强大、界面简洁美观，还有很多高级特性：
 
@@ -30,127 +30,160 @@
 
 相比其它在线格式化工具，如：bejson.com和json.cn等，转杰森界面更加专业、功能更加实用，绝对是开发和测试的好工具。
 
-
-欢迎各位大虾一起来玩，Star、Fork或提Issue都是极好的！
-
 ![](/mean.png)
 
-### 一起来玩
-```
-# 1、下载代码
-$ git clone http://github.com/CN-Tower/zjson.git         # Github
-$ git clone http://gitlab.zte.com.cn/CN-Tower/zjson.git  # Gitlab
+### 三、运行项目
 
-# 2、安装或解压node_modules
-$ cd zjson/client
-$ npm install
-
-# 3、Start
-$ npm start
-
-# 4、Build
-$ npm run update
+#### 开发启动
+```bash
+npm start
 ```
 
-### 项目结构
+#### 项目打包
+```bash
+npm run build
 ```
-zjson
-├── client                              
-│   ├── node_modules/                   
-│   ├── src                             
-│   │   ├── app                         
-│   │   │   ├── app-config
-│   │   │   │   ├── config-items
-│   │   │   │   │   ├── config-indent.component.ts
-│   │   │   │   │   ├── config-lang.component.ts
-│   │   │   │   │   ├── config-quote.component.ts
-│   │   │   │   │   └── config-theme.component.ts
-│   │   │   │   ├── app-config.component.html
-│   │   │   │   ├── app-config.component.less
-│   │   │   │   ├── app-config.component.ts
-│   │   │   │   └── index.ts
-│   │   │   ├── attachments
-│   │   │   │   ├── index.ts
-│   │   │   │   ├── zjs-attachment.ts
-│   │   │   │   ├── zjs-compare.component.ts
-│   │   │   │   ├── zjs-hint.component.ts
-│   │   │   │   ├── zjs-hist.component.ts
-│   │   │   │   ├── zjs-info.component.ts
-│   │   │   │   ├── zjs-loading.component.ts
-│   │   │   │   ├── zjs-notice.component.ts
-│   │   │   │   ├── zjs-title.component.ts
-│   │   │   │   └── zjs-update.component.ts
-│   │   │   ├── formatter       
-│   │   │   │   ├── formatter.conf.ts
-│   │   │   │   ├── formatter.core.ts
-│   │   │   │   └── formatter.help.ts
-│   │   │   ├── monaco-editor        
-│   │   │   │   ├── index.ts
-│   │   │   │   ├── monaco-diff-editor.component.ts
-│   │   │   │   ├── monaco-editor.base.ts
-│   │   │   │   ├── monaco-editor.component.ts
-│   │   │   │   ├── monaco-editor.themes.ts
-│   │   │   │   ├── zjs-diff-editor.component.html
-│   │   │   │   ├── zjs-diff-editor.component.less
-│   │   │   │   └── zjs-diff-editor.component.ts
-│   │   │   ├── shared
-│   │   │   │   ├── index.ts
-│   │   │   │   ├── shared-broadcast.service.ts
-│   │   │   │   ├── shared-interface.ts
-│   │   │   │   ├── shared-style.less
-│   │   │   │   └── theme.less
-│   │   │   ├── app.component.class  
-│   │   │   ├── app.component.html   
-│   │   │   ├── app.component.less   
-│   │   │   ├── app.component.spec.ts
-│   │   │   ├── app.component.ts     
-│   │   │   ├── app.modules.ts       
-│   │   │   └── app.service.ts       
-│   │   ├── assets                  
-│   │   │   ├── css                 
-│   │   │   │   ├── animate.css     
-│   │   │   │   └── loading.css     
-│   │   │   ├── i18n                
-│   │   │   │   ├── en.json         
-│   │   │   │   └── zh.json         
-│   │   │   ├── lib 
-│   │   │   │   ├── monaco-editor/  
-│   │   │   │   ├── bootstrap.min.js  
-│   │   │   │   ├── FileSaver.js   
-│   │   │   │   ├── funclib.min.js
-│   │   │   │   └── jquery.min.js                 
-│   │   │   └── img/  
-│   │   ├── favicon.ico             
-│   │   ├── index.html              
-│   │   ├── main.ts                 
-│   │   ├── styles.css              
-│   │   ├── typings.d.ts            
-│   │   └── ...                     
-│   ├── tools                       
-│   │   └── update-zjson.js         
-│   ├── package.json                
-│   ├── angular.json                
-│   ├── proxy.conf.json             
-│   ├── README.md                   
-│   └── ...                         
-├── server                      
-│   ├── node_modules/           
-│   ├── views/                  
-│   ├── zjson/                  
-│   ├── bin                     
-│   │   └── www                 
-│   ├── routes                  
-│   │   ├── api.js              
-│   │   └── index.js            
-│   ├── work                    
-│   │   └── visits-count.work.js
-│   ├── app.js                  
-│   └── package.json            
-├── .editorconfig               
-├── .gitignore                  
-├── Dockerfile                  
-├── nginx.conf                  
-├── zjson.sh                    
-├── README.md                   
-└── ...                         
+
+#### 应用程序
+Windows
+```bash
+npm run package:win
+```
+MacOS
+```bash
+npm run package:mac
+```
+
+### 四、项目结构
+```
+zjson ( Directories: 82, Files: 181 )
+ ├─ e2e                                  # 端到端测试文件
+ │ ├─ src
+ │ │ ├─ app.e2e-spec.ts
+ │ │ └─ app.po.ts
+ │ └─ tsconfig.e2e.json
+ ├─ electron-app                         # Electron配置文件
+ │ ├─ index.html
+ │ ├─ main.js
+ │ ├─ package.json
+ │ ├─ renderer.js
+ │ ├─ zjson.icns
+ │ └─ zjson.ico
+ ├─ scripts                              # 脚本目录
+ │ ├─ build.js
+ │ ├─ build-exe.js
+ │ ├─ build-msi.js
+ │ ├─ clear.js
+ │ ├─ electron.conf.js
+ │ ├─ prepare.js
+ │ └─ rename.js
+ ├─ src                                  # 项目主目录
+ │ ├─ app
+ │ │ ├─ @shared
+ │ │ │ ├─ index.ts
+ │ │ │ ├─ shared-broadcast.service.ts
+ │ │ │ ├─ shared-interface.ts
+ │ │ │ ├─ shared-styles.less
+ │ │ │ └─ theme.less
+ │ │ ├─ app-config
+ │ │ │ ├─ config-items
+ │ │ │ │ ├─ config-indent.component.ts
+ │ │ │ │ ├─ config-lang.component.ts
+ │ │ │ │ ├─ config-quote.component.ts
+ │ │ │ │ └─ config-theme.component.ts
+ │ │ │ ├─ app-config.component.html
+ │ │ │ ├─ app-config.component.less
+ │ │ │ ├─ app-config.component.ts
+ │ │ │ └─ index.ts
+ │ │ ├─ attachments
+ │ │ │ ├─ index.ts
+ │ │ │ ├─ zjs-attachments.less
+ │ │ │ ├─ zjs-compare.component.ts
+ │ │ │ ├─ zjs-hint.component.ts
+ │ │ │ ├─ zjs-hist.component.ts
+ │ │ │ ├─ zjs-info.component.ts
+ │ │ │ ├─ zjs-loading.component.ts
+ │ │ │ ├─ zjs-notice.component.ts
+ │ │ │ ├─ zjs-title.component.ts
+ │ │ │ └─ zjs-update.component.ts
+ │ │ ├─ formatter
+ │ │ │ ├─ formatter.conf.ts
+ │ │ │ ├─ formatter.core.ts
+ │ │ │ └─ formatter.help.ts
+ │ │ ├─ monaco-editor
+ │ │ │ ├─ index.ts
+ │ │ │ ├─ monaco-diff-editor.component.ts
+ │ │ │ ├─ monaco-editor.base.ts
+ │ │ │ ├─ monaco-editor.component.ts
+ │ │ │ ├─ monaco-editor.themes.ts
+ │ │ │ ├─ monaco-eidtor.service.ts
+ │ │ │ ├─ zjs-diff-editor.component.html
+ │ │ │ ├─ zjs-diff-editor.component.less
+ │ │ │ └─ zjs-diff-editor.component.ts
+ │ │ ├─ zjson-panel
+ │ │ │ ├─ zjson-panel.component.css
+ │ │ │ ├─ zjson-panel.component.html
+ │ │ │ └─ zjson-panel.component.ts
+ │ │ ├─ app.base.ts
+ │ │ ├─ app.component.html
+ │ │ ├─ app.component.less
+ │ │ ├─ app.component.spec.ts
+ │ │ ├─ app.component.ts
+ │ │ ├─ app.module.ts
+ │ │ ├─ app.service.ts
+ │ │ └─ screen.service.ts
+ │ ├─ assets
+ │ │ ├─ css
+ │ │ │ └─ loading.css
+ │ │ ├─ i18n
+ │ │ │ ├─ en.json
+ │ │ │ └─ zh.json
+ │ │ ├─ img
+ │ │ │ ├─ chrome.png
+ │ │ │ ├─ firefox.png
+ │ │ │ └─ mean_stack.jpg
+ │ │ └─ lib
+ │ │   ├─ font-awesome/
+ │ │   ├─ monaco-editor
+ │ │   │ └─ vs
+ │ │   │   ├─ base/
+ │ │   │   ├─ basic-languages/
+ │ │   │   ├─ editor/
+ │ │   │   ├─ language/
+ │ │   │   └─ loader.js
+ │ │   ├─ FileSaver.js
+ │ │   ├─ animate.min.css
+ │ │   ├─ bootstrap.min.css
+ │ │   ├─ bootstrap.min.js
+ │ │   ├─ funclib.min.js
+ │ │   └─ jquery.min.js
+ │ ├─ environments
+ │ │ ├─ environment.prod.ts
+ │ │ └─ environment.ts
+ │ ├─ .DS_Store
+ │ ├─ browserslist
+ │ ├─ favicon.ico
+ │ ├─ index.html
+ │ ├─ karma.conf.js
+ │ ├─ main.ts
+ │ ├─ polyfills.ts
+ │ ├─ styles.less
+ │ ├─ test.ts
+ │ ├─ tsconfig.app.json
+ │ ├─ tsconfig.spec.json
+ │ ├─ tslint.json
+ │ └─ typings.d.ts
+ ├─ .DS_Store
+ ├─ .editorconfig
+ ├─ .gitignore
+ ├─ README.md
+ ├─ RELEASES
+ ├─ angular.json
+ ├─ mean.png
+ ├─ package.json
+ ├─ proxy.conf.json
+ ├─ tsconfig.json
+ ├─ tslint.json
+ ├─ zjson-diff.png
+ └─ zjson.png
 ```

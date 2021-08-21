@@ -1,18 +1,18 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # compiled output
-/client/dist
-/client/tmp
-/client/out-tsc
-/client/build/package/
-**/package-lock.json
-**/*.dmg
-**/*.msi
-**/*.exe
+dist
+tmp
+out-tsc
+package/
+package-lock.json
+*.dmg
+*.msi
+*.exe
+*.nupkg
 
 # dependencies
-/client/node_modules
-/server/node_modules
+node_modules
 
 # IDEs and editors
 /.idea
@@ -35,18 +35,15 @@
 /connect.lock
 /coverage
 /libpeerconnection.log
-/client/npm-debug.log
-/server/npm-debug.log
 npm-debug.log
-/client/testem.log
-/client/typings
+testem.log
 
 # e2e
-/client/e2e/*.js
-/client/e2e/*.map
+e2e/*.js
+e2e/*.map
 
 # System Files
 .DS_Store
 Thumbs.db
 
-server/visit-count.txt
+visit-count.txt
