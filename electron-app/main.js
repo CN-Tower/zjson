@@ -36,7 +36,8 @@ function createWindow () {
 
   // 开启开发者工具
   // mainWindow.webContents.openDevTools();
-
+  
+  mainWindow.setMenu(null);
   mainWindow.loadFile('index.html');
   mainWindow.on('closed', () => mainWindow = null);
 }
