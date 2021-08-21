@@ -16,9 +16,10 @@
     "electron:dist": "electron dist",
     "electron:exe": "electron-packager dist zjson --platform=win32 --out=package --icon=dist/zjson.ico --overwrite",
     "electron:dmg": "electron-packager dist zjson --platform=darwin --out=package --icon=dist/zjson.ico --overwrite",
-    "package:exe": "node scripts/build-win.js",
+    "package:exe": "node scripts/build-exe.js && node scripts/rename.js exe",
     "package:dmg": "electron-installer-dmg package/zjson-darwin-x64/zjson.app package/zjson-darwin-x64 && node scripts/rename.js dmg",
-    "preview": "serve build"
+    "preview": "serve build",
+    "clear": "node scripts/clear.js all"
   },
   "private": true,
   "dependencies": {

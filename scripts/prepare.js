@@ -84,9 +84,12 @@ const appServicePath = './src/app/app.service.ts';
 fn.wt(
   appServicePath,
   fn.rd(appServicePath)
-    .replace(/version:\s?'(\d{1,3}\.){2}\d{1,3}',/, `version: '${pkg.version}',`)
+    .replace(/version:\s?'(\d{1,3}\.?){3}',/, `version: '${pkg.version}',`)
     .replace(/updateTime:\s?'\d{4}(-\d{2}){2}',/, `updateTime: '${fn.fmtDate('yyyy-MM-dd', new Date())}',`)
   );
+
+const electronPkg = './electron-app/package.json';
+fn.wt(electronPkg, fn.rd(electronPkg).replace(/"version":\s?"(\d{1,3}\.?){3}",/, `"version": "${pkg.version}",`));
 
 fn.rm('dist/');
 
