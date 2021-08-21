@@ -1,5 +1,5 @@
 const {app, BrowserWindow, ipcMain} = require('electron')
-// const request = require("request");
+// const fetch = require('node-fetch');
 // const fn = require('funclib');
 // const fs = require('fs');
 // const path  = require('path');
@@ -52,7 +52,7 @@ ipcMain.on('maxWindow', () => {
 //   fn.rm(tmpPath);
 //   fn.mk(tmpPath);
 //   const stream = fs.createWriteStream(path.join(tmpPath, 'zjson.zip'));
-//   request(updateUrl).pipe(stream).on("close", function (err) {
+//   fetch(updateUrl).pipe(stream).on("close", function (err) {
 //     if (err) mainWindow.webContents.send('refresh', true);
 //   });
 //   fn.rm(path.join(root, 'zjson.js'));
