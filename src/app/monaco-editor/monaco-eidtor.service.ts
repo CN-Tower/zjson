@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { AppService } from '../app.service';
-import { SharedBroadcastService } from '../@shared/shared-broadcast.service';
+import { MessageService } from '../@shared/message.service';
 
 @Injectable()
 export class MonacoEditorService {
   constructor (
     private appService: AppService,
-    private broadcast: SharedBroadcastService
+    private messageService: MessageService
   ) { }
 
   updateEditorTheme(...minimapEditors: any[]) {
@@ -24,7 +24,7 @@ export class MonacoEditorService {
     editors.forEach(editor => {
       if (editor) {
         const model = editor.getModel();
-        model.updateOptions({tabSize: this.broadcast.tabsize});
+        model.updateOptions({tabSize: this.messageService.tabsize});
       }
     });
   }

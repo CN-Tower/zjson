@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { AppService } from './app.service';
-import { SharedBroadcastService } from './@shared/index';
+import { MessageService } from './@shared/index';
 import { BsDropdownModule, ModalModule, TooltipModule } from 'ngx-bootstrap';
 import {
   MonacoEditorComponent, MonacoDiffEditorComponent, MonacoEditorService, ZjsDiffEditorComponent
@@ -47,7 +47,7 @@ export function TranslateFactory(http: HttpClient) {
     ZjsLoadingComponent, ZjsUpdateComponent, ZjsCompareComponent, ZjsonPanelComponent
   ],
   providers: [
-    AppService, MonacoEditorService, SharedBroadcastService, ScreenService,
+    AppService, MonacoEditorService, MessageService, ScreenService,
   ],
   bootstrap: [
     AppComponent

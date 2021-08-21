@@ -1,18 +1,18 @@
 import { AfterViewInit } from '@angular/core';
-import { SharedBroadcastService } from '../@shared';
+import { MessageService } from '../@shared';
 import { MONACO_THEMES } from './monaco-editor.themes';
 
 export class MonacoEditorBase implements AfterViewInit {
 
-  constructor(public broadcast: SharedBroadcastService) {}
+  constructor(public messageService: MessageService) {}
 
   ngAfterViewInit() {
-    if (this.broadcast.isEditorLoaded) {
+    if (this.messageService.isEditorLoaded) {
       const editor = fn.get(win, 'monaco/editor');
-      if (editor) this.broadcast.editorReadyUp();
+      if (editor) this.messageService.editorReadyUp();
     } else {
-      if (this.broadcast.isEditorLoading) return;
-      this.broadcast.isEditorLoading = true;
+      if (this.messageService.isEditorLoading) return;
+      this.messageService.isEditorLoading = true;
       /**==================== electron ignore sta ====================*/
       const loaderScript: HTMLScriptElement = document.createElement('script');
       loaderScript.type = 'text/javascript';
@@ -53,9 +53,9 @@ export class MonacoEditorBase implements AfterViewInit {
       // -------------------------------------------------------------
         win.require(['vs/editor/editor.main'], () => {
           this.defineEditorThemes();
-          this.broadcast.editorReadyUp();
-          this.broadcast.isEditorLoaded = true;
-          this.broadcast.isEditorLoading = false;
+          this.messageService.editorReadyUp();
+          this.messageService.isEditorLoaded = true;
+          this.messageService.isEditorLoading = false;
         });
       });
       document.body.appendChild(loaderScript);
@@ -63,9 +63,9 @@ export class MonacoEditorBase implements AfterViewInit {
       /**==================== electron enable sta ======================
       fn.defer(() => win.loadMonacoEditor(() => {
         this.defineEditorThemes();
-        this.broadcast.editorReadyUp();
-        this.broadcast.isEditorLoaded = true;
-        this.broadcast.isEditorLoading = false;
+        this.messageService.editorReadyUp();
+        this.messageService.isEditorLoaded = true;
+        this.messageService.isEditorLoading = false;
       }));
       ======================= electron enable end ====================*/
     }

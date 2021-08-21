@@ -1,2 +1,2 @@
-export * from './shared-broadcast.service';
-export * from './shared-interface';
+export * from './message.service';
+export * from './interfaces';

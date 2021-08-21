@@ -4,7 +4,7 @@ import {
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MonacoEditorBase } from './monaco-editor.base';
-import { SharedBroadcastService } from '../@shared/shared-broadcast.service';
+import { MessageService } from '../@shared/message.service';
 
 @Component({
   selector: 'monaco-editor',
@@ -38,15 +38,15 @@ export class MonacoEditorComponent extends MonacoEditorBase implements OnInit, O
   registerOnChange = (fn: any) => this.propagateChange = fn;
   registerOnTouched = (fn: any) => this.onTouched = fn;
 
-  constructor(private zone: NgZone, public broadcast: SharedBroadcastService) {
-    super(broadcast);
+  constructor(private zone: NgZone, public messageService: MessageService) {
+    super(messageService);
   }
 
   ngOnInit() {
-    if (this.broadcast.isEditorLoaded) {
+    if (this.messageService.isEditorLoaded) {
       this.initMonacoEditor();
     } else {
-      this.sub = this.broadcast.editorStream.subscribe(() => this.initMonacoEditor());
+      this.sub = this.messageService.editorStream.subscribe(() => this.initMonacoEditor());
     }
   }
 

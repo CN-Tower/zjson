@@ -109,7 +109,7 @@
         "scc": "Success formated {{rowIdx}} lines !",
         "err": "Parse Error, an excessive abnormal Json!"
     },
-    "zNotice": "Dear code friends, zjson.net and funclib.js (a zjson dependency) are open source now. If you are interested, click the links below!",
+    "zNotice": "Dear code friends, zjson.net and format-to-json are open source now. If you are interested, click the links below!",
     "noHist": "No saved record !",
     "saveSuccess": "Save Success !",
     "formatSuccess": "Format Success !",

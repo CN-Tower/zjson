@@ -1,6 +1,6 @@
 import { Component, Input, Output, ViewChild, EventEmitter, ElementRef, OnInit, OnDestroy } from '@angular/core';
 import { MonacoEditorBase } from './monaco-editor.base';
-import { SharedBroadcastService } from '../@shared/shared-broadcast.service';
+import { MessageService } from '../@shared/message.service';
 import { AppService } from '../app.service';
 
 @Component({
@@ -40,8 +40,8 @@ export class MonacoDiffEditorComponent extends MonacoEditorBase implements OnIni
   _modifiedModel: any;
   private _editor: any;
 
-  constructor(private appService: AppService, public broadcast: SharedBroadcastService) {
-    super(broadcast);
+  constructor(private appService: AppService, public messageService: MessageService) {
+    super(messageService);
   }
 
   ngOnInit() {

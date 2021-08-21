@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, OnDestroy } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { AppService } from '../app.service';
-import { SharedBroadcastService, FmtHist } from '../@shared/index';
+import { MessageService, FmtHist } from '../@shared/index';
 
 @Component({
   selector: 'zjs-compare',
@@ -56,7 +56,7 @@ export class ZjsCompareComponent implements OnInit, OnDestroy {
   constructor(
     private appService: AppService,
     private translate: TranslateService,
-    private broadcast: SharedBroadcastService
+    private messageService: MessageService
   ) { }
 
   ngOnInit() {
@@ -64,7 +64,7 @@ export class ZjsCompareComponent implements OnInit, OnDestroy {
       this.fmtHists = this.appService.getFmtHists();
     }
     this.getCompareHists();
-    this.histsSub = this.broadcast.compareHistStream.subscribe(() => this.getCompareHists());
+    this.histsSub = this.messageService.compareHistStream.subscribe(() => this.getCompareHists());
   }
 
   ngOnDestroy() {
@@ -75,7 +75,7 @@ export class ZjsCompareComponent implements OnInit, OnDestroy {
     if (fn.get($e, '/target/tagName') === 'I') {
       this.appService.rmvCompareHists(hist);
       this.getCompareHists();
-      this.broadcast.showHint({
+      this.messageService.showHint({
         hintType: 'success',
         hintMsg: this.translate.instant('removeSavedSuccess')
       });

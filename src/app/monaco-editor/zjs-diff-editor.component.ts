@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit, AfterViewInit, OnDestroy} from '@angular/core';
 import { AppService } from '../app.service';
-import { SharedBroadcastService, DiffType, FmtHist, EditorOptions, DiffEditors } from '../@shared/index';
+import { MessageService, DiffType, FmtHist, EditorOptions, DiffEditors } from '../@shared/index';
 import { Configs } from '../formatter/formatter.conf';
 import { Formatter } from '../formatter/formatter.core';
 import { TranslateService } from '@ngx-translate/core';
@@ -66,7 +66,7 @@ export class ZjsDiffEditorComponent implements OnInit, AfterViewInit, OnDestroy 
   constructor(
     private appService: AppService,
     private translate: TranslateService,
-    private broadcast: SharedBroadcastService,
+    private messageService: MessageService,
     private editorService: MonacoEditorService,
     private screenService: ScreenService,
   ) { }
@@ -79,7 +79,7 @@ export class ZjsDiffEditorComponent implements OnInit, AfterViewInit, OnDestroy 
     }
     this.showDiffChange(this.diffType);
     this.getCompareHists();
-    this.eidtorSub = this.broadcast.editorOptStream.subscribe((eidtorOpt: EditorOptions) => {
+    this.eidtorSub = this.messageService.editorOptStream.subscribe((eidtorOpt: EditorOptions) => {
       this.updateEditorOptions(eidtorOpt);
     });
   }
@@ -189,7 +189,7 @@ export class ZjsDiffEditorComponent implements OnInit, AfterViewInit, OnDestroy 
   afterDiffEditorInit(editorInfo: any) {
     this.diffEditor = editorInfo.editor;
     this.editorModel = editorInfo.editorModel;
-    this.diffEditor.onDidUpdateDiff(() => this.broadcast.hideLoading());
+    this.diffEditor.onDidUpdateDiff(() => this.messageService.hideLoading());
     this.editorModel.onDidChangeContent(() => {
       this.modifiedCode = this.getModelContent();
     });
@@ -257,7 +257,7 @@ export class ZjsDiffEditorComponent implements OnInit, AfterViewInit, OnDestroy 
   initDiffEditor() {
     if (this.isShowSource) return;
     this.isShowDiffEditor = false;
-    this.broadcast.showLoading(3000);
+    this.messageService.showLoading(3000);
     this.originalModel = { code: this.originalCode };
     this.modifiedModel = { code: this.modifiedCode };
     fn.defer(() => this.isShowDiffEditor = true);
@@ -305,7 +305,7 @@ export class ZjsDiffEditorComponent implements OnInit, AfterViewInit, OnDestroy 
   showOrRmFmtHist($e: any) {
     if (fn.get($e, '/e/target/tagName') === 'I') {
       this.appService.rmvCompareHists($e.hist);
-      this.broadcast.changeCompareHist();
+      this.messageService.changeCompareHist();
       this.getCompareHists();
       this.alertNotice(this.translate.instant('removeSavedSuccess'), 'success');
     } else {
@@ -330,7 +330,7 @@ export class ZjsDiffEditorComponent implements OnInit, AfterViewInit, OnDestroy 
         const histName = this.saveCprTime + ` ( ${appdix} | ${appdix_} )`;
         const hist = {name: histName, ori: this.originalCode, mod: this.modifiedCode};
         this.appService.setCompareHists(hist);
-        this.broadcast.changeCompareHist();
+        this.messageService.changeCompareHist();
         this.getCompareHists();
         this.alertNotice(this.translate.instant('saveSuccess'));
       }
@@ -358,6 +358,6 @@ export class ZjsDiffEditorComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   alertNotice(message: string, type: 'danger'|'success' = 'success') {
-    this.broadcast.showHint({hintMsg: message, hintType: type});
+    this.messageService.showHint({hintMsg: message, hintType: type});
   }
 }

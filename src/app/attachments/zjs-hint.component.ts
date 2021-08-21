@@ -1,6 +1,6 @@
 import { Component} from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { SharedBroadcastService, HintInfo } from '../@shared/index';
+import { MessageService, HintInfo } from '../@shared/index';
 
 @Component({
   selector: 'zjs-hint',
@@ -31,8 +31,8 @@ export class ZjsHintComponent {
   hintMsg: string;
   hintType: string;
 
-  constructor(private broadcast: SharedBroadcastService) {
-    broadcast.hintStream.subscribe((hintInfo: HintInfo) => {
+  constructor(private messageService: MessageService) {
+    messageService.hintStream.subscribe((hintInfo: HintInfo) => {
       this.hintCtrl = 'show';
       this.hintMsg = hintInfo.hintMsg;
       this.hintType = hintInfo.hintType || 'success';

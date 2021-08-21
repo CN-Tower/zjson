@@ -81,9 +81,9 @@ zjson ( Directories: 82, Files: 181 )
  │ ├─ app
  │ │ ├─ @shared
  │ │ │ ├─ index.ts
- │ │ │ ├─ shared-broadcast.service.ts
- │ │ │ ├─ shared-interface.ts
- │ │ │ ├─ shared-styles.less
+ │ │ │ ├─ message.service.ts
+ │ │ │ ├─ interfaces.ts
+ │ │ │ ├─ styles.less
  │ │ │ └─ theme.less
  │ │ ├─ app-config
  │ │ │ ├─ config-items
@@ -160,7 +160,6 @@ zjson ( Directories: 82, Files: 181 )
  │ ├─ environments
  │ │ ├─ environment.prod.ts
  │ │ └─ environment.ts
- │ ├─ .DS_Store
  │ ├─ browserslist
  │ ├─ favicon.ico
  │ ├─ index.html
@@ -173,7 +172,6 @@ zjson ( Directories: 82, Files: 181 )
  │ ├─ tsconfig.spec.json
  │ ├─ tslint.json
  │ └─ typings.d.ts
- ├─ .DS_Store
  ├─ .editorconfig
  ├─ .gitignore
  ├─ README.md

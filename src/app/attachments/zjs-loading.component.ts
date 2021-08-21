@@ -1,5 +1,5 @@
 import { Component, OnInit} from '@angular/core';
-import { SharedBroadcastService } from '../@shared/shared-broadcast.service';
+import { MessageService } from '../@shared/message.service';
 import { style } from '@angular/animations';
 
 @Component({
@@ -23,10 +23,10 @@ import { style } from '@angular/animations';
 })
 export class ZjsLoadingComponent implements OnInit {
 
-  constructor(private broadcast: SharedBroadcastService) { }
+  constructor(private messageService: MessageService) { }
 
   ngOnInit() {
-    this.broadcast.loadingStream.subscribe(isShow => {
+    this.messageService.loadingStream.subscribe(isShow => {
       $('#zjs-loading').css('display', isShow ? 'block' : 'none');
     });
   }

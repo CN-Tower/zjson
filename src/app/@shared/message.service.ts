@@ -1,8 +1,8 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { HintInfo, QuoteInfo, EditorOptions } from './shared-interface';
+import { HintInfo, QuoteInfo, EditorOptions } from './interfaces';
 
 @Injectable()
-export class SharedBroadcastService {
+export class MessageService {
   private loadingEmiter: EventEmitter<boolean> = new EventEmitter;
   private hintEmiter: EventEmitter<any> = new EventEmitter;
   private editorEmiter: EventEmitter<any> = new EventEmitter;

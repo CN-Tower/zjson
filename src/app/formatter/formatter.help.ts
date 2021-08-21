@@ -60,10 +60,10 @@ export class FmtHelp {
   broadcastQuote(that: any, conf: Configs, isNormal?: boolean) {
     let qtIdx = that.appService.getQuoteIdx();
     if (isNormal || conf.isStrict) {
-      that.broadcast.changeQuote({quoteIdx: qtIdx, isNormal: true});
+      that.messageService.changeQuote({quoteIdx: qtIdx, isNormal: true});
     } else {
       if (qtIdx > 2) qtIdx = 1;
-      that.broadcast.changeQuote({quoteIdx: qtIdx, isNormal: false});
+      that.messageService.changeQuote({quoteIdx: qtIdx, isNormal: false});
     }
   }
 

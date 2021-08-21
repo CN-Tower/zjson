@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter} from '@angular/core';
-import { QuoteIdx, QuoteInfo, SharedBroadcastService } from '../../@shared';
+import { QuoteIdx, QuoteInfo, MessageService } from '../../@shared';
 import { AppService } from '../../app.service';
 
 @Component({
@@ -55,8 +55,8 @@ export class ConfigQuoteComponent implements OnInit {
     4: {kQ: '', vQ: '\''}
   };
 
-  constructor(private broadcast: SharedBroadcastService, private appService: AppService) {
-    this.broadcast.quoteStream.subscribe((qtInfo: QuoteInfo) => {
+  constructor(private messageService: MessageService, private appService: AppService) {
+    this.messageService.quoteStream.subscribe((qtInfo: QuoteInfo) => {
       this.changeQuote(qtInfo.quoteIdx);
       if (qtInfo.isNormal !== undefined) this.isNormal = qtInfo.isNormal;
     });

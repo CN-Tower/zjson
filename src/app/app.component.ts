@@ -4,7 +4,7 @@ import { ZjsApp } from './app.base';
 import { AppService } from './app.service';
 import { ScreenService } from './screen.service';
 import { MonacoEditorService } from './monaco-editor/monaco-eidtor.service';
-import { SharedBroadcastService, EditorModal, DiffType, IgnoreInfo } from './@shared/index';
+import { MessageService, EditorModal, DiffType, IgnoreInfo } from './@shared/index';
 
 let editorW: number, sourceW: number, originX: number;
 
@@ -20,7 +20,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
   constructor(
     public appService: AppService,
     private translate: TranslateService,
-    private broadcast: SharedBroadcastService,
+    private messageService: MessageService,
     private editorService: MonacoEditorService,
     private screenService: ScreenService,
   ) {
@@ -57,7 +57,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     this.initUploadEvent();
     this.initOpenDragEvent();
     this.initResizeZconEvent();
-    this.broadcast.showLoading(30000);
+    this.messageService.showLoading(30000);
     this.onWindowResize();
     fn.timeout(500, () => this.onWindowResize());
     fn.defer(() => {
@@ -119,7 +119,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
    * 弹出操作通知
    * =================================*/
   alertNotice(message: string, type: 'danger'|'success' = 'success') {
-    this.broadcast.showHint({hintMsg: message, hintType: type});
+    this.messageService.showHint({hintMsg: message, hintType: type});
   }
 
   /**
@@ -156,17 +156,17 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
       this.appService.setAppTheme(them);
     }
     this.editorService.updateEditorTheme(this.fmtEditor);
-    this.broadcast.changeEditorOpts('theme');
+    this.messageService.changeEditorOpts('theme');
   }
 
   setIsStrict(isStrict: boolean) {
     this.conf.isStrict = isStrict;
     this.appService.setIsStrict(isStrict);
     if (isStrict) {
-      this.broadcast.changeQuote({quoteIdx: 1});
+      this.messageService.changeQuote({quoteIdx: 1});
     } else {
       const qtIdx = this.appService.getQuoteIdx();
-      this.broadcast.changeQuote({quoteIdx: qtIdx});
+      this.messageService.changeQuote({quoteIdx: qtIdx});
     }
     this.doFormate(true);
   }
@@ -641,7 +641,7 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
    * 代码编辑器渲染完成
    * ===================================*/
   afterEditorInit(editor: any, editorName: EditorModal) {
-    this.broadcast.hideLoading();
+    this.messageService.hideLoading();
     fn.match(editorName, {
       'source': () => {
         this.srcEditor = editor;
@@ -666,9 +666,9 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
   updateEditorTabsize() {
     this.doFormate(true);
     if (this.srcEditor && this.fmtEditor) {
-      this.broadcast.tabsize = this.conf.indent;
+      this.messageService.tabsize = this.conf.indent;
       this.editorService.updateEditorTabsize(this.srcEditor, this.fmtEditor);
-      this.broadcast.changeEditorOpts('tabsize');
+      this.messageService.changeEditorOpts('tabsize');
     }
   }
 
@@ -849,13 +849,13 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
     }
     this.sharedLink = '';
     fn.copyText(`${this.appUrl}?sharedId=${this.appService.getUserId()}`);
-    this.broadcast.showLoading(3000);
+    this.messageService.showLoading(3000);
     const success = () => {
-      this.broadcast.hideLoading();
+      this.messageService.hideLoading();
       this.alertNotice(this.translate.instant('_shareSuccess'));
     };
     const error = () => {
-      this.broadcast.hideLoading();
+      this.messageService.hideLoading();
       this.alertNotice(this.translate.instant('_shareJsonError'), 'danger');
     };
     /**==================== electron ignore sta ====================*/
@@ -874,20 +874,20 @@ export class AppComponent extends ZjsApp implements OnInit, AfterViewInit {
       const queryStr = isFromIpt ? $('#search-ipt').val() || '-' : location.href;
       const sharedId = fn.get(fn.parseQueryStr(queryStr), 'sharedId') || '';
       if (sharedId) {
-        this.broadcast.showLoading(3000);
+        this.messageService.showLoading(3000);
         const error = () => {
-          this.broadcast.hideLoading();
+          this.messageService.hideLoading();
           this.alertNotice(this.translate.instant('_getJsonError'), 'danger');
         };
         /**==================== electron ignore sta ====================*/
         this.appService.getSharedJson(sharedId).subscribe(res => {
-          this.broadcast.hideLoading();
+          this.messageService.hideLoading();
           this.sourcest = res.sharedJson;
         }, error);
         /**==================== electron ignore end ====================*/
         /**==================== electron enable sta ======================
         win.electronUtils.getSharedJson(sharedId).then(res => {
-          this.broadcast.hideLoading();
+          this.messageService.hideLoading();
           this.sourcest = res.sharedJson;
           $('#format-btn').click();
         }).catch(error);

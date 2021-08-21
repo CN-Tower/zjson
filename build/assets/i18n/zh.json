@@ -109,7 +109,7 @@
         "scc": "格式化成功，行数：{{rowIdx}}行！",
         "err": "解析出错，过大的非正常Json字符串！"
     },
-    "zNotice": "亲爱的码友们，zjson.net和funclib.js（zjson所依赖的一个函数库）已经开源啦，有兴趣的话就一起来玩吧！",
+    "zNotice": "亲爱的码友们，zjson.net 和 format-to-json 已经开源啦，有兴趣的话就一起来玩吧！",
     "noHist": "没有保存的历史！",
     "saveSuccess": "保存成功！",
     "formatSuccess": "格式化成功！",
