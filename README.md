@@ -47,11 +47,11 @@ npm run build
 #### 应用程序
 Windows
 ```bash
-npm run package:win
+npm run build:exe
 ```
 MacOS
 ```bash
-npm run package:mac
+npm run build:dmg
 ```
 
 ### 四、项目结构

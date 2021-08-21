@@ -30,18 +30,21 @@
     }
   }
 }
-#zjs-info-modal {
-  .modal-title {
-    color: #333333;
-  }
-  .z-info-modal {
-    color: #333333;
-    table tr td{
-      &:nth-child(1) {
-        text-align: right;
-      }
-      &:nth-child(2) {
-        padding-left: 4px;
+.zjs-info-modal-wp {
+  max-width: 380px;
+  #zjs-info-modal {
+    .modal-title {
+      color: #333333;
+    }
+    .z-info-modal {
+      color: #333333;
+      table tr td{
+        &:nth-child(1) {
+          text-align: right;
+        }
+        &:nth-child(2) {
+          padding-left: 4px;
+        }
       }
     }
   }
@@ -94,10 +97,10 @@
     }
     #zjs-editors {
       padding: 0;
-      height: calc(100vh - 22px) !important;
+      height: calc(100vh - 26px) !important;
       .zjs-editor-item {
         .panel {
-          height: calc(100vh - 22px) !important;
+          height: calc(100vh - 26px) !important;
         }
       }
     }
