@@ -6,9 +6,9 @@ import 'rxjs/add/operator/map';
 
 export const APP_INFO = {
   version: '5.1.2',
-  updateTime: '2021-08-21',
+  updateTime: '2021-08-22',
   appUrl: 'https://www.zjson.net',
-  downloadUrl: 'https://www.zjson.net/download',
+  downloadUrl: 'https://cntower.oss-cn-shanghai.aliyuncs.com/zjson',
   i18nVersion: '1.0.1',
 };
 
