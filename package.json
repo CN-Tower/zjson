@@ -15,8 +15,8 @@
     "electron": "node scripts/prepare.js electron && ng build --prod && node scripts/electron.js && electron dist",
     "electron:dist": "electron dist",
     "electron:build": "node scripts/prepare.js electron && ng build --prod && node scripts/electron.js package && node scripts/webpack.config.js",
-    "electron:dmg": "electron-packager dist zjson --platform=darwin --out=package --icon=assets/zjson.icns --overwrite",
-    "electron:exe": "electron-packager dist zjson --platform=win32 --out=package --icon=assets/zjson.ico --overwrite",
+    "electron:dmg": "electron-packager dist zjson --platform=darwin --out=package --icon=electron-app/zjson.icns --overwrite",
+    "electron:exe": "electron-packager dist zjson --platform=win32 --out=package --icon=electron-app/zjson.ico --overwrite",
     "package:dmg": "node scripts/build-dmg.js && node scripts/rename.js dmg",
     "package:exe": "node scripts/build-exe.js && node scripts/rename.js exe",
     "preview": "serve build",
@@ -78,6 +78,7 @@
     "ts-node": "~5.0.1",
     "tslint": "~5.9.1",
     "typescript": "~2.7.2",
+    "webpack": "^4.46.0",
     "webpack5.51.1": "npm:webpack@5.51.1"
   }
 }

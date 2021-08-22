@@ -20,8 +20,8 @@ createDMG(
     out: outPath,
     name: 'zjson-darwin-x64',
     title: 'ZJSON',
-    background: path.join(rootPath, 'assets/dmg_bg.png'),
-    icon: path.join(rootPath, 'assets/zjson.icns'),
+    background: path.join(rootPath, 'electron-app/dmg-bg.png'),
+    icon: path.join(rootPath, 'electron-app/zjson.icns'),
     overwrite: true,
   },
   (err) => {
