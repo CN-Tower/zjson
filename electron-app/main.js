@@ -1,4 +1,5 @@
-const {app, BrowserWindow, ipcMain} = require('electron')
+const {app, BrowserWindow, ipcMain} = require('electron');
+const { ebtMain } = require('electron-baidu-tongji');
 // const fetch = require('node-fetch');
 // const fn = require('funclib');
 // const fs = require('fs');
@@ -48,6 +49,8 @@ ipcMain.on('minWindow', () => {
 ipcMain.on('maxWindow', () => {
  if (mainWindow) mainWindow.maximize();
 });
+
+ebtMain(ipcMain);
 
 // function update() {
 //   fn.rm(tmpPath);

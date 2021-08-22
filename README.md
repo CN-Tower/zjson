@@ -9,9 +9,9 @@
 - Algorithm: https://github.com/CN-Tower/format-to-json
 
 #### 主页界面
-![](/zjson.png)
+![](/assets/zjson.png)
 #### 对比界面
-![](/zjson-diff.png)
+![](/assets/zjson-diff.png)
 
 ### 二、简单介绍
 
@@ -31,7 +31,7 @@
 
 相比其它在线格式化工具，如：bejson.com和json.cn等，转杰森界面更加专业、功能更加实用，绝对是开发和测试的好工具。
 
-![](/mean.jpg)
+![](/assets/mean_stack.jpg)
 
 ### 三、运行项目
 

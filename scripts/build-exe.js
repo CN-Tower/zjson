@@ -19,8 +19,8 @@ files.forEach(f => fn.rm(f));
     name: 'zjson',
     productName: 'zjson',
     exe: 'zjson.exe',
-    icon: path.join(srcPath, 'resources/app/zjson.ico'),
-    iconNuget: path.join(srcPath, 'resources/app/zjson.ico'),
+    icon: path.join(rootPath, 'assets/zjson.ico'),
+    iconNuget: path.join(rootPath, 'assets/zjson.ico'),
     homepage: 'https://www.zjson.net',
     description: 'A powerful json formate tool!',
   });

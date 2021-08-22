@@ -12,12 +12,12 @@
     "build:dmg": "node scripts/clear.js dmg && npm run electron:build && npm run electron:dmg && node scripts/prepare.js && npm run package:dmg",
     "build:exe": "node scripts/clear.js exe && npm run electron:build && npm run electron:exe && node scripts/prepare.js",
     "build:win": "node scripts/clear.js exe && npm run electron:build && npm run electron:exe && node scripts/prepare.js && npm run package:exe",
-    "electron": "node scripts/prepare.js electron && ng build --prod && node scripts/electron.conf.js && electron dist",
-    "electron:build": "node scripts/prepare.js electron && ng build --prod && node scripts/electron.conf.js package",
+    "electron": "node scripts/prepare.js electron && ng build --prod && node scripts/electron.js && electron dist",
     "electron:dist": "electron dist",
-    "electron:dmg": "electron-packager dist zjson --platform=darwin --out=package --icon=dist/zjson.icns --overwrite",
-    "electron:exe": "electron-packager dist zjson --platform=win32 --out=package --icon=dist/zjson.ico --overwrite",
-    "package:dmg": "electron-installer-dmg package/zjson-darwin-x64/zjson.app package/zjson-darwin-x64 && node scripts/rename.js dmg",
+    "electron:build": "node scripts/prepare.js electron && ng build --prod && node scripts/electron.js package && node scripts/webpack.config.js",
+    "electron:dmg": "electron-packager dist zjson --platform=darwin --out=package --icon=assets/zjson.icns --overwrite",
+    "electron:exe": "electron-packager dist zjson --platform=win32 --out=package --icon=assets/zjson.ico --overwrite",
+    "package:dmg": "node scripts/build-dmg.js && node scripts/rename.js dmg",
     "package:exe": "node scripts/build-exe.js && node scripts/rename.js exe",
     "preview": "serve build",
     "clear": "node scripts/clear.js"
@@ -37,11 +37,13 @@
     "@ngx-translate/http-loader": "^3.0.1",
     "bootstrap": "^3.3.7",
     "core-js": "^2.5.4",
+    "electron-baidu-tongji": "^1.0.5",
     "font-awesome": "^4.7.0",
     "funclib": "^6.0.5",
     "jquery": "^3.3.1",
     "monaco-editor": "^0.14.3",
     "ngx-bootstrap": "^3.0.1",
+    "node-fetch": "^2.6.1",
     "request": "^2.88.0",
     "rxjs": "6.0.0",
     "rxjs-compat": "6.1.0",
@@ -76,6 +78,6 @@
     "ts-node": "~5.0.1",
     "tslint": "~5.9.1",
     "typescript": "~2.7.2",
-    "value-looker": "^2.1.2"
+    "webpack5.51.1": "npm:webpack@5.51.1"
   }
 }

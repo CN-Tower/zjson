@@ -2,7 +2,7 @@ const { ipcRenderer, shell } = require('electron');
 const fetch = require('node-fetch');
 const package = require('./package.json');
 
-const prefix = 'https://www.zjson.net'
+const prefix = 'https://www.zjson.net';
 
 window.electronUtils = {
   /**

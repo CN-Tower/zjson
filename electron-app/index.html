@@ -16,13 +16,9 @@
 
   <!-- 百度统计 -->
   <script>
-    var _hmt = _hmt || [];
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "https://hm.baidu.com/hm.js?d3aa7f1c94348134747346fd79bc79ee";
-      var s = document.getElementsByTagName("script")[0]; 
-      s.parentNode.insertBefore(hm, s);
-    })();
+    const { ipcRenderer } = require('electron');
+    const { ebtRenderer } = require('electron-baidu-tongji');
+    ebtRenderer(ipcRenderer, '17128298');
   </script>   
 
   <!-- Global site tag (gtag.js) - Google Analytics -->

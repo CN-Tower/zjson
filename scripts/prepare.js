@@ -46,7 +46,6 @@ const tsPaths = [
 const elPaths = [
   'src/app/app.component.html'
 ];
-
 tsPaths.forEach(tsPath => doElectronReplace('ts', tsPath));
 elPaths.forEach(elPath => doElectronReplace('el', elPath));
 

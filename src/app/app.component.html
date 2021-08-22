@@ -127,7 +127,7 @@
                 <i class="fa fa-window-maximize z-op-icon" tooltip="{{'maximal' | translate}}"></i>
               </span>
               <span *ngIf="fullscreen" (click)="toggleFullscreen(false)">
-                <i class="fa fa-window-restore z-op-icon" tooltip="{{'minimal' | translate}}"></i>
+                <i class="fa fa-window-restore z-op-icon" tooltip="{{'minimal' | translate}}" placement="left"></i>
               </span>
             </ng-container>
             <ng-container *ngIf="!isElectronApp">

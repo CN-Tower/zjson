@@ -5,14 +5,15 @@ dist
 tmp
 out-tsc
 package/
-package-lock.json
 *.dmg
 *.msi
 *.exe
 *.nupkg
 
 # dependencies
-/node_modules
+node_modules
+package-lock.json
+yarn-lock.json
 
 # IDEs and editors
 /.idea
