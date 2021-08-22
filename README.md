@@ -5,7 +5,8 @@
 - WebSite: https://www.zjson.net
 - FuncLib: https://www.funclib.net
 - GitHub: &nbsp;https://github.com/CN-Tower/zjson
-- GitHub: &nbsp;https://github.com/CN-Tower/funclib.js
+- GitHub: &nbsp;https://github.com/CN-Tower/funclib
+- Algorithm: https://github.com/CN-Tower/format-to-json
 
 #### 主页界面
 ![](/zjson.png)
