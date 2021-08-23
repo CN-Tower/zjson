@@ -16,7 +16,7 @@
     "electron:dist": "electron dist",
     "electron:build": "node scripts/prepare.js electron && ng build --prod && node scripts/electron.js package && node scripts/webpack.config.js",
     "electron:dmg": "electron-packager dist zjson --platform=darwin --arch=x64 --out=package --icon=electron-app/zjson.icns --overwrite",
-    "electron:exe": "electron-packager dist zjson --platform=win32 --arch==x64 --out=package --icon=electron-app/zjson.ico --overwrite",
+    "electron:exe": "electron-packager dist zjson --platform=win32 --arch=x64 --out=package --icon=electron-app/zjson.ico --overwrite",
     "package:dmg": "node scripts/build-dmg.js && node scripts/rename.js dmg",
     "package:exe": "node scripts/build-exe.js && node scripts/rename.js exe",
     "preview": "serve build",
