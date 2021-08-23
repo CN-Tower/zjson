@@ -1,5 +1,7 @@
 const {app, BrowserWindow, ipcMain} = require('electron');
 const { ebtMain } = require('electron-baidu-tongji');
+const windowStateKeeper = require('./window-state');
+
 // const fetch = require('node-fetch');
 // const fn = require('funclib');
 // const fs = require('fs');
@@ -19,18 +21,28 @@ app.on('activate', () => {
 });
 
 /**
- * 创建程序主窗口
+ * 程序主窗口
  */
 function createWindow () {
+  // 记录window的大小和位置
+  const mainWindowState = windowStateKeeper({
+    defaultWidth: 1200,
+    defaultHeight: 768,
+  });
+  const { x, y, width, height } = mainWindowState;
+
+  // 创建主窗口
   mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 768,
+    x,
+    y,
+    width,
+    height,
     maximizable: true,
     minimizable: true,
     resizable: true,
     webPreferences: {
       nodeIntegration: true,
-      // 在渲染进程中使用require
+      // 设置允许在渲染进程中使用require
       contextIsolation: false,
     },
   });
@@ -41,6 +53,8 @@ function createWindow () {
   mainWindow.setMenu(null);
   mainWindow.loadFile('index.html');
   mainWindow.on('closed', () => mainWindow = null);
+
+  mainWindowState.manage(mainWindow);
 }
 
 ipcMain.on('minWindow', () => {

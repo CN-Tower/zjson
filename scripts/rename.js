@@ -5,7 +5,6 @@ const pkg = require('../package.json');
 const glob = require('glob');
 
 const rootPath = path.resolve(__dirname, '../');
-
 const programType = process.argv[2];
 
 if (programType === 'dmg') {
@@ -16,7 +15,8 @@ if (programType === 'dmg') {
     fn.mv(srcPath, pkgName);
     fn.log(`打包完成: ${fn.chalk(pkgName, 'blue')}`, '#zjson');
   });
-} else if (programType === 'exe') {
+}
+else if (programType === 'exe') {
   const srcPath = path.join(rootPath, `package`);
   const pkgName = path.join(rootPath, `zjson-win32-x64-v${pkg.version}.exe`);
   const exes = glob.sync(`${srcPath}/*.exe`);

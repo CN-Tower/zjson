@@ -56,21 +56,25 @@
       </div>
     </div>
   </div>
+
   <app-root id="app-root" style="display: none;"></app-root>
-  <script>var win = window; var path = require('path');</script>
-  <script type="text/javascript" src="./runtime.js"></script>
-  <script type="text/javascript" src="./polyfills.js"></script>
+
   <script type="text/javascript" src="./assets/lib/jquery.min.js"></script>
   <script>
+    var win = window, path = require('path');
     if (typeof module === 'object') {
       window.jQuery = window.$ = module.exports;
     }
   </script>
   <script type="text/javascript" src="./assets/lib/funclib.min.js"></script>
   <script type="text/javascript" src="./assets/lib/bootstrap.min.js"></script>
-  <script type="text/javascript" src="./assets/lib/FileSaver.js"></script>
+  <script type="text/javascript" src="./runtime.js"></script>
+  <script type="text/javascript" src="./polyfills.js"></script>
   <script type="text/javascript" src="./zjson.js"></script>
-  <script>require('./renderer.js')</script>
+  <script type="text/javascript" src="./assets/lib/FileSaver.js"></script>
+  <!-- 引入渲染进程处理模块 -->
+  <script>require('./renderer')</script>
+  <!-- 引入monaco-editor -->
   <script src="./assets/lib/monaco-editor/vs/loader.js"></script>
   <script>
     window.loadMonacoEditor = onLoaded => {

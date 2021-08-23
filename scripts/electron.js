@@ -1,5 +1,6 @@
 const fn = require('funclib');
 const glob = require('glob');
+const pkg = require('../electron-app/package.json');
 
 fn.progress.start('Electron config', {type: 'spi'});
 
@@ -24,9 +25,6 @@ files.forEach(fp => {
 
 fn.rm('dist/3rdpartylicenses.txt');
 fn.mv('dist/main.js', 'dist/zjson.js')
-fn.cp('electron-app/index.html', 'dist/index.html');
-fn.cp('electron-app/package.json', 'dist/package.json');
-fn.cp('electron-app/main.js', 'dist/main.js');
-fn.cp('electron-app/renderer.js', 'dist/renderer.js');
+pkg.files.forEach(file => fn.cp(`electron-app/${file}`, `dist/${file}`));
 
 fn.progress.stop();

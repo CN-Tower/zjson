@@ -1,6 +1,13 @@
 {
   "name": "zjson",
-  "version": "5.1.3",
+  "version": "5.1.4",
   "license": "MIT",
-  "main": "main.js"
+  "main": "main.js",
+  "files": [
+    "main.js",
+    "index.html",
+    "renderer.js",
+    "window-state.js",
+    "package.json"
+  ]
 }
