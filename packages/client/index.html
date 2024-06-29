@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>转杰森 | ZJSON _ 全力打造最好用的Json工具！</title>
+  <meta name="description"
+    content="转杰森,zjson,json,json格式化,json编辑器,json解析,json工具,在线json格式化,在线json编辑器,在线json解析,在线json工具,json formatter, json editor" />
+  <meta name="keywords"
+    content="转杰森,zjson,json,json格式化,json编辑器,json解析,json工具,在线json格式化,在线json编辑器,在线json解析,在线json工具,json formatter, json editor" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="Bookmark" href="favicon.ico">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="stylesheet" href="css/loading.css">
+</head>
+
+<body class="ov_hidden">
+  <div id="browser-hint">
+    <div class="link-img">
+      <a href="http://www.google.cn/chrome/browser/">
+        <img src="assets/img/chrome.png" />
+      </a>
+      <a href="https://www.mozilla.org/en-US/firefox/products/?v=b">
+        <img src="assets/img/firefox.png" />
+      </a>
+    </div>
+    <div class="hint-msg">
+      <p>您好，当前的浏览器不支持转杰森，请使用谷歌或火狐浏览器打开网站！</p>
+      <p>Hi, the current browsers do not support ZJSON<br>
+        please use the Chrome or Firefox browser to open the website!</p>
+    </div>
+  </div>
+  <div id="app">
+    <div class="loadingBg greyBg"></div>
+    <div class="loadingText">
+      <div class="z-json-tt">
+        <h2>转杰森</h2>&nbsp;<h5>刀耐</h5>
+        <h2 class="h2_spliter"> | </h2>
+        <h2>ZJSON</h2>&nbsp;<h5>.NET</h5>
+        <p>http://www.zjson.net</p>
+      </div>
+      <div class="loadingGifBg">
+        <div class="shaft-load">
+          <div class="shaft1"></div>
+          <div class="shaft2"></div>
+          <div class="shaft3"></div>
+          <div class="shaft4"></div>
+          <div class="shaft5"></div>
+          <div class="shaft6"></div>
+          <div class="shaft7"></div>
+          <div class="shaft8"></div>
+          <div class="shaft9"></div>
+          <div class="shaft10"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    var userAgent = navigator.userAgent;
+    var isFirefox = userAgent.indexOf("Firefox") > -1;
+    var isSafari = userAgent.indexOf("Safari") > -1 && userAgent.indexOf("Chrome") == -1;
+    var isChrome = userAgent.indexOf("Chrome") > -1 && userAgent.indexOf("Safari") > -1;
+    if (!(isFirefox || isChrome || isSafari)) {
+      document.getElementById('browser-hint').style.display = 'block';
+      document.getElementById('app').style.display = 'none';
+    }
+  </script>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
+</html>

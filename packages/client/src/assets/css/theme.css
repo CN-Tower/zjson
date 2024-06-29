@@ -1,0 +1,115 @@
+@charset "UTF-8";
+
+body {
+  overflow-x: hidden;
+  color: var(--site-text-color);
+  font-size: var(--font-size-base);
+  font-family: var(--font-family);
+  background: var(--body-background);
+  /* transition: background 1s cubic-bezier(.075,.82,.165,1) */
+}
+.text1 {
+  color: var(--site-text-color);
+}
+.text2 {
+  color: var(--site-text-color-secondary);
+}
+.text3 {
+  color: var(--site-text-color-third);
+}
+
+:root {
+  --header-height: 64px;
+  --menu-item-border: 2px;
+  --primary-color: #1677ff;
+  --component-background: #ffffff;
+  --body-background: #ffffff;
+  --site-text-color: rgba(0, 0, 0, 0.88);
+  --demo-grid-color: #1677ff;
+  --demo-grid-color-65: #1677ffbf;
+  --demo-grid-color-75: #1677ffbf;
+  --site-text-color-secondary: rgba(0, 0, 0, 0.65);
+  --site-text-color-third: rgba(0, 0, 0, 0.45);
+  --site-border-color-split: rgba(5, 5, 5, 0.06);
+  --border-radius-base: 6;
+  --font-size-base: 14px;
+  --font-size-max: 13px;
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    'Noto Color Emoji';
+  --code-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  --border-color-base: #d9d9d9;
+  --purple-3: #d3adf7;
+  --purple-6: #722ed1;
+  --text-color: rgba(0, 0, 0, 0.88);
+  --search-icon-color: #ced4d9;
+  --ease-in-out-circ: cubic-bezier(0.78, 0.14, 0.15, 0.86);
+  --shadow-2: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12),
+    0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  --link-color: #1677ff;
+  --error-color: #ff4d4f;
+  --white: #fff;
+  --green-6: #52c41a;
+  --gray-8: undefined;
+  --magenta-7: #c41d7f;
+  --line-height-base: 1.5714285714285714;
+  --screen-md-min: 768px;
+  --screen-sm-min: 576px;
+  --screen-lg: 992px;
+  --mobile-max-width: 767.99px;
+  --box-shadow-base: 0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02),
+    0 2px 4px 0 rgba(0, 0, 0, 0.02) --animation-duration-base: 0.3s;
+  --ease-in-out: cubic-bezier(0.645, 0.045, 0.355, 1);
+  --shadow-1-down: 0 1px 2px -2px rgba(0, 0, 0, 0.16), 0 3px 6px 0 rgba(0, 0, 0, 0.12),
+    0 5px 12px 4px rgba(0, 0, 0, 0.09);
+  --box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02),
+    0 2px 4px 0 rgba(0, 0, 0, 0.02);
+}
+
+html.dark-mode {
+  --header-height: 64px;
+  --menu-item-border: 2px;
+  --primary-color: #1668dc;
+  --component-background: #1E1E1E;
+  --body-background: #1E1E1E;
+  --site-text-color: rgba(255, 255, 255, 0.85);
+  --demo-grid-color: #1668dc;
+  --demo-grid-color-65: #1668dcbf;
+  --demo-grid-color-75: #1668dcbf;
+  --site-text-color-secondary: rgba(255, 255, 255, 0.65);
+  --site-text-color-third: rgba(255, 255, 255, 0.45);
+  --site-border-color-split: rgba(253, 253, 253, 0.12);
+  --border-radius-base: 6;
+  --font-size-base: 14px;
+  --font-size-max: 13px;
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    'Noto Color Emoji';
+  --code-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  --border-color-base: #424242;
+  --purple-3: #301c4d;
+  --purple-6: #642ab5;
+  --text-color: rgba(255, 255, 255, 0.85);
+  --search-icon-color: #ced4d9;
+  --ease-in-out-circ: cubic-bezier(0.78, 0.14, 0.15, 0.86);
+  --shadow-2: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12),
+    0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  --link-color: #1668dc;
+  --error-color: #dc4446;
+  --white: #fff;
+  --green-6: #49aa19;
+  --gray-8: undefined;
+  --magenta-7: #e0529c;
+  --line-height-base: 1.5714285714285714;
+  --screen-md-min: 768px;
+  --screen-sm-min: 576px;
+  --screen-lg: 992px;
+  --mobile-max-width: 767.99px;
+  --box-shadow-base: 0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02),
+    0 2px 4px 0 rgba(0, 0, 0, 0.02) --animation-duration-base: 0.3s;
+  --ease-in-out: cubic-bezier(0.645, 0.045, 0.355, 1);
+  --shadow-1-down: 0 1px 2px -2px rgba(0, 0, 0, 0.16), 0 3px 6px 0 rgba(0, 0, 0, 0.12),
+    0 5px 12px 4px rgba(0, 0, 0, 0.09);
+  --box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02),
+    0 2px 4px 0 rgba(0, 0, 0, 0.02);
+}

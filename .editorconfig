@@ -1,14 +1,21 @@
-# Editor configuration, see http://editorconfig.org
+# EditorConfig is awesome: http://EditorConfig.org
+
+# top-most EditorConfig file
 root = true
 
 [*]
+# Option for setting a maximum length for each line
+# Supported By A Limited Number of Editors
+# https://github.com/editorconfig/editorconfig/wiki/EditorConfig-Properties#supported-by-a-limited-number-of-editors
+# max_line_length = 120
+
+# Unix-style newlines with a newline ending every file
+end_of_line = lf
+
+# Matches multiple files with brace expansion notation
+# Set default charset
 charset = utf-8
+
+# 4 space indentation
 indent_style = space
 indent_size = 2
-insert_final_newline = true
-trim_trailing_whitespace = true
-
-[*.md]
-max_line_length = off
-trim_trailing_whitespace = false
-

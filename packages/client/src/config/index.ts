@@ -1,0 +1,1 @@
+export const ZJSON_THEME = 'ZJSON_THEME'

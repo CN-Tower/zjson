@@ -1,0 +1,39 @@
+@charset "UTF-8";
+
+:root {
+  --bg_cover: rgba(0, 0, 0, 0.25);
+  --xs: 5px;
+  --sm: 10px;
+  --md: 15px;
+  --lg: 20px;
+  --xl: 25px;
+  --xxl: 30px;
+  --br_xs: 550px;
+  --br_sm: 800px;
+  --br_md: 1050px;
+  --br_lg: 1300px;
+  --br_xl: 1550px;
+  --fs_1: 20px;
+  --fs_2: 18px;
+  --fs_3: 16px;
+  --fs_4: 14px;
+  --fs_5: 12px;
+  --fs_6: 10px;
+  --lh_xs: 1;
+  --lh_sm: 1.25;
+  --lh_md: 1.5;
+  --lh_lg: 1.75;
+  --lh_xl: 2;
+  --fs_sm_plus: 1px;
+  --fs_lg_plus: 10px;
+  --b_radius: 4px;
+  --b_radius_sm: 3px;
+  --b_radius_md: 8px;
+  --b_radius_lg: 12px;
+  --box_shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  --box_shadow_sm: 0 2px 6px rgba(0, 0, 0, 0.2);
+  --box_shadow_md: 0 3px 8px rgba(0, 0, 0, 0.2);
+  --box_shadow_lg: 0 4px 10px rgba(0, 0, 0, 0.2);
+  --b_wp_mb: 480px;
+  --b_border: 1px solid var(--border-color-base);
+}
