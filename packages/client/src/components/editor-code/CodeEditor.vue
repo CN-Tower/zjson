@@ -1,57 +1,59 @@
 <template>
-  <div class="editor-result h_100 flex_col_start">
-    <div class="zjs-toolbar w_100 flex_end mt_xs fs_3">
-      <a-tooltip title="内容推至左边">
-        <span class="bar-btn flex_center">
-          <SvgToLeft />
-        </span>
-      </a-tooltip>
-      <a-tooltip title="压缩">
-        <ShrinkOutlined class="bar-btn" />
-      </a-tooltip>
-      <a-tooltip title="转义">
-        <span class="bar-btn flex_center">
-          <SvgCycle />
-        </span>
-      </a-tooltip>
-      <a-tooltip title="不转义">
-        <!-- <span class="bar-btn flex_center">
-          <SvgCycleDot />
-        </span> -->
+  <div class="code-editor h_100 flex_col_start mt_sm p_relative">
+    <div class="zjs-toolbar w_100 flex_end">
+      <a-tooltip title="拆分编辑器">
+        <SplitCellsOutlined
+          class="bar-btn"
+          :class="{ disabled: isEditorNumMax }"
+          @click="emit('split')"
+        />
       </a-tooltip>
       <a-tooltip title="清空">
         <DeleteOutlined class="bar-btn" />
       </a-tooltip>
-      <a-tooltip title="下载">
-        <DownloadOutlined class="bar-btn" />
+      <a-tooltip title="存档历史">
+        <FolderOpenOutlined class="bar-btn" />
       </a-tooltip>
       <a-tooltip title="存档">
         <SaveOutlined class="bar-btn" />
       </a-tooltip>
-      <a-tooltip title="复制">
-        <CopyOutlined class="bar-btn" />
+      <a-tooltip v-if="codeEditors.length > 1" title="关闭">
+        <CloseOutlined class="bar-btn" @click="emit('close')" />
       </a-tooltip>
     </div>
-    <div class="editor-wrap w_100 h_100 p_relative pl_0">
+    <div class="code-content w_100 h_100">
       <div class="editor w_100 h_100" ref="editorRef"></div>
-      <slot></slot>
     </div>
+    <slot></slot>
   </div>
 </template>
 
 <script setup lang="ts">
-import SvgToLeft from '@/assets/svg/to_left.svg'
-import SvgCycle from '@/assets/svg/cycle.svg'
-import SvgCycleDot from '@/assets/svg/cycle_dot.svg'
-import { CopyOutlined, ShrinkOutlined, DeleteOutlined, SaveOutlined, DownloadOutlined } from '@ant-design/icons-vue'
+import {
+  DeleteOutlined,
+  SplitCellsOutlined,
+  FolderOpenOutlined,
+  SaveOutlined,
+  CloseOutlined
+} from '@ant-design/icons-vue'
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { storeToRefs, useAppStore, useEditorStore } from '@/stores'
 import { events } from '@/utils'
 
-const editorRef = ref()
-const isEditorInited = ref(false)
+const props = defineProps({
+  codeEditors: {
+    type: Object,
+    default: () => ({})
+  },
+  isEditorNumMax: {
+    type: Boolean
+  }
+})
+const emit = defineEmits(['split', 'close'])
 const { isEditorReady } = storeToRefs(useEditorStore())
 const { themeMode } = storeToRefs(useAppStore())
+const editorRef = ref()
+const isEditorInited = ref(false)
 let editor = null as any
 
 const initEditor = () => {
@@ -78,8 +80,9 @@ onBeforeUnmount(() => editor?.dispose())
 </script>
 
 <style lang="scss">
-.editor-result {
-  .editor-wrap {
+.code-editor {
+  width: 100%;
+  .code-content {
     padding: 1px;
   }
 }

@@ -1,0 +1,41 @@
+.zjs-toolbar {
+  height: 30px;
+  padding-right: 12px;
+  .bar-btn {
+    margin-left: 12px;
+    cursor: pointer;
+    transition: color 0.25s;
+    &:hover:not(.disabled) {
+      color: var(--primary-color);
+    }
+    &.disabled {
+      opacity: .4;
+      cursor: not-allowed;
+    }
+  }
+}
+
+.zjs-dragbar {
+  width: 8px;
+  right: -6px;
+  cursor: col-resize;
+  z-index: 99;
+  &:hover, &.active {
+    &:not(.disabled) {
+      .drag-line {
+        background: blue;
+        opacity: 1;
+      }
+    }
+  }
+  &.disabled {
+    cursor: not-allowed;
+  }
+  .drag-line {
+    width: 2px;
+    height: 100%;
+    transition: all 0.25s;
+    background: var(--border-color-base);
+    opacity: 0.35;
+  }
+}
