@@ -60,7 +60,7 @@ const noticeMap = {
 } as Record<string, any>
 
 const format = computed(() => {
-  if (formatResult.value) {
+  if (formatResult.value && formatResult.value.result) {
     const { fmtSign, fmtLines, errIndex, errExpect, fmtType } = formatResult.value
     const type = fmtType === 'danger' ? 'error' : fmtType
     const msg = noticeMap[fmtSign]?.(errIndex || fmtLines, errExpect)
