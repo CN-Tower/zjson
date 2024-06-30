@@ -28,7 +28,7 @@
         <FolderOpenOutlined class="bar-btn" />
       </a-tooltip>
       <a-tooltip title="转为JSON">
-        <RetweetOutlined class="bar-btn" />
+        <RetweetOutlined class="bar-btn" @click="emit('editorAction', { type: 'fmtJson' })" />
       </a-tooltip>
     </div>
     <div class="editor-wrap w_100 h_100 pr_0">
@@ -49,9 +49,10 @@ import {
   FolderOpenOutlined,
   UploadOutlined
 } from '@ant-design/icons-vue'
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount, inject } from 'vue'
 import { storeToRefs, useAppStore, useEditorStore } from '@/stores'
 import { events } from '@/utils'
+import type { Ref } from 'vue'
 
 const emit = defineEmits(['editorAction'])
 
@@ -61,6 +62,8 @@ const editorRef = ref()
 const { isEditorReady } = storeToRefs(useEditorStore())
 const { themeMode } = storeToRefs(useAppStore())
 let editor = null as any
+
+const sourceCode = inject('sourceCode') as Ref<string>
 
 const initEditor = () => {
   if (isEditorInited.value || !isEditorReady.value) return
@@ -72,6 +75,10 @@ const initEditor = () => {
     theme: themeMode.value === 'light' ? 'vs' : 'vs-dark',
     minimap: { enabled: true },
     scrollbar: { horizontal: 'hidden' }
+  })
+  editor.setValue(sourceCode.value || '')
+  editor.onDidChangeModelContent(() => {
+    sourceCode.value = editor.getValue()
   })
 }
 

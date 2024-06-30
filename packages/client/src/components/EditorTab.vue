@@ -1,12 +1,11 @@
 <template>
 <div class="editor-tab" ref="tabTextRef">
-  {{ getTabTitle(tab) }}
+  {{ getTabTitle(tab!) }}
 </div>
 </template>
   
 <script setup lang='ts'>
 import { ref, onMounted } from 'vue'
-import type { IEditorTab } from '@/types'
 
 const props = defineProps({
   tab: {
@@ -16,7 +15,7 @@ const props = defineProps({
 })
 const tabTextRef = ref()
 
-const getTabTitle = (tab: IEditorTab) => {
+const getTabTitle = (tab: any) => {
   return `${tab.type ? tab.type.toUpperCase() : 'TAB'}-${tab.title}`
 }
 

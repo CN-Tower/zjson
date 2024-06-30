@@ -58,7 +58,7 @@ const initEditor = () => {
   if (isEditorInited.value || !isEditorReady.value) return
   isEditorInited.value = true
   editor = (window as any).monaco.editor.create(editorRef.value, {
-    language: 'text/plain',
+    language: 'json',
     tabSize: 2,
     wordWrap: 'on',
     theme: themeMode.value === 'light' ? 'vs' : 'vs-dark',
@@ -70,7 +70,10 @@ const initEditor = () => {
 const layoutEditor = () => {
   editor?.layout()
 }
-defineExpose({ layoutEditor })
+const setResultValue = (val: string) => {
+  editor?.setValue(val)
+}
+defineExpose({ layoutEditor, setResultValue })
 
 events.on('editorReady', () => initEditor())
 onMounted(() => setTimeout(() => initEditor()))

@@ -1,17 +1,25 @@
 <template>
   <div class="editor-diff h_100 flex_col_start">
     <div class="zjs-toolbar w_100 flex_between mt_xs fs_3">
-      <div class="bar-left">
-        <a-tooltip title="清空">
-          <DeleteOutlined class="bar-btn" />
-        </a-tooltip>
+      <div class="bar-left pl_sm flex_start">
+        <span class="fs_5">语言：</span>
+        <a-select class="zjs-selector" v-model:value="editorLang" style="width: 120px" size="small">
+          <a-select-option value="json">json</a-select-option>
+          <a-select-option value="html">html</a-select-option>
+          <a-select-option value="css">css</a-select-option>
+          <a-select-option value="javascript">javascript</a-select-option>
+          <a-select-option value="typescript">typescript</a-select-option>
+        </a-select>
       </div>
       <div class="bar-center">
-        <a-tooltip title="推到中间">
-          <PauseOutlined class="bar-btn" @click="handleCenterSource" />
+        <a-tooltip title="清空左侧">
+          <DeleteOutlined class="bar-btn del-l mr_lg" />
         </a-tooltip>
         <a-tooltip title="左右交换">
           <SwapOutlined class="bar-btn" />
+        </a-tooltip>
+        <a-tooltip title="推到中间">
+          <PauseOutlined class="bar-btn" @click="handleCenterSource" />
         </a-tooltip>
         <a-tooltip title="存档历史">
           <FolderOpenOutlined class="bar-btn" />
@@ -19,18 +27,17 @@
         <a-tooltip title="存档">
           <SaveOutlined class="bar-btn" />
         </a-tooltip>
-        <a-tooltip title="保存并对比">
-          <CheckOutlined class="bar-btn" />
+        <a-tooltip v-if="isShowDiff" title="编辑内容">
+          <EditOutlined class="bar-btn" @click="handleEdit" />
         </a-tooltip>
-        <a-tooltip title="编辑内容">
-          <EditOutlined class="bar-btn" />
+        <a-tooltip v-else title="保存并对比">
+          <CheckOutlined class="bar-btn" @click="handleDiff" />
         </a-tooltip>
-      </div>
-      <div class="bar-right">
-        <a-tooltip title="清空">
-          <DeleteOutlined class="bar-btn" />
+        <a-tooltip title="清空右侧">
+          <DeleteOutlined class="bar-btn del-r ml_xxl" />
         </a-tooltip>
       </div>
+      <div class="bar-right"></div>
     </div>
     <div class="diff-content w_100 h_100">
       <div v-if="!isShowDiff" class="h_100 flex_between" ref="wrapRef">
@@ -69,6 +76,7 @@ const isOnResizing = ref(false)
 const wrapRef = ref()
 const leftRef = ref()
 const rightRef = ref()
+const editorLang = ref('json')
 
 /**
  * ===========================================================================
@@ -83,6 +91,13 @@ const handleCenterSource = () => {
     rightRef.value.$el.style = '50%'
     handleLayoutEditors()
   }
+}
+
+const handleEdit = () => {
+  isShowDiff.value = false
+}
+const handleDiff = () => {
+  isShowDiff.value = true
 }
 
 /**
@@ -108,6 +123,7 @@ const handleMouseDown = (e: MouseEvent) => {
   document.addEventListener('mouseup', handleMouseUp)
 }
 
+let layoutTimer = null as any
 const handleMouseMove = (e: MouseEvent) => {
   if (!isOnResizing.value) return
   const cx = e.clientX
@@ -120,6 +136,8 @@ const handleMouseMove = (e: MouseEvent) => {
   leftRef.value.$el.style.width = `${pl}%`
   rightRef.value.$el.style.width = `${pr}%`
   handleLayoutEditors()
+  clearTimeout(layoutTimer)
+  layoutTimer = setTimeout(() => handleLayoutEditors(), 300)
 }
 
 const handleMouseUp = (e: MouseEvent) => {
@@ -128,8 +146,8 @@ const handleMouseUp = (e: MouseEvent) => {
 }
 
 const handleLayoutEditors = () => {
-  leftRef.value.layoutEditor()
-  rightRef.value.layoutEditor()
+  leftRef.value?.layoutEditor()
+  rightRef.value?.layoutEditor()
 }
 
 const removeEventListeners = () => {
@@ -146,6 +164,17 @@ onBeforeUnmount(() => removeEventListeners())
 
 <style lang="scss">
 .editor-diff {
+  .zjs-toolbar {
+    .bar-left, .bar-right {
+      width: 200px;
+    }
+    .del-l {
+      transform: rotate(-15deg);
+    }
+    .del-r {
+      transform: rotate(15deg);
+    }
+  }
   .source-left {
     width: 50%;
     flex-shrink: 0;

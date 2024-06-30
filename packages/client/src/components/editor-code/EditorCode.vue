@@ -35,7 +35,9 @@ const isEditorNumMax = computed(() => codeEditors.value.length >= 3)
 const handleSplitEditor = (item: ICodeEditor, i: number) => {
   if (isEditorNumMax.value) return
   codeEditors.value.splice(i + 1, 0, { key: Math.random().toString() })
-  setTimeout(() => calcEditorWidth(), 200)
+  setTimeout(() => calcEditorWidth())
+  setTimeout(() => calcEditorWidth(), 300)
+  setTimeout(() => calcEditorWidth(), 800)
 }
 
 const handleCloseEditor = (i: number) => {
@@ -62,8 +64,6 @@ let ow = 0
 let firstIdx = 0
 
 const handleMouseDown = (e: MouseEvent, i: number) => {
-  console.log('-------i', i, editorRefs.value.length)
-  console.log(editorRefs.value[0].$el)
   if (!wrapRef.value) return
   if (editorRefs.value.length !== 2) return
   ww = wrapRef.value.offsetWidth
@@ -72,13 +72,14 @@ const handleMouseDown = (e: MouseEvent, i: number) => {
   }
   ox = e.clientX
   firstIdx = +(editorRefs.value[0].$el.offsetLeft > 100)
-  ow = editorRefs.value[0].$el.offsetWidth
+  ow = editorRefs.value[firstIdx].$el.offsetWidth
   isOnResizing.value = true
   removeEventListeners()
   document.addEventListener('mousemove', handleMouseMove)
   document.addEventListener('mouseup', handleMouseUp)
 }
 
+let layoutTimer = null as any
 const handleMouseMove = (e: MouseEvent) => {
   if (!isOnResizing.value) return
   const cx = e.clientX
@@ -91,6 +92,8 @@ const handleMouseMove = (e: MouseEvent) => {
   editorRefs.value[firstIdx].$el.style.width = `${pl}%`
   editorRefs.value[+!firstIdx].$el.style.width = `${pr}%`
   handleLayoutEditors()
+  clearTimeout(layoutTimer)
+  layoutTimer = setTimeout(() => handleLayoutEditors(), 300)
 }
 
 const handleMouseUp = (e: MouseEvent) => {

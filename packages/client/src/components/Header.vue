@@ -3,18 +3,18 @@
     <h3 class="mg_0 fw_bold">
       转杰森 | ZJSON <span class="fs_6"><a class="text_dec_none" href="">（回到旧版）</a></span>
     </h3>
-    <a-alert class="zjs-alert mx_sm text_center" type="info">
+    <a-alert class="zjs-alert mx_sm text_center" :type="format.type">
       <template #message>
-        <span class="fs_5">格式化成功</span>
+        <span class="fs_5">{{ format.msg }}</span>
       </template>
     </a-alert>
     <div class="zjs-hbtns flex_start">
-      <a-button class="hd-btn" size="small" type="text" @click="toggleThemeMode"> English </a-button>
+      <a-button class="hd-btn" size="small" type="text" @click="toggleLanguage"> English </a-button>
       <a-button
         class="hd-btn btn-settings pd_0 flex_center"
         size="small"
         type="text"
-        @click="toggleThemeMode"
+        @click="handleOpenGithub"
       >
         <GithubOutlined />
       </a-button>
@@ -24,13 +24,14 @@
         type="text"
         @click="toggleThemeMode"
       >
-        <SvgDay />
+        <SvgDay v-if="themeMode === 'dark'" />
+        <SvgNight v-else />
       </a-button>
       <a-button
         class="hd-btn btn-settings pd_0 flex_center"
         size="small"
         type="text"
-        @click="toggleThemeMode"
+        @click="handleSettings"
       >
         <SettingOutlined />
       </a-button>
@@ -41,10 +42,33 @@
 <script lang="ts" setup>
 import SvgDay from '@/assets/svg/day.svg'
 import SvgNight from '@/assets/svg/night.svg'
-import { storeToRefs, useAppStore } from '@/stores'
+import { storeToRefs, useAppStore, useEditorStore } from '@/stores'
 import { SettingOutlined, GithubOutlined } from '@ant-design/icons-vue'
+import { computed } from 'vue';
 
 const { themeMode } = storeToRefs(useAppStore())
+const { formatResult } = storeToRefs(useEditorStore())
+
+const noticeMap = {
+  ost: (idx: number, exp: string) => `第${idx}行，期望一个“String”！`,
+  col: (idx: number, exp: string) => `第${idx}行，期望一个“冒号”！`,
+  val: (idx: number, exp: string) => `第${idx}行，不是一个合法的值！`,
+  end: (idx: number, exp: string) => `第${idx}行，期望一个“逗号”或一个“${exp}”！`,
+  war: (idx: number, exp: string) => `非正常Json转换，行数：${idx}行！`,
+  scc: (idx: number, exp: string) => `格式化成功，行数：${idx}行！`,
+  err: (idx: number, exp: string) => `解析出错，过大的非正常Json字符串！`
+} as Record<string, any>
+
+const format = computed(() => {
+  if (formatResult.value) {
+    const { fmtSign, fmtLines, errIndex, errExpect, fmtType } = formatResult.value
+    const type = fmtType === 'danger' ? 'error' : fmtType
+    const msg = noticeMap[fmtSign]?.(errIndex || fmtLines, errExpect)
+    return { type, msg }
+  } else {
+    return { type: 'info', msg: '你好，欢迎使用转杰森！' }
+  }
+})
 
 const toggleThemeMode = () => {
   if (themeMode.value === 'light') {
@@ -55,12 +79,20 @@ const toggleThemeMode = () => {
     ;(window as any).monaco?.editor?.setTheme('vs')
   }
 }
+
+const toggleLanguage = () => {}
+
+const handleSettings = () => {}
+
+const handleOpenGithub = () => {
+  window.open('https://github.com/CN-Tower/zjson', '_blank')
+}
 </script>
 
 <style lang="scss">
 .dark-mode {
   .zjs-header {
-    .zjs-alert {
+    .zjs-alert.ant-alert-info {
       background: #1668dc0f;
     }
   }

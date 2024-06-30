@@ -16,12 +16,50 @@
 <script setup lang="ts">
 import EditorSource from './EditorSource.vue'
 import EditorResult from './EditorResult.vue'
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount, provide, onActivated } from 'vue'
+import { debounce } from 'lodash-es'
+import fmt2json from 'format-to-json'
+import { storeToRefs, useEditorStore } from '@/stores'
 
+const props = defineProps({
+  isActive: {
+    type: Boolean
+  }
+})
+
+const { formatResult } = storeToRefs(useEditorStore())
 const isOnResizing = ref(false)
 const wrapRef = ref()
 const sourceRef = ref()
 const resultRef = ref()
+const sourceCode = ref('')
+const fmtResult = ref(null as any)
+
+provide('sourceCode', sourceCode)
+
+const setFormatResult = () => {
+  if (props.isActive) {
+    formatResult.value = fmtResult.value
+  }
+}
+
+watch(
+  () => props.isActive,
+  () => setFormatResult(),
+  { immediate: true }
+)
+
+watch(sourceCode, (val) => {
+  handleFmtToJson()
+})
+
+const doFormatJson = () => {
+  fmtResult.value = fmt2json(sourceCode.value, { withDetails: true })
+  console.log('fmtResult.value', fmtResult.value)
+  setFormatResult()
+  resultRef.value.setResultValue(fmtResult.value.result)
+}
+const handleFmtToJson = debounce(() => doFormatJson(), 500, { leading: true })
 
 /**
  * ===========================================================================
@@ -29,7 +67,7 @@ const resultRef = ref()
  * ===========================================================================
  */
 interface IEditorAction {
-  type: string,
+  type: string
   data?: any
 }
 const handleEditorAction = ({ type, data }: IEditorAction) => {
@@ -43,6 +81,8 @@ const handleEditorAction = ({ type, data }: IEditorAction) => {
     resultRef.value.$el.style.width = '100%'
     handleLayoutEditors()
     sourceRef.value.isEditorDftLeft = true
+  } else if (type === 'fmtJson') {
+    doFormatJson()
   }
 }
 
@@ -68,6 +108,7 @@ const handleMouseDown = (e: MouseEvent) => {
   document.addEventListener('mouseup', handleMouseUp)
 }
 
+let layoutTimer = null as any
 const handleMouseMove = (e: MouseEvent) => {
   if (!isOnResizing.value) return
   const cx = e.clientX
@@ -79,8 +120,10 @@ const handleMouseMove = (e: MouseEvent) => {
   const pr = 100 - pl
   sourceRef.value.$el.style.width = `${pl}%`
   resultRef.value.$el.style.width = `${pr}%`
-  handleLayoutEditors()
   sourceRef.value.isEditorDftLeft = false
+  handleLayoutEditors()
+  clearTimeout(layoutTimer)
+  layoutTimer = setTimeout(() => handleLayoutEditors(), 300)
 }
 
 const handleMouseUp = (e: MouseEvent) => {

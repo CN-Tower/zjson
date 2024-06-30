@@ -1,6 +1,7 @@
 .zjs-toolbar {
   height: 30px;
   padding-right: 12px;
+  flex-shrink: 0;
   .bar-btn {
     margin-left: 12px;
     cursor: pointer;
@@ -37,5 +38,13 @@
     transition: all 0.25s;
     background: var(--border-color-base);
     opacity: 0.35;
+  }
+}
+
+.dark-mode {
+  .zjs-selector {
+    .ant-select-selector {
+      background: rgba(255, 255, 255, 0.02) !important;
+    }
   }
 }

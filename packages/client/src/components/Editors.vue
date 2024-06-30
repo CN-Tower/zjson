@@ -7,17 +7,13 @@
       size="small"
       @edit="onEdit"
     >
-      <a-tab-pane
-        v-for="tab in editorTabs"
-        :key="tab.key"
-        :closable="isTabClosable"
-      >
+      <a-tab-pane v-for="tab in editorTabs" :key="tab.key" :closable="isTabClosable">
         <template #tab>
           <EditorTab :tab="tab" />
         </template>
         <div class="zjs-editor">
           <template v-if="tab.type">
-            <component :is="editorComps[tab.type]"></component>
+            <component :is="editorComps[tab.type]" :isActive="tab.key === activeKey"></component>
           </template>
           <EditorType v-else @selectType="handleSelectType(tab, $event)" />
         </div>
