@@ -4,6 +4,7 @@
       <div class="bar-left pl_sm flex_start">
         <span class="fs_5">语言：</span>
         <a-select class="zjs-selector" v-model:value="editorLang" style="width: 120px" size="small">
+          <a-select-option value="plaintext">plaintext</a-select-option>
           <a-select-option value="json">json</a-select-option>
           <a-select-option value="html">html</a-select-option>
           <a-select-option value="css">css</a-select-option>
@@ -16,7 +17,7 @@
           <DeleteOutlined class="bar-btn del-l mr_lg" />
         </a-tooltip>
         <a-tooltip title="左右交换">
-          <SwapOutlined class="bar-btn" />
+          <SwapOutlined class="bar-btn" @click="handleSwapLeftRight" />
         </a-tooltip>
         <a-tooltip title="推到中间">
           <PauseOutlined class="bar-btn" @click="handleCenterSource" />
@@ -43,8 +44,14 @@
       </div>
     </div>
     <div class="diff-content w_100 h_100">
-      <div v-if="!isShowDiff" class="h_100 flex_between" ref="wrapRef">
-        <SourceEditor class="source-left" ref="leftRef">
+      <DiffEditor v-if="isShowDiff" ref="diffEditorRef" />
+      <div v-else class="h_100 flex_between" ref="wrapRef">
+        <SourceEditor
+          class="source-left"
+          ref="leftEditorRef"
+          :code="leftCode"
+          @codeChange="leftCode = $event"
+        >
           <div
             class="zjs-dragbar p_absolute t_0 h_100"
             :class="{ active: isOnResizing }"
@@ -53,9 +60,13 @@
             <div class="drag-line p_center h_100"></div>
           </div>
         </SourceEditor>
-        <SourceEditor class="source-right" ref="rightRef" />
+        <SourceEditor
+          class="source-right"
+          ref="rightEditorRef"
+          :code="rightCode"
+          @codeChange="rightCode = $event"
+        />
       </div>
-      <DiffEditor />
     </div>
   </div>
 </template>
@@ -63,7 +74,7 @@
 <script setup lang="ts">
 import SourceEditor from './SourceEditor.vue'
 import DiffEditor from './DiffEditor.vue'
-import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount, provide } from 'vue'
 import {
   PauseOutlined,
   SwapOutlined,
@@ -83,10 +94,17 @@ const props = defineProps({
 const isShowDiff = ref(false)
 const isOnResizing = ref(false)
 const wrapRef = ref()
-const leftRef = ref()
-const rightRef = ref()
-const editorLang = ref('json')
+const diffEditorRef = ref()
+const leftEditorRef = ref()
+const rightEditorRef = ref()
 const { formatResult } = storeToRefs(useEditorStore())
+const editorLang = ref('json')
+const leftCode = ref('')
+const rightCode = ref('')
+
+provide('editorLang', editorLang)
+provide('leftCode', leftCode)
+provide('rightCode', rightCode)
 
 watch(
   () => props.isActive,
@@ -101,12 +119,18 @@ watch(
  * 响应页面事件
  * ===========================================================================
  */
+const handleSwapLeftRight = () => {
+  const temp = leftCode.value
+  leftCode.value = rightCode.value
+  rightCode.value = temp
+}
+
 const handleCenterSource = () => {
   if (isShowDiff.value) {
-
+    diffEditorRef.value?.resetDiffEditor()
   } else {
-    leftRef.value.$el.style = '50%'
-    rightRef.value.$el.style = '50%'
+    leftEditorRef.value.$el.style = '50%'
+    rightEditorRef.value.$el.style = '50%'
     handleLayoutEditors()
   }
 }
@@ -134,7 +158,7 @@ const handleMouseDown = (e: MouseEvent) => {
     return
   }
   ox = e.clientX
-  ow = leftRef.value.$el.offsetWidth
+  ow = leftEditorRef.value.$el.offsetWidth
   isOnResizing.value = true
   removeEventListeners()
   document.addEventListener('mousemove', handleMouseMove)
@@ -151,8 +175,8 @@ const handleMouseMove = (e: MouseEvent) => {
   if (nw + 400 > ww) nw = ww - 400
   const pl = (nw / ww) * 100
   const pr = 100 - pl
-  leftRef.value.$el.style.width = `${pl}%`
-  rightRef.value.$el.style.width = `${pr}%`
+  leftEditorRef.value.$el.style.width = `${pl}%`
+  rightEditorRef.value.$el.style.width = `${pr}%`
   handleLayoutEditors()
   clearTimeout(layoutTimer)
   layoutTimer = setTimeout(() => handleLayoutEditors(), 300)
@@ -164,8 +188,8 @@ const handleMouseUp = (e: MouseEvent) => {
 }
 
 const handleLayoutEditors = () => {
-  leftRef.value?.layoutEditor()
-  rightRef.value?.layoutEditor()
+  leftEditorRef.value?.layoutEditor()
+  rightEditorRef.value?.layoutEditor()
 }
 
 const removeEventListeners = () => {
@@ -183,7 +207,8 @@ onBeforeUnmount(() => removeEventListeners())
 <style lang="scss">
 .editor-diff {
   .zjs-toolbar {
-    .bar-left, .bar-right {
+    .bar-left,
+    .bar-right {
       width: 200px;
     }
     .del-l {

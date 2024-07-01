@@ -23,7 +23,9 @@ body {
   --menu-item-border: 2px;
   --primary-color: #1677ff;
   --component-background: #ffffff;
+  --component-background-float: rgba(0, 0, 0, 0.08);
   --body-background: #ffffff;
+  --background-float: #ffffff;
   --site-text-color: rgba(0, 0, 0, 0.88);
   --demo-grid-color: #1677ff;
   --demo-grid-color-65: #1677ffbf;
@@ -71,7 +73,9 @@ html.dark-mode {
   --menu-item-border: 2px;
   --primary-color: #1668dc;
   --component-background: #1E1E1E;
+  --component-background-float: rgba(255, 255, 255, 0.08);
   --body-background: #1E1E1E;
+  --background-float: #232323;
   --site-text-color: rgba(255, 255, 255, 0.85);
   --demo-grid-color: #1668dc;
   --demo-grid-color-65: #1668dcbf;

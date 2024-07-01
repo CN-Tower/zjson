@@ -33,16 +33,13 @@
       <a-tooltip title="清空">
         <DeleteOutlined class="bar-btn" @click="emit('editorAction', { type: 'clearResult' })" />
       </a-tooltip>
-      <a-tooltip title="下载">
-        <DownloadOutlined class="bar-btn" />
-      </a-tooltip>
       <a-tooltip title="复制">
         <CopyOutlined class="bar-btn" @click="handleCopyResult" />
       </a-tooltip>
     </div>
     <div class="editor-wrap w_100 h_100 p_relative pl_0">
       <div class="editor w_100 h_100" ref="editorRef"></div>
-      <p v-if="!resultCode" class="resout-hint p_center text_center text3 opacity_d75">
+      <p v-if="!resultCode" class="resout-hint p_center text_center text3 opacity_d75 pe_none">
         格式化结果输出<br />记得及时存档以备不时之需
       </p>
       <slot></slot>
@@ -60,7 +57,6 @@ import {
   ShrinkOutlined,
   ExpandAltOutlined,
   DeleteOutlined,
-  DownloadOutlined
 } from '@ant-design/icons-vue'
 import { ref, watch, onMounted, onBeforeUnmount, inject } from 'vue'
 import { storeToRefs, useAppStore, useEditorStore } from '@/stores'

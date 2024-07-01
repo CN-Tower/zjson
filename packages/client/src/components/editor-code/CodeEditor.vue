@@ -73,7 +73,7 @@ const initEditor = () => {
   if (isEditorInited.value || !isEditorReady.value) return
   isEditorInited.value = true
   editor = (window as any).monaco.editor.create(editorRef.value, {
-    language: 'text/plain',
+    language: 'plaintext',
     tabSize: 2,
     wordWrap: 'on',
     theme: themeMode.value === 'light' ? 'vs' : 'vs-dark',

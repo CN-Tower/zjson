@@ -47,7 +47,13 @@
       background: rgba(255, 255, 255, 0.02) !important;
     }
   }
-  .zjs-button.ant-btn-default {
+  .ant-btn-default {
     background: rgba(255, 255, 255, 0.02) !important;
+  }
+}
+
+.ant-popover {
+  .ant-popover-inner {
+    background: var(--background-float);
   }
 }

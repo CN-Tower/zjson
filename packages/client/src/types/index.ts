@@ -1,3 +1,5 @@
+export * from './base'
+
 /**
  * 编辑器类型
  */

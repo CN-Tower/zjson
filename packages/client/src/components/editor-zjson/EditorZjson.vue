@@ -1,6 +1,11 @@
 <template>
   <div class="editor-zjson h_100 flex_start" ref="wrapRef">
-    <EditorSource class="zjson-source h_100" ref="sourceRef" @editorAction="handleEditorAction">
+    <EditorSource
+      class="zjson-source h_100"
+      ref="sourceRef"
+      :historyKey="historyKey"
+      @editorAction="handleEditorAction"
+    >
       <div
         class="zjs-dragbar p_absolute t_0 h_100"
         :class="{ active: isOnResizing }"
@@ -11,6 +16,15 @@
     </EditorSource>
     <EditorResult class="zjson-result h_100" ref="resultRef" @editorAction="handleEditorAction" />
   </div>
+  <a-modal v-model:open="isShowSaveMode" title="存档">
+    <div class="my_md">
+      <a-input placeholder="请输入存档名称" v-model:value="saveName"></a-input>
+    </div>
+    <template #footer>
+      <a-button @click="isShowSaveMode = false">取消</a-button>
+      <a-button type="primary" :disabled="!saveName.trim()" @click="handleSaveFile">保存</a-button>
+    </template>
+  </a-modal>
 </template>
 
 <script setup lang="ts">
@@ -20,6 +34,8 @@ import { ref, watch, onMounted, onBeforeUnmount, provide } from 'vue'
 import { debounce } from 'lodash-es'
 import fmt2json from 'format-to-json'
 import { storeToRefs, useEditorStore } from '@/stores'
+import { message } from 'ant-design-vue'
+import { ZJSON_SAVE_JSONS, TEMPLATE_ZJSON, TEMPLATE_PYUNI } from '@/config'
 
 const props = defineProps({
   isActive: {
@@ -37,6 +53,9 @@ const fmtStrict = ref(false)
 const fmtEscape = ref(false)
 const fmtExpand = ref(true)
 const fmtResult = ref(null as any)
+const isShowSaveMode = ref(false)
+const saveName = ref('')
+const historyKey = ref(Math.random())
 
 provide('sourceCode', sourceCode)
 provide('resultCode', resultCode)
@@ -60,7 +79,7 @@ const doFormatJson = () => {
     withDetails: true,
     strict: fmtStrict.value,
     escape: fmtEscape.value,
-    expand: fmtExpand.value,
+    expand: fmtExpand.value
   })
   console.log('fmtResult.value', fmtResult.value)
   resultCode.value = fmtResult.value.result
@@ -107,9 +126,11 @@ const handleEditorAction = ({ type, data }: IEditorAction) => {
       break
     case 'clearSource':
       sourceCode.value = ''
+      message.success('源码已清空')
       break
     case 'clearResult':
       resultCode.value = ''
+      message.success('结果已清空')
       break
     case 'fmtEscape':
       fmtEscape.value = !fmtEscape.value
@@ -122,8 +143,63 @@ const handleEditorAction = ({ type, data }: IEditorAction) => {
       fmtExpand.value = !fmtExpand.value
       doFormatJson()
       break
+    case 'saveFile':
+      if (!sourceCode.value.trim()) {
+        message.warning('源码为空，无法存档')
+        return
+      }
+      const code = sourceCode.value.replace(/[\s\r\n]/g, '')
+      saveName.value = code.length > 20 ? code.substr(0, 20) + ' ...' : code
+      isShowSaveMode.value = true
+      break
   }
 }
+
+/**
+ * 存档
+ */
+const handleSaveFile = () => {
+  const savedList = JSON.parse(localStorage.getItem(ZJSON_SAVE_JSONS) || '[]')
+  savedList.push({
+    name: saveName.value,
+    code: sourceCode.value,
+    time: Date.now()
+  })
+  if (savedList.length > 20) {
+    savedList.shift()
+  }
+  localStorage.setItem(ZJSON_SAVE_JSONS, JSON.stringify(savedList))
+  isShowSaveMode.value = false
+  historyKey.value = Math.random()
+  message.success('存档成功')
+}
+
+/**
+ * 打开模板JSON
+ */
+const handleOpenTplate = (type: 'zjson' | 'pyUni') => {
+  console.log('type', type)
+  if (type === 'zjson') {
+    sourceCode.value = TEMPLATE_ZJSON
+  } else if (type === 'pyUni') {
+    sourceCode.value = TEMPLATE_PYUNI
+  } else {
+    sourceCode.value = ''
+  }
+}
+provide('handleOpenTplate', handleOpenTplate)
+
+/**
+ * 打开历史存档
+ */
+const handleOpenHistory = (time: number) => {
+  const savedList = JSON.parse(localStorage.getItem(ZJSON_SAVE_JSONS) || '[]')
+  const item = savedList.find((item: any) => item.time === time)
+  if (item) {
+    sourceCode.value = item.code
+  }
+}
+provide('handleOpenHistory', handleOpenHistory)
 
 /**
  * ===========================================================================
