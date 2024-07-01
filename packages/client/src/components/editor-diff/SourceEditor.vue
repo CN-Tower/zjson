@@ -1,6 +1,10 @@
 <template>
   <div class="diff-source h_100 p_relative">
     <div class="editor w_100 h_100" ref="editorRef"></div>
+    <p v-if="!code" class="zjs-placeholder p_center text_center text3 opacity_d75 pe_none fs_1xx">
+      <img class="code-img" v-if="from === 'l'" src="https://s21.ax1x.com/2024/07/02/pkgnGQ0.png" alt="">
+      <img class="code-img" v-else src="https://s21.ax1x.com/2024/07/02/pkgnYLT.png" alt="">
+    </p>
     <slot></slot>
   </div>
 </template>
@@ -13,6 +17,10 @@ import { events } from '@/utils'
 const emit = defineEmits(['codeChange'])
 const props = defineProps({
   code: {
+    type: String,
+    default: ''
+  },
+  from: {
     type: String,
     default: ''
   }
@@ -30,11 +38,14 @@ watch(editorLang, (lang) => {
   }
 })
 
-watch(() => props.code, (code) => {
-  if (editor && editor.getValue() !== code) {
-    editor.setValue(code)
+watch(
+  () => props.code,
+  (code) => {
+    if (editor && editor.getValue() !== code) {
+      editor.setValue(code)
+    }
   }
-})
+)
 
 const initEditor = () => {
   if (isEditorInited.value || !isEditorReady.value) return

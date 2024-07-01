@@ -36,7 +36,6 @@ const updateEditorModel = () => {
 const initEditor = () => {
   if (isEditorInited.value || !isEditorReady.value) return
   isEditorInited.value = true
-  console.log('leftCode', leftCode.value)
   editor = (window as any).monaco.editor.createDiffEditor(editorRef.value, {
     originalEditable: true
   })
@@ -53,7 +52,11 @@ const resetDiffEditor = () => {
   isEditorInited.value = false
   initEditor()
 }
-defineExpose({ resetDiffEditor })
+
+const layoutEditor = () => {
+  editor?.layout()
+}
+defineExpose({ resetDiffEditor, layoutEditor })
 
 events.on('editorReady', () => initEditor())
 onMounted(() => setTimeout(() => initEditor()))

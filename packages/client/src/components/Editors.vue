@@ -11,7 +11,7 @@
         <template #tab>
           <EditorTab :tab="tab" />
         </template>
-        <div class="zjs-editor">
+        <div class="zjs-editor p_relative">
           <template v-if="tab.type">
             <component :is="editorComps[tab.type]" :isActive="tab.key === activeKey"></component>
           </template>
@@ -20,6 +20,10 @@
             :isActive="tab.key === activeKey"
             @selectType="handleSelectType(tab, $event)"
           />
+          <template v-if="!tab.type">
+            <img class="type-img img-l p_center_y" src="https://s21.ax1x.com/2024/07/02/pkgKBKx.png" alt="">
+            <img class="type-img img-r p_center_y" src="https://s21.ax1x.com/2024/07/02/pkgKd2R.png" alt="">
+          </template>
         </div>
       </a-tab-pane>
     </a-tabs>
@@ -93,6 +97,11 @@ const onEdit = (targetKey: string | MouseEvent, action: string) => {
         border-bottom-color: #1e1e1e;
       }
     }
+    .zjs-editor {
+      .type-img {
+        opacity: .2;
+      }
+    }
   }
 }
 .zjs-content {
@@ -114,6 +123,17 @@ const onEdit = (targetKey: string | MouseEvent, action: string) => {
   }
   .zjs-editor {
     height: calc(100vh - 82px);
+    .type-img {
+      width: 300px;
+      opacity: .4;
+      user-select: none;
+      &.img-l {
+        left: 4vw;
+      }
+      &.img-r {
+        right: 4vw;
+      }
+    }
   }
 }
 </style>

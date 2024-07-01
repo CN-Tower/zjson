@@ -45,7 +45,7 @@ watch(
   
 <style lang="scss">
 .editor-type {
-  top: 45% !important;
+  top: 40% !important;
   .type-item {
     width: 200px;
     height: 200px;

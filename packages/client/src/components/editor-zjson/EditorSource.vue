@@ -33,9 +33,12 @@
     </div>
     <div class="editor-wrap w_100 h_100 pr_0 p_relative">
       <div class="editor w_100 h_100" ref="editorRef"></div>
-      <p v-if="!sourceCode" class="source-hint p_center text_center text3 opacity_d75 pe_none">
-        在此处输入或者粘贴<br />需要格式化的JSON原代码
-      </p>
+      <div v-if="!sourceCode" class="source-hint p_center pe_none">
+        <p  class="text_center text3 opacity_d75">
+          在此处输入或者粘贴<br />需要格式化的JSON原代码
+        </p>
+        <img src="https://s21.ax1x.com/2024/07/02/pkgKDr6.png" alt="">
+      </div>
     </div>
     <slot></slot>
   </div>
@@ -107,12 +110,24 @@ onBeforeUnmount(() => editor?.dispose())
 </script>
 
 <style lang="scss">
+.dark-mode {
+  .editor-source .editor-wrap .source-hint img {
+    opacity: .2;
+  }
+}
 .editor-source {
   .editor-wrap {
     padding: 1px;
     .source-hint {
-      top: 30%;
+      top: 25%;
       font-size: 24px;
+      img {
+        width: 220px;
+        margin-top: 20px;
+        position: absolute;
+        opacity: 0.4;
+        user-select: none;
+      }
     }
   }
 }

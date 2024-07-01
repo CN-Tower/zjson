@@ -57,3 +57,19 @@
     background: var(--background-float);
   }
 }
+
+.zjs-placeholder {
+  top: 40%;
+  .code-img {
+    width: 260px;
+    opacity: 0.4;
+    user-select: none;
+  }
+}
+.dark-mode {
+  .zjs-placeholder {
+    .code-img {
+      opacity: 0.2;
+    }
+  }
+}

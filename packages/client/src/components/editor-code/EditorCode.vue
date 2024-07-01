@@ -3,6 +3,7 @@
     <CodeEditor
       v-for="(item, i) in codeEditors"
       :key="item.key"
+      :index="i"
       :codeEditors="codeEditors"
       :isEditorNumMax="isEditorNumMax"
       ref="editorRefs"
@@ -23,13 +24,13 @@
 
 <script setup lang="ts">
 import CodeEditor from './CodeEditor.vue'
-import { ref, watch, onMounted, onBeforeUnmount, computed } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount, computed, provide } from 'vue'
 import type { ICodeEditor } from '@/types'
 import { storeToRefs, useEditorStore } from '@/stores'
 
 const props = defineProps({
   isActive: {
-    type: Boolean
+    type: Boolean,
   }
 })
 const codeEditors = ref<ICodeEditor[]>([{ key: Math.random().toString() }])
@@ -38,14 +39,9 @@ const editorRefs = ref([] as any[])
 const isOnResizing = ref(false)
 const isEditorNumMax = computed(() => codeEditors.value.length >= 3)
 const { formatResult } = storeToRefs(useEditorStore())
+const historyKey = ref(Math.random())
 
-watch(
-  () => props.isActive,
-  (active) => {
-    if (active) formatResult.value = {}
-  },
-  { immediate: true }
-)
+provide('historyKey', historyKey)
 
 const handleSplitEditor = (item: ICodeEditor, i: number) => {
   if (isEditorNumMax.value) return
@@ -119,6 +115,17 @@ const handleMouseUp = (e: MouseEvent) => {
 const handleLayoutEditors = () => {
   editorRefs.value.forEach((editorRef: any) => editorRef?.layoutEditor())
 }
+
+watch(
+  () => props.isActive,
+  (active) => {
+    if (active) {
+      formatResult.value = {}
+      setTimeout(() => handleLayoutEditors())
+    }
+  },
+  { immediate: true }
+)
 
 const removeEventListeners = () => {
   document.removeEventListener('mousemove', handleMouseMove)

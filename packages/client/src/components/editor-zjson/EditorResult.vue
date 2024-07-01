@@ -39,9 +39,12 @@
     </div>
     <div class="editor-wrap w_100 h_100 p_relative pl_0">
       <div class="editor w_100 h_100" ref="editorRef"></div>
-      <p v-if="!resultCode" class="resout-hint p_center text_center text3 opacity_d75 pe_none">
-        格式化结果输出<br />记得及时存档以备不时之需
-      </p>
+      <div v-if="!resultCode" class="resout-hint p_center pe_none">
+        <p class="text_center text3 opacity_d75">
+          格式化结果输出<br />记得及时存档以备不时之需
+        </p>
+        <img src="https://s21.ax1x.com/2024/07/02/pkgKwx1.png" alt="">
+      </div>
       <slot></slot>
     </div>
   </div>
@@ -115,6 +118,11 @@ onBeforeUnmount(() => editor?.dispose())
 </script>
 
 <style lang="scss">
+.dark-mode {
+  .editor-result .editor-wrap .resout-hint img {
+    opacity: .2;
+  }
+}
 .editor-result {
   .btn-escape {
     width: 20px;
@@ -122,8 +130,16 @@ onBeforeUnmount(() => editor?.dispose())
   .editor-wrap {
     padding: 1px;
     .resout-hint {
-      top: 30%;
+      top: 25%;
       font-size: 24px;
+      img {
+        width: 360px;
+        margin-top: 20px;
+        margin-left: -20px;
+        position: absolute;
+        opacity: .4;
+        user-select: none;
+      }
     }
   }
 }

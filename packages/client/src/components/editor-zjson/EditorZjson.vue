@@ -53,8 +53,8 @@ const fmtStrict = ref(false)
 const fmtEscape = ref(false)
 const fmtExpand = ref(true)
 const fmtResult = ref(null as any)
-const isShowSaveMode = ref(false)
 const saveName = ref('')
+const isShowSaveMode = ref(false)
 const historyKey = ref(Math.random())
 
 provide('sourceCode', sourceCode)
@@ -87,12 +87,6 @@ const doFormatJson = () => {
 }
 
 const handleFmtToJson = debounce(() => doFormatJson(), 500, { leading: true })
-
-watch(
-  () => props.isActive,
-  () => setFormatResult(),
-  { immediate: true }
-)
 
 watch(sourceCode, (val) => handleFmtToJson(), { immediate: true })
 
@@ -160,13 +154,13 @@ const handleEditorAction = ({ type, data }: IEditorAction) => {
  */
 const handleSaveFile = () => {
   const savedList = JSON.parse(localStorage.getItem(ZJSON_SAVE_JSONS) || '[]')
-  savedList.push({
+  savedList.unshift({
     name: saveName.value,
     code: sourceCode.value,
     time: Date.now()
   })
   if (savedList.length > 20) {
-    savedList.shift()
+    savedList.pop()
   }
   localStorage.setItem(ZJSON_SAVE_JSONS, JSON.stringify(savedList))
   isShowSaveMode.value = false
@@ -250,6 +244,17 @@ const handleLayoutEditors = () => {
   sourceRef.value?.layoutEditor()
   resultRef.value?.layoutEditor()
 }
+
+watch(
+  () => props.isActive,
+  (active) => {
+    setFormatResult()
+    if (active) {
+      setTimeout(() => handleLayoutEditors())
+    }
+  },
+  { immediate: true }
+)
 
 const removeEventListeners = () => {
   document.removeEventListener('mousemove', handleMouseMove)

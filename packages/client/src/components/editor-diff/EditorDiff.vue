@@ -9,7 +9,7 @@
       </div>
       <div class="bar-center">
         <a-tooltip title="清空左侧">
-          <DeleteOutlined class="bar-btn del-l mr_lg" />
+          <DeleteOutlined class="bar-btn del-l mr_lg" @click="handleDelLeft" />
         </a-tooltip>
         <a-tooltip title="左右交换">
           <SwapOutlined class="bar-btn" @click="handleSwapLeftRight" />
@@ -17,14 +17,22 @@
         <a-tooltip title="推到中间">
           <PauseOutlined class="bar-btn" @click="handleCenterSource" />
         </a-tooltip>
-        <a-tooltip title="存档历史">
-          <FolderOpenOutlined class="bar-btn" />
+        <a-tooltip title="清空两边">
+          <ClearOutlined class="bar-btn" @click="handleDelBoth" />
         </a-tooltip>
+        <a-popover trigger="click" placement="bottom">
+          <template #content>
+            <SaveHistory @select="saveHistoryRef.click()" :key="historyKey" />
+          </template>
+          <a-tooltip title="存档历史">
+            <FolderOpenOutlined class="bar-btn" ref="saveHistoryRef" />
+          </a-tooltip>
+        </a-popover>        
         <a-tooltip title="存档">
-          <SaveOutlined class="bar-btn" />
+          <SaveOutlined class="bar-btn" @click="handleSaveFile" />
         </a-tooltip>
         <a-tooltip title="清空右侧">
-          <DeleteOutlined class="bar-btn del-r ml_xxl" />
+          <DeleteOutlined class="bar-btn del-r ml_xxl" @click="handleDelRight" />
         </a-tooltip>
       </div>
       <div class="bar-right flex_end">
@@ -45,6 +53,7 @@
           class="source-left"
           ref="leftEditorRef"
           :code="leftCode"
+          from="l"
           @codeChange="leftCode = $event"
         >
           <div
@@ -59,28 +68,41 @@
           class="source-right"
           ref="rightEditorRef"
           :code="rightCode"
+          from="r"
           @codeChange="rightCode = $event"
         />
       </div>
     </div>
   </div>
+  <a-modal v-model:open="isShowSaveMode" title="存档">
+    <div class="my_md">
+      <a-input placeholder="请输入存档名称" v-model:value="saveName"></a-input>
+    </div>
+    <template #footer>
+      <a-button @click="isShowSaveMode = false">取消</a-button>
+      <a-button type="primary" :disabled="!saveName.trim()" @click="submitSaveFile">保存</a-button>
+    </template>
+  </a-modal>
 </template>
 
 <script setup lang="ts">
 import SourceEditor from './SourceEditor.vue'
 import DiffEditor from './DiffEditor.vue'
+import SaveHistory from './SaveHistory.vue'
 import { ref, watch, onMounted, onBeforeUnmount, provide } from 'vue'
 import {
   PauseOutlined,
   SwapOutlined,
   DeleteOutlined,
+  ClearOutlined,
   FolderOpenOutlined,
   SaveOutlined,
   CheckOutlined,
   EditOutlined
 } from '@ant-design/icons-vue'
 import { storeToRefs, useEditorStore } from '@/stores'
-import { EDITOR_LANGS } from '@/config'
+import { EDITOR_LANGS, ZJSON_SAVE_DIFFS } from '@/config'
+import { message } from 'ant-design-vue'
 
 const props = defineProps({
   isActive: {
@@ -97,18 +119,14 @@ const { formatResult } = storeToRefs(useEditorStore())
 const editorLang = ref('json')
 const leftCode = ref('')
 const rightCode = ref('')
+const saveName = ref('')
+const isShowSaveMode = ref(false)
+const historyKey = ref(Math.random())
+const saveHistoryRef = ref()
 
 provide('editorLang', editorLang)
 provide('leftCode', leftCode)
 provide('rightCode', rightCode)
-
-watch(
-  () => props.isActive,
-  (active) => {
-    if (active) formatResult.value = {}
-  },
-  { immediate: true }
-)
 
 /**
  * ===========================================================================
@@ -134,9 +152,69 @@ const handleCenterSource = () => {
 const handleEdit = () => {
   isShowDiff.value = false
 }
+
 const handleDiff = () => {
   isShowDiff.value = true
 }
+
+const handleDelLeft = () => {
+  leftCode.value = ''
+}
+
+const handleDelRight = () => {
+  rightCode.value = ''
+}
+
+const handleDelBoth = () => {
+  leftCode.value = ''
+  rightCode.value = ''
+}
+
+/**
+ * 存档
+ */
+const handleSaveFile = () => {
+  if (!leftCode.value.trim() && !rightCode.value.trim()) {
+    message.warning('空文件不能保存')
+    return
+  }
+  const lc = leftCode.value.replace(/[\s\r\n]/g, '')
+  const rc = rightCode.value.replace(/[\s\r\n]/g, '')
+  const l = lc.length > 12 ? lc.substr(0, 12) + ' ...' : lc
+  const r = rc.length > 12 ? rc.substr(0, 12) + ' ...' : rc
+  saveName.value = `${l} | ${r}`
+  isShowSaveMode.value = true
+}
+
+const submitSaveFile = () => {
+  const savedList = JSON.parse(localStorage.getItem(ZJSON_SAVE_DIFFS) || '[]')
+  savedList.unshift({
+    name: saveName.value,
+    leftCode: leftCode.value,
+    rightCode: rightCode.value,
+    time: Date.now()
+  })
+  if (savedList.length > 20) {
+    savedList.pop()
+  }
+  localStorage.setItem(ZJSON_SAVE_DIFFS, JSON.stringify(savedList))
+  isShowSaveMode.value = false
+  historyKey.value = Math.random()
+  message.success('存档成功')
+}
+
+/**
+ * 打开历史存档
+ */
+const handleOpenHistory = (time: number) => {
+  const savedList = JSON.parse(localStorage.getItem(ZJSON_SAVE_DIFFS) || '[]')
+  const item = savedList.find((item: any) => item.time === time)
+  if (item) {
+    leftCode.value = item.leftCode
+    rightCode.value = item.rightCode
+  }
+}
+provide('handleOpenHistory', handleOpenHistory)
 
 /**
  * ===========================================================================
@@ -186,7 +264,19 @@ const handleMouseUp = (e: MouseEvent) => {
 const handleLayoutEditors = () => {
   leftEditorRef.value?.layoutEditor()
   rightEditorRef.value?.layoutEditor()
+  diffEditorRef.value?.layoutEditor()
 }
+
+watch(
+  () => props.isActive,
+  (active) => {
+    if (active) {
+      formatResult.value = {}
+      setTimeout(() => handleLayoutEditors())
+    }
+  },
+  { immediate: true }
+)
 
 const removeEventListeners = () => {
   document.removeEventListener('mousemove', handleMouseMove)
