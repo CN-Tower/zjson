@@ -4,12 +4,7 @@
       <div class="bar-left pl_sm flex_start">
         <span class="fs_5">语言：</span>
         <a-select class="zjs-selector" v-model:value="editorLang" style="width: 120px" size="small">
-          <a-select-option value="plaintext">plaintext</a-select-option>
-          <a-select-option value="json">json</a-select-option>
-          <a-select-option value="html">html</a-select-option>
-          <a-select-option value="css">css</a-select-option>
-          <a-select-option value="javascript">javascript</a-select-option>
-          <a-select-option value="typescript">typescript</a-select-option>
+          <a-select-option v-for="l in EDITOR_LANGS" :value="l" :key="l">{{ l }}</a-select-option>
         </a-select>
       </div>
       <div class="bar-center">
@@ -85,6 +80,7 @@ import {
   EditOutlined
 } from '@ant-design/icons-vue'
 import { storeToRefs, useEditorStore } from '@/stores'
+import { EDITOR_LANGS } from '@/config'
 
 const props = defineProps({
   isActive: {

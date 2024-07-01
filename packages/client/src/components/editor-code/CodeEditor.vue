@@ -4,11 +4,7 @@
       <div class="bar-left pl_sm flex_start">
         <span class="fs_5">语言：</span>
         <a-select class="zjs-selector" v-model:value="editorLang" style="width: 120px" size="small">
-          <a-select-option value="json">json</a-select-option>
-          <a-select-option value="html">html</a-select-option>
-          <a-select-option value="css">css</a-select-option>
-          <a-select-option value="javascript">javascript</a-select-option>
-          <a-select-option value="typescript">typescript</a-select-option>
+          <a-select-option v-for="l in EDITOR_LANGS" :value="l" :key="l">{{ l }}</a-select-option>
         </a-select>
       </div>
       <div class="bar-right">
@@ -48,9 +44,10 @@ import {
   SaveOutlined,
   CloseOutlined
 } from '@ant-design/icons-vue'
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
 import { storeToRefs, useAppStore, useEditorStore } from '@/stores'
 import { events } from '@/utils'
+import { EDITOR_LANGS } from '@/config'
 
 const props = defineProps({
   codeEditors: {
@@ -69,11 +66,16 @@ const isEditorInited = ref(false)
 const editorLang = ref('json')
 let editor = null as any
 
+watch(editorLang, () => {
+  console.log(editorLang.value)
+  editor?.updateOptions({ language: editorLang.value })
+})
+
 const initEditor = () => {
   if (isEditorInited.value || !isEditorReady.value) return
   isEditorInited.value = true
   editor = (window as any).monaco.editor.create(editorRef.value, {
-    language: 'plaintext',
+    language: editorLang.value,
     tabSize: 2,
     wordWrap: 'on',
     theme: themeMode.value === 'light' ? 'vs' : 'vs-dark',
