@@ -64,6 +64,10 @@
     width: 260px;
     opacity: 0.4;
     user-select: none;
+    pointer-events: none;
+    &.img-lg {
+      width: 300px;
+    }
   }
 }
 .dark-mode {

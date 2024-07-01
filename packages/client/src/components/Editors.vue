@@ -127,6 +127,7 @@ const onEdit = (targetKey: string | MouseEvent, action: string) => {
       width: 300px;
       opacity: .4;
       user-select: none;
+      pointer-events: none;
       &.img-l {
         left: 4vw;
       }

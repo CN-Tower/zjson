@@ -38,18 +38,18 @@
       <div class="editor w_100 h_100" ref="editorRef"></div>
       <p v-if="!editorCode" class="zjs-placeholder p_center text_center text3 opacity_d75 pe_none fs_1xx">
         <img
-          class="code-img"
+          class="code-img img-lg"
           v-if="index === 0"
           src="https://s21.ax1x.com/2024/07/02/pkgnNeU.png"
           alt=""
         />
         <img
-          class="code-img"
+          class="code-img img-lg"
           v-else-if="index === 1"
           src="https://s21.ax1x.com/2024/07/02/pkgn3zq.png"
           alt=""
         />
-        <img class="code-img" v-else src="https://s21.ax1x.com/2024/07/02/pkgnJyV.png" alt="" />
+        <img class="code-img img-lg" v-else src="https://s21.ax1x.com/2024/07/02/pkgnJyV.png" alt="" />
       </p>
     </div>
     <slot></slot>

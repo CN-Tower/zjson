@@ -103,6 +103,7 @@ import {
 import { storeToRefs, useEditorStore } from '@/stores'
 import { EDITOR_LANGS, ZJSON_SAVE_DIFFS } from '@/config'
 import { message } from 'ant-design-vue'
+import { debounce } from '@/utils'
 
 const props = defineProps({
   isActive: {
@@ -266,6 +267,16 @@ const handleLayoutEditors = () => {
   rightEditorRef.value?.layoutEditor()
   diffEditorRef.value?.layoutEditor()
 }
+
+const handleWindowResize = debounce(() => {
+  const WW = wrapRef.value.offsetWidth
+  const LW = leftEditorRef.value.$el.offsetWidth
+  const pl = (LW / WW) * 100
+  const pr = 100 - pl
+  leftEditorRef.value.$el.style.width = `${pl}%`
+  rightEditorRef.value.$el.style.width = `${pr}%`
+  setTimeout(() => handleLayoutEditors(), 200)
+}, 300)
 
 watch(
   () => props.isActive,

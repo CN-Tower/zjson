@@ -1,5 +1,5 @@
 <template>
-  <div class="editor-zjson h_100 flex_start" ref="wrapRef">
+  <div class="editor-zjson w_100 h_100 flex_start" ref="wrapRef">
     <EditorSource
       class="zjson-source h_100"
       ref="sourceRef"
@@ -31,11 +31,11 @@
 import EditorSource from './EditorSource.vue'
 import EditorResult from './EditorResult.vue'
 import { ref, watch, onMounted, onBeforeUnmount, provide } from 'vue'
-import { debounce } from 'lodash-es'
 import fmt2json from 'format-to-json'
 import { storeToRefs, useEditorStore } from '@/stores'
 import { message } from 'ant-design-vue'
 import { ZJSON_SAVE_JSONS, TEMPLATE_ZJSON, TEMPLATE_PYUNI } from '@/config'
+import { debounce } from '@/utils'
 
 const props = defineProps({
   isActive: {
@@ -245,6 +245,16 @@ const handleLayoutEditors = () => {
   resultRef.value?.layoutEditor()
 }
 
+const handleWindowResize = debounce(() => {
+  const WW = wrapRef.value.offsetWidth
+  const LW = sourceRef.value.$el.offsetWidth
+  const pl = (LW / WW) * 100
+  const pr = 100 - pl
+  sourceRef.value.$el.style.width = `${pl}%`
+  resultRef.value.$el.style.width = `${pr}%`
+  handleLayoutEditors()
+}, 300)
+
 watch(
   () => props.isActive,
   (active) => {
@@ -259,11 +269,11 @@ watch(
 const removeEventListeners = () => {
   document.removeEventListener('mousemove', handleMouseMove)
   document.removeEventListener('mouseup', handleMouseUp)
-  window.addEventListener('resize', handleLayoutEditors)
+  window.addEventListener('resize', handleWindowResize)
 }
 
 onMounted(() => {
-  window.addEventListener('resize', handleLayoutEditors)
+  window.addEventListener('resize', handleWindowResize)
 })
 onBeforeUnmount(() => removeEventListeners())
 </script>
