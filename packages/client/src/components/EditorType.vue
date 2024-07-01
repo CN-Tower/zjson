@@ -23,8 +23,24 @@
 import SvgDiff from '@/assets/svg/diff.svg'
 import SvgCode from '@/assets/svg/code.svg'
 import { RetweetOutlined } from '@ant-design/icons-vue'
+import { storeToRefs, useEditorStore } from '@/stores'
+import { watch } from 'vue'
 
 const emits = defineEmits(['selectType'])
+const props = defineProps({
+  isActive: {
+    type: Boolean
+  }
+})
+const { formatResult } = storeToRefs(useEditorStore())
+
+watch(
+  () => props.isActive,
+  (active) => {
+    if (active) formatResult.value = {}
+  },
+  { immediate: true }
+)
 </script>
   
 <style lang="scss">

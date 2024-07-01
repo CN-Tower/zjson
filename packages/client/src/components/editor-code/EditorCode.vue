@@ -23,14 +23,29 @@
 
 <script setup lang="ts">
 import CodeEditor from './CodeEditor.vue'
-import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount, computed } from 'vue'
 import type { ICodeEditor } from '@/types'
+import { storeToRefs, useEditorStore } from '@/stores'
 
+const props = defineProps({
+  isActive: {
+    type: Boolean
+  }
+})
 const codeEditors = ref<ICodeEditor[]>([{ key: Math.random().toString() }])
 const wrapRef = ref()
 const editorRefs = ref([] as any[])
 const isOnResizing = ref(false)
 const isEditorNumMax = computed(() => codeEditors.value.length >= 3)
+const { formatResult } = storeToRefs(useEditorStore())
+
+watch(
+  () => props.isActive,
+  (active) => {
+    if (active) formatResult.value = {}
+  },
+  { immediate: true }
+)
 
 const handleSplitEditor = (item: ICodeEditor, i: number) => {
   if (isEditorNumMax.value) return
@@ -102,7 +117,7 @@ const handleMouseUp = (e: MouseEvent) => {
 }
 
 const handleLayoutEditors = () => {
-  editorRefs.value.forEach((editorRef: any) => editorRef.layoutEditor())
+  editorRefs.value.forEach((editorRef: any) => editorRef?.layoutEditor())
 }
 
 const removeEventListeners = () => {

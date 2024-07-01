@@ -9,14 +9,14 @@
         <div class="drag-line p_center h_100"></div>
       </div>
     </EditorSource>
-    <EditorResult class="zjson-result h_100" ref="resultRef" />
+    <EditorResult class="zjson-result h_100" ref="resultRef" @editorAction="handleEditorAction" />
   </div>
 </template>
 
 <script setup lang="ts">
 import EditorSource from './EditorSource.vue'
 import EditorResult from './EditorResult.vue'
-import { ref, watch, onMounted, onBeforeUnmount, provide, onActivated } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount, provide } from 'vue'
 import { debounce } from 'lodash-es'
 import fmt2json from 'format-to-json'
 import { storeToRefs, useEditorStore } from '@/stores'
@@ -26,22 +26,48 @@ const props = defineProps({
     type: Boolean
   }
 })
-
 const { formatResult } = storeToRefs(useEditorStore())
 const isOnResizing = ref(false)
 const wrapRef = ref()
 const sourceRef = ref()
 const resultRef = ref()
 const sourceCode = ref('')
+const resultCode = ref('')
+const fmtStrict = ref(false)
+const fmtEscape = ref(false)
+const fmtExpand = ref(true)
 const fmtResult = ref(null as any)
 
 provide('sourceCode', sourceCode)
+provide('resultCode', resultCode)
+provide('fmtStrict', fmtStrict)
+provide('fmtEscape', fmtEscape)
+provide('fmtExpand', fmtExpand)
 
+/**
+ * ===========================================================================
+ * 响应页面事件
+ * ===========================================================================
+ */
 const setFormatResult = () => {
   if (props.isActive) {
     formatResult.value = fmtResult.value
   }
 }
+
+const doFormatJson = () => {
+  fmtResult.value = fmt2json(sourceCode.value, {
+    withDetails: true,
+    strict: fmtStrict.value,
+    escape: fmtEscape.value,
+    expand: fmtExpand.value,
+  })
+  console.log('fmtResult.value', fmtResult.value)
+  resultCode.value = fmtResult.value.result
+  setFormatResult()
+}
+
+const handleFmtToJson = debounce(() => doFormatJson(), 500, { leading: true })
 
 watch(
   () => props.isActive,
@@ -49,40 +75,53 @@ watch(
   { immediate: true }
 )
 
-watch(sourceCode, (val) => {
-  handleFmtToJson()
-})
+watch(sourceCode, (val) => handleFmtToJson(), { immediate: true })
 
-const doFormatJson = () => {
-  fmtResult.value = fmt2json(sourceCode.value, { withDetails: true })
-  console.log('fmtResult.value', fmtResult.value)
-  setFormatResult()
-  resultRef.value.setResultValue(fmtResult.value.result)
-}
-const handleFmtToJson = debounce(() => doFormatJson(), 500, { leading: true })
-
-/**
- * ===========================================================================
- * 响应页面事件
- * ===========================================================================
- */
 interface IEditorAction {
   type: string
   data?: any
 }
 const handleEditorAction = ({ type, data }: IEditorAction) => {
-  if (type === 'putCenter') {
-    sourceRef.value.$el.style.width = '50%'
-    resultRef.value.$el.style.width = '50%'
-    handleLayoutEditors()
-    sourceRef.value.isEditorDftLeft = false
-  } else if (type === 'putLeft') {
-    sourceRef.value.$el.style.width = '38%'
-    resultRef.value.$el.style.width = '100%'
-    handleLayoutEditors()
-    sourceRef.value.isEditorDftLeft = true
-  } else if (type === 'fmtJson') {
-    doFormatJson()
+  switch (type) {
+    case 'putCenter':
+      sourceRef.value.$el.style.width = '50%'
+      resultRef.value.$el.style.width = '50%'
+      handleLayoutEditors()
+      sourceRef.value.isEditorDftLeft = false
+      break
+    case 'putLeft':
+      sourceRef.value.$el.style.width = '38%'
+      resultRef.value.$el.style.width = '100%'
+      handleLayoutEditors()
+      sourceRef.value.isEditorDftLeft = true
+      break
+    case 'fmtJson':
+      doFormatJson()
+      break
+    case 'unescapeSrc':
+      sourceCode.value = sourceCode.value.replace(/\\"/gm, '"').replace(/\\\\/gm, '\\')
+      break
+    case 'fmtStrict':
+      fmtStrict.value = !fmtStrict.value
+      doFormatJson()
+      break
+    case 'clearSource':
+      sourceCode.value = ''
+      break
+    case 'clearResult':
+      resultCode.value = ''
+      break
+    case 'fmtEscape':
+      fmtEscape.value = !fmtEscape.value
+      doFormatJson()
+      break
+    case 'pushToLeft':
+      sourceCode.value = resultCode.value
+      break
+    case 'fmtExpand':
+      fmtExpand.value = !fmtExpand.value
+      doFormatJson()
+      break
   }
 }
 
@@ -132,8 +171,8 @@ const handleMouseUp = (e: MouseEvent) => {
 }
 
 const handleLayoutEditors = () => {
-  sourceRef.value.layoutEditor()
-  resultRef.value.layoutEditor()
+  sourceRef.value?.layoutEditor()
+  resultRef.value?.layoutEditor()
 }
 
 const removeEventListeners = () => {

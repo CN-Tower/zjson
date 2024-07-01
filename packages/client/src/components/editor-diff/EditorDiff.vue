@@ -27,17 +27,20 @@
         <a-tooltip title="存档">
           <SaveOutlined class="bar-btn" />
         </a-tooltip>
-        <a-tooltip v-if="isShowDiff" title="编辑内容">
-          <EditOutlined class="bar-btn" @click="handleEdit" />
-        </a-tooltip>
-        <a-tooltip v-else title="保存并对比">
-          <CheckOutlined class="bar-btn" @click="handleDiff" />
-        </a-tooltip>
         <a-tooltip title="清空右侧">
           <DeleteOutlined class="bar-btn del-r ml_xxl" />
         </a-tooltip>
       </div>
-      <div class="bar-right"></div>
+      <div class="bar-right flex_end">
+        <a-button class="r-btn zjs-button" v-if="isShowDiff" size="small" @click="handleEdit">
+          <EditOutlined />
+          <span class="fs_5">编辑</span>
+        </a-button>
+        <a-button class="r-btn zjs-button" v-else size="small" @click="handleDiff">
+          <CheckOutlined />
+          <span class="fs_5">对比</span>
+        </a-button>
+      </div>
     </div>
     <div class="diff-content w_100 h_100">
       <div v-if="!isShowDiff" class="h_100 flex_between" ref="wrapRef">
@@ -60,7 +63,7 @@
 <script setup lang="ts">
 import SourceEditor from './SourceEditor.vue'
 import DiffEditor from './DiffEditor.vue'
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, watch, onMounted, onBeforeUnmount } from 'vue'
 import {
   PauseOutlined,
   SwapOutlined,
@@ -70,13 +73,28 @@ import {
   CheckOutlined,
   EditOutlined
 } from '@ant-design/icons-vue'
+import { storeToRefs, useEditorStore } from '@/stores'
 
+const props = defineProps({
+  isActive: {
+    type: Boolean
+  }
+})
 const isShowDiff = ref(false)
 const isOnResizing = ref(false)
 const wrapRef = ref()
 const leftRef = ref()
 const rightRef = ref()
 const editorLang = ref('json')
+const { formatResult } = storeToRefs(useEditorStore())
+
+watch(
+  () => props.isActive,
+  (active) => {
+    if (active) formatResult.value = {}
+  },
+  { immediate: true }
+)
 
 /**
  * ===========================================================================
@@ -173,6 +191,11 @@ onBeforeUnmount(() => removeEventListeners())
     }
     .del-r {
       transform: rotate(15deg);
+    }
+    .bar-right {
+      .r-btn {
+        width: 90px;
+      }
     }
   }
   .source-left {

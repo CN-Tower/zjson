@@ -8,38 +8,40 @@
         <StepBackwardOutlined class="bar-btn" @click="emit('editorAction', { type: 'putLeft' })" />
       </a-tooltip>
       <a-tooltip title="源码反转义">
-        <ThunderboltOutlined class="bar-btn" />
-      </a-tooltip>
-      <a-tooltip title="标准格式开关">
-        <span class="bar-btn flex_center">
-          <SvgSwitch />
-        </span>
-        <!-- <span class="bar-btn flex_center">
-          <SvgSwitch class="rotate_180" />
-        </span> -->
-      </a-tooltip>
-      <a-tooltip title="清空源码">
-        <DeleteOutlined class="bar-btn" />
-      </a-tooltip>
-      <a-tooltip title="上传文件">
-        <UploadOutlined class="bar-btn" />
+        <ThunderboltOutlined
+          class="bar-btn"
+          @click="emit('editorAction', { type: 'unescapeSrc' })"
+        />
       </a-tooltip>
       <a-tooltip title="存档记录">
         <FolderOpenOutlined class="bar-btn" />
+      </a-tooltip>
+      <a-tooltip title="存档">
+        <SaveOutlined class="bar-btn" />
+      </a-tooltip>
+      <a-tooltip title="清空源码">
+        <DeleteOutlined class="bar-btn" @click="emit('editorAction', { type: 'clearSource' })" />
+      </a-tooltip>
+      <a-tooltip title="上传文件">
+        <UploadOutlined class="bar-btn" />
       </a-tooltip>
       <a-tooltip title="转为JSON">
         <RetweetOutlined class="bar-btn" @click="emit('editorAction', { type: 'fmtJson' })" />
       </a-tooltip>
     </div>
-    <div class="editor-wrap w_100 h_100 pr_0">
+    <div class="editor-wrap w_100 h_100 pr_0 p_relative">
       <div class="editor w_100 h_100" ref="editorRef"></div>
+      <p v-if="!sourceCode" class="source-hint p_center text_center text3 opacity_d75">
+        在此处输入或者粘贴<br />需要格式化的JSON原代码
+      </p>
     </div>
     <slot></slot>
   </div>
 </template>
 
 <script setup lang="ts">
-import SvgSwitch from '@/assets/svg/switch.svg'
+import { ref, watch, onMounted, onBeforeUnmount, inject } from 'vue'
+import { storeToRefs, useAppStore, useEditorStore } from '@/stores'
 import {
   PauseOutlined,
   StepBackwardOutlined,
@@ -47,23 +49,26 @@ import {
   ThunderboltOutlined,
   DeleteOutlined,
   FolderOpenOutlined,
+  SaveOutlined,
   UploadOutlined
 } from '@ant-design/icons-vue'
-import { ref, onMounted, onBeforeUnmount, inject } from 'vue'
-import { storeToRefs, useAppStore, useEditorStore } from '@/stores'
 import { events } from '@/utils'
 import type { Ref } from 'vue'
 
 const emit = defineEmits(['editorAction'])
-
+const sourceCode = inject('sourceCode') as Ref<string>
 const isEditorInited = ref(false)
 const isEditorDftLeft = ref(true)
 const editorRef = ref()
 const { isEditorReady } = storeToRefs(useEditorStore())
 const { themeMode } = storeToRefs(useAppStore())
-let editor = null as any
 
-const sourceCode = inject('sourceCode') as Ref<string>
+let editor = null as any
+watch(sourceCode, (val) => {
+  if (editor && val !== editor.getValue()) {
+    editor?.setValue(val)
+  }
+})
 
 const initEditor = () => {
   if (isEditorInited.value || !isEditorReady.value) return
@@ -96,6 +101,10 @@ onBeforeUnmount(() => editor?.dispose())
 .editor-source {
   .editor-wrap {
     padding: 1px;
+    .source-hint {
+      top: 30%;
+      font-size: 24px;
+    }
   }
 }
 </style>

@@ -15,7 +15,11 @@
           <template v-if="tab.type">
             <component :is="editorComps[tab.type]" :isActive="tab.key === activeKey"></component>
           </template>
-          <EditorType v-else @selectType="handleSelectType(tab, $event)" />
+          <EditorType
+            v-else
+            :isActive="tab.key === activeKey"
+            @selectType="handleSelectType(tab, $event)"
+          />
         </div>
       </a-tab-pane>
     </a-tabs>
