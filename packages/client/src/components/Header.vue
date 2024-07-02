@@ -11,14 +11,6 @@
     <div class="zjs-hbtns flex_start">
       <a-button class="hd-btn" size="small" type="text" @click="toggleLanguage"> English </a-button>
       <a-button
-        class="hd-btn btn-settings pd_0 flex_center"
-        size="small"
-        type="text"
-        @click="handleOpenGithub"
-      >
-        <GithubOutlined />
-      </a-button>
-      <a-button
         class="hd-btn btn-theme pd_0 flex_center"
         size="small"
         type="text"
@@ -31,9 +23,17 @@
         class="hd-btn btn-settings pd_0 flex_center"
         size="small"
         type="text"
-        @click="handleSettings"
+        @click="handleOpenNpm"
       >
-        <SettingOutlined />
+        <SvgNpm />
+      </a-button>
+      <a-button
+        class="hd-btn btn-settings pd_0 flex_center"
+        size="small"
+        type="text"
+        @click="handleOpenGithub"
+      >
+        <GithubOutlined />
       </a-button>
     </div>
   </header>
@@ -42,9 +42,10 @@
 <script lang="ts" setup>
 import SvgDay from '@/assets/svg/day.svg'
 import SvgNight from '@/assets/svg/night.svg'
+import SvgNpm from '@/assets/svg/npm.svg'
 import { storeToRefs, useAppStore, useEditorStore } from '@/stores'
-import { SettingOutlined, GithubOutlined } from '@ant-design/icons-vue'
-import { computed } from 'vue';
+import { GithubOutlined } from '@ant-design/icons-vue'
+import { computed } from 'vue'
 
 const { themeMode } = storeToRefs(useAppStore())
 const { formatResult } = storeToRefs(useEditorStore())
@@ -56,7 +57,7 @@ const noticeMap = {
   end: (idx: number, exp: string) => `第${idx}行，期望一个“逗号”或一个“${exp}”！`,
   war: (idx: number, exp: string) => `非正常Json转换，行数：${idx}行！`,
   scc: (idx: number, exp: string) => `格式化成功，行数：${idx}行！`,
-  err: (idx: number, exp: string) => `解析出错，过大的非正常Json字符串！`
+  err: (idx: number, exp: string) => `解析出错，过大的非正常Json字符串！`,
 } as Record<string, any>
 
 const format = computed(() => {
@@ -70,6 +71,8 @@ const format = computed(() => {
   }
 })
 
+const toggleLanguage = () => {}
+
 const toggleThemeMode = () => {
   if (themeMode.value === 'light') {
     themeMode.value = 'dark'
@@ -80,9 +83,9 @@ const toggleThemeMode = () => {
   }
 }
 
-const toggleLanguage = () => {}
-
-const handleSettings = () => {}
+const handleOpenNpm = () => {
+  window.open('https://www.npmjs.com/package/format-to-json', '_blank')
+}
 
 const handleOpenGithub = () => {
   window.open('https://github.com/CN-Tower/zjson', '_blank')

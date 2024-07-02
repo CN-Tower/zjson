@@ -25,12 +25,32 @@
       <a-button type="primary" :disabled="!saveName.trim()" @click="handleSaveFile">保存</a-button>
     </template>
   </a-modal>
+  <a-modal v-model:open="isShowSettingsMode" title="转杰森设置">
+    <a-form class="mt_md form-item">
+      <a-form-item label="缩进：">
+        <a-select class="w_100" v-model:value="codeIndent">
+          <a-select-option v-for="i in 8" :value="i">{{ i }}</a-select-option>
+        </a-select>
+      </a-form-item>
+      <a-form-item label="引号：">
+        <a-select
+          class="w_100"
+          v-model:value="qtMarkType"
+          :options="qtMarkOptions"
+          @change="() => {}"
+        />
+      </a-form-item>
+    </a-form>
+    <template #footer>
+      <a-button type="primary" @click="isShowSettingsMode = false">确定</a-button>
+    </template>
+  </a-modal>
 </template>
 
 <script setup lang="ts">
 import EditorSource from './EditorSource.vue'
 import EditorResult from './EditorResult.vue'
-import { ref, watch, onMounted, onBeforeUnmount, provide } from 'vue'
+import { ref, watch, computed, onMounted, onBeforeUnmount, provide } from 'vue'
 import fmt2json from 'format-to-json'
 import { storeToRefs, useEditorStore } from '@/stores'
 import { message } from 'ant-design-vue'
@@ -39,8 +59,8 @@ import { debounce } from '@/utils'
 
 const props = defineProps({
   isActive: {
-    type: Boolean
-  }
+    type: Boolean,
+  },
 })
 const { formatResult } = storeToRefs(useEditorStore())
 const isOnResizing = ref(false)
@@ -53,15 +73,37 @@ const fmtStrict = ref(false)
 const fmtEscape = ref(false)
 const fmtExpand = ref(true)
 const fmtResult = ref(null as any)
+const wordWrap = ref(true)
+const codeIndent = ref(2)
+const qtMarkType = ref<0 | 1 | 2 | 3>(0)
+const keyQtMark = computed<any>(() => ['"', '', '', "'"][qtMarkType.value])
+const valQtMark = computed<any>(() => ['"', "'", '"', "'"][qtMarkType.value])
 const saveName = ref('')
 const isShowSaveMode = ref(false)
 const historyKey = ref(Math.random())
+const isShowSettingsMode = ref(false)
+const qtMarkOptions = ref([
+  { label: '"key": "value"', value: 0 },
+  { label: "key: 'value'", value: 1 },
+  { label: 'key: "value"', value: 2 },
+  { label: "'key': 'value'", value: 3 },
+])
 
 provide('sourceCode', sourceCode)
 provide('resultCode', resultCode)
 provide('fmtStrict', fmtStrict)
 provide('fmtEscape', fmtEscape)
 provide('fmtExpand', fmtExpand)
+provide('wordWrap', wordWrap)
+provide('codeIndent', codeIndent)
+
+watch([codeIndent, qtMarkType], () => {
+  isShowSettingsMode.value = false
+})
+
+watch([codeIndent, keyQtMark, valQtMark], () => {
+  if (props.isActive) doFormatJson()
+})
 
 /**
  * ===========================================================================
@@ -69,9 +111,7 @@ provide('fmtExpand', fmtExpand)
  * ===========================================================================
  */
 const setFormatResult = () => {
-  if (props.isActive) {
-    formatResult.value = fmtResult.value
-  }
+  if (props.isActive) formatResult.value = fmtResult.value
 }
 
 const doFormatJson = () => {
@@ -79,16 +119,18 @@ const doFormatJson = () => {
     withDetails: true,
     strict: fmtStrict.value,
     escape: fmtEscape.value,
-    expand: fmtExpand.value
+    expand: fmtExpand.value,
+    indent: codeIndent.value,
+    keyQtMark: keyQtMark.value,
+    valQtMark: valQtMark.value,
   })
   console.log('fmtResult.value', fmtResult.value)
   resultCode.value = fmtResult.value.result
   setFormatResult()
 }
 
-const handleFmtToJson = debounce(() => doFormatJson(), 500, { leading: true })
-
-watch(sourceCode, (val) => handleFmtToJson(), { immediate: true })
+const handleFmtToJson = debounce(() => doFormatJson(), 500)
+watch(sourceCode, () => handleFmtToJson(), { immediate: true })
 
 interface IEditorAction {
   type: string
@@ -150,6 +192,14 @@ const handleEditorAction = ({ type, data }: IEditorAction) => {
 }
 
 /**
+ * 设置
+ */
+const handleSettings = () => {
+  isShowSettingsMode.value = true
+}
+provide('handleSettings', handleSettings)
+
+/**
  * 存档
  */
 const handleSaveFile = () => {
@@ -157,7 +207,7 @@ const handleSaveFile = () => {
   savedList.unshift({
     name: saveName.value,
     code: sourceCode.value,
-    time: Date.now()
+    time: Date.now(),
   })
   if (savedList.length > 20) {
     savedList.pop()
@@ -263,7 +313,7 @@ watch(
       setTimeout(() => handleLayoutEditors())
     }
   },
-  { immediate: true }
+  { immediate: true },
 )
 
 const removeEventListeners = () => {

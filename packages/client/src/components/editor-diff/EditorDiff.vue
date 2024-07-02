@@ -31,6 +31,9 @@
         <a-tooltip title="存档">
           <SaveOutlined class="bar-btn" @click="handleSaveFile" />
         </a-tooltip>
+        <a-tooltip title="设置">
+          <SettingOutlined class="bar-btn" />
+        </a-tooltip>
         <a-tooltip title="清空右侧">
           <DeleteOutlined class="bar-btn del-r ml_xxl" @click="handleDelRight" />
         </a-tooltip>
@@ -98,7 +101,8 @@ import {
   FolderOpenOutlined,
   SaveOutlined,
   CheckOutlined,
-  EditOutlined
+  EditOutlined,
+  SettingOutlined,
 } from '@ant-design/icons-vue'
 import { storeToRefs, useEditorStore } from '@/stores'
 import { EDITOR_LANGS, ZJSON_SAVE_DIFFS } from '@/config'

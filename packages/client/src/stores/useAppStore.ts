@@ -5,10 +5,9 @@ import { ZJSON_THEME } from '@/config'
 
 export const useAppStore = defineStore('useAppStore', () => {
   const themeMode = ref(localStorage.getItem(ZJSON_THEME) || 'light')
-
   const themeConfig = computed(() => {
     return {
-      algorithm: themeMode.value === 'light' ? theme.defaultAlgorithm : theme.darkAlgorithm
+      algorithm: themeMode.value === 'light' ? theme.defaultAlgorithm : theme.darkAlgorithm,
     }
   })
 

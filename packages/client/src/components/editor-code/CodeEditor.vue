@@ -8,13 +8,6 @@
         </a-select>
       </div>
       <div class="bar-right">
-        <a-tooltip title="拆分编辑器">
-          <SplitCellsOutlined
-            class="bar-btn"
-            :class="{ disabled: isEditorNumMax }"
-            @click="emit('split')"
-          />
-        </a-tooltip>
         <a-tooltip title="清空">
           <DeleteOutlined class="bar-btn" @click="handleDelCode" />
         </a-tooltip>
@@ -28,6 +21,16 @@
         </a-popover>
         <a-tooltip title="存档">
           <SaveOutlined class="bar-btn" @click="handleSaveFile" />
+        </a-tooltip>
+        <a-tooltip title="设置">
+          <SettingOutlined class="bar-btn" />
+        </a-tooltip>
+        <a-tooltip title="拆分编辑器">
+          <SplitCellsOutlined
+            class="bar-btn"
+            :class="{ disabled: isEditorNumMax }"
+            @click="emit('split')"
+          />
         </a-tooltip>
         <a-tooltip v-if="codeEditors.length > 1" title="关闭">
           <CloseOutlined class="bar-btn" @click="emit('close')" />
@@ -74,7 +77,8 @@ import {
   SplitCellsOutlined,
   FolderOpenOutlined,
   SaveOutlined,
-  CloseOutlined
+  CloseOutlined,
+  SettingOutlined,
 } from '@ant-design/icons-vue'
 import { ref, watch, onMounted, onBeforeUnmount, provide, inject, type Ref } from 'vue'
 import { storeToRefs, useAppStore, useEditorStore } from '@/stores'

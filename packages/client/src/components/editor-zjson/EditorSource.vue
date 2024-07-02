@@ -18,7 +18,11 @@
           <SelectSaveHistory @select="saveHistoryRef.click()" :key="historyKey" />
         </template>
         <a-tooltip title="存档记录">
-          <FolderOpenOutlined class="bar-btn" ref="saveHistoryRef" @click="emit('editorAction', { type: 'openFile' })" />
+          <FolderOpenOutlined
+            class="bar-btn"
+            ref="saveHistoryRef"
+            @click="emit('editorAction', { type: 'openFile' })"
+          />
         </a-tooltip>
       </a-popover>
       <a-tooltip title="存档">
@@ -34,10 +38,8 @@
     <div class="editor-wrap w_100 h_100 pr_0 p_relative">
       <div class="editor w_100 h_100" ref="editorRef"></div>
       <div v-if="!sourceCode" class="source-hint p_center pe_none">
-        <p  class="text_center text3 opacity_d75">
-          在此处输入或者粘贴<br />需要格式化的JSON原代码
-        </p>
-        <img src="https://s21.ax1x.com/2024/07/02/pkgKDr6.png" alt="">
+        <p class="text_center text3 opacity_d75">在此处输入或者粘贴<br />需要格式化的JSON字符串</p>
+        <img src="https://s21.ax1x.com/2024/07/02/pkgKDr6.png" alt="" />
       </div>
     </div>
     <slot></slot>
@@ -56,7 +58,6 @@ import {
   DeleteOutlined,
   FolderOpenOutlined,
   SaveOutlined,
-  UploadOutlined
 } from '@ant-design/icons-vue'
 import { events } from '@/utils'
 import type { Ref } from 'vue'
@@ -64,7 +65,7 @@ import type { Ref } from 'vue'
 const props = defineProps({
   historyKey: {
     type: Number,
-  }
+  },
 })
 const emit = defineEmits(['editorAction'])
 const sourceCode = inject('sourceCode') as Ref<string>
@@ -91,7 +92,7 @@ const initEditor = () => {
     wordWrap: 'on',
     theme: themeMode.value === 'light' ? 'vs' : 'vs-dark',
     minimap: { enabled: true },
-    scrollbar: { horizontal: 'hidden' }
+    scrollbar: { horizontal: 'hidden' },
   })
   editor.setValue(sourceCode.value || '')
   editor.onDidChangeModelContent(() => {
@@ -112,7 +113,7 @@ onBeforeUnmount(() => editor?.dispose())
 <style lang="scss">
 .dark-mode {
   .editor-source .editor-wrap .source-hint img {
-    opacity: .2;
+    opacity: 0.2;
   }
 }
 .editor-source {
@@ -121,12 +122,12 @@ onBeforeUnmount(() => editor?.dispose())
     .source-hint {
       top: 25%;
       font-size: 24px;
+      user-select: none;
       img {
         width: 220px;
         margin-top: 20px;
         position: absolute;
         opacity: 0.4;
-        user-select: none;
       }
     }
   }
