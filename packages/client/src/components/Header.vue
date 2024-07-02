@@ -6,13 +6,17 @@
         <a class="text_dec_none" href="https://www.zjson.net/old">（回到旧版）</a>
       </span>
     </h3>
-    <a-alert class="zjs-alert mx_sm text_center" :type="format.type">
+    <a-alert class="zjs-alert mx_sm text_center ov_hidden" :type="format.type">
       <template #message>
-        <div class="fs_5" ref="greetingRef">{{ format.msg }}</div>
+        <div class="fs_5">
+          <div ref="greetingRef">{{ format.msg || greetingWrod }}</div>
+        </div>
       </template>
     </a-alert>
     <div class="zjs-hbtns flex_start">
-      <a-button class="hd-btn" size="small" type="text" @click="toggleLanguage"> English </a-button>
+      <a-button class="hd-btn" size="small" type="text" @click="toggleLanguage" disabled>
+        English
+      </a-button>
       <a-button
         class="hd-btn btn-theme pd_0 flex_center"
         size="small"
@@ -49,7 +53,8 @@ import SvgNpm from '@/assets/svg/npm.svg'
 import { storeToRefs, useAppStore, useEditorStore } from '@/stores'
 import { GithubOutlined } from '@ant-design/icons-vue'
 import { computed, ref, watch } from 'vue'
-import { ANIMATE_CLASSES_IN } from '@/config'
+import { ANIMATE_CLASSES_IN, ANIMATE_CLASSES_OUT, GREETINGS_CN } from '@/config'
+import { randomNum } from '@/utils'
 
 const { themeMode } = storeToRefs(useAppStore())
 const { formatResult } = storeToRefs(useEditorStore())
@@ -71,7 +76,7 @@ const format = computed(() => {
     const msg = noticeMap[fmtSign]?.(errIndex || fmtLines, errExpect)
     return { type, msg }
   } else {
-    return { type: 'info', msg: '你好，欢迎使用转杰森！' }
+    return { type: 'info', msg: '' }
   }
 })
 
@@ -82,13 +87,31 @@ const format = computed(() => {
  */
 
 let animationTimer: any = null
+const greetingDefault = '你好，欢迎使用转杰森！'
+const greetingWrod = ref(greetingDefault)
 const greetingRef = ref()
+const greetingIn = () => {
+  const idx = randomNum(ANIMATE_CLASSES_IN.length)
+  greetingRef.value.className = ANIMATE_CLASSES_IN[idx]
+}
+const greetingOut = () => {
+  const idx = randomNum(ANIMATE_CLASSES_OUT.length)
+  greetingRef.value.className = ANIMATE_CLASSES_OUT[idx]
+}
 const animationGreeting = () => {
   setTimeout(() => {
     if (!formatResult.value.result) {
+      greetingWrod.value = greetingDefault
+      greetingIn()
       clearInterval(animationTimer)
-      console.log('greetingRef', greetingRef.value)
-      animationTimer = setInterval(() => {}, 5000)
+      animationTimer = setInterval(() => {
+        greetingOut()
+        setTimeout(() => {
+          const gidx = randomNum(GREETINGS_CN.length)
+          greetingWrod.value = GREETINGS_CN[gidx]
+          greetingIn()
+        }, 500)
+      }, 5000)
     } else {
       clearInterval(animationTimer)
     }

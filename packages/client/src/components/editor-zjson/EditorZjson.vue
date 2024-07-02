@@ -191,6 +191,7 @@ const handleEditorAction = ({ type, data }: IEditorAction) => {
       break
     case 'unescapeSrc':
       sourceCode.value = sourceCode.value.replace(/\\"/gm, '"').replace(/\\\\/gm, '\\')
+      message.success('原码已反转义')
       break
     case 'fmtStrict':
       fmtStrict.value = !fmtStrict.value
@@ -198,11 +199,11 @@ const handleEditorAction = ({ type, data }: IEditorAction) => {
       break
     case 'clearSource':
       sourceCode.value = ''
-      message.success('源码已清空')
+      message.success('原码已清空')
       break
     case 'clearResult':
       resultCode.value = ''
-      message.success('结果已清空')
+      message.success('格式化结果已清空')
       break
     case 'fmtEscape':
       fmtEscape.value = !fmtEscape.value
@@ -217,7 +218,7 @@ const handleEditorAction = ({ type, data }: IEditorAction) => {
       break
     case 'saveFile':
       if (!sourceCode.value.trim()) {
-        message.warning('源码为空，无法存档')
+        message.warning('原码为空，无法存档')
         return
       }
       const code = sourceCode.value.replace(/[\s\r\n]/g, '')

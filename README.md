@@ -56,6 +56,6 @@ As you can see, zjson is a free, ad-free and pure website, with its code fully o
 如您所见，转杰森是一个完全免费且无任何广告的纯净的工具网站，代码也是完全开源的。而网站的域名、证书、服务器和维护却需要费用和精力，如果您觉得转杰森对你有帮助，不妨请我喝杯茶，感谢！
 
 <div style="display: flex; justify-content: flex-start;">
-  <img src="https://s21.ax1x.com/2024/07/02/pkgdngK.jpg" width="204">
-  <img src="https://s21.ax1x.com/2024/07/02/pkgdm36.jpg" width="233">
+  <img src="https://raw.githubusercontent.com/CN-Tower/zjson/master/docs/donation/AliPay.jpg" width="204">
+  <img src="https://raw.githubusercontent.com/CN-Tower/zjson/master/docs/donation/WechatPay.png" width="233">
 <div>

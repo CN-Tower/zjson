@@ -8,6 +8,7 @@
 import { RouterView } from 'vue-router'
 import { storeToRefs, useAppStore, useEditorStore } from '@/stores'
 import { events } from '@/utils'
+import { message } from 'ant-design-vue'
 
 const { themeConfig } = storeToRefs(useAppStore())
 const { isEditorReady } = storeToRefs(useEditorStore())
@@ -18,7 +19,7 @@ loaderScript.src = 'https://lf6-cdn-tos.bytecdntp.com/cdn/monaco-editor/0.32.1/m
 loaderScript.addEventListener('load', () => {
   const win = window as any
   win.require.config({
-    paths: { vs: 'https://lf6-cdn-tos.bytecdntp.com/cdn/monaco-editor/0.32.1/min/vs' }
+    paths: { vs: 'https://lf6-cdn-tos.bytecdntp.com/cdn/monaco-editor/0.32.1/min/vs' },
   })
   win.MonacoEnvironment = {
     getWorkerUrl: function () {
@@ -28,7 +29,7 @@ loaderScript.addEventListener('load', () => {
         };
         importScripts('https://lf6-cdn-tos.bytecdntp.com/cdn/monaco-editor/0.32.1/min/vs/base/worker/workerMain.js');
       `)}`
-    }
+    },
   }
   win.require(['vs/editor/editor.main'], () => {
     isEditorReady.value = true
@@ -36,4 +37,6 @@ loaderScript.addEventListener('load', () => {
   })
 })
 document.body.appendChild(loaderScript)
+
+message.config({ top: `50px`, duration: 2, maxCount: 3 })
 </script>
