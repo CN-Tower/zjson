@@ -20,8 +20,9 @@
 
 ## Technology stack  | 技术栈
 
-- 前端技术选型：`Vite5` + `Vue3` + `Pinia` + `Ant-design-vue` + `Monace-editor`
-- JSON格式化算法：https://github.com/CN-Tower/format-to-json
+- ZJSON webset url. ZJSON在线网址：https://zjson.net
+- JSON fromat algorithm. JSON格式化算法：https://github.com/CN-Tower/format-to-json
+- FrontEnd framewrok and libs. 前端技术选型：`Vite5` + `Vue3` + `Pinia` + `Ant-design-vue` + `Monace-editor`
 
 ## Screenshorts | 截图
 
