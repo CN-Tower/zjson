@@ -26,21 +26,26 @@
 ## Screenshorts | 截图
 
 ### JSON formatter | JSON格式化
+
 ![](/docs/screenshots/light-zjson.png)<br>
 ![](/docs/screenshots/dark-zjson.png)
 
 ### Documents comparison | 文件对比
+
 ![](/docs/screenshots/light-diff.png)<br>
 ![](/docs/screenshots/dark-diff.png)
 
 ### Code editing | 代码编辑
+
 ![](/docs/screenshots/light-code.png)<br>
 ![](/docs/screenshots/dark-code.png)
 
 ## Feedback | 问题反馈
 
-To report bugs or provide suggestions, you can submit an issue, or add my WeChat, or join the zjson QQ group<br>
-反馈BUG和提意见，可以给我提issue、加我微信或者加转杰森QQ群<br>
+To report bugs or provide suggestions, you can submit an issue, or add my WeChat, or join the zjson QQ group
+
+反馈BUG和提意见，可以给我提issue、加我微信或者加转杰森QQ群
+
 ![](/docs/donation/WechatQQ.jpg)
 
 ## Donation | 请喝茶
