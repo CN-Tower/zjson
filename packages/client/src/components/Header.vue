@@ -8,7 +8,7 @@
     </h3>
     <a-alert class="zjs-alert mx_sm text_center" :type="format.type">
       <template #message>
-        <span class="fs_5">{{ format.msg }}</span>
+        <div class="fs_5" ref="greetingRef">{{ format.msg }}</div>
       </template>
     </a-alert>
     <div class="zjs-hbtns flex_start">
@@ -48,7 +48,8 @@ import SvgNight from '@/assets/svg/night.svg'
 import SvgNpm from '@/assets/svg/npm.svg'
 import { storeToRefs, useAppStore, useEditorStore } from '@/stores'
 import { GithubOutlined } from '@ant-design/icons-vue'
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { ANIMATE_CLASSES_IN } from '@/config'
 
 const { themeMode } = storeToRefs(useAppStore())
 const { formatResult } = storeToRefs(useEditorStore())
@@ -73,6 +74,33 @@ const format = computed(() => {
     return { type: 'info', msg: '你好，欢迎使用转杰森！' }
   }
 })
+
+/**
+ * ===========================================================================
+ * 欢迎语动画
+ * ===========================================================================
+ */
+
+let animationTimer: any = null
+const greetingRef = ref()
+const animationGreeting = () => {
+  setTimeout(() => {
+    if (!formatResult.value.result) {
+      clearInterval(animationTimer)
+      console.log('greetingRef', greetingRef.value)
+      animationTimer = setInterval(() => {}, 5000)
+    } else {
+      clearInterval(animationTimer)
+    }
+  })
+}
+watch(formatResult, () => animationGreeting())
+
+/**
+ * ===========================================================================
+ * 响应页面事件
+ * ===========================================================================
+ */
 
 const toggleLanguage = () => {}
 

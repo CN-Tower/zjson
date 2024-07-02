@@ -1,0 +1,26 @@
+export const ANIMATE_CLASSES_IN = [
+  'bounceIn',
+  'bounceInLeft',
+  'bounceInUp',
+  'fadeIn',
+  'fadeInLeft',
+  'fadeInUp',
+  'flipInX',
+  'rotateIn',
+  'slideInLeft',
+  'slideInUp',
+  'rollIn',
+]
+export const ANIMATE_CLASSES_OUT = [
+  'bounceOut',
+  'bounceOutRight',
+  'bounceOutDown',
+  'fadeOut',
+  'fadeOutRight',
+  'fadeOutDown',
+  'flipOutX',
+  'rotateOut',
+  'slideOutRight',
+  'slideOutDown',
+  'rollOut',
+]
