@@ -37,17 +37,19 @@
 ![](/docs/screenshots/light-code.png)<br>
 ![](/docs/screenshots/dark-code.png)
 
+## Feedback | 问题反馈
+
+To report bugs or provide suggestions, you can submit an issue, or add my WeChat, or join the ZJSON QQ group<br>
+反馈BUG和提意见，可以给我提issue、加我微信或者加转杰森QQ群<br>
+![](/docs/donation/WechatQQ.jpg)
+
 ## Donation | 请喝茶
 
 As you can see, ZJSON is a completely free and ad-free pure website, and the code is also completely open source. However, the domain name, certificate, server, and maintenance of the website require cost and effort. If you think ZJSON helpful, you can donate me a cup of tea. Thank you!
 
 如您所见，转杰森是一个完全免费且无任何广告的纯净的工具网站，代码也是完全开源的。而网站的域名、证书、服务器和维护却需要费用和精力，如果您觉得转杰森对你有帮助，不妨请我喝杯茶，感谢！
 
-<img src="https://s21.ax1x.com/2024/07/02/pkgdngK.jpg" width="204">
-<img src="https://s21.ax1x.com/2024/07/02/pkgdm36.jpg" width="233">
-
-## 加微信
-
-To report bugs or provide suggestions, you can submit an issue, or add my WeChat, or join the ZJSON QQ group<br>
-反馈BUG和提意见，可以给我提issue、加我微信或者加转杰森QQ群<br>
-![](/docs/donation/WechatQQ.jpg)
+<div style="display: flex; justify-content: flex-start;">
+  <img src="https://s21.ax1x.com/2024/07/02/pkgdngK.jpg" width="204">
+  <img src="https://s21.ax1x.com/2024/07/02/pkgdm36.jpg" width="233">
+<div>
