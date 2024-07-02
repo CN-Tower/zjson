@@ -26,17 +26,14 @@ const props = defineProps({
   }
 })
 const editorLang = inject('editorLang') as Ref<string>
+const tabSize = inject('tabSize') as Ref<string>
+const wordWrap = inject('wordWrap') as Ref<string>
+const detectIndentation = inject('detectIndentation') as Ref<string>
 const { isEditorReady } = storeToRefs(useEditorStore())
 const { themeMode } = storeToRefs(useAppStore())
 const editorRef = ref()
 const isEditorInited = ref(false)
 let editor = null as any
-
-watch(editorLang, (lang) => {
-  if (lang && editor) {
-    ;(window as any).monaco.editor.setModelLanguage(editor.getModel(), lang)
-  }
-})
 
 watch(
   () => props.code,
@@ -47,6 +44,22 @@ watch(
   }
 )
 
+watch(editorLang, (lang) => {
+  if (lang && editor) {
+    ;(window as any).monaco.editor.setModelLanguage(editor.getModel(), lang)
+  }
+})
+
+watch([tabSize, wordWrap, detectIndentation], () => {
+  setTimeout(() => {
+    editor?.updateOptions({
+      tabSize: tabSize.value,
+      wordWrap: wordWrap.value ? 'on' : 'off',
+      detectIndentation: detectIndentation.value,
+    })
+  })
+})
+
 const initEditor = () => {
   if (isEditorInited.value || !isEditorReady.value) return
   isEditorInited.value = true
@@ -56,7 +69,7 @@ const initEditor = () => {
     wordWrap: 'on',
     theme: themeMode.value === 'light' ? 'vs' : 'vs-dark',
     minimap: { enabled: true },
-    scrollbar: { horizontal: 'hidden' }
+    detectIndentation: detectIndentation.value
   })
   editor.setValue(props.code)
   editor.onDidChangeModelContent(() => {

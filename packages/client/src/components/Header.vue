@@ -1,7 +1,10 @@
 <template>
   <header class="zjs-header flex_between pd_sm mb_xs text_nowrap">
     <h3 class="mg_0 fw_bold">
-      转杰森 | ZJSON <span class="fs_6"><a class="text_dec_none" href="">（回到旧版）</a></span>
+      转杰森 | ZJSON
+      <span class="fs_6">
+        <a class="text_dec_none" href="https://www.zjson.net/old">（回到旧版）</a>
+      </span>
     </h3>
     <a-alert class="zjs-alert mx_sm text_center" :type="format.type">
       <template #message>

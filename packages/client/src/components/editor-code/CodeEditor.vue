@@ -23,7 +23,7 @@
           <SaveOutlined class="bar-btn" @click="handleSaveFile" />
         </a-tooltip>
         <a-tooltip title="设置">
-          <SettingOutlined class="bar-btn" />
+          <SettingOutlined class="bar-btn" @click="handleSettings" />
         </a-tooltip>
         <a-tooltip title="拆分编辑器">
           <SplitCellsOutlined
@@ -39,7 +39,10 @@
     </div>
     <div class="code-content w_100 h_100 p_relative">
       <div class="editor w_100 h_100" ref="editorRef"></div>
-      <p v-if="!editorCode" class="zjs-placeholder p_center text_center text3 opacity_d75 pe_none fs_1xx">
+      <p
+        v-if="!editorCode"
+        class="zjs-placeholder p_center text_center text3 opacity_d75 pe_none fs_1xx"
+      >
         <img
           class="code-img img-lg"
           v-if="index === 0"
@@ -52,10 +55,16 @@
           src="https://s21.ax1x.com/2024/07/02/pkgn3zq.png"
           alt=""
         />
-        <img class="code-img img-lg" v-else src="https://s21.ax1x.com/2024/07/02/pkgnJyV.png" alt="" />
+        <img
+          class="code-img img-lg"
+          v-else
+          src="https://s21.ax1x.com/2024/07/02/pkgnJyV.png"
+          alt=""
+        />
       </p>
     </div>
     <slot></slot>
+    <!-- 存档弹窗 -->
     <a-modal v-model:open="isShowSaveMode" title="存档">
       <div class="my_md">
         <a-input placeholder="请输入存档名称" v-model:value="saveName"></a-input>
@@ -65,6 +74,34 @@
         <a-button type="primary" :disabled="!saveName.trim()" @click="submitSaveFile"
           >保存</a-button
         >
+      </template>
+    </a-modal>
+    <!-- 设置弹窗 -->
+    <a-modal v-model:open="isShowSettingsMode" title="代码编辑器设置">
+      <a-form class="mt_md form-item">
+        <a-form-item label="超出换行：">
+          <a-radio-group v-model:value="wordWrap">
+            <a-radio :value="true">自动换行</a-radio>
+            <a-radio :value="false">不换行</a-radio>
+          </a-radio-group>
+        </a-form-item>
+        <a-form-item label="检测缩进：">
+          <a-radio-group v-model:value="detectIndentation">
+            <a-radio :value="true">自动检测</a-radio>
+            <a-radio :value="false">不检测</a-radio>
+          </a-radio-group>
+        </a-form-item>
+        <a-form-item label="缩进大小：">
+          <a-select class="w_100" v-model:value="tabSize">
+            <a-select-option v-for="i in 8" :value="i">{{ i }}</a-select-option>
+          </a-select>
+        </a-form-item>
+        <a-form-item label="保存设置：">
+          <a-checkbox v-model:checked="isSaveToLocal" name="type">是否保存设置持久生效</a-checkbox>
+        </a-form-item>
+      </a-form>
+      <template #footer>
+        <a-button type="primary" @click="isShowSettingsMode = false">确定</a-button>
       </template>
     </a-modal>
   </div>
@@ -83,20 +120,20 @@ import {
 import { ref, watch, onMounted, onBeforeUnmount, provide, inject, type Ref } from 'vue'
 import { storeToRefs, useAppStore, useEditorStore } from '@/stores'
 import { events } from '@/utils'
-import { EDITOR_LANGS, ZJSON_SAVE_CODES } from '@/config'
+import { EDITOR_LANGS, ZJSON_SAVE_CODES, ZJSON_CODE_SETTINGS } from '@/config'
 import { message } from 'ant-design-vue'
 
 const props = defineProps({
   codeEditors: {
     type: Object,
-    default: () => ({})
+    default: () => ({}),
   },
   isEditorNumMax: {
-    type: Boolean
+    type: Boolean,
   },
   index: {
-    type: Number
-  }
+    type: Number,
+  },
 })
 const emit = defineEmits(['split', 'close'])
 const historyKey = inject('historyKey') as Ref<number>
@@ -109,7 +146,26 @@ const editorCode = ref('')
 const saveName = ref('')
 const isShowSaveMode = ref(false)
 const saveHistoryRef = ref()
+const tabSize = ref(2)
+const wordWrap = ref(true)
+const detectIndentation = ref(true)
+const isSaveToLocal = ref(false)
+const isShowSettingsMode = ref(false)
 let editor = null as any
+
+const localSettings = JSON.parse(localStorage.getItem(ZJSON_CODE_SETTINGS) || '{}')
+if (localSettings.isSaveToLocal) {
+  tabSize.value = localSettings.tabSize
+  wordWrap.value = localSettings.wordWrap
+  detectIndentation.value = localSettings.detectIndentation
+  isSaveToLocal.value = localSettings.isSaveToLocal
+}
+
+watch(editorCode, (code) => {
+  if (editor && code !== editor.getValue()) {
+    editor.setValue(code)
+  }
+})
 
 watch(editorLang, () => {
   const model = editor?.getModel()
@@ -118,11 +174,31 @@ watch(editorLang, () => {
   }
 })
 
-watch(editorCode, (code) => {
-  if (editor && code !== editor.getValue()) {
-    editor.setValue(code)
-  }
+watch([tabSize, wordWrap, detectIndentation], () => {
+  // isShowSettingsMode.value = false
+  if (isSaveToLocal.value) saveSettingsToLocal()
+  setTimeout(() => {
+    editor?.updateOptions({
+      tabSize: tabSize.value,
+      wordWrap: wordWrap.value ? 'on' : 'off',
+      detectIndentation: detectIndentation.value,
+    })
+  })
 })
+
+watch(isSaveToLocal, () => saveSettingsToLocal())
+
+const saveSettingsToLocal = () => {
+  localStorage.setItem(
+    ZJSON_CODE_SETTINGS,
+    JSON.stringify({
+      tabSize: tabSize.value,
+      wordWrap: wordWrap.value,
+      detectIndentation: detectIndentation.value,
+      isSaveToLocal: isSaveToLocal.value,
+    }),
+  )
+}
 
 /**
  * ===========================================================================
@@ -132,6 +208,10 @@ watch(editorCode, (code) => {
 
 const handleDelCode = () => {
   editorCode.value = ''
+}
+
+const handleSettings = () => {
+  isShowSettingsMode.value = true
 }
 
 /**
@@ -153,7 +233,7 @@ const submitSaveFile = () => {
     name: saveName.value,
     lang: editorLang.value,
     code: editorCode.value,
-    time: Date.now()
+    time: Date.now(),
   })
   if (savedList.length > 20) {
     savedList.pop()
@@ -191,7 +271,7 @@ const initEditor = () => {
     wordWrap: 'on',
     theme: themeMode.value === 'light' ? 'vs' : 'vs-dark',
     minimap: { enabled: true },
-    scrollbar: { horizontal: 'hidden' }
+    detectIndentation: detectIndentation.value,
   })
   editor.setValue(editorCode.value)
   editor.onDidChangeModelContent(() => {

@@ -16,6 +16,7 @@
     </EditorSource>
     <EditorResult class="zjson-result h_100" ref="resultRef" @editorAction="handleEditorAction" />
   </div>
+  <!-- 存档弹窗 -->
   <a-modal v-model:open="isShowSaveMode" title="存档">
     <div class="my_md">
       <a-input placeholder="请输入存档名称" v-model:value="saveName"></a-input>
@@ -25,8 +26,15 @@
       <a-button type="primary" :disabled="!saveName.trim()" @click="handleSaveFile">保存</a-button>
     </template>
   </a-modal>
-  <a-modal v-model:open="isShowSettingsMode" title="转杰森设置">
+  <!-- 设置弹窗 -->
+  <a-modal v-model:open="isShowSettingsMode" title="转杰森编辑器设置">
     <a-form class="mt_md form-item">
+      <a-form-item label="换行：">
+        <a-radio-group v-model:value="wordWrap">
+          <a-radio :value="true">自动换行</a-radio>
+          <a-radio :value="false">不换行</a-radio>
+        </a-radio-group>
+      </a-form-item>
       <a-form-item label="缩进：">
         <a-select class="w_100" v-model:value="codeIndent">
           <a-select-option v-for="i in 8" :value="i">{{ i }}</a-select-option>
@@ -39,6 +47,9 @@
           :options="qtMarkOptions"
           @change="() => {}"
         />
+      </a-form-item>
+      <a-form-item label="保存：">
+        <a-checkbox v-model:checked="isSaveToLocal" name="type">是否保存设置持久生效</a-checkbox>
       </a-form-item>
     </a-form>
     <template #footer>
@@ -54,7 +65,7 @@ import { ref, watch, computed, onMounted, onBeforeUnmount, provide } from 'vue'
 import fmt2json from 'format-to-json'
 import { storeToRefs, useEditorStore } from '@/stores'
 import { message } from 'ant-design-vue'
-import { ZJSON_SAVE_JSONS, TEMPLATE_ZJSON, TEMPLATE_PYUNI } from '@/config'
+import { ZJSON_SAVE_JSONS, TEMPLATE_ZJSON, TEMPLATE_PYUNI, ZJSON_JSON_SETTINGS } from '@/config'
 import { debounce } from '@/utils'
 
 const props = defineProps({
@@ -81,6 +92,7 @@ const valQtMark = computed<any>(() => ['"', "'", '"', "'"][qtMarkType.value])
 const saveName = ref('')
 const isShowSaveMode = ref(false)
 const historyKey = ref(Math.random())
+const isSaveToLocal = ref(false)
 const isShowSettingsMode = ref(false)
 const qtMarkOptions = ref([
   { label: '"key": "value"', value: 0 },
@@ -97,19 +109,43 @@ provide('fmtExpand', fmtExpand)
 provide('wordWrap', wordWrap)
 provide('codeIndent', codeIndent)
 
-watch([codeIndent, qtMarkType], () => {
-  isShowSettingsMode.value = false
-})
+const localSettings = JSON.parse(localStorage.getItem(ZJSON_JSON_SETTINGS) || '{}')
+if (localSettings.isSaveToLocal) {
+  wordWrap.value = localSettings.wordWrap
+  codeIndent.value = localSettings.codeIndent
+  qtMarkType.value = localSettings.qtMarkType
+  isSaveToLocal.value = localSettings.isSaveToLocal
+}
 
 watch([codeIndent, keyQtMark, valQtMark], () => {
   if (props.isActive) doFormatJson()
 })
+
+watch([codeIndent, qtMarkType, wordWrap], () => {
+  // isShowSettingsMode.value = false
+  if (isSaveToLocal.value) saveSettingsToLocal()
+})
+
+watch(isSaveToLocal, () => saveSettingsToLocal())
+
+const saveSettingsToLocal = () => {
+  localStorage.setItem(
+    ZJSON_JSON_SETTINGS,
+    JSON.stringify({
+      wordWrap: wordWrap.value,
+      codeIndent: codeIndent.value,
+      qtMarkType: qtMarkType.value,
+      isSaveToLocal: isSaveToLocal.value,
+    }),
+  )
+}
 
 /**
  * ===========================================================================
  * 响应页面事件
  * ===========================================================================
  */
+
 const setFormatResult = () => {
   if (props.isActive) formatResult.value = fmtResult.value
 }

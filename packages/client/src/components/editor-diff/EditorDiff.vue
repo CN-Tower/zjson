@@ -27,12 +27,12 @@
           <a-tooltip title="存档历史">
             <FolderOpenOutlined class="bar-btn" ref="saveHistoryRef" />
           </a-tooltip>
-        </a-popover>        
+        </a-popover>
         <a-tooltip title="存档">
           <SaveOutlined class="bar-btn" @click="handleSaveFile" />
         </a-tooltip>
         <a-tooltip title="设置">
-          <SettingOutlined class="bar-btn" />
+          <SettingOutlined class="bar-btn" @click="handleSettings" />
         </a-tooltip>
         <a-tooltip title="清空右侧">
           <DeleteOutlined class="bar-btn del-r ml_xxl" @click="handleDelRight" />
@@ -77,6 +77,7 @@
       </div>
     </div>
   </div>
+  <!-- 存档弹窗 -->
   <a-modal v-model:open="isShowSaveMode" title="存档">
     <div class="my_md">
       <a-input placeholder="请输入存档名称" v-model:value="saveName"></a-input>
@@ -84,6 +85,34 @@
     <template #footer>
       <a-button @click="isShowSaveMode = false">取消</a-button>
       <a-button type="primary" :disabled="!saveName.trim()" @click="submitSaveFile">保存</a-button>
+    </template>
+  </a-modal>
+  <!-- 设置弹窗 -->
+  <a-modal v-model:open="isShowSettingsMode" title="对比编辑器设置">
+    <a-form class="mt_md form-item">
+      <a-form-item label="超出换行：">
+        <a-radio-group v-model:value="wordWrap">
+          <a-radio :value="true">自动换行</a-radio>
+          <a-radio :value="false">不换行</a-radio>
+        </a-radio-group>
+      </a-form-item>
+      <a-form-item label="检测缩进：">
+        <a-radio-group v-model:value="detectIndentation">
+          <a-radio :value="true">自动检测</a-radio>
+          <a-radio :value="false">不检测</a-radio>
+        </a-radio-group>
+      </a-form-item>
+      <a-form-item label="缩进大小：">
+        <a-select class="w_100" v-model:value="tabSize">
+          <a-select-option v-for="i in 8" :value="i">{{ i }}</a-select-option>
+        </a-select>
+      </a-form-item>
+      <a-form-item label="保存设置：">
+        <a-checkbox v-model:checked="isSaveToLocal" name="type">是否保存设置持久生效</a-checkbox>
+      </a-form-item>
+    </a-form>
+    <template #footer>
+      <a-button type="primary" @click="isShowSettingsMode = false">确定</a-button>
     </template>
   </a-modal>
 </template>
@@ -105,14 +134,14 @@ import {
   SettingOutlined,
 } from '@ant-design/icons-vue'
 import { storeToRefs, useEditorStore } from '@/stores'
-import { EDITOR_LANGS, ZJSON_SAVE_DIFFS } from '@/config'
+import { EDITOR_LANGS, ZJSON_SAVE_DIFFS, ZJSON_DIFF_SETTINGS } from '@/config'
 import { message } from 'ant-design-vue'
 import { debounce } from '@/utils'
 
 const props = defineProps({
   isActive: {
-    type: Boolean
-  }
+    type: Boolean,
+  },
 })
 const isShowDiff = ref(false)
 const isOnResizing = ref(false)
@@ -128,10 +157,46 @@ const saveName = ref('')
 const isShowSaveMode = ref(false)
 const historyKey = ref(Math.random())
 const saveHistoryRef = ref()
+const tabSize = ref(2)
+const wordWrap = ref(true)
+const detectIndentation = ref(true)
+const isSaveToLocal = ref(false)
+const isShowSettingsMode = ref(false)
 
 provide('editorLang', editorLang)
 provide('leftCode', leftCode)
 provide('rightCode', rightCode)
+provide('tabSize', tabSize)
+provide('wordWrap', wordWrap)
+provide('detectIndentation', detectIndentation)
+
+const localSettings = JSON.parse(localStorage.getItem(ZJSON_DIFF_SETTINGS) || '{}')
+if (localSettings.isSaveToLocal) {
+  tabSize.value = localSettings.tabSize
+  wordWrap.value = localSettings.wordWrap
+  detectIndentation.value = localSettings.detectIndentation
+  isSaveToLocal.value = localSettings.isSaveToLocal
+}
+
+watch([tabSize, wordWrap, detectIndentation], () => {
+  // isShowSettingsMode.value = false
+  if (isSaveToLocal.value) saveSettingsToLocal()
+})
+
+watch(isSaveToLocal, () => saveSettingsToLocal())
+
+const saveSettingsToLocal = () => {
+  localStorage.setItem(
+    ZJSON_DIFF_SETTINGS,
+    JSON.stringify({
+      tabSize: tabSize.value,
+      wordWrap: wordWrap.value,
+      detectIndentation: detectIndentation.value,
+      isSaveToLocal: isSaveToLocal.value,
+    }),
+  )
+}
+
 
 /**
  * ===========================================================================
@@ -175,6 +240,10 @@ const handleDelBoth = () => {
   rightCode.value = ''
 }
 
+const handleSettings = () => {
+  isShowSettingsMode.value = true
+}
+
 /**
  * 存档
  */
@@ -197,7 +266,7 @@ const submitSaveFile = () => {
     name: saveName.value,
     leftCode: leftCode.value,
     rightCode: rightCode.value,
-    time: Date.now()
+    time: Date.now(),
   })
   if (savedList.length > 20) {
     savedList.pop()
@@ -290,7 +359,7 @@ watch(
       setTimeout(() => handleLayoutEditors())
     }
   },
-  { immediate: true }
+  { immediate: true },
 )
 
 const removeEventListeners = () => {

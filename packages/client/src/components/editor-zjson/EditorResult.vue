@@ -113,7 +113,6 @@ const initEditor = () => {
     wordWrap: wordWrap.value,
     theme: themeMode.value === 'light' ? 'vs' : 'vs-dark',
     minimap: { enabled: true },
-    scrollbar: { horizontal: 'hidden' },
   })
   editor.setValue(resultCode.value || '')
   editor.onDidChangeModelContent(() => {
