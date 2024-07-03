@@ -21,8 +21,8 @@
             @selectType="handleSelectType(tab, $event)"
           />
           <template v-if="!tab.type">
-            <img class="type-img img-l p_center_y" src="https://s21.ax1x.com/2024/07/02/pkgKBKx.png" alt="">
-            <img class="type-img img-r p_center_y" src="https://s21.ax1x.com/2024/07/02/pkgKd2R.png" alt="">
+            <img class="type-img img-l p_center_y" src="https://img.picgo.net/2024/07/03/a3c71b7ca824bf6982.png" alt="">
+            <img class="type-img img-r p_center_y" src="https://img.picgo.net/2024/07/03/a49e9a1813c0a02b2c.png" alt="">
           </template>
         </div>
       </a-tab-pane>

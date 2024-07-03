@@ -46,19 +46,19 @@
         <img
           class="code-img img-lg"
           v-if="index === 0"
-          src="https://s21.ax1x.com/2024/07/02/pkgnNeU.png"
+          src="https://img.picgo.net/2024/07/03/11130c620a3e44582.png"
           alt=""
         />
         <img
           class="code-img img-lg"
           v-else-if="index === 1"
-          src="https://s21.ax1x.com/2024/07/02/pkgn3zq.png"
+          src="https://img.picgo.net/2024/07/03/259d00a2e5b22910f.png"
           alt=""
         />
         <img
           class="code-img img-lg"
           v-else
-          src="https://s21.ax1x.com/2024/07/02/pkgnJyV.png"
+          src="https://img.picgo.net/2024/07/03/318105d607a38be22.png"
           alt=""
         />
       </p>

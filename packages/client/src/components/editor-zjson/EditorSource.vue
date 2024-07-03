@@ -39,7 +39,7 @@
       <div class="editor w_100 h_100" ref="editorRef"></div>
       <div v-if="!sourceCode" class="source-hint p_center pe_none">
         <p class="text_center text3 opacity_d75">在此处输入或者粘贴<br />需要格式化的JSON字符串</p>
-        <img class="p_center_x" src="https://s21.ax1x.com/2024/07/02/pkgKDr6.png" alt="" />
+        <img class="p_center_x" src="https://img.picgo.net/2024/07/03/a102e8853fab7b6b7d.png" alt="" />
       </div>
     </div>
     <slot></slot>

@@ -46,7 +46,7 @@
       <div class="editor w_100 h_100" ref="editorRef"></div>
       <div v-if="!resultCode" class="resout-hint p_center pe_none">
         <p class="text_center text3 opacity_d75">格式化结果输出<br />记得及时存档以备不时之需</p>
-        <img class="p_center_x" src="https://s21.ax1x.com/2024/07/02/pkgKwx1.png" alt="" />
+        <img class="p_center_x" src="https://img.picgo.net/2024/07/03/a27c582a154d393ca4.png" alt="" />
       </div>
       <slot></slot>
     </div>
