@@ -17,15 +17,37 @@
       <a-button class="hd-btn" size="small" type="text" @click="toggleLanguage" disabled>
         English
       </a-button>
-      <a-button
-        class="hd-btn btn-theme pd_0 flex_center"
-        size="small"
-        type="text"
-        @click="toggleThemeMode"
-      >
-        <SvgDay v-if="themeMode === 'dark'" />
-        <SvgNight v-else />
-      </a-button>
+      <a-popover placement="bottom">
+        <template #content>
+          <div class="zjs-theme-conf flex_col">
+            <a-button
+              class="px_sm fs_5 mb_xs"
+              size="small"
+              :class="{ active: themeSetting === 'system' }"
+              @click="handleThemeSetting('system')"
+            >
+              跟随系统
+            </a-button>
+            <a-button
+              class="px_sm fs_5"
+              size="small"
+              :class="{ active: themeSetting === 'select' }"
+              @click="handleThemeSetting('select')"
+            >
+              记住选择
+            </a-button>
+          </div>
+        </template>
+        <a-button
+          class="hd-btn btn-theme pd_0 flex_center"
+          size="small"
+          type="text"
+          @click="toggleThemeMode"
+        >
+          <SvgDay v-if="themeMode === 'dark'" />
+          <SvgNight v-else />
+        </a-button>
+      </a-popover>
       <a-button
         class="hd-btn btn-settings pd_0 flex_center"
         size="small"
@@ -55,9 +77,10 @@ import { GithubOutlined } from '@ant-design/icons-vue'
 import { computed, ref, watch } from 'vue'
 import { ANIMATE_CLASSES_IN, ANIMATE_CLASSES_OUT, GREETINGS_CN } from '@/config'
 import { randomNum } from '@/utils'
+import type { IThemeSetting } from '@/types'
 
-const { themeMode } = storeToRefs(useAppStore())
 const { formatResult } = storeToRefs(useEditorStore())
+const { themeMode, themeSetting } = storeToRefs(useAppStore())
 
 const noticeMap = {
   ost: (idx: number, exp: string) => `第${idx}行，期望一个“String”！`,
@@ -127,14 +150,12 @@ watch(formatResult, () => animationGreeting())
 
 const toggleLanguage = () => {}
 
+const handleThemeSetting = (conf: IThemeSetting) => {
+  themeSetting.value = conf
+}
+
 const toggleThemeMode = () => {
-  if (themeMode.value === 'light') {
-    themeMode.value = 'dark'
-    ;(window as any).monaco?.editor?.setTheme('vs-dark')
-  } else {
-    themeMode.value = 'light'
-    ;(window as any).monaco?.editor?.setTheme('vs')
-  }
+  themeMode.value = themeMode.value === 'light' ? 'dark' : 'light'
 }
 
 const handleOpenNpm = () => {
@@ -177,6 +198,14 @@ const handleOpenGithub = () => {
     width: 100%;
     max-width: 780px;
     transform: translateY(3px);
+  }
+}
+.zjs-theme-conf {
+  .ant-btn {
+    &.active {
+      color: var(--primary-color);
+      border: 1px solid var(--primary-color);
+    }
   }
 }
 </style>

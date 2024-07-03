@@ -28,3 +28,8 @@ export interface ICodeEditor {
 export type Events = {
   editorReady: void
 }
+
+/**
+ * 主题设置
+ */
+export type IThemeSetting = 'system' | 'select'
