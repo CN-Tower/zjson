@@ -152,7 +152,6 @@ onBeforeUnmount(() => editor?.dispose())
       img {
         width: 360px;
         margin-top: 20px;
-        margin-left: -30px;
         opacity: 0.4;
       }
     }
