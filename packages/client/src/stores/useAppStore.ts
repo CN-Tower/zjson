@@ -4,7 +4,7 @@ import { theme } from 'ant-design-vue'
 import { ZJSON_THEME } from '@/config'
 
 export const useAppStore = defineStore('useAppStore', () => {
-  const themeMode = ref(localStorage.getItem(ZJSON_THEME) || 'light')
+  const themeMode = ref(localStorage.getItem(ZJSON_THEME) || 'dark')
   const themeConfig = computed(() => {
     return {
       algorithm: themeMode.value === 'light' ? theme.defaultAlgorithm : theme.darkAlgorithm,
