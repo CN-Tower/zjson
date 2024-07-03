@@ -17,30 +17,32 @@
     <EditorResult class="zjson-result h_100" ref="resultRef" @editorAction="handleEditorAction" />
   </div>
   <!-- 存档弹窗 -->
-  <a-modal v-model:open="isShowSaveMode" title="存档">
+  <a-modal v-model:open="isShowSaveMode" :title="t('modal.saveRecord')">
     <div class="my_md">
-      <a-input placeholder="请输入存档名称" v-model:value="saveName"></a-input>
+      <a-input :placeholder="t('modal.saveName')" v-model:value="saveName"></a-input>
     </div>
     <template #footer>
-      <a-button @click="isShowSaveMode = false">取消</a-button>
-      <a-button type="primary" :disabled="!saveName.trim()" @click="handleSaveFile">保存</a-button>
+      <a-button @click="isShowSaveMode = false">{{ t('cancel') }}</a-button>
+      <a-button type="primary" :disabled="!saveName.trim()" @click="handleSaveFile">
+        {{ t('save') }}
+      </a-button>
     </template>
   </a-modal>
   <!-- 设置弹窗 -->
-  <a-modal v-model:open="isShowSettingsMode" title="转杰森编辑器设置">
-    <a-form class="mt_md form-item">
-      <a-form-item label="换行：">
+  <a-modal v-model:open="isShowSettingsMode" :title="t('modal.zjsonSettings')">
+    <a-form class="zjson-settings-form mt_md">
+      <a-form-item :label="t('modal.wrap_')">
         <a-radio-group v-model:value="wordWrap">
-          <a-radio :value="true">自动换行</a-radio>
-          <a-radio :value="false">不换行</a-radio>
+          <a-radio :value="true">{{ t('modal.autoWrap') }}</a-radio>
+          <a-radio :value="false">{{ t('modal.noWrap') }}</a-radio>
         </a-radio-group>
       </a-form-item>
-      <a-form-item label="缩进：">
+      <a-form-item :label="t('modal.indent_')">
         <a-select class="w_100" v-model:value="codeIndent">
           <a-select-option v-for="i in 8" :value="i">{{ i }}</a-select-option>
         </a-select>
       </a-form-item>
-      <a-form-item label="引号：">
+      <a-form-item :label="t('modal.quoteMark_')">
         <a-select
           class="w_100"
           v-model:value="qtMarkType"
@@ -48,12 +50,14 @@
           @change="() => {}"
         />
       </a-form-item>
-      <a-form-item label="保存：">
-        <a-checkbox v-model:checked="isSaveToLocal" name="type">是否保存设置持久生效</a-checkbox>
+      <a-form-item :label="t('modal.save_')">
+        <a-checkbox v-model:checked="isSaveToLocal" name="type">
+          {{ t('modal.saveToLocal') }}
+        </a-checkbox>
       </a-form-item>
     </a-form>
     <template #footer>
-      <a-button type="primary" @click="isShowSettingsMode = false">确定</a-button>
+      <a-button type="primary" @click="isShowSettingsMode = false">{{ t('confirm') }}</a-button>
     </template>
   </a-modal>
 </template>
@@ -67,6 +71,7 @@ import { storeToRefs, useEditorStore } from '@/stores'
 import { message } from 'ant-design-vue'
 import { ZJSON_SAVE_JSONS, TEMPLATE_ZJSON, TEMPLATE_PYUNI, ZJSON_JSON_SETTINGS } from '@/config'
 import { debounce } from '@/utils'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
   isActive: {
@@ -74,6 +79,7 @@ const props = defineProps({
   },
 })
 const { formatResult } = storeToRefs(useEditorStore())
+const { t } = useI18n()
 const isOnResizing = ref(false)
 const wrapRef = ref()
 const sourceRef = ref()
@@ -191,7 +197,7 @@ const handleEditorAction = ({ type, data }: IEditorAction) => {
       break
     case 'unescapeSrc':
       sourceCode.value = sourceCode.value.replace(/\\"/gm, '"').replace(/\\\\/gm, '\\')
-      message.success('原码已反转义')
+      message.success(t('msg.srcUnescaped'))
       break
     case 'fmtStrict':
       fmtStrict.value = !fmtStrict.value
@@ -199,11 +205,11 @@ const handleEditorAction = ({ type, data }: IEditorAction) => {
       break
     case 'clearSource':
       sourceCode.value = ''
-      message.success('原码已清空')
+      message.success(t('msg.srcCleared'))
       break
     case 'clearResult':
       resultCode.value = ''
-      message.success('格式化结果已清空')
+      message.success(t('msg.rstEmptied'))
       break
     case 'fmtEscape':
       fmtEscape.value = !fmtEscape.value
@@ -218,7 +224,7 @@ const handleEditorAction = ({ type, data }: IEditorAction) => {
       break
     case 'saveFile':
       if (!sourceCode.value.trim()) {
-        message.warning('原码为空，无法存档')
+        message.warning(t('msg.srcEmpty'))
         return
       }
       const code = sourceCode.value.replace(/[\s\r\n]/g, '')
@@ -252,7 +258,7 @@ const handleSaveFile = () => {
   localStorage.setItem(ZJSON_SAVE_JSONS, JSON.stringify(savedList))
   isShowSaveMode.value = false
   historyKey.value = Math.random()
-  message.success('存档成功')
+  message.success(t('msg.saved'))
 }
 
 /**
@@ -373,6 +379,13 @@ onBeforeUnmount(() => removeEventListeners())
   }
   .zjson-result {
     width: 100%;
+  }
+}
+[lang='en'] {
+  .zjson-settings-form {
+    .ant-form-item-label {
+      width: 90px;
+    }
   }
 }
 </style>

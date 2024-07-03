@@ -63,7 +63,7 @@ onMounted(() => setTimeout(() => initEditor()))
 onBeforeUnmount(() => editor?.dispose())
 </script>
 
-<style>
+<style lang="scss">
 .diff-editor {
   padding: 1px;
 }

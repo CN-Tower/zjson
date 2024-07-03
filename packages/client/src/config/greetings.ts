@@ -1,3 +1,19 @@
+export const GREETINGS_EN = [
+  'Nice to meet you again !',
+  'You\'ll have good luck !',
+  'God bless you !',
+  'May happiness be with you forever !',
+  'May joy and health be with you always !',
+  'Take your passion and make it come true !',
+  'Wish all the best wishes for you !',
+  'Where there is a will, there is a way.',
+  'It is never too late to mend.',
+  'Practice makes perfect.',
+  'Time tries all things.',
+  'The first wealth is health.',
+  'If winter comes, can spring be far behind?',
+  'Each man is the architect of his own fate.',
+]
 export const GREETINGS_CN = [
   '也许似乎大概是，然而未必不可能',
   '觉得为时已晚的时候，恰恰是最早的时候',
@@ -34,13 +50,4 @@ export const GREETINGS_CN = [
   '不怕衣服有补钉，只怕心灵有污点',
   '说归说，笑归笑，动手动脚没家教',
   '毛毛细雨，打湿衣裳；杯杯小酒，吃垮家当'
-]
-export const GREETINGS_EN = [
-  'Where there is a will, there is a way.',
-  'It is never too late to mend.',
-  'Practice makes perfect.',
-  'Time tries all things.',
-  'The first wealth is health.',
-  'If winter comes, can spring be far behind?',
-  'Each man is the architect of his own fate.'
 ]

@@ -1,10 +1,10 @@
 <template>
   <div class="slect-history">
     <ul class="flex_col_start pd_0 mg_0 list_style_none items_stretch">
-      <li class="his-item" @click="handleLoadTpl('zjson')">转杰森 | ZJSON</li>
+      <li class="his-item" @click="handleLoadTpl('zjson')">ZJSON | 转杰森</li>
       <li class="his-item" @click="handleLoadTpl('pyUni')">Py Unicode Collections</li>
       <li class="bb_1 my_sm"></li>
-      <li v-if="!saveList.length" class="text3 pd_xs">暂无存档</li>
+      <li v-if="!saveList.length" class="text3 pd_xs">{{ t('modal.noSaved') }}</li>
       <li
         class="his-item"
         v-for="(item, i) in saveList"
@@ -24,7 +24,9 @@ import type { Func } from '@/types'
 import { ZJSON_SAVE_JSONS } from '@/config'
 import { DeleteOutlined } from '@ant-design/icons-vue'
 import { formatDate } from '@/utils'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const emit = defineEmits(['select'])
 const handleOpenTplate = inject('handleOpenTplate') as Func
 const handleOpenHistory = inject('handleOpenHistory') as Func

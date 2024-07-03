@@ -1,7 +1,7 @@
 <template>
   <div class="save-history">
     <ul class="flex_col_start pd_0 mg_0 list_style_none items_stretch">
-      <li v-if="!saveList.length" class="text3 pd_xs">暂无存档</li>
+      <li v-if="!saveList.length" class="text3 pd_xs">{{ t('modal.noSaved') }}</li>
       <li
         class="his-item"
         v-for="(item, i) in saveList"
@@ -21,7 +21,9 @@ import type { Func } from '@/types'
 import { ZJSON_SAVE_CODES } from '@/config'
 import { DeleteOutlined } from '@ant-design/icons-vue'
 import { formatDate } from '@/utils'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const emit = defineEmits(['select'])
 const handleOpenHistory = inject('handleOpenHistory') as Func
 const saveList = ref(JSON.parse(localStorage.getItem(ZJSON_SAVE_CODES) || '[]') as any[])

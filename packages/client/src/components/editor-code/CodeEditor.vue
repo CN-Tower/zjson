@@ -2,37 +2,37 @@
   <div class="code-editor h_100 flex_col_start mt_sm p_relative">
     <div class="zjs-toolbar w_100 flex_between">
       <div class="bar-left pl_sm flex_start">
-        <span class="fs_5">语言：</span>
+        <span class="fs_5">{{ t('editor.lang_') }}</span>
         <a-select class="zjs-selector" v-model:value="editorLang" style="width: 120px" size="small">
           <a-select-option v-for="l in EDITOR_LANGS" :value="l" :key="l">{{ l }}</a-select-option>
         </a-select>
       </div>
       <div class="bar-right">
-        <a-tooltip title="清空">
+        <a-tooltip :title="t('clear')">
           <DeleteOutlined class="bar-btn" @click="handleDelCode" />
         </a-tooltip>
         <a-popover trigger="click" placement="bottom">
           <template #content>
             <SaveHistory @select="saveHistoryRef.click()" :key="historyKey" />
           </template>
-          <a-tooltip title="存档历史">
+          <a-tooltip :title="t('editor.savedRecords')">
             <FolderOpenOutlined class="bar-btn" ref="saveHistoryRef" />
           </a-tooltip>
         </a-popover>
-        <a-tooltip title="存档">
+        <a-tooltip :title="t('editor.save')">
           <SaveOutlined class="bar-btn" @click="handleSaveFile" />
         </a-tooltip>
-        <a-tooltip title="设置">
+        <a-tooltip :title="t('settings')">
           <SettingOutlined class="bar-btn" @click="handleSettings" />
         </a-tooltip>
-        <a-tooltip title="拆分编辑器">
+        <a-tooltip :title="t('editor.splitEditor')">
           <SplitCellsOutlined
             class="bar-btn"
             :class="{ disabled: isEditorNumMax }"
             @click="emit('split')"
           />
         </a-tooltip>
-        <a-tooltip v-if="codeEditors.length > 1" title="关闭">
+        <a-tooltip v-if="codeEditors.length > 1" :title="t('close')">
           <CloseOutlined class="bar-btn" @click="emit('close')" />
         </a-tooltip>
       </div>
@@ -65,43 +65,45 @@
     </div>
     <slot></slot>
     <!-- 存档弹窗 -->
-    <a-modal v-model:open="isShowSaveMode" title="存档">
+    <a-modal v-model:open="isShowSaveMode" :title="t('modal.saveRecord')">
       <div class="my_md">
-        <a-input placeholder="请输入存档名称" v-model:value="saveName"></a-input>
+        <a-input :placeholder="t('modal.saveName')" v-model:value="saveName"></a-input>
       </div>
       <template #footer>
-        <a-button @click="isShowSaveMode = false">取消</a-button>
-        <a-button type="primary" :disabled="!saveName.trim()" @click="submitSaveFile"
-          >保存</a-button
-        >
+        <a-button @click="isShowSaveMode = false">{{ t('cancel') }}</a-button>
+        <a-button type="primary" :disabled="!saveName.trim()" @click="submitSaveFile">
+          {{ t('save') }}
+        </a-button>
       </template>
     </a-modal>
     <!-- 设置弹窗 -->
-    <a-modal v-model:open="isShowSettingsMode" title="代码编辑器设置">
-      <a-form class="mt_md form-item">
-        <a-form-item label="超出换行：">
+    <a-modal v-model:open="isShowSettingsMode" :title="t('modal.codeSettings')">
+      <a-form class="mt_md code-settings-form">
+        <a-form-item :label="t('modal.overWrap_')">
           <a-radio-group v-model:value="wordWrap">
-            <a-radio :value="true">自动换行</a-radio>
-            <a-radio :value="false">不换行</a-radio>
+            <a-radio :value="true">{{ t('modal.autoWrap') }}</a-radio>
+            <a-radio :value="false">{{ t('modal.noWrap') }}</a-radio>
           </a-radio-group>
         </a-form-item>
-        <a-form-item label="检测缩进：">
+        <a-form-item :label="t('modal.detectTab_')">
           <a-radio-group v-model:value="detectIndentation">
-            <a-radio :value="true">自动检测</a-radio>
-            <a-radio :value="false">不检测</a-radio>
+            <a-radio :value="true">{{ t('modal.autoDetect') }}</a-radio>
+            <a-radio :value="false">{{ t('modal.noDetect') }}</a-radio>
           </a-radio-group>
         </a-form-item>
-        <a-form-item label="缩进大小：">
+        <a-form-item :label="t('modal.tabSize_')">
           <a-select class="w_100" v-model:value="tabSize">
             <a-select-option v-for="i in 8" :value="i">{{ i }}</a-select-option>
           </a-select>
         </a-form-item>
-        <a-form-item label="保存设置：">
-          <a-checkbox v-model:checked="isSaveToLocal" name="type">是否保存设置持久生效</a-checkbox>
+        <a-form-item :label="t('modal.saveSettings_')">
+          <a-checkbox v-model:checked="isSaveToLocal" name="type">
+            {{ t('modal.saveToLocal') }}
+          </a-checkbox>
         </a-form-item>
       </a-form>
       <template #footer>
-        <a-button type="primary" @click="isShowSettingsMode = false">确定</a-button>
+        <a-button type="primary" @click="isShowSettingsMode = false">{{ t('confirm') }}</a-button>
       </template>
     </a-modal>
   </div>
@@ -122,6 +124,7 @@ import { storeToRefs, useAppStore, useEditorStore } from '@/stores'
 import { events } from '@/utils'
 import { EDITOR_LANGS, ZJSON_SAVE_CODES, ZJSON_CODE_SETTINGS } from '@/config'
 import { message } from 'ant-design-vue'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
   codeEditors: {
@@ -139,6 +142,7 @@ const emit = defineEmits(['split', 'close'])
 const historyKey = inject('historyKey') as Ref<number>
 const { isEditorReady } = storeToRefs(useEditorStore())
 const { themeMode } = storeToRefs(useAppStore())
+const { t } = useI18n()
 const editorRef = ref()
 const isEditorInited = ref(false)
 const editorLang = ref('json')
@@ -219,7 +223,7 @@ const handleSettings = () => {
  */
 const handleSaveFile = () => {
   if (!editorCode.value.trim()) {
-    message.warning('空文件不能保存')
+    message.warning(t('msg.saveEmpty'))
     return
   }
   const code = editorCode.value.replace(/[\s\r\n]/g, '')
@@ -241,7 +245,7 @@ const submitSaveFile = () => {
   localStorage.setItem(ZJSON_SAVE_CODES, JSON.stringify(savedList))
   isShowSaveMode.value = false
   historyKey.value = Math.random()
-  message.success('存档成功')
+  message.success(t('msg.saved'))
 }
 
 /**
@@ -294,6 +298,13 @@ onBeforeUnmount(() => editor?.dispose())
   width: 100%;
   .code-content {
     padding: 1px;
+  }
+}
+[lang='en'] {
+  .code-settings-form {
+    .ant-form-item-label {
+      width: 110px;
+    }
   }
 }
 </style>

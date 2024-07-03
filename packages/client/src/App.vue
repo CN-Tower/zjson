@@ -9,9 +9,16 @@ import { RouterView } from 'vue-router'
 import { storeToRefs, useAppStore, useEditorStore } from '@/stores'
 import { events } from '@/utils'
 import { message } from 'ant-design-vue'
+import { useI18n } from 'vue-i18n'
+import { watchEffect } from 'vue'
 
+const { locale } = useI18n()
 const { themeConfig } = storeToRefs(useAppStore())
 const { isEditorReady } = storeToRefs(useEditorStore())
+
+watchEffect(() => {
+  document.documentElement.lang = locale.value
+})
 
 const loaderScript: HTMLScriptElement = document.createElement('script')
 loaderScript.type = 'text/javascript'

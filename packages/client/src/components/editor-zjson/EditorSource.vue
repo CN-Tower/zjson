@@ -1,13 +1,13 @@
 <template>
   <div class="editor-source h_100 flex_col_start p_relative">
     <div class="zjs-toolbar w_100 flex_end mt_xs fs_3">
-      <a-tooltip v-if="isEditorDftLeft" title="推到中间">
+      <a-tooltip v-if="isEditorDftLeft" :title="t('editor.toCenter')">
         <PauseOutlined class="bar-btn" @click="emit('editorAction', { type: 'putCenter' })" />
       </a-tooltip>
-      <a-tooltip v-else="isEditorDftLeft" title="推到默认位置">
+      <a-tooltip v-else="isEditorDftLeft" :title="t('editor.toDefaultPos')">
         <StepBackwardOutlined class="bar-btn" @click="emit('editorAction', { type: 'putLeft' })" />
       </a-tooltip>
-      <a-tooltip title="源码反转义">
+      <a-tooltip :title="t('editor.srcUnescape')">
         <ThunderboltOutlined
           class="bar-btn"
           @click="emit('editorAction', { type: 'unescapeSrc' })"
@@ -17,7 +17,7 @@
         <template #content>
           <SelectSaveHistory @select="saveHistoryRef.click()" :key="historyKey" />
         </template>
-        <a-tooltip title="存档记录">
+        <a-tooltip :title="t('editor.savedRecords')">
           <FolderOpenOutlined
             class="bar-btn"
             ref="saveHistoryRef"
@@ -25,21 +25,27 @@
           />
         </a-tooltip>
       </a-popover>
-      <a-tooltip title="存档">
+      <a-tooltip :title="t('editor.save')">
         <SaveOutlined class="bar-btn" @click="emit('editorAction', { type: 'saveFile' })" />
       </a-tooltip>
-      <a-tooltip title="清空源码">
+      <a-tooltip :title="t('editor.clearSource')">
         <DeleteOutlined class="bar-btn" @click="emit('editorAction', { type: 'clearSource' })" />
       </a-tooltip>
-      <a-tooltip title="转为JSON">
+      <a-tooltip :title="t('editor.toJson')">
         <RetweetOutlined class="bar-btn" @click="emit('editorAction', { type: 'fmtJson' })" />
       </a-tooltip>
     </div>
     <div class="editor-wrap w_100 h_100 pr_0 p_relative">
       <div class="editor w_100 h_100" ref="editorRef"></div>
       <div v-if="!sourceCode" class="source-hint p_center pe_none">
-        <p class="text_center text3 opacity_d75">在此处输入或者粘贴<br />需要格式化的JSON字符串</p>
-        <img class="p_center_x" src="https://img.picgo.net/2024/07/03/a102e8853fab7b6b7d.png" alt="" />
+        <p class="text_center text3 opacity_d75">
+          {{ t('editor.enterOrPaste') }}<br />{{ t('editor.jsonLikeStr') }}
+        </p>
+        <img
+          class="p_center_x"
+          src="https://img.picgo.net/2024/07/03/a102e8853fab7b6b7d.png"
+          alt=""
+        />
       </div>
     </div>
     <slot></slot>
@@ -61,6 +67,7 @@ import {
 } from '@ant-design/icons-vue'
 import { events } from '@/utils'
 import type { Ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
   historyKey: {
@@ -75,6 +82,7 @@ const editorRef = ref()
 const { isEditorReady } = storeToRefs(useEditorStore())
 const { themeMode } = storeToRefs(useAppStore())
 const saveHistoryRef = ref()
+const { t } = useI18n()
 
 let editor = null as any
 watch(sourceCode, (val) => {

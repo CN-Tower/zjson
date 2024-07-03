@@ -2,23 +2,23 @@
   <div class="editor-result h_100 flex_col_start">
     <div class="zjs-toolbar w_100 flex_between mt_xs fs_3">
       <div class="bar-left">
-        <a-tooltip title="内容推至左边">
+        <a-tooltip :title="t('editor.settings')">
           <SettingOutlined class="bar-btn" @click="handleSettings" />
         </a-tooltip>
       </div>
       <div class="bar-right flex_end">
-        <a-tooltip title="内容推至左边">
+        <a-tooltip :title="t('editor.pushToLeft')">
           <span class="bar-btn flex_center">
             <SvgToLeft @click="emit('editorAction', { type: 'pushToLeft' })" />
           </span>
         </a-tooltip>
-        <a-tooltip v-if="fmtExpand" title="压缩">
+        <a-tooltip v-if="fmtExpand" :title="t('editor.compress')">
           <ShrinkOutlined class="bar-btn" @click="emit('editorAction', { type: 'fmtExpand' })" />
         </a-tooltip>
-        <a-tooltip v-else title="展开">
+        <a-tooltip v-else :title="t('editor.stretch')">
           <ExpandAltOutlined class="bar-btn" @click="emit('editorAction', { type: 'fmtExpand' })" />
         </a-tooltip>
-        <a-tooltip title="转义开关">
+        <a-tooltip :title="t('editor.escapeSwitch')">
           <span v-if="fmtEscape" class="bar-btn flex_center">
             <SvgSwitch class="rotate_180" @click="emit('editorAction', { type: 'fmtEscape' })" />
           </span>
@@ -26,7 +26,7 @@
             <SvgSwitch @click="emit('editorAction', { type: 'fmtEscape' })" />
           </span>
         </a-tooltip>
-        <a-tooltip title="标准格式开关">
+        <a-tooltip :title="t('editor.standardFormatSwitch')">
           <span v-if="fmtStrict" class="bar-btn btn-strict flex_center">
             <SvgCycleDot @click="emit('editorAction', { type: 'fmtStrict' })" />
           </span>
@@ -34,10 +34,10 @@
             <SvgCycle @click="emit('editorAction', { type: 'fmtStrict' })" />
           </span>
         </a-tooltip>
-        <a-tooltip title="清空">
+        <a-tooltip :title="t('clear')">
           <DeleteOutlined class="bar-btn" @click="emit('editorAction', { type: 'clearResult' })" />
         </a-tooltip>
-        <a-tooltip title="复制">
+        <a-tooltip :title="t('copy')">
           <CopyOutlined class="bar-btn" @click="handleCopyResult" />
         </a-tooltip>
       </div>
@@ -45,8 +45,14 @@
     <div class="editor-wrap w_100 h_100 p_relative pl_0">
       <div class="editor w_100 h_100" ref="editorRef"></div>
       <div v-if="!resultCode" class="resout-hint p_center pe_none">
-        <p class="text_center text3 opacity_d75">格式化结果输出<br />记得及时存档以备不时之需</p>
-        <img class="p_center_x" src="https://img.picgo.net/2024/07/03/a27c582a154d393ca4.png" alt="" />
+        <p class="text_center text3 opacity_d75">
+          {{ t('editor.resultOutput') }}<br />{{ t('editor.rememberSave') }}
+        </p>
+        <img
+          class="p_center_x"
+          src="https://img.picgo.net/2024/07/03/a27c582a154d393ca4.png"
+          alt=""
+        />
       </div>
       <slot></slot>
     </div>
@@ -71,6 +77,7 @@ import { events, copyText } from '@/utils'
 import { message } from 'ant-design-vue'
 import type { Ref } from 'vue'
 import type { Func } from '@/types'
+import { useI18n } from 'vue-i18n'
 
 const emit = defineEmits(['editorAction'])
 const resultCode = inject('resultCode') as Ref<string>
@@ -84,6 +91,7 @@ const editorRef = ref()
 const isEditorInited = ref(false)
 const { isEditorReady } = storeToRefs(useEditorStore())
 const { themeMode } = storeToRefs(useAppStore())
+const { t } = useI18n()
 
 let editor = null as any
 watch(resultCode, (val) => {
@@ -101,7 +109,7 @@ watch(wordWrap, () => {
 
 const handleCopyResult = () => {
   copyText(resultCode.value)
-  message.success('复制成功')
+  message.success(t('msg.copySuccess'))
 }
 
 const initEditor = () => {

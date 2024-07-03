@@ -2,19 +2,19 @@
   <div class="editor-type flex_center p_center">
     <div class="type-item" @click="emits('selectType', 'zjson')">
       <RetweetOutlined />
-      <p>转杰森</p>
+      <p>{{ t('zjson') }}</p>
     </div>
     <div class="type-item" @click="emits('selectType', 'diff')">
       <span>
         <SvgDiff />
       </span>
-      <p>文件对比</p>
+      <p>{{ t('editor.docCompare') }}</p>
     </div>
     <div class="type-item" @click="emits('selectType', 'code')">
       <span>
         <SvgCode />
       </span>
-      <p>代码编辑</p>
+      <p>{{ t('editor.codeEditor') }}</p>
     </div>
   </div>
 </template>
@@ -25,6 +25,7 @@ import SvgCode from '@/assets/svg/code.svg'
 import { RetweetOutlined } from '@ant-design/icons-vue'
 import { storeToRefs, useEditorStore } from '@/stores'
 import { watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 const emits = defineEmits(['selectType'])
 const props = defineProps({
@@ -33,6 +34,7 @@ const props = defineProps({
   }
 })
 const { formatResult } = storeToRefs(useEditorStore())
+const { t } = useI18n()
 
 watch(
   () => props.isActive,
