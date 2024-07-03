@@ -46,7 +46,7 @@
       <div class="editor w_100 h_100" ref="editorRef"></div>
       <div v-if="!resultCode" class="resout-hint p_center pe_none">
         <p class="text_center text3 opacity_d75">格式化结果输出<br />记得及时存档以备不时之需</p>
-        <img src="https://s21.ax1x.com/2024/07/02/pkgKwx1.png" alt="" />
+        <img class="p_center_x" src="https://s21.ax1x.com/2024/07/02/pkgKwx1.png" alt="" />
       </div>
       <slot></slot>
     </div>
@@ -144,6 +144,8 @@ onBeforeUnmount(() => editor?.dispose())
   .editor-wrap {
     padding: 1px;
     .resout-hint {
+      width: 100%;
+      text-align: center;
       top: 25%;
       font-size: 24px;
       user-select: none;
@@ -151,7 +153,6 @@ onBeforeUnmount(() => editor?.dispose())
         width: 360px;
         margin-top: 20px;
         margin-left: -30px;
-        position: absolute;
         opacity: 0.4;
       }
     }
