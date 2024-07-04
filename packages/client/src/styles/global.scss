@@ -63,6 +63,10 @@
 .ant-popover {
   .ant-popover-inner {
     background: var(--background-float);
+    transition: background 0s !important;
+    button {
+      transition: background 0s !important;
+    }
   }
 }
 
