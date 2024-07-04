@@ -93,8 +93,8 @@ importers:
         specifier: 4.x
         version: 4.0.0(vue@3.4.29)
       format-to-json:
-        specifier: ^3.0.4
-        version: 3.0.4
+        specifier: ^3.0.5
+        version: 3.0.5
       mitt:
         specifier: ^3.0.1
         version: 3.0.1
@@ -5546,8 +5546,8 @@ packages:
       mime-types: 2.1.35
     dev: true
 
-  /format-to-json@3.0.4:
-    resolution: {integrity: sha512-7UTd7xs8vqzO7FIG35tYCJ134Z/wD0snaO0Atm0NH7qkOi8Ig19vlGJ4wHPe1Jh664X4opwOpJ1SFzbQJAqD8w==}
+  /format-to-json@3.0.5:
+    resolution: {integrity: sha512-NehhbObbs9B1pLgfMz1IijSKNRA0Bf+RZcRoUFmmu0lveqE83XyrJWG3lQBuQZM6bT9dGEPRVFnSWQ80wVGISA==}
     hasBin: true
     dependencies:
       commander: 2.20.3
