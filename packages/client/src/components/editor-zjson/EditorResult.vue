@@ -80,6 +80,7 @@ import type { Func } from '@/types'
 import { useI18n } from 'vue-i18n'
 
 const emit = defineEmits(['editorAction'])
+const fmtResult = inject('fmtResult') as Ref<any>
 const resultCode = inject('resultCode') as Ref<string>
 const fmtEscape = inject('fmtEscape') as Ref<boolean>
 const fmtExpand = inject('fmtExpand') as Ref<boolean>
@@ -92,6 +93,7 @@ const isEditorInited = ref(false)
 const { isEditorReady } = storeToRefs(useEditorStore())
 const { themeMode } = storeToRefs(useAppStore())
 const { t } = useI18n()
+const errRowDecorations = ref([] as any[])
 
 let editor = null as any
 watch(resultCode, (val) => {
@@ -103,9 +105,42 @@ watch(resultCode, (val) => {
 watch(codeIndent, () => {
   setTimeout(() => editor?.updateOptions({ tabSize: codeIndent.value }))
 })
+
 watch(wordWrap, () => {
   setTimeout(() => editor?.updateOptions({ wordWrap: wordWrap.value ? 'on' : 'off' }))
 })
+
+/**
+ * 错误行高亮
+ */
+watch(
+  fmtResult,
+  (rst) => {
+    if (!editor || !rst) return
+    if (rst.errIndex) {
+      editor.revealPositionInCenter({ lineNumber: rst.errIndex, column: 1 })
+      setTimeout(() => {
+        editor.deltaDecorations(errRowDecorations.value, [])
+        errRowDecorations.value = editor.deltaDecorations(
+          [],
+          [
+            {
+              range: new (window as any).monaco.Range(rst.errIndex, 1, rst.errIndex, 1),
+              options: {
+                isWholeLine: true,
+                className: 'myContentClass',
+                glyphMarginClassName: 'myGlyphMarginClass',
+              },
+            },
+          ],
+        )
+      })
+    } else {
+      editor.deltaDecorations(errRowDecorations.value, [])
+    }
+  },
+  { deep: true },
+)
 
 const handleCopyResult = () => {
   copyText(resultCode.value)

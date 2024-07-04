@@ -107,6 +107,7 @@ const qtMarkOptions = ref([
   { label: "'key': 'value'", value: 3 },
 ])
 
+provide('fmtResult', fmtResult)
 provide('sourceCode', sourceCode)
 provide('resultCode', resultCode)
 provide('fmtStrict', fmtStrict)
@@ -205,11 +206,9 @@ const handleEditorAction = ({ type, data }: IEditorAction) => {
       break
     case 'clearSource':
       sourceCode.value = ''
-      message.success(t('msg.srcCleared'))
       break
     case 'clearResult':
       resultCode.value = ''
-      message.success(t('msg.rstEmptied'))
       break
     case 'fmtEscape':
       fmtEscape.value = !fmtEscape.value
