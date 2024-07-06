@@ -24,7 +24,7 @@ const i18n = createI18n({
       close: 'Close',
       header: {
         zjsTitle: () => 'ZJSON | 转杰森',
-        oldVersion: '（Old Version）',
+        oldVersion: 'old version',
         followSys: 'Follow system',
         keepSelect: 'Keep current',
       },
@@ -98,7 +98,7 @@ const i18n = createI18n({
       close: '关闭',
       header: {
         zjsTitle: () => '转杰森 | ZJSON',
-        oldVersion: '（回到旧版）',
+        oldVersion: '回到旧版',
         followSys: '跟随系统',
         keepSelect: '保持选择',
       },

@@ -19,12 +19,12 @@ const getTabTitle = (tab: any) => {
   return `${tab.type ? tab.type.toUpperCase() : 'TAB'}-${tab.title}`
 }
 
-onMounted(() => {
-  setTimeout(() => {
-    const tabEle = tabTextRef.value?.parentElement?.parentElement
-    if (tabEle) {
-      tabEle.setAttribute('draggable', true)
-    }
-  })
-})
+// onMounted(() => {
+//   setTimeout(() => {
+//     const tabEle = tabTextRef.value?.parentElement?.parentElement
+//     if (tabEle) {
+//       tabEle.setAttribute('draggable', true)
+//     }
+//   })
+// })
 </script>

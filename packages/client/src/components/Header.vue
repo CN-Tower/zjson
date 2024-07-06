@@ -3,9 +3,11 @@
     <h3 class="zjs-htitle mg_0 fw_bold">
       {{ t('header.zjsTitle') }}
       <span class="fs_6">
-        <a class="text_dec_none" href="https://www.zjson.net/old">
+        [
+        <a class="hd-old-v text_dec_none hover_underline" href="https://www.zjson.net/old">
           {{ t('header.oldVersion') }}
         </a>
+        ]
       </span>
     </h3>
     <a-alert class="zjs-alert mx_sm text_center ov_hidden" :type="format.type">
@@ -131,7 +133,9 @@ const format = computed(() => {
  */
 
 let animationTimer: any = null
-const greetingDft = computed(() => locale.value === 'en' ? 'Hello, welcome to use zjson.' : '你好，欢迎使用转杰森！')
+const greetingDft = computed(() =>
+  locale.value === 'en' ? 'Hello, welcome to use zjson.' : '你好，欢迎使用转杰森！',
+)
 const greetingWrod = ref(greetingDft.value)
 const greetingRef = ref()
 const greetingIn = () => {
@@ -201,6 +205,9 @@ const handleOpenGithub = () => {
   }
 }
 .zjs-header {
+  .hd-old-v {
+    color: var(--primary-color);
+  }
   .zjs-htitle,
   .zjs-hbtns {
     width: 200px;
@@ -230,7 +237,6 @@ const handleOpenGithub = () => {
     height: 28px;
     width: 100%;
     max-width: 980px;
-    transform: translateY(3px);
   }
 }
 .zjs-theme-conf {
