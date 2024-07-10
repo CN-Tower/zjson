@@ -49,7 +49,7 @@ To report bugs or provide suggestions, you can submit an issue, or add my WeChat
 
 ![](/docs/donation/WechatQQ.jpg)
 
-## Donation | 请喝茶
+## Patronage | 请喝茶
 
 As you can see, zjson is a free, ad-free and pure website, with its code fully open-source. However, the domain name, certificate, server, and maintenance require cost and effort. If you think zjson helpful, you can donate me a cup of tea. Thank you!
 
