@@ -22,6 +22,7 @@ const i18n = createI18n({
       diff: 'Diff',
       settings: 'Settings',
       close: 'Close',
+      newTab: 'New Tab',
       header: {
         zjsTitle: () => 'ZJSON | 转杰森',
         oldVersion: 'old version',
@@ -96,6 +97,7 @@ const i18n = createI18n({
       diff: '对比',
       settings: '设置',
       close: '关闭',
+      newTab: '新建',
       header: {
         zjsTitle: () => '转杰森 | ZJSON',
         oldVersion: '回到旧版',

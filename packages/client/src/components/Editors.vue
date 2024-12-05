@@ -21,11 +21,25 @@
             @selectType="handleSelectType(tab, $event)"
           />
           <template v-if="!tab.type">
-            <img class="type-img img-l p_center_y" src="https://img.picgo.net/2024/07/03/a3c71b7ca824bf6982.png" alt="">
-            <img class="type-img img-r p_center_y" src="https://img.picgo.net/2024/07/03/a49e9a1813c0a02b2c.png" alt="">
+            <img
+              class="type-img img-l p_center_y"
+              src="https://img.picgo.net/2024/07/03/a3c71b7ca824bf6982.png"
+              alt=""
+            />
+            <img
+              class="type-img img-r p_center_y"
+              src="https://img.picgo.net/2024/07/03/a49e9a1813c0a02b2c.png"
+              alt=""
+            />
           </template>
         </div>
       </a-tab-pane>
+      <template #addIcon>
+        <PlusOutlined /> {{ t('newTab') }}
+        <a-button class="ml_sm my_xs" size="small" @click.stop="handleAddDiffEditor">
+          {{ t('editor.docCompare') }}
+        </a-button>
+      </template>
     </a-tabs>
   </main>
 </template>
@@ -38,17 +52,18 @@ import EditorTab from './EditorTab.vue'
 import EditorDiff from './editor-diff/EditorDiff.vue'
 import EditorCode from './editor-code/EditorCode.vue'
 import type { IEditorType, IEditorTab } from '@/types'
+import { PlusOutlined } from '@ant-design/icons-vue'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const editorComps = shallowRef({
   zjson: EditorZjson,
   diff: EditorDiff,
-  code: EditorCode
+  code: EditorCode,
 })
-
 const editorTabs = ref<IEditorTab[]>([
-  { title: `${Date.now().toString().substr(-8)}`, key: 'defaultKey', type: 'zjson' }
+  { title: `${Date.now().toString().substr(-8)}`, key: 'defaultKey', type: 'zjson' },
 ])
-
 const isTabClosable = computed(() => editorTabs.value.length > 1)
 const activeKey = ref(editorTabs.value[0].key)
 const newTabIndex = ref(0)
@@ -79,6 +94,16 @@ const remove = (targetKey: string) => {
   }
 }
 
+const handleAddDiffEditor = () => {
+  activeKey.value = `NewTab${++newTabIndex.value}`
+  const tab = {
+    title: `${Date.now().toString().substr(-8)}`,
+    key: activeKey.value,
+    type: 'diff',
+  } as IEditorTab
+  editorTabs.value.push(tab)
+}
+
 const onEdit = (targetKey: string | MouseEvent, action: string) => {
   if (action === 'add') {
     add()
@@ -99,7 +124,7 @@ const onEdit = (targetKey: string | MouseEvent, action: string) => {
     }
     .zjs-editor {
       .type-img {
-        opacity: .2;
+        opacity: 0.2;
       }
     }
   }
@@ -125,7 +150,7 @@ const onEdit = (targetKey: string | MouseEvent, action: string) => {
     height: calc(100vh - 82px);
     .type-img {
       width: 300px;
-      opacity: .4;
+      opacity: 0.4;
       user-select: none;
       pointer-events: none;
       &.img-l {
