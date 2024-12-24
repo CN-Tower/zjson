@@ -9,16 +9,17 @@
       </div>
       <div class="bar-center">
         <a-tooltip :title="t('editor.clearLeft')">
-          <DeleteOutlined class="bar-btn del-l mr_lg" @click="handleDelLeft" />
+          <DeleteOutlined class="bar-btn del-l" @click="handleDelLeft" />
         </a-tooltip>
+        <a-tooltip :title="t('editor.zjsonLeft')">
+          <RetweetOutlined class="bar-btn mr_md" @click="handleZjsonLeft" />
+        </a-tooltip>
+        <a-divider class="mr_sm" type="vertical" />
         <a-tooltip :title="t('editor.swapLeftRight')">
           <SwapOutlined class="bar-btn" @click="handleSwapLeftRight" />
         </a-tooltip>
         <a-tooltip :title="t('editor.toCenter')">
           <PauseOutlined class="bar-btn" @click="handleCenterSource" />
-        </a-tooltip>
-        <a-tooltip :title="t('editor.clearBoth')">
-          <ClearOutlined class="bar-btn" @click="handleDelBoth" />
         </a-tooltip>
         <a-popover trigger="click" placement="bottom">
           <template #content>
@@ -31,11 +32,18 @@
         <a-tooltip :title="t('editor.save')">
           <SaveOutlined class="bar-btn" @click="handleSaveFile" />
         </a-tooltip>
+        <a-tooltip :title="t('editor.clearBoth')">
+          <ClearOutlined class="bar-btn" @click="handleDelBoth" />
+        </a-tooltip>
         <a-tooltip :title="t('settings')">
-          <SettingOutlined class="bar-btn" @click="handleSettings" />
+          <SettingOutlined class="bar-btn mr_sm" @click="handleSettings" />
+        </a-tooltip>
+        <a-divider class="ml_md" type="vertical" />
+        <a-tooltip :title="t('editor.zjsonRight')">
+          <RetweetOutlined class="bar-btn ml_md" @click="handleZjsonRight" />
         </a-tooltip>
         <a-tooltip :title="t('editor.clearRight')">
-          <DeleteOutlined class="bar-btn del-r ml_xxl" @click="handleDelRight" />
+          <DeleteOutlined class="bar-btn del-r" @click="handleDelRight" />
         </a-tooltip>
       </div>
       <div class="bar-right flex_end">
@@ -136,12 +144,14 @@ import {
   CheckOutlined,
   EditOutlined,
   SettingOutlined,
+  RetweetOutlined,
 } from '@ant-design/icons-vue'
 import { storeToRefs, useEditorStore } from '@/stores'
 import { EDITOR_LANGS, ZJSON_SAVE_DIFFS, ZJSON_DIFF_SETTINGS } from '@/config'
 import { message } from 'ant-design-vue'
 import { debounce } from '@/utils'
 import { useI18n } from 'vue-i18n'
+import fmt2json from 'format-to-json'
 
 const props = defineProps({
   isActive: {
@@ -208,6 +218,14 @@ const saveSettingsToLocal = () => {
  * 响应页面事件
  * ===========================================================================
  */
+const handleZjsonLeft = () => {
+  leftEditorRef.value?.updateContent(fmt2json(leftCode.value))
+}
+
+const handleZjsonRight = () => {
+  rightEditorRef.value?.updateContent(fmt2json(rightCode.value))
+}
+
 const handleSwapLeftRight = () => {
   const temp = leftCode.value
   leftCode.value = rightCode.value

@@ -55,6 +55,8 @@ const i18n = createI18n({
         clearBoth: 'Clear both',
         swapLeftRight: 'Swap left and right',
         splitEditor: 'Split editor',
+        zjsonLeft: 'ZJSON left',
+        zjsonRight: 'ZJSON right',
       },
       msg: {
         srcUnescaped: 'Source code has been unescaped',
@@ -130,6 +132,8 @@ const i18n = createI18n({
         clearBoth: '清空两边',
         swapLeftRight: '交换左右',
         splitEditor: '拆分编辑器',
+        zjsonLeft: '左边JSON格式化',
+        zjsonRight: '右边JSON格式化',
       },
       msg: {
         srcUnescaped: '原码已反转义',

@@ -12,7 +12,7 @@
 <script setup lang="ts">
 import { ref, watch, onMounted, onBeforeUnmount, inject, type Ref } from 'vue'
 import { storeToRefs, useAppStore, useEditorStore } from '@/stores'
-import { events } from '@/utils'
+import { events, updateEditorContent } from '@/utils'
 
 const emit = defineEmits(['codeChange'])
 const props = defineProps({
@@ -80,7 +80,13 @@ const initEditor = () => {
 const layoutEditor = () => {
   editor?.layout()
 }
-defineExpose({ layoutEditor })
+
+const updateContent = (content: string) => {
+  if (editor) {
+    updateEditorContent(editor, content)
+  }
+}
+defineExpose({ layoutEditor, updateContent })
 
 events.on('editorReady', () => initEditor())
 onMounted(() => setTimeout(() => initEditor()))
