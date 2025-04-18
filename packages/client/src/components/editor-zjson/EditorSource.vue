@@ -7,11 +7,8 @@
       <a-tooltip v-else="isEditorDftLeft" :title="t('editor.toDefaultPos')">
         <StepBackwardOutlined class="bar-btn" @click="emit('editorAction', { type: 'putLeft' })" />
       </a-tooltip>
-      <a-tooltip :title="t('editor.srcUnescape')">
-        <ThunderboltOutlined
-          class="bar-btn"
-          @click="emit('editorAction', { type: 'unescapeSrc' })"
-        />
+      <a-tooltip :title="t('editor.save')">
+        <SaveOutlined class="bar-btn" @click="emit('editorAction', { type: 'saveFile' })" />
       </a-tooltip>
       <a-popover trigger="click" placement="bottom">
         <template #content>
@@ -25,8 +22,11 @@
           />
         </a-tooltip>
       </a-popover>
-      <a-tooltip :title="t('editor.save')">
-        <SaveOutlined class="bar-btn" @click="emit('editorAction', { type: 'saveFile' })" />
+      <a-tooltip :title="t('editor.srcUnescape')">
+        <ThunderboltOutlined
+          class="bar-btn"
+          @click="emit('editorAction', { type: 'unescapeSrc' })"
+        />
       </a-tooltip>
       <a-tooltip :title="t('editor.clearSource')">
         <DeleteOutlined class="bar-btn" @click="emit('editorAction', { type: 'clearSource' })" />
