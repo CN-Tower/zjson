@@ -22,19 +22,19 @@ watchEffect(() => {
 
 const loaderScript: HTMLScriptElement = document.createElement('script')
 loaderScript.type = 'text/javascript'
-loaderScript.src = 'https://lf6-cdn-tos.bytecdntp.com/cdn/monaco-editor/0.32.1/min/vs/loader.js'
+loaderScript.src = '/lib/monaco-editor/min/vs/loader.js'
 loaderScript.addEventListener('load', () => {
   const win = window as any
   win.require.config({
-    paths: { vs: 'https://lf6-cdn-tos.bytecdntp.com/cdn/monaco-editor/0.32.1/min/vs' },
+    paths: { vs: '/lib/monaco-editor/min/vs' },
   })
   win.MonacoEnvironment = {
     getWorkerUrl: function () {
       return `data:text/javascript;charset=utf-8,${encodeURIComponent(`
         self.MonacoEnvironment = {
-          baseUrl: 'https://lf6-cdn-tos.bytecdntp.com/cdn/monaco-editor/0.32.1/min/'
+          baseUrl: '/lib/monaco-editor/min/'
         };
-        importScripts('https://lf6-cdn-tos.bytecdntp.com/cdn/monaco-editor/0.32.1/min/vs/base/worker/workerMain.js');
+        importScripts('/lib/monaco-editor/min/vs/base/worker/workerMain.js');
       `)}`
     },
   }
