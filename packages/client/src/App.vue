@@ -22,19 +22,19 @@ watchEffect(() => {
 
 const loaderScript: HTMLScriptElement = document.createElement('script')
 loaderScript.type = 'text/javascript'
-loaderScript.src = '/lib/monaco-editor/min/vs/loader.js'
+loaderScript.src = 'https://www.zjson.net/lib/monaco-editor/min/vs/loader.js'
 loaderScript.addEventListener('load', () => {
   const win = window as any
   win.require.config({
-    paths: { vs: '/lib/monaco-editor/min/vs' },
+    paths: { vs: 'https://www.zjson.net/lib/monaco-editor/min/vs' },
   })
   win.MonacoEnvironment = {
     getWorkerUrl: function () {
       return `data:text/javascript;charset=utf-8,${encodeURIComponent(`
         self.MonacoEnvironment = {
-          baseUrl: '/lib/monaco-editor/min/'
+          baseUrl: 'https://www.zjson.net/lib/monaco-editor/min/'
         };
-        importScripts('/lib/monaco-editor/min/vs/base/worker/workerMain.js');
+        importScripts('https://www.zjson.net/lib/monaco-editor/min/vs/base/worker/workerMain.js');
       `)}`
     },
   }
