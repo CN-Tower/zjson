@@ -48,14 +48,3 @@ To report bugs or provide suggestions, you can submit an issue, or add my WeChat
 反馈BUG和提意见，可以给我提issue、加我微信或者加转杰森QQ群
 
 ![](/docs/donation/WechatQQ.jpg)
-
-## Patronage | 请喝茶
-
-As you can see, zjson is a free, ad-free and pure website, with its code fully open-source. However, the domain name, certificate, server, and maintenance require cost and effort. If you think zjson helpful, you can donate me a cup of tea. Thank you!
-
-如您所见，转杰森是一个完全免费且无任何广告的纯净的工具网站，代码也是完全开源的。而网站的域名、证书、服务器和维护却需要费用和精力，如果您觉得转杰森对你有帮助，不妨请我喝杯茶，感谢！
-
-<div style="display: flex; justify-content: flex-start;">
-  <img src="https://raw.githubusercontent.com/CN-Tower/zjson/master/docs/donation/AliPay.jpg" width="204">
-  <img src="https://raw.githubusercontent.com/CN-Tower/zjson/master/docs/donation/WechatPay.png" width="233">
-<div>
