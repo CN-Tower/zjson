@@ -2,7 +2,25 @@ module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
   ignorePatterns: ['**/*.js', '.eslintrc.cjs'],
-  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'prettier'],
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'prettier',
+    'plugin:vue/vue3-essential',
+    'eslint:recommended',
+    '@vue/eslint-config-typescript',
+    '@vue/eslint-config-prettier/skip-formatting'
+  ],
+  overrides: [
+    {
+      files: [
+        'e2e/**/*.{test,spec}.{js,ts,jsx,tsx}'
+      ],
+      'extends': [
+        'plugin:playwright/recommended'
+      ]
+    }
+  ],
   plugins: ['@typescript-eslint', 'simple-import-sort', 'import'],
   rules: {
     'simple-import-sort/imports': 'error',
@@ -20,5 +38,8 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-var-requires': 'off'
+  },
+  parserOptions: {
+    ecmaVersion: 'latest'
   }
 }
