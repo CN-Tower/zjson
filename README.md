@@ -40,11 +40,3 @@
 
 ![](/docs/screenshots/light-code.png)<br>
 ![](/docs/screenshots/dark-code.png)
-
-## Feedback | 问题反馈
-
-To report bugs or provide suggestions, you can submit an issue, or add my WeChat, or join the zjson QQ group
-
-反馈BUG和提意见，可以给我提issue、加我微信或者加转杰森QQ群
-
-![](/docs/donation/WechatQQ.jpg)
