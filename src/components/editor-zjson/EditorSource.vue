@@ -41,11 +41,11 @@
         <p class="text_center text3 opacity_d75">
           {{ t('editor.enterOrPaste') }}<br />{{ t('editor.jsonLikeStr') }}
         </p>
-        <img
+        <!-- <img
           class="p_center_x"
           src="https://img.picgo.net/2024/07/03/a102e8853fab7b6b7d.png"
           alt=""
-        />
+        /> -->
       </div>
     </div>
     <slot></slot>

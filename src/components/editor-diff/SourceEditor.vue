@@ -1,10 +1,10 @@
 <template>
   <div class="diff-source h_100 p_relative">
     <div class="editor w_100 h_100" ref="editorRef"></div>
-    <p v-if="!code" class="zjs-placeholder p_center text_center text3 opacity_d75 pe_none fs_1xx">
+    <!-- <p v-if="!code" class="zjs-placeholder p_center text_center text3 opacity_d75 pe_none fs_1xx">
       <img class="code-img" v-if="from === 'l'" src="https://img.picgo.net/2024/07/03/a44f0e7d071bb73ee.png" alt="">
       <img class="code-img" v-else src="https://img.picgo.net/2024/07/03/b5f4df1f5d4298174.png" alt="">
-    </p>
+    </p> -->
     <slot></slot>
   </div>
 </template>

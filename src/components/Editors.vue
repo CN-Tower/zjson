@@ -20,7 +20,7 @@
             :isActive="tab.key === activeKey"
             @selectType="handleSelectType(tab, $event)"
           />
-          <template v-if="!tab.type">
+          <!-- <template v-if="!tab.type">
             <img
               class="type-img img-l p_center_y"
               src="https://img.picgo.net/2024/07/03/a3c71b7ca824bf6982.png"
@@ -31,7 +31,7 @@
               src="https://img.picgo.net/2024/07/03/a49e9a1813c0a02b2c.png"
               alt=""
             />
-          </template>
+          </template> -->
         </div>
       </a-tab-pane>
       <template #addIcon>

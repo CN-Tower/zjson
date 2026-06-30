@@ -39,7 +39,7 @@
     </div>
     <div class="code-content w_100 h_100 p_relative">
       <div class="editor w_100 h_100" ref="editorRef"></div>
-      <p
+      <!-- <p
         v-if="!editorCode"
         class="zjs-placeholder p_center text_center text3 opacity_d75 pe_none fs_1xx"
       >
@@ -61,7 +61,7 @@
           src="https://img.picgo.net/2024/07/03/318105d607a38be22.png"
           alt=""
         />
-      </p>
+      </p> -->
     </div>
     <slot></slot>
     <!-- 存档弹窗 -->

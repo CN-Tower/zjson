@@ -48,11 +48,11 @@
         <p class="text_center text3 opacity_d75">
           {{ t('editor.resultOutput') }}<br />{{ t('editor.rememberSave') }}
         </p>
-        <img
+        <!-- <img
           class="p_center_x"
           src="https://img.picgo.net/2024/07/03/a27c582a154d393ca4.png"
           alt=""
-        />
+        /> -->
       </div>
       <slot></slot>
     </div>
